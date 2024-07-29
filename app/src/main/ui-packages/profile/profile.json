@@ -1,0 +1,573 @@
+{
+  "name": "profile",
+  "version": 33,
+  "source-key": {
+    "type": "figma",
+    "file": "kvZ8X82t1TLWtum69IfnVG",
+    "node": "438:1158",
+    "version": "6317935461",
+    "component-id": "4b27c9bfd13a34c26e9241741752f1e9e155e1e9"
+  },
+  "default": "Profile",
+  "documentation": "Profile",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "Signup drawer"
+      },
+      {
+        "type": "group",
+        "id": "Signup drawer_synth"
+      },
+      {
+        "type": "group",
+        "id": "Divider"
+      },
+      {
+        "type": "group",
+        "id": "Button"
+      },
+      {
+        "type": "text",
+        "id": "Profile"
+      },
+      {
+        "type": "group",
+        "id": "First Name"
+      },
+      {
+        "type": "group",
+        "id": "Last Name"
+      },
+      {
+        "type": "group",
+        "id": "Updates and recommendation"
+      },
+      {
+        "type": "group",
+        "id": "Checkbox"
+      },
+      {
+        "type": "text",
+        "id": "Optional"
+      },
+      {
+        "type": "text",
+        "id": "First Name1"
+      },
+      {
+        "type": "text",
+        "id": "Last Name1"
+      },
+      {
+        "type": "text",
+        "id": "Updates and Recommendations"
+      },
+      {
+        "type": "text",
+        "id": "Stay in touch with the best playlist updates"
+      },
+      {
+        "type": "group",
+        "id": "Checkboxes"
+      },
+      {
+        "type": "text",
+        "id": "Email from CRBT"
+      },
+      {
+        "type": "group",
+        "id": "state-layer"
+      },
+      {
+        "type": "vector",
+        "id": "container"
+      },
+      {
+        "type": "text",
+        "id": "Save Profile"
+      }
+    ],
+    "modes": {
+      "Profile": {
+        "rules": [
+          {
+            "id": "top_level",
+            "main-axis-align": "end",
+            "cross-axis-align": "start",
+            "children": [
+              "Signup drawer"
+            ]
+          },
+          {
+            "id": "Signup drawer",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 390.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 844.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Signup drawer_synth",
+              "Divider",
+              "Button"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            }
+          },
+          {
+            "id": "Signup drawer_synth",
+            "opacity": 100.0,
+            "padding": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 390.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 844.0
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Profile",
+              "First Name",
+              "Last Name",
+              "Updates and recommendation",
+              "Checkbox",
+              "Optional"
+            ],
+            "item-spacing": 50.0
+          },
+          {
+            "id": "Divider",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 11.0
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 438.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 342.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 0.5
+              }
+            },
+            "is-structured": false,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            }
+          },
+          {
+            "id": "Button",
+            "padding": {
+              "left": 24.0,
+              "top": 12.0,
+              "right": 24.0,
+              "bottom": 12.0
+            },
+            "border-radius": 24.0,
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 24.0
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 523.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 342.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "children": [
+              "Save Profile"
+            ],
+            "fills": [
+              {
+                "color": {},
+                "opacity": 1.0,
+                "fill-type": "lineargradient",
+                "blend-mode": "normal",
+                "color-stops": [
+                  {
+                    "color": {
+                      "alpha": 1.0,
+                      "hue": 240.93023255813955,
+                      "saturation": 0.5058823529411764,
+                      "value": 1.0
+                    },
+                    "color-stop-position": 0.0
+                  },
+                  {
+                    "color": {
+                      "alpha": 1.0,
+                      "hue": 240.76923076923077,
+                      "saturation": 0.5098039215686274,
+                      "value": 0.6
+                    },
+                    "color-stop-position": 1.0
+                  }
+                ],
+                "gradient-handle-positions": [
+                  {
+                    "x": 0.5,
+                    "y": 0.0
+                  },
+                  {
+                    "x": 0.5,
+                    "y": 1.0
+                  },
+                  {
+                    "x": 0.49,
+                    "y": 0.0
+                  }
+                ]
+              }
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Profile",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.8901960784313725
+            },
+            "text-content": "Profile ",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 24.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "First Name",
+            "padding": {
+              "bottom": 8.0
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "stroke-width": 1.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "First Name1"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Last Name",
+            "padding": {
+              "bottom": 8.0
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "stroke-width": 1.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Last Name1"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Updates and recommendation",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Updates and Recommendations",
+              "Stay in touch with the best playlist updates"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Checkbox",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "shrink"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Checkboxes",
+              "Email from CRBT"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Optional",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.4588235294117647
+            },
+            "text-content": "Optional",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "First Name1",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.34901960784313724,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.996078431372549
+            },
+            "text-content": "First Name",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Last Name1",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.34901960784313724,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "Last Name",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Updates and Recommendations",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "Updates and Recommendations",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Stay in touch with the best playlist updates",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 300.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.6588235294117647
+            },
+            "text-content": "Stay in touch with the best playlist updates",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Checkboxes",
+            "padding": 4.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "shrink"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "state-layer"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Email from CRBT",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "Email from CRBT",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "state-layer",
+            "padding": 11.0,
+            "border-radius": 100.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "shrink"
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "children": [
+              "container"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "container",
+            "border-radius": 2.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 18.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 18.0
+              }
+            },
+            "vector-content": "container.svg"
+          },
+          {
+            "id": "Save Profile",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Save Profile ",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          }
+        ]
+      }
+    }
+  },
+  "previews": [
+    {
+      "design": "Profile",
+      "size": {
+        "width": 390.0,
+        "height": 844.0
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}

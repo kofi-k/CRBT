@@ -1,0 +1,529 @@
+{
+  "name": "authentication",
+  "version": 33,
+  "source-key": {
+    "type": "figma",
+    "file": "kvZ8X82t1TLWtum69IfnVG",
+    "node": "438:1157",
+    "version": "6317930633",
+    "component-id": "d98fbbcf30f98f5e976db441bc04372158bc1208"
+  },
+  "default": "Authentication",
+  "documentation": "Authentication",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "Signup drawer"
+      },
+      {
+        "type": "group",
+        "id": "Header"
+      },
+      {
+        "type": "group",
+        "id": "Code Box"
+      },
+      {
+        "type": "group",
+        "id": "Code"
+      },
+      {
+        "type": "group",
+        "id": "Help"
+      },
+      {
+        "type": "text",
+        "id": "We’ve sent you a code"
+      },
+      {
+        "type": "text",
+        "id": "For extra security, we’ve texted you a login code. Enter it here:"
+      },
+      {
+        "type": "group",
+        "id": "Box 01"
+      },
+      {
+        "type": "group",
+        "id": "Box 02"
+      },
+      {
+        "type": "group",
+        "id": "Box 03"
+      },
+      {
+        "type": "group",
+        "id": "Box 04"
+      },
+      {
+        "type": "group",
+        "id": "fluent-mdl2:message-friend-request"
+      },
+      {
+        "type": "group",
+        "id": "Request Code"
+      },
+      {
+        "type": "vector",
+        "id": "Vector"
+      },
+      {
+        "type": "text",
+        "id": "Request a new code"
+      },
+      {
+        "type": "text",
+        "id": "Available again in 57 seconds"
+      },
+      {
+        "type": "group",
+        "id": "material-symbols:help-outline"
+      },
+      {
+        "type": "text",
+        "id": "Need help?"
+      },
+      {
+        "type": "vector",
+        "id": "Vector1"
+      }
+    ],
+    "modes": {
+      "Authentication": {
+        "rules": [
+          {
+            "id": "top_level",
+            "main-axis-align": "end",
+            "cross-axis-align": "start",
+            "children": [
+              "Signup drawer"
+            ]
+          },
+          {
+            "id": "Signup drawer",
+            "padding": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 390.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 424.0
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Header",
+              "Code Box",
+              "Code",
+              "Help"
+            ],
+            "item-spacing": 48.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            }
+          },
+          {
+            "id": "Header",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "We’ve sent you a code",
+              "For extra security, we’ve texted you a login code. Enter it here:"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Code Box",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 350.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Box 01",
+              "Box 02",
+              "Box 03",
+              "Box 04"
+            ],
+            "item-spacing": 48.0,
+            "clip-content": false
+          },
+          {
+            "id": "Code",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "fluent-mdl2:message-friend-request",
+              "Request Code"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Help",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "material-symbols:help-outline",
+              "Need help?"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "We’ve sent you a code",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.9372549019607843
+            },
+            "text-content": "We’ve sent you a code",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 24.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "For extra security, we’ve texted you a login code. Enter it here:",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 300.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "For extra security, we’ve texted you a login code. Enter it here:",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Box 01",
+            "border-radius": 7.5,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              }
+            },
+            "stroke-width": 2.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "is-structured": false
+          },
+          {
+            "id": "Box 02",
+            "border-radius": 7.5,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              }
+            },
+            "stroke-width": 2.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "is-structured": false
+          },
+          {
+            "id": "Box 03",
+            "border-radius": 7.5,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              }
+            },
+            "stroke-width": 2.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "is-structured": false
+          },
+          {
+            "id": "Box 04",
+            "border-radius": 7.5,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 48.0
+              }
+            },
+            "stroke-width": 2.0,
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "is-structured": false
+          },
+          {
+            "id": "fluent-mdl2:message-friend-request",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector"
+            ]
+          },
+          {
+            "id": "Request Code",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Request a new code",
+              "Available again in 57 seconds"
+            ],
+            "item-spacing": 8.0,
+            "clip-content": false
+          },
+          {
+            "id": "Vector",
+            "margin": {
+              "top": 4.5
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector.svg"
+          },
+          {
+            "id": "Request a new code",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 300.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "Request a new code ",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Available again in 57 seconds",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 300.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.27450980392156865,
+              "value": 1.0
+            },
+            "text-content": "Available again in 57 seconds",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "material-symbols:help-outline",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector1"
+            ]
+          },
+          {
+            "id": "Need help?",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.020725388601036197,
+              "value": 0.7568627450980392
+            },
+            "text-content": "Need help?",
+            "overflow": "visible",
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector1",
+            "margin": {
+              "left": 2.0,
+              "top": 2.0,
+              "right": 1.9999866485595703,
+              "bottom": 1.9999752044677734
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector1.svg"
+          }
+        ]
+      }
+    }
+  },
+  "previews": [
+    {
+      "design": "Authentication",
+      "size": {
+        "width": 390.0,
+        "height": 844.0
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
