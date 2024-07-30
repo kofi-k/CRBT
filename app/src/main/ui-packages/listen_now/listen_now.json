@@ -1,0 +1,2172 @@
+{
+  "name": "listen_now",
+  "version": 33,
+  "source-key": {
+    "type": "figma",
+    "file": "kvZ8X82t1TLWtum69IfnVG",
+    "node": "435:1041",
+    "version": "6321075082",
+    "component-id": "91da498e5bd25c8f3836afbe7002cdc57a46f121"
+  },
+  "default": "Listen Now",
+  "documentation": "Listen Now",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "Status Bar - iPhone"
+      },
+      {
+        "type": "group",
+        "id": "Container"
+      },
+      {
+        "type": "group",
+        "id": "Container1"
+      },
+      {
+        "type": "group",
+        "id": "Container2"
+      },
+      {
+        "type": "group",
+        "id": "Time"
+      },
+      {
+        "type": "group",
+        "id": "Levels"
+      },
+      {
+        "type": "text",
+        "id": "Time1"
+      },
+      {
+        "type": "group",
+        "id": "Battery"
+      },
+      {
+        "type": "vector",
+        "id": "Wifi"
+      },
+      {
+        "type": "vector",
+        "id": "Cellular Connection"
+      },
+      {
+        "type": "vector",
+        "id": "Border"
+      },
+      {
+        "type": "vector",
+        "id": "Cap"
+      },
+      {
+        "type": "vector",
+        "id": "Capacity"
+      },
+      {
+        "type": "group",
+        "id": "Header"
+      },
+      {
+        "type": "group",
+        "id": "Song"
+      },
+      {
+        "type": "group",
+        "id": "Song1"
+      },
+      {
+        "type": "group",
+        "id": "Song2"
+      },
+      {
+        "type": "group",
+        "id": "Song3"
+      },
+      {
+        "type": "group",
+        "id": "Name"
+      },
+      {
+        "type": "group",
+        "id": "Search"
+      },
+      {
+        "type": "group",
+        "id": "ic:baseline-arrow-back-ios"
+      },
+      {
+        "type": "text",
+        "id": "Tones"
+      },
+      {
+        "type": "group",
+        "id": "carbon:notification"
+      },
+      {
+        "type": "vector",
+        "id": "Vector"
+      },
+      {
+        "type": "vector",
+        "id": "Vector1"
+      },
+      {
+        "type": "text",
+        "id": "Value"
+      },
+      {
+        "type": "group",
+        "id": "Search1"
+      },
+      {
+        "type": "vector",
+        "id": "Icon"
+      },
+      {
+        "type": "group",
+        "id": "List 1"
+      },
+      {
+        "type": "image",
+        "id": "Logo"
+      },
+      {
+        "type": "group",
+        "id": "Info"
+      },
+      {
+        "type": "group",
+        "id": "pepicons-pencil:dots-y"
+      },
+      {
+        "type": "text",
+        "id": "Tone name"
+      },
+      {
+        "type": "text",
+        "id": "Artist name"
+      },
+      {
+        "type": "vector",
+        "id": "Vector2"
+      },
+      {
+        "type": "group",
+        "id": "List 2"
+      },
+      {
+        "type": "image",
+        "id": "Logo1"
+      },
+      {
+        "type": "group",
+        "id": "Info1"
+      },
+      {
+        "type": "group",
+        "id": "pepicons-pencil:dots-y1"
+      },
+      {
+        "type": "text",
+        "id": "Tone name1"
+      },
+      {
+        "type": "text",
+        "id": "Artist name1"
+      },
+      {
+        "type": "vector",
+        "id": "Vector3"
+      },
+      {
+        "type": "group",
+        "id": "List 3"
+      },
+      {
+        "type": "image",
+        "id": "Logo2"
+      },
+      {
+        "type": "group",
+        "id": "Info2"
+      },
+      {
+        "type": "group",
+        "id": "pepicons-pencil:dots-y2"
+      },
+      {
+        "type": "text",
+        "id": "Tone name2"
+      },
+      {
+        "type": "text",
+        "id": "Artist name2"
+      },
+      {
+        "type": "vector",
+        "id": "Vector4"
+      },
+      {
+        "type": "group",
+        "id": "List 4"
+      },
+      {
+        "type": "image",
+        "id": "Logo3"
+      },
+      {
+        "type": "group",
+        "id": "Info3"
+      },
+      {
+        "type": "group",
+        "id": "pepicons-pencil:dots-y3"
+      },
+      {
+        "type": "text",
+        "id": "Tone name3"
+      },
+      {
+        "type": "text",
+        "id": "Artist name3"
+      },
+      {
+        "type": "vector",
+        "id": "Vector5"
+      },
+      {
+        "type": "group",
+        "id": "Song4"
+      },
+      {
+        "type": "group",
+        "id": "List 5"
+      },
+      {
+        "type": "group",
+        "id": "Frame 3"
+      },
+      {
+        "type": "group",
+        "id": "Info4"
+      },
+      {
+        "type": "group",
+        "id": "bx:pause"
+      },
+      {
+        "type": "group",
+        "id": "Player"
+      },
+      {
+        "type": "vector",
+        "id": "Outer"
+      },
+      {
+        "type": "vector",
+        "id": "Inner"
+      },
+      {
+        "type": "text",
+        "id": "Tone name4"
+      },
+      {
+        "type": "text",
+        "id": "Artist name4"
+      },
+      {
+        "type": "vector",
+        "id": "Vector6"
+      },
+      {
+        "type": "group",
+        "id": "Navigation"
+      },
+      {
+        "type": "group",
+        "id": "majesticons:home-line"
+      },
+      {
+        "type": "group",
+        "id": "mingcute:transfer-line"
+      },
+      {
+        "type": "group",
+        "id": "material-symbols:subscriptions-outline"
+      },
+      {
+        "type": "group",
+        "id": "iconamoon:profile"
+      },
+      {
+        "type": "vector",
+        "id": "Vector7"
+      },
+      {
+        "type": "group",
+        "id": "Group"
+      },
+      {
+        "type": "vector",
+        "id": "Vector8"
+      },
+      {
+        "type": "vector",
+        "id": "Vector9"
+      },
+      {
+        "type": "vector",
+        "id": "Vector10"
+      },
+      {
+        "type": "group",
+        "id": "Group1"
+      },
+      {
+        "type": "vector",
+        "id": "Vector11"
+      },
+      {
+        "type": "vector",
+        "id": "Vector12"
+      }
+    ],
+    "modes": {
+      "Listen Now": {
+        "rules": [
+          {
+            "id": "top_level",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Status Bar - iPhone",
+              "Container",
+              "Container1",
+              "Container2"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            }
+          },
+          {
+            "id": "Status Bar - iPhone",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 54.0
+              }
+            },
+            "stroke-alignment": "center",
+            "is-structured": false,
+            "children": [
+              "Time",
+              "Levels"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "Container",
+            "padding": {
+              "left": 24.0,
+              "top": 24.0,
+              "right": 24.0
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Header",
+              "Song",
+              "Song1",
+              "Song2",
+              "Song3"
+            ],
+            "item-spacing": 23.0
+          },
+          {
+            "id": "Container1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Song4"
+            ],
+            "item-spacing": 23.0
+          },
+          {
+            "id": "Container2",
+            "padding": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Navigation"
+            ],
+            "item-spacing": 23.0
+          },
+          {
+            "id": "Time",
+            "margin": {
+              "right": 250.57252502441406
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 0.0
+              },
+              "vertical": {
+                "attachment": "center",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 54.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Time1"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Levels",
+            "margin": {
+              "left": 250.57275390625
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 0.0
+              },
+              "vertical": {
+                "attachment": "center",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 54.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Battery",
+              "Wifi",
+              "Cellular Connection"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Time1",
+            "margin": {
+              "left": 51.52734375,
+              "top": 18.339630126953125,
+              "right": 51.18257522583008,
+              "bottom": 13.660369873046875
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "font-weight": 590.0,
+            "text-content": "9:41",
+            "overflow": "visible",
+            "text-size": 17.0,
+            "line-height": 1.2941175842285155,
+            "typeface": "SF Pro"
+          },
+          {
+            "id": "Battery",
+            "margin": {
+              "left": 81.0,
+              "top": 23.0,
+              "right": 31.099437713623047,
+              "bottom": 18.0
+            },
+            "stroke-alignment": "center",
+            "is-structured": false,
+            "children": [
+              "Border",
+              "Cap",
+              "Capacity"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Wifi",
+            "margin": {
+              "top": 23.63775634765625,
+              "bottom": 18.033937454223633
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": -4.443685531616211
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 17.141666412353516
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "wifi.svg"
+          },
+          {
+            "id": "Cellular Connection",
+            "margin": {
+              "top": 23.53582763671875,
+              "bottom": 18.237756729125977
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": -30.113737106323242
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 19.200000762939453
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "cellular_connection.svg"
+          },
+          {
+            "id": "Border",
+            "border-radius": 4.300000190734863,
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": -1.1640186309814453
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 25.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "border.svg"
+          },
+          {
+            "id": "Cap",
+            "margin": {
+              "top": 4.7811279296875,
+              "bottom": 4.143400192260742
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": 13.000000357627869
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 1.328037977218628
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "cap.svg"
+          },
+          {
+            "id": "Capacity",
+            "margin": {
+              "top": 2.0,
+              "bottom": 2.0
+            },
+            "border-radius": 2.5,
+            "alignment": {
+              "horizontal": {
+                "attachment": "center",
+                "offset": -1.1640186309814453
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 21.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "capacity.svg"
+          },
+          {
+            "id": "Header",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Name",
+              "Search"
+            ],
+            "item-spacing": 24.0,
+            "clip-content": false
+          },
+          {
+            "id": "Song",
+            "padding": 12.0,
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "List 1"
+            ],
+            "item-spacing": 24.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "Song1",
+            "padding": 12.0,
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "List 2"
+            ],
+            "item-spacing": 24.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "Song2",
+            "padding": 12.0,
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "List 3"
+            ],
+            "item-spacing": 24.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "Song3",
+            "padding": 12.0,
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "List 4"
+            ],
+            "item-spacing": 24.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "Name",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "space-between",
+            "children": [
+              "ic:baseline-arrow-back-ios",
+              "Tones",
+              "carbon:notification"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Search",
+            "padding": {
+              "left": 16.0,
+              "top": 12.0,
+              "right": 16.0,
+              "bottom": 12.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "stroke-width": 1.0,
+            "stroke-alignment": "center",
+            "stroke-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.8509803921568627
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Value",
+              "Search1"
+            ],
+            "item-spacing": 8.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            }
+          },
+          {
+            "id": "ic:baseline-arrow-back-ios",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector"
+            ]
+          },
+          {
+            "id": "Tones",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "text-content": "Tones",
+            "overflow": "visible",
+            "text-size": 16.0,
+            "line-height": 1.375,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "carbon:notification",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector1"
+            ]
+          },
+          {
+            "id": "Vector",
+            "margin": {
+              "top": 2.100006103515625,
+              "right": 12.329999923706055,
+              "bottom": 2.099994659423828
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector.svg"
+          },
+          {
+            "id": "Vector1",
+            "margin": {
+              "left": 2.25,
+              "top": 0.75,
+              "right": 2.25,
+              "bottom": 1.499673843383789
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector1.svg"
+          },
+          {
+            "id": "Value",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.7019607843137254
+            },
+            "text-content": "Search ",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 16.0,
+            "typeface": "Inter"
+          },
+          {
+            "id": "Search1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 16.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 16.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Icon"
+            ]
+          },
+          {
+            "id": "Icon",
+            "margin": 2.0,
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": -0.7998046875
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": -0.79998779296875
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "icon.svg"
+          },
+          {
+            "id": "List 1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Logo",
+              "Info",
+              "pepicons-pencil:dots-y"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Logo",
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              }
+            },
+            "image-content": "logo.png",
+            "scale": "cover"
+          },
+          {
+            "id": "Info",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tone name",
+              "Artist name"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "pepicons-pencil:dots-y",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector2"
+            ]
+          },
+          {
+            "id": "Tone name",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Tone name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "line-height": 1.5714285278320312,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Artist name",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Artist name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector2",
+            "margin": {
+              "left": 10.7998046875,
+              "top": 4.79998779296875,
+              "right": 10.2001953125,
+              "bottom": 4.200011253356934
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector2.svg"
+          },
+          {
+            "id": "List 2",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Logo1",
+              "Info1",
+              "pepicons-pencil:dots-y1"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Logo1",
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              }
+            },
+            "image-content": "logo.png",
+            "scale": "cover"
+          },
+          {
+            "id": "Info1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tone name1",
+              "Artist name1"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "pepicons-pencil:dots-y1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector3"
+            ]
+          },
+          {
+            "id": "Tone name1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Tone name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "line-height": 1.5714285278320312,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Artist name1",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Artist name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector3",
+            "margin": {
+              "left": 10.7998046875,
+              "top": 4.79998779296875,
+              "right": 10.2001953125,
+              "bottom": 4.200011253356934
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector3.svg"
+          },
+          {
+            "id": "List 3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Logo2",
+              "Info2",
+              "pepicons-pencil:dots-y2"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Logo2",
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              }
+            },
+            "image-content": "logo.png",
+            "scale": "cover"
+          },
+          {
+            "id": "Info2",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tone name2",
+              "Artist name2"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "pepicons-pencil:dots-y2",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector4"
+            ]
+          },
+          {
+            "id": "Tone name2",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Tone name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "line-height": 1.5714285278320312,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Artist name2",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Artist name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector4",
+            "margin": {
+              "left": 10.7998046875,
+              "top": 4.79998779296875,
+              "right": 10.2001953125,
+              "bottom": 4.200011253356934
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector4.svg"
+          },
+          {
+            "id": "List 4",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Logo3",
+              "Info3",
+              "pepicons-pencil:dots-y3"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Logo3",
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              }
+            },
+            "image-content": "logo.png",
+            "scale": "cover"
+          },
+          {
+            "id": "Info3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tone name3",
+              "Artist name3"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "pepicons-pencil:dots-y3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector5"
+            ]
+          },
+          {
+            "id": "Tone name3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Tone name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "line-height": 1.5714285278320312,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Artist name3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Artist name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector5",
+            "margin": {
+              "left": 10.7998046875,
+              "top": 4.79998779296875,
+              "right": 10.2001953125,
+              "bottom": 4.200011253356934
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector5.svg"
+          },
+          {
+            "id": "Song4",
+            "padding": 12.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "List 5"
+            ],
+            "item-spacing": 24.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            },
+            "clip-content": false
+          },
+          {
+            "id": "List 5",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "start",
+            "children": [
+              "Frame 3",
+              "Info4",
+              "bx:pause"
+            ],
+            "item-spacing": 12.0,
+            "clip-content": false
+          },
+          {
+            "id": "Frame 3",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.04245376586914
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.04245376586914
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Player"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Info4",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tone name4",
+              "Artist name4"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "bx:pause",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector6"
+            ]
+          },
+          {
+            "id": "Player",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.04245376586914
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.04245376586914
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Outer",
+              "Inner"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Outer",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 0.02122677071020007
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 0.021226771641522646
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 44.0
+              }
+            }
+          },
+          {
+            "id": "Inner",
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": 2.021484375
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": 2.021240234375
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 40.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 40.0
+              }
+            },
+            "vector-content": "inner.svg"
+          },
+          {
+            "id": "Tone name4",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 600.0,
+            "color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Tone name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "line-height": 1.5714285278320312,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Artist name4",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Artist name",
+            "overflow": "visible",
+            "max-lines": -1,
+            "text-align": "left",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Vector6",
+            "margin": {
+              "left": 8.0,
+              "top": 7.0,
+              "right": 8.0,
+              "bottom": 7.0
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector6.svg"
+          },
+          {
+            "id": "Navigation",
+            "padding": {
+              "left": 16.0,
+              "top": 12.0,
+              "right": 16.0,
+              "bottom": 12.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 68.0
+              }
+            },
+            "arrangement": "row",
+            "main-axis-align": "space-between",
+            "children": [
+              "majesticons:home-line",
+              "mingcute:transfer-line",
+              "material-symbols:subscriptions-outline",
+              "iconamoon:profile"
+            ],
+            "fills": [
+              {
+                "color": {},
+                "opacity": 1.0,
+                "fill-type": "lineargradient",
+                "blend-mode": "normal",
+                "color-stops": [
+                  {
+                    "color": {
+                      "alpha": 1.0,
+                      "hue": 0.0,
+                      "saturation": 0.0,
+                      "value": 1.0
+                    },
+                    "color-stop-position": 0.0
+                  },
+                  {
+                    "color": {
+                      "alpha": 1.0,
+                      "hue": 0.0,
+                      "saturation": 0.0,
+                      "value": 0.6
+                    },
+                    "color-stop-position": 1.0
+                  }
+                ],
+                "gradient-handle-positions": [
+                  {
+                    "x": 0.5,
+                    "y": 0.0
+                  },
+                  {
+                    "x": 0.5,
+                    "y": 1.0
+                  },
+                  {
+                    "x": 0.48,
+                    "y": 0.0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "majesticons:home-line",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector7"
+            ]
+          },
+          {
+            "id": "mingcute:transfer-line",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Group"
+            ]
+          },
+          {
+            "id": "material-symbols:subscriptions-outline",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Vector10"
+            ]
+          },
+          {
+            "id": "iconamoon:profile",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              },
+              "height-constraints": {
+                "sizing-mode": "fixed",
+                "value": 24.0
+              }
+            },
+            "is-structured": false,
+            "children": [
+              "Group1"
+            ]
+          },
+          {
+            "id": "Vector7",
+            "margin": {
+              "left": 4.0,
+              "top": 4.25,
+              "right": 4.0,
+              "bottom": 4.0
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": -1.0
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": -1.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector7.svg"
+          },
+          {
+            "id": "Group",
+            "is-structured": false,
+            "children": [
+              "Vector8",
+              "Vector9"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Vector8",
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            }
+          },
+          {
+            "id": "Vector9",
+            "margin": {
+              "left": 3.0009765625,
+              "top": 4.0001220703125,
+              "right": 3.001239776611328,
+              "bottom": 4.0011091232299805
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector8.svg"
+          },
+          {
+            "id": "Vector10",
+            "margin": {
+              "left": 2.0,
+              "top": 2.0,
+              "right": 1.9999980926513672,
+              "bottom": 1.9999980926513672
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector9.svg"
+          },
+          {
+            "id": "Group1",
+            "margin": 4.0,
+            "is-structured": false,
+            "children": [
+              "Vector11",
+              "Vector12"
+            ],
+            "clip-content": false
+          },
+          {
+            "id": "Vector11",
+            "margin": {
+              "top": 10.0
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": -1.0
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": -1.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector10.svg"
+          },
+          {
+            "id": "Vector12",
+            "margin": {
+              "left": 5.0,
+              "right": 5.0,
+              "bottom": 10.0
+            },
+            "alignment": {
+              "horizontal": {
+                "attachment": "start",
+                "offset": -1.0
+              },
+              "vertical": {
+                "attachment": "start",
+                "offset": -1.0
+              }
+            },
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              }
+            },
+            "vector-content": "vector11.svg"
+          }
+        ]
+      }
+    }
+  },
+  "previews": [
+    {
+      "design": "Listen Now",
+      "size": {
+        "width": 390.0,
+        "height": 714.04248046875
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}

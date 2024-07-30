@@ -1,0 +1,273 @@
+{
+  "name": "option_popup",
+  "version": 33,
+  "source-key": {
+    "type": "figma",
+    "file": "kvZ8X82t1TLWtum69IfnVG",
+    "node": "436:1043",
+    "version": "6321606174",
+    "component-id": "ab4c3de89e16304dbf73cd047ed1fad7731daf11"
+  },
+  "default": "Option Popup",
+  "documentation": "Option Popup\n",
+  "design": {
+    "atoms": [
+      {
+        "type": "group",
+        "id": "top_level",
+        "root": "true"
+      },
+      {
+        "type": "group",
+        "id": "Tag"
+      },
+      {
+        "type": "group",
+        "id": "Tag1"
+      },
+      {
+        "type": "group",
+        "id": "Tag2"
+      },
+      {
+        "type": "group",
+        "id": "Tag3"
+      },
+      {
+        "type": "text",
+        "id": "Listen now"
+      },
+      {
+        "type": "text",
+        "id": "Subscribe"
+      },
+      {
+        "type": "text",
+        "id": "Subscribe Gift"
+      },
+      {
+        "type": "text",
+        "id": "Unsubscribe"
+      }
+    ],
+    "modes": {
+      "Option Popup": {
+        "rules": [
+          {
+            "id": "top_level",
+            "padding": 12.0,
+            "border-radius": 12.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "main-axis-align": "start",
+            "cross-axis-align": "start",
+            "children": [
+              "Tag",
+              "Tag1",
+              "Tag2",
+              "Tag3"
+            ],
+            "item-spacing": 10.0,
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 1.0
+            }
+          },
+          {
+            "id": "Tag",
+            "padding": {
+              "left": 12.0,
+              "top": 4.0,
+              "right": 12.0,
+              "bottom": 4.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "Listen now"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.9568627450980393
+            }
+          },
+          {
+            "id": "Tag1",
+            "padding": {
+              "left": 12.0,
+              "top": 4.0,
+              "right": 12.0,
+              "bottom": 4.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "Subscribe"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.9568627450980393
+            }
+          },
+          {
+            "id": "Tag2",
+            "padding": {
+              "left": 12.0,
+              "top": 4.0,
+              "right": 12.0,
+              "bottom": 4.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "Subscribe Gift"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.9568627450980393
+            }
+          },
+          {
+            "id": "Tag3",
+            "padding": {
+              "left": 12.0,
+              "top": 4.0,
+              "right": 12.0,
+              "bottom": 4.0
+            },
+            "border-radius": 24.0,
+            "size-constraints": {
+              "width-constraints": {
+                "sizing-mode": "proportional",
+                "value": 1.0
+              },
+              "height-constraints": {
+                "sizing-mode": "shrink"
+              }
+            },
+            "children": [
+              "Unsubscribe"
+            ],
+            "background-color": {
+              "alpha": 1.0,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.9568627450980393
+            }
+          },
+          {
+            "id": "Listen now",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Listen now",
+            "overflow": "visible",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Subscribe",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Subscribe",
+            "overflow": "visible",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Subscribe Gift",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Subscribe Gift",
+            "overflow": "visible",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          },
+          {
+            "id": "Unsubscribe",
+            "font-weight": 500.0,
+            "color": {
+              "alpha": 0.6784313725490196,
+              "hue": 0.0,
+              "saturation": 0.0,
+              "value": 0.1568627450980392
+            },
+            "text-content": "Unsubscribe",
+            "overflow": "visible",
+            "text-size": 12.0,
+            "line-height": 1.8333332824707032,
+            "typeface": "Montserrat"
+          }
+        ]
+      }
+    }
+  },
+  "previews": [
+    {
+      "design": "Option Popup",
+      "size": {
+        "width": 342.0,
+        "height": 174.0
+      }
+    }
+  ],
+  "adin-component-search-paths": [],
+  "image-search-paths": [],
+  "vector-search-paths": []
+}
