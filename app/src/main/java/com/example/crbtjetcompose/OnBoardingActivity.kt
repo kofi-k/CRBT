@@ -1,6 +1,9 @@
 package com.example.crbtjetcompose
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -34,11 +37,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -52,6 +57,15 @@ import androidx.navigation.compose.composable
 import com.example.crbtjetcompose.data.ProfileData
 import androidx.navigation.compose.rememberNavController
 import com.example.crbtjetcompose.ui.theme.CRBTJetComposeTheme
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
+
 class OnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -242,11 +256,19 @@ fun SignupScreenPreview() {
 }
 
 @Composable
-fun SignupScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit) {
+fun SignupScreen(
+    modifier: Modifier = Modifier,
+    onContinueClicked: (String) -> Unit
+) {
+    val auth = FirebaseAuth.getInstance()
+    val context = LocalContext.current
+
+    var phoneNumber by remember { mutableStateOf("") }
+    var verificationId by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
+
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
+        modifier = modifier.fillMaxSize().background(Color.Transparent)
     ) {
         Image(
             painter = painterResource(id = R.drawable.onboardingbackground),
@@ -254,7 +276,6 @@ fun SignupScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,18 +284,68 @@ fun SignupScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit) {
                 .height(300.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
-            SignupCardContent(
-                onContinue = { onContinueClicked() }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { onContinueClicked() },
-            ) {
-                Text("Continue")
+            Column(modifier = Modifier.padding(16.dp)) {
+                OutlinedTextField(
+                    value = phoneNumber,
+                    onValueChange = { phoneNumber = it },
+                    label = { Text("Phone Number (e.g., +1234567890)") },
+                    placeholder = { Text("Enter phone number") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardType = KeyboardType.Phone,
+                    singleLine = true,
+                    textStyle = LocalTextStyle.current.copy(color = Color.White),
+                    leadingIcon = { Icon(painterResource(id = R.drawable.ic_phone), contentDescription = "Phone") },
+                    isError = phoneNumber.isBlank() || !PHONE_NUMBER_PATTERN.matches(phoneNumber),
+                    errorMessage = if (phoneNumber.isBlank()) "Phone number cannot be empty" else "Invalid phone number format"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        if (phoneNumber.isNotBlank() && PHONE_NUMBER_PATTERN.matches(phoneNumber)) {
+                            sendVerificationCode(phoneNumber, context, auth, scope) { verifiedId ->
+                                verificationId = verifiedId
+                                onContinueClicked(phoneNumber) // Pass phone number after verification
+                            }
+                        }
+                    },
+                    enabled = phoneNumber.isNotBlank() && PHONE_NUMBER_PATTERN.matches(phoneNumber)
+                ) {
+                    Text("Continue")
+                }
             }
         }
     }
 }
+
+private val PHONE_NUMBER_PATTERN = PatternValidator(pattern = "^[\\+]?[(]?[0-9]{3}[)]?[\\s-]?[0-9]{3}[\\s-]?[0-9]{4}$")
+
+private fun sendVerificationCode(
+    phoneNumber: String,
+    context: Context,
+    auth: FirebaseAuth,
+    scope: CoroutineScope,
+    onVerificationCompleted: (String) -> Unit
+) {
+    val options = PhoneAuthOptions.newBuilder()
+        .setPhoneNumber(phoneNumber)
+        .setTimeout(60L, TimeUnit.SECONDS)
+        .setActivity(context as Activity) // Cast context to Activity for verification callbacks
+        .setActivityCodeResultListener { _, result ->
+            val verificationId = result.verificationId
+            onVerificationCompleted(verificationId ?: "") // Pass verificationId if successful
+        }
+        .build()
+
+    scope.launch {
+        try {
+            PhoneAuthProvider.getInstance(auth).verifyPhoneNumber(options)
+        } catch (e: Exception) {
+            // Handle verification errors (e.g., network issue, invalid number)
+            Toast.makeText(context, "Verification failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -507,7 +578,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             Column(
-                modifier =Modifier
+                modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -556,6 +627,5 @@ fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -
         }
     }
 }
-
 
 
