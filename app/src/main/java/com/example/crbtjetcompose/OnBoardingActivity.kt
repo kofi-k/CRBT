@@ -2,6 +2,7 @@ package com.example.crbtjetcompose
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -52,19 +53,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.crbtjetcompose.data.ProfileData
 import androidx.navigation.compose.rememberNavController
 import com.example.crbtjetcompose.ui.theme.CRBTJetComposeTheme
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 class OnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,12 +68,11 @@ class OnBoardingActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController, startDestination = "onboarding") {
                     composable("onboarding") { OnboardingScreen(onButtonClicked = { navController.navigate("chooseLanguage") }) }
-                    composable("chooseLanguage") { ChooseLanguageScreen(onContinueClicked = { navController.navigate("signup") }) }
-                    composable("signup") { SignupScreen(onContinueClicked = { navController.navigate("authentication") }) }
-                    composable("authentication") { AuthenticationScreen(onContinueClicked = { navController.navigate("profile") }) }
-                    composable("profile") { ProfileScreen(onProfileSaved = { /* handle profile saved */ }) }
+                    composable("chooseLanguage") { ChooseLanguageScreen(navController = navController, onContinueClicked = { navController.navigate("signup") }) }
+                    composable("signup") { SignupScreen(navController = navController)}
+                    composable("authentication") { AuthenticationScreen(navController = navController, onContinueClicked = { navController.navigate("profile") }) }
+                    composable("profile") { ProfileScreen(navController = navController, onProfileSaved = { /* handle profile saved */ }) }
                 }
-            }
         }
     }
 }
@@ -133,84 +126,77 @@ fun OnboardingScreen(
     }
 }
 
-@Preview(showBackground = true, name = "Language Selection", group = "Onboarding")
 @Composable
-fun ChooseLanguageScreenPreview() {
-    CRBTJetComposeTheme {
-        ChooseLanguageScreen(onContinueClicked = {})
-    }
-}
+fun ChooseLanguageScreen(
+        modifier: Modifier = Modifier,
+        onContinueClicked: () -> Unit,
+        navController: NavController
+    )
+    {
+        var selectedLanguageIndex by remember { mutableStateOf(0) }
 
-@Composable
-fun ChooseLanguageScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit) {
-    var selectedLanguageIndex by remember { mutableStateOf(0) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.onboardingbackground),
-            contentDescription = "background image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        Card(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.BottomCenter)
-                .height(250.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Black)
-        ) {
-            ChooseLanguageCardContent(selectedLanguageIndex,
-                onLanguageSelected = { index -> selectedLanguageIndex = index },
-                onNextClicked = {} // Pass the lambda here
+                .fillMaxSize()
+                .background(Color.Transparent)) {
+            Image(
+                painter = painterResource(id = R.drawable.onboardingbackground),
+                contentDescription = "background image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { onContinueClicked() },
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomCenter)
+                    .height(250.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.Black)
             ) {
-                Text("Continue")
+                ChooseLanguageCardContent(
+                    selectedLanguageIndex = selectedLanguageIndex,
+                    onLanguageSelected = { index -> selectedLanguageIndex = index },
+                    onNextClicked = {
+                        navController.navigate("signup")
+                        onContinueClicked()
+                    }
+                )
             }
         }
     }
-}
 
 @Composable
 fun ChooseLanguageCardContent(
-    selectedLanguageIndex: Int,
-    onLanguageSelected: (Int) -> Unit,
-    onNextClicked: () -> Unit
+        selectedLanguageIndex: Int,
+        onLanguageSelected: (Int) -> Unit,
+        onNextClicked: () -> Unit
 ) {
-    val items = listOf("English", "Spanish", "French")
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Choose your preferred language",
-            color = Color.White,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        LanguageDropdown(items, selectedLanguageIndex, onLanguageSelected)
+        val items = listOf("English", "Spanish", "French")
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Choose your preferred language",
+                color = Color.White,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            LanguageDropdown(items, selectedLanguageIndex, onLanguageSelected)
 
-        // Add the Next button
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onNextClicked) {
-            Text("Next")
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onNextClicked) {
+                Text("Next")
+            }
         }
     }
-}
+
 
 @Composable
 fun LanguageDropdown(
@@ -248,24 +234,22 @@ fun LanguageDropdown(
         }
     }
 }
-
+/**
 @Preview(showBackground = true)
 @Composable
 fun SignupScreenPreview() {
     SignupScreen(onContinueClicked = {})
 }
 
+**/
+
 @Composable
 fun SignupScreen(
     modifier: Modifier = Modifier,
-    onContinueClicked: (String) -> Unit
-) {
-    val auth = FirebaseAuth.getInstance()
-    val context = LocalContext.current
+    navController: NavController // Added back navController parameter
 
+) {
     var phoneNumber by remember { mutableStateOf("") }
-    var verificationId by remember { mutableStateOf<String?>(null) }
-    val scope = rememberCoroutineScope()
 
     Box(
         modifier = modifier.fillMaxSize().background(Color.Transparent)
@@ -284,42 +268,22 @@ fun SignupScreen(
                 .height(300.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
-                    label = { Text("Phone Number (e.g., +1234567890)") },
-                    placeholder = { Text("Enter phone number") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardType = KeyboardType.Phone,
-                    singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(color = Color.White),
-                    leadingIcon = { Icon(painterResource(id = R.drawable.ic_phone), contentDescription = "Phone") },
-                    isError = phoneNumber.isBlank() || !PHONE_NUMBER_PATTERN.matches(phoneNumber),
-                    errorMessage = if (phoneNumber.isBlank()) "Phone number cannot be empty" else "Invalid phone number format"
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        if (phoneNumber.isNotBlank() && PHONE_NUMBER_PATTERN.matches(phoneNumber)) {
-                            sendVerificationCode(phoneNumber, context, auth, scope) { verifiedId ->
-                                verificationId = verifiedId
-                                onContinueClicked(phoneNumber) // Pass phone number after verification
-                            }
-                        }
-                    },
-                    enabled = phoneNumber.isNotBlank() && PHONE_NUMBER_PATTERN.matches(phoneNumber)
-                ) {
-                    Text("Continue")
+            SignupCardContent(
+                phoneNumber = phoneNumber,
+                onPhoneNumberChange = { phoneNumber = it },
+                onContinue = {
+                    if (phoneNumber.length == 9) {
+                        navController.navigate("authentication")
+                    }
                 }
-            }
+            )// Call onSignupSuccess from SignupCardContent
         }
     }
 }
 
-private val PHONE_NUMBER_PATTERN = PatternValidator(pattern = "^[\\+]?[(]?[0-9]{3}[)]?[\\s-]?[0-9]{3}[\\s-]?[0-9]{4}$")
+//private val PHONE_NUMBER_PATTERN = PatternValidator(pattern = "^[\\+]?[(]?[0-9]{3}[)]?[\\s-]?[0-9]{3}[\\s-]?[0-9]{4}$")
 
-private fun sendVerificationCode(
+/** private fun sendVerificationCode(
     phoneNumber: String,
     context: Context,
     auth: FirebaseAuth,
@@ -345,14 +309,15 @@ private fun sendVerificationCode(
         }
     }
 }
-
+**/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupCardContent(onContinue: () -> Unit) {
+fun SignupCardContent( phoneNumber: String,
+                       onPhoneNumberChange: (String) -> Unit,
+                       onContinue: () -> Unit ) {
     val countries = listOf("Ethiopia", "Kenya", "Uganda")
     var selectedCountryIndex by remember { mutableStateOf(0) }
-    var phoneNumber by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -384,7 +349,7 @@ fun SignupCardContent(onContinue: () -> Unit) {
         OutlinedTextField(
             value = phoneNumber,
             onValueChange = {
-                if (it.length <= 9) phoneNumber = it // Limit to 9 digits
+                if (it.length <= 9) onPhoneNumberChange(it) // Limit to 9 digits
             },
             label = { Text("Phone Number", color = Color.White) },
             textStyle = TextStyle(color = Color.White),
@@ -403,6 +368,7 @@ fun SignupCardContent(onContinue: () -> Unit) {
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = "By signing up, you agree to our Privacy Policy and Terms of Service.",
             color = Color.White,
@@ -410,6 +376,17 @@ fun SignupCardContent(onContinue: () -> Unit) {
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall
         )
+        Button(
+            onClick = {
+                if (phoneNumber.length == 9) {
+                    onContinue() // Call onContinue for signup logic
+
+                }
+            },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Next")
+        }
     }
 }
 
@@ -449,15 +426,17 @@ fun CountryDropdown(
         }
     }
 }
-
+/**
 @Preview(showBackground = true)
 @Composable
 fun AuthenticationScreenPreview() {
     AuthenticationScreen(onContinueClicked = {})
 }
-
+**/
 @Composable
-fun AuthenticationScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit) {
+fun AuthenticationScreen(modifier: Modifier = Modifier, onContinueClicked: () -> Unit,
+                         navController: NavController // Added navController as a parameter
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -478,7 +457,8 @@ fun AuthenticationScreen(modifier: Modifier = Modifier, onContinueClicked: () ->
                 .height(300.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
-            AuthenticationCardContent(onContinue = onContinueClicked)
+            AuthenticationCardContent(onContinue = {onContinueClicked()
+                                        navController.navigate("profile")})
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { onContinueClicked() },
@@ -493,6 +473,8 @@ fun AuthenticationScreen(modifier: Modifier = Modifier, onContinueClicked: () ->
 fun AuthenticationCardContent(onContinue: () -> Unit){
 
     var code by remember { mutableStateOf("") }
+    val validCode = "5544" // Replace with desired valid code
+
 
     Column(
         modifier = Modifier
@@ -547,18 +529,37 @@ fun AuthenticationCardContent(onContinue: () -> Unit){
                 textAlign = TextAlign.End,
                 modifier = Modifier.clickable { /* handle help */ }
             )
+            Button(
+                onClick = {
+                    if (code == validCode) {
+                        onContinue()
+                    } else {
+                        // Handle incorrect code (e.g., show error message)
+                    }
+                }
+            ) {
+                Text("Continue")
+            }
         }
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
-
-    ProfileScreen(onProfileSaved = {})
+    val navController = rememberNavController()
+    ProfileScreen(
+        onProfileSaved = {},
+        navController = navController
+    )
 }
 
+
+
+
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -> Unit) {
+fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -> Unit,
+                  navController: NavController // Added navController parameter
+) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -618,6 +619,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -
                     onClick = {
                         val profileData = ProfileData(firstName, lastName, email, receiveEmails)
                         onProfileSaved(profileData) // Call onProfileSaved with the data
+                        navController.navigate("home") // Navigate to "home" screen
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {
@@ -626,6 +628,6 @@ fun ProfileScreen(modifier: Modifier = Modifier, onProfileSaved: (ProfileData) -
             }
         }
     }
+    }
 }
-
 
