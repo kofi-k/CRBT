@@ -6,7 +6,3 @@ enum class OnboardingSetupProcess {
     OTP_VERIFICATION,
     USER_PROFILE_SETUP,
 }
-
-fun OnboardingSetupData.userProfileIsComplete(): Boolean {
-    return firstName.isNotEmpty() && lastName.isNotEmpty()
-}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_data_amharic">Amharic</string>
+    <string name="core_data_oromiffa">Oromiffa</string>
+    <string name="core_data_tigrigna">Tigrigna</string>
+    <string name="core_data_somalia">Somalia</string>
+    <string name="core_data_arabic">Arabic</string>
+    <string name="core_data_english">English</string>
+</resources>
