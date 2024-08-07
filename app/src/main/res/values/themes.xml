@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    !-- Allows us to override night specific attributes in the
+    values-night folder. -->
+    <style name="NightAdjusted.Theme.CRBT" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- The final theme we use -->
+    <style name="Theme.CRBT" parent="NightAdjusted.Theme.CRBT" />
+
+    <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="Theme.CRBT.Splash" parent="NightAdjusted.Theme.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ui_crbtlogo</item>
+        <item name="postSplashScreenTheme">@style/Theme.CRBT</item>
+    </style>
+
 
     <style name="Theme.CRBTJetCompose" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
