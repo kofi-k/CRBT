@@ -64,7 +64,6 @@ fun CustomInputField(
         errorIndicatorColor = Color.Transparent,
         errorTextColor = MaterialTheme.colorScheme.error,
         errorLeadingIconColor = MaterialTheme.colorScheme.error,
-
         ),
     shape: Shape = MaterialTheme.shapes.medium,
 ) {
