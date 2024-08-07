@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.crbt.android.library)
+    alias(libs.plugins.crbt.android.library.jacoco)
+    alias(libs.plugins.crbt.android.library.compose)
 }
 
 android {
@@ -8,6 +9,9 @@ android {
 }
 
 dependencies {
+    api(projects.core.data)
+    api(projects.core.common)
+
     api(libs.androidx.metrics)
     api(projects.core.designsystem)
     implementation(libs.coil.kt)

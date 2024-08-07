@@ -4,10 +4,11 @@
     <string name="feature_onboarding_page_one_subtitle">Find and listen to great music on the Go.</string>
     <string name="feature_onboarding_language_selection_title">Choose your preferred language</string>
     <string name="feature_onboarding_language_selection_subtitle">Select your preferred language to get started</string>
+    <string name="feature_onboarding_language_label">Language</string>
     <string name="feature_onboarding_welcome_title">Welcome to CRBT</string>
     <string name="feature_onboarding_phone_number_entry_message">Your mobile number helps to verify your account and keep your account secured</string>
     <string name="feature_onboarding_next_button">Next</string>
-    <string name="feature_onboarding_privacy_policy_message">By registering you accept our Terms of Use and Privacy Policy</string>
+    <string name="feature_onboarding_privacy_policy_message">By registering you accept our <b>Terms of Use</b> and <b>Privacy Policy</b></string>
     <string name="feature_onboarding_authentication_title">We’ve sent you a code</string>
     <string name="feature_onboarding_authentication_subtitle">For extra security, we’ve texted you a login code. Enter it here:</string>
     <string name="feature_onboarding_authentication_resend_code">Request a new code</string>
@@ -18,4 +19,6 @@
     <string name="feature_onboarding_profile_last_name_label">Last Name</string>
     <string name="feature_onboarding_profile_email_label">Email from CRBT</string>
     <string name="feature_onboarding_save_profile_button">Save Profile</string>
+    <string name="feature_onboarding_updates_title">Updates and Recommendations</string>
+    <string name="feature_onboarding_updates_subtitle">Stay in touch with the best playlist updates</string>
 </resources>

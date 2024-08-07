@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.crbt.android.library)
+    alias(libs.plugins.crbt.android.library.jacoco)
+    alias(libs.plugins.crbt.android.hilt)
 }
 
 android {

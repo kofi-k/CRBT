@@ -1,18 +1,21 @@
+import com.example.crbtjetcompose.CRBTBuildType
+
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.crbt.android.application)
+    alias(libs.plugins.crbt.android.application.compose)
+    alias(libs.plugins.crbt.android.application.flavors)
+    alias(libs.plugins.crbt.android.application.jacoco)
+    alias(libs.plugins.crbt.android.hilt)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
     namespace = "com.example.crbtjetcompose"
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.crbtjetcompose"
-        minSdk = 24
-        targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -21,6 +24,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -29,45 +35,63 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes.add("META-INF/gradle/incremental.annotation.processors")
         }
     }
 }
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose)
+    implementation(projects.feature.payment)
+    implementation(projects.feature.subscription)
+    implementation(projects.feature.home)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.services)
+    implementation(projects.feature.profile)
+
+    implementation(projects.core.ui)
+    implementation(projects.core.common)
+    implementation(projects.core.data)
+    implementation(projects.core.model)
+    implementation(projects.core.designsystem)
+
+
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.media3.common)
-    implementation(libs.androidx.compiler)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
+    implementation(libs.androidx.compose.material3.adaptive.navigation)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.androidx.compose.runtime.tracing)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.profileinstaller)
+    implementation(libs.androidx.tracing.ktx)
+    implementation(libs.androidx.window.core)
+    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.coil.kt)
+
+    ksp(libs.hilt.compiler)
+
+    // Tooling
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.androidx.compose.ui.test)
+    androidTestImplementation(libs.hilt.android.testing)
+
+
+}
+
+dependencyGuard {
+    configuration("prodReleaseRuntimeClasspath")
 }
