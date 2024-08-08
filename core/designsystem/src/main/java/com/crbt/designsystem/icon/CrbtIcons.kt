@@ -31,6 +31,7 @@ import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Pin
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Subscriptions
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * CRBT icons. Material icons are [ImageVector]s, custom icons are drawable resource IDs.
  */
 object CrbtIcons {
+    val Refresh = Icons.Rounded.Refresh
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val ArrowForward = Icons.AutoMirrored.Rounded.ArrowForward
     val ArrowUp = Icons.Default.KeyboardArrowUp

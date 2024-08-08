@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.crbtjetcompose.core.designsystem.R
 
@@ -41,6 +42,9 @@ fun ProcessButton(
         ) {
             Text(
                 text = text,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium
+                ),
             )
             AnimatedVisibility(isProcessing) {
                 CircularProgressIndicator(
