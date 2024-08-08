@@ -50,6 +50,10 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onDoneClicked() {
+        _onboardingScreenData = createOnboardingScreenData()
+    }
+
     fun onLanguageSelected(language: CRBTLanguage) {
         _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = language)
         _isNextEnabled = getIsNextEnabled()

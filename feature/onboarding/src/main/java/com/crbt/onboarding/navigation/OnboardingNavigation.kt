@@ -1,6 +1,5 @@
 package com.crbt.onboarding.navigation
 
-import androidx.activity.compose.BackHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -28,7 +27,10 @@ fun NavGraphBuilder.onboardingScreen(
         val onboardingSetupData = viewModel.onboardingSetupData
         OnboardingScreen(
             onNextClicked = { viewModel.onNextClicked() },
-            onOTPVerified = onNavigateToOnboardingProfile,
+            onOTPVerified = {
+                onNavigateToOnboardingProfile()
+                viewModel.onDoneClicked()
+            },
             screenData = screenData,
             onboardingSetupData = onboardingSetupData,
             onPhoneNumberEntered = viewModel::onPhoneNumberEntered,

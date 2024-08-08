@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.CRBTLanguage
@@ -104,8 +105,10 @@ fun OnboardingSheetContainer(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(id = titleRes).uppercase(),
-            style = MaterialTheme.typography.titleLarge,
+            text = stringResource(id = titleRes),
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold
+            ),
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
