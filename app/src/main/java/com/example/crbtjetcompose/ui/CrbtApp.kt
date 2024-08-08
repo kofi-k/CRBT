@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,12 +24,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.crbt.designsystem.components.CrbtNavigationBar
 import com.crbt.designsystem.components.CrbtNavigationBarItem
 import com.crbt.designsystem.components.CrbtTopAppBar
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.designsystem.theme.CrbtTheme
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 
@@ -40,7 +41,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 )
 @Composable
 fun CrbtApp(appState: CrbtAppState) {
-
+    val destination = appState.currentTopLevelDestination
     Scaffold(
         modifier = Modifier.semantics {
             testTagsAsResourceId = true
@@ -49,13 +50,12 @@ fun CrbtApp(appState: CrbtAppState) {
         contentColor = MaterialTheme.colorScheme.onBackground,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            if (appState.shouldShowBottomBar) {
-                FauBottomBar(
+            if (destination != null) {
+                CrbtBottomBar(
                     destinations = appState.topLevelDestinations,
-                    destinationsWithUnreadResources = emptySet(),
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.currentDestination,
-                    modifier = Modifier.testTag("FauBottomBar"),
+                    modifier = Modifier.testTag("CrbtBottomBar"),
                 )
             }
         },
@@ -72,7 +72,6 @@ fun CrbtApp(appState: CrbtAppState) {
                 ),
         ) {
             // Show the top app bar on top level destinations.
-            val destination = appState.currentTopLevelDestination
             if (destination != null) {
                 CrbtTopAppBar(
                     titleRes = destination.titleTextId,
@@ -102,9 +101,8 @@ fun CrbtApp(appState: CrbtAppState) {
 
 
 @Composable
-private fun FauBottomBar(
+private fun CrbtBottomBar(
     destinations: List<TopLevelDestination>,
-    destinationsWithUnreadResources: Set<TopLevelDestination>,
     onNavigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
@@ -140,6 +138,19 @@ private fun FauBottomBar(
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
     this?.hierarchy?.any {
-        println("it.route: ${it.route} destination.name: ${destination.name}")
         it.route?.contains(destination.name, true) ?: false
     } ?: false
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBottomBar() {
+    CrbtTheme {
+        CrbtBottomBar(
+            destinations = TopLevelDestination.entries,
+            onNavigateToDestination = {},
+            currentDestination = null,
+            modifier = Modifier,
+        )
+    }
+}

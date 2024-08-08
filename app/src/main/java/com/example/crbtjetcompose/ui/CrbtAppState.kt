@@ -11,10 +11,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
 import com.crbt.home.navigation.HOME_ROUTE
+import com.crbt.home.navigation.navigateToHome
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_ROUTE
+import com.crbt.profile.navigation.navigateToProfile
 import com.crbt.services.navigation.SERVICES_ROUTE
+import com.crbt.services.navigation.navigateToServices
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
+import com.crbt.subscription.navigation.navigateToSubscription
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 
 @Composable
@@ -83,21 +87,17 @@ class CrbtAppState(
             }
 
             when (topLevelDestination) {
-                TopLevelDestination.HOME -> navController.navigate(HOME_ROUTE, topLevelNavOptions)
-                TopLevelDestination.SERVICES -> navController.navigate(
-                    SERVICES_ROUTE,
-                    topLevelNavOptions
-                )
+                TopLevelDestination.HOME ->
+                    navController.navigateToHome(topLevelNavOptions)
 
-                TopLevelDestination.SUBSCRIPTIONS -> navController.navigate(
-                    SUBSCRIPTION_ROUTE,
-                    topLevelNavOptions
-                )
+                TopLevelDestination.SERVICES ->
+                    navController.navigateToServices(topLevelNavOptions)
 
-                TopLevelDestination.PROFILE -> navController.navigate(
-                    PROFILE_ROUTE,
-                    topLevelNavOptions
-                )
+                TopLevelDestination.SUBSCRIPTIONS -> navController
+                    .navigateToSubscription(topLevelNavOptions)
+
+                TopLevelDestination.PROFILE ->
+                    navController.navigateToProfile(topLevelNavOptions)
             }
         }
     }
