@@ -1,18 +1,22 @@
 package com.crbt.onboarding
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.CRBTLanguage
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.CustomInputButton
 import com.example.crbtjetcompose.feature.onboarding.R
 
@@ -60,35 +65,46 @@ fun LanguageSelectionMenu(
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
 
-    Box(modifier = modifier) {
-        CustomInputButton(
-            text = stringResource(id = selectedLanguage.languageResValue),
-            onClick = {
-                expanded = !expanded
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = CrbtIcons.ArrowRight,
-                    contentDescription = CrbtIcons.ArrowRight.name,
-                    modifier = Modifier.rotate(rotateIcon),
-                )
-            }
-        )
-        DropdownMenu(
-            expanded = expanded, onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            ,
-        ) {
-            CRBTLanguage.entries.forEach { language ->
-                DropdownMenuItem(
-                    text = { Text(stringResource(id = language.languageResValue)) },
-                    onClick = {
-                        onLanguageSelected(language)
-                        expanded = false
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.outlineVariant.copy(
+            alpha = stronglyDeemphasizedAlpha
+        ),
+    ) {
+        Column {
+            CustomInputButton(
+                text = stringResource(id = selectedLanguage.languageResValue),
+                onClick = {
+                    expanded = !expanded
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = CrbtIcons.ArrowRight,
+                        contentDescription = CrbtIcons.ArrowRight.name,
+                        modifier = Modifier.rotate(rotateIcon),
+                    )
+                },
+                elevation = if (expanded) null else ButtonDefaults.buttonElevation(),
+            )
+            AnimatedVisibility(visible = expanded) {
+                Column(
+                    modifier = Modifier
+                ) {
+                    CRBTLanguage.entries.forEach { language ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(id = language.languageResValue)) },
+                            onClick = {
+                                onLanguageSelected(language)
+                                expanded = false
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
+                }
             }
         }
     }
