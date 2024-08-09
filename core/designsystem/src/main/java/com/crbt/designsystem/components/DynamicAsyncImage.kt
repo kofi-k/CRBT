@@ -1,5 +1,6 @@
 package com.crbt.designsystem.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,13 +26,14 @@ import com.example.crbtjetcompose.core.designsystem.R
 fun DynamicAsyncImage(
     modifier: Modifier = Modifier,
     imageUrl: String?,
+    @DrawableRes imageRes: Int = R.drawable.avatar,
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
     val imageLoader = rememberAsyncImagePainter(
         model = imageUrl,
         onState = { state ->
-            isLoading = state is AsyncImagePainter.State.Loading
+            isLoading = state is AsyncImagePainter.State.Loading && imageUrl != null
             isError = state is AsyncImagePainter.State.Error
         },
     )
@@ -54,10 +56,10 @@ fun DynamicAsyncImage(
             modifier = Modifier
                 .fillMaxWidth(),
             contentScale = ContentScale.Crop,
-            painter = if (isError.not() && !isLocalInspection) {
+            painter = if (isError.not() && !isLocalInspection && imageUrl != null) {
                 imageLoader
             } else {
-                painterResource(R.drawable.avatar)
+                painterResource(imageRes)
             },
             contentDescription = null,
         )
