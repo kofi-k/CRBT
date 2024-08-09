@@ -40,10 +40,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
 
 
@@ -63,12 +65,18 @@ fun HomeScreen() {
             balancePercentage = 65
         )
 
-
         LatestMusicCard(
             artist = DummyTones.tones[0].artist,
             title = DummyTones.tones[0].toneName,
             backgroundUrl = DummyTones.tones[0].toneImageUrl,
             onCardClick = {}
+        )
+
+        // todo put popular tones here
+
+        RecentSubscription(
+            onSubscriptionClick = {},
+            userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions( DummyUser.user)
         )
     }
 }
@@ -98,7 +106,7 @@ internal fun UserBalanceCard(
                 onDrawBehind {
                     drawRoundRect(
                         brush,
-                        cornerRadius = CornerRadius(16.dp.toPx())
+                        cornerRadius = CornerRadius(24.dp.toPx())
                     )
                 }
             }

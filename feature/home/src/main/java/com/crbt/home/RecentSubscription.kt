@@ -1,0 +1,143 @@
+package com.crbt.home
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
+import com.crbt.data.core.data.model.DummyUser
+import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.ui.core.ui.ToneItem
+import com.example.crbtjetcompose.core.model.data.UserToneSubscriptions
+import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
+import com.example.crbtjetcompose.feature.home.R
+
+
+@Composable
+fun RecentSubscription(
+    modifier: Modifier = Modifier,
+    onSubscriptionClick: (toneId: String?) -> Unit,
+    userSubscriptions: List<UserToneSubscriptions>,  // todo use a ui state [UserSubscriptionsUiState] to manage this
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onSubscriptionClick(null)
+                },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.feature_home_recent_subscription_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+            IconButton(onClick = { onSubscriptionClick(null) }) {
+                Icon(
+                    imageVector = CrbtIcons.ArrowRight,
+                    contentDescription = CrbtIcons.ArrowRight.name
+                )
+            }
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .heightIn(max = max(200.dp, with(LocalDensity.current) { 200.sp.toDp() }))
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(
+                    items = userSubscriptions,
+                    key = { it.toneId }
+                ) { tone ->
+                    ToneItem(
+                        title = tone.toneName,
+                        subtitle = tone.dueDate,
+                        trailingContent = {
+                            SubscriptionTrailingContent(
+                                title = DummyUser.user.accountBalance.toString(),
+                                subtitle = stringResource(id = R.string.feature_home_recent_subscription_rate_Description)
+                            )
+                        },
+                        imageUrl = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable {
+                                onSubscriptionClick(tone.toneId)
+                            }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SubscriptionTrailingContent(
+    title: String,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(id = R.string.feature_home_balance, title),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = slightlyDeemphasizedAlpha)
+        )
+    }
+
+}
+
+@Preview
+@Composable
+fun PreviewRecentSubscription() {
+    CrbtTheme {
+        RecentSubscription(
+            onSubscriptionClick = {},
+            userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(
+                DummyUser.user
+            )
+        )
+    }
+}

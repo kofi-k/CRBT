@@ -3,4 +3,6 @@
     <string name="feature_home_balance">ETB %s</string>
     <string name="feature_home_balance_subtitle">Est. Balance</string>
     <string name="feature_home_latest_music">Latest Music On The Block</string>
+    <string name="feature_home_recent_subscription_title">Recent Subscription</string>
+    <string name="feature_home_recent_subscription_rate_Description">Per month</string>
 </resources>
