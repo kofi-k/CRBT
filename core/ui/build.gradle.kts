@@ -19,6 +19,7 @@ dependencies {
     api(projects.core.model)
     implementation(libs.libphonenumber)
     implementation(libs.androidx.auto.fill)
+    implementation(libs.androidx.graphics.shapes)
     implementation(libs.country.code.picker)
     implementation(libs.play.services.auth.api.phone)
 }

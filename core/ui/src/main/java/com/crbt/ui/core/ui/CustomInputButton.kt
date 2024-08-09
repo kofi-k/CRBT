@@ -2,10 +2,10 @@ package com.crbt.ui.core.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,12 +34,14 @@ fun CustomInputButton(
         ),
         contentColor = MaterialTheme.colorScheme.onSurface,
     ),
+    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
 ) {
     Button(
         onClick = onClick,
         colors = colors,
         shape = MaterialTheme.shapes.medium,
         modifier = modifier,
+        elevation =elevation
     ) {
         Icon(
             imageVector = leadingIcon,

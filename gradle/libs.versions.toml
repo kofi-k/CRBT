@@ -79,7 +79,7 @@ libphonenumber = "8.13.26"
 countryCodePicker = "0.1"
 authApiPhone = "18.1.0"
 androidxAutofill = "1.1.0"
-
+graphicShapes = "1.0.0-rc01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -176,7 +176,7 @@ country-code-picker = { group = "com.github.ahmmedrejowan", name = "CountryCodeP
 libphonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "libphonenumber" }
 play-services-auth-api-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "authApiPhone" }
 androidx-auto-fill = { group = "androidx.autofill", name = "autofill", version.ref = "androidxAutofill" }
-
+androidx-graphics-shapes = { group = "androidx.graphics", name = "graphics-shapes", version.ref = "graphicShapes" }
 
 
 

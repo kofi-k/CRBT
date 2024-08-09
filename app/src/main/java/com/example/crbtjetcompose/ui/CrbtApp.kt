@@ -99,7 +99,7 @@ fun CrbtApp(appState: CrbtAppState) {
     }
 }
 
-
+/*will customize this to look like figma design */
 @Composable
 private fun CrbtBottomBar(
     destinations: List<TopLevelDestination>,
