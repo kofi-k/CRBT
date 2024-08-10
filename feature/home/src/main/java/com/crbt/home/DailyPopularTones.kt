@@ -3,7 +3,6 @@ package com.crbt.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +22,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,13 +43,11 @@ import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.tracing.trace
 import com.crbt.designsystem.components.DynamicAsyncImage
-import com.crbt.designsystem.components.scrollbar.DecorativeScrollbar
-import com.crbt.designsystem.components.scrollbar.scrollbarState
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.example.crbtjetcompose.feature.home.R
 
 
-enum class PopularTodayOptions{
+enum class PopularTodayOptions {
     Tones,
     Albums
 }
@@ -66,8 +62,9 @@ fun PopularTodayTabLayout(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
 
-    Column(modifier = Modifier) {
-        Text(text = stringResource(id = R.string.feature_home_popular_today_title),
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(id = R.string.feature_home_popular_today_title),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold
             ),
@@ -86,35 +83,35 @@ fun PopularTodayTabLayout(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-            PopularTodayOptions.entries.forEachIndexed { index, option ->
-                Text(
-                    text = option.name,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .clickable (
-                            onClick = {
-                                selectedTabIndex = index
-                            },
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        )
-                        .background(
-                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .border(
-                            width = 1.dp,
-                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 4.dp
-                        )
-                )
-            }
+                PopularTodayOptions.entries.forEachIndexed { index, option ->
+                    Text(
+                        text = option.name,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .background(
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .border(
+                                width = 1.dp,
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .padding(
+                                horizontal = 12.dp,
+                                vertical = 4.dp
+                            )
+                            .clickable(
+                                onClick = {
+                                    selectedTabIndex = index
+                                },
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            )
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.size(16.dp))
@@ -124,18 +121,19 @@ fun PopularTodayTabLayout(
                     popularTonesUiState = PopularTonesUiState.Shown(
                         tones = DummyTones.tones
                     ),
-                    onToneSelected = {toneId ->
+                    onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             PopularTodayOptions.Albums -> {
                 DailyPopularTones(
                     popularTonesUiState = PopularTonesUiState.Shown(
                         tones = DummyTones.tones.reversed()
                     ),
-                    onToneSelected = {toneId ->
+                    onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -146,8 +144,6 @@ fun PopularTodayTabLayout(
 }
 
 
-
-
 @Composable
 fun DailyPopularTones(
     popularTonesUiState: PopularTonesUiState.Shown,
@@ -156,7 +152,8 @@ fun DailyPopularTones(
 ) = trace("DailyPopularTones") {
     val lazyGridState = rememberLazyListState()
 
-    Box(modifier = modifier
+    Box(
+        modifier = modifier
             .fillMaxWidth(),
     ) {
         LazyRow(
@@ -216,24 +213,24 @@ fun MusicCard(
             )
         }
         Spacer(modifier = Modifier.size(2.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = artist,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(
-                        slightlyDeemphasizedAlpha
-                    )
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        Text(
+            text = title,
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = artist,
+            style = MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    slightlyDeemphasizedAlpha
+                )
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 

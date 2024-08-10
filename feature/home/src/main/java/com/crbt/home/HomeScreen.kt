@@ -52,7 +52,9 @@ import com.example.crbtjetcompose.feature.home.R
 
 @Composable
 fun HomeScreen(
-    onSubscriptionClick: (String?) -> Unit = {}
+    onSubscriptionClick: (String?) -> Unit = {},
+    onNavigateToTopUp: () -> Unit = {},
+
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -66,7 +68,7 @@ fun HomeScreen(
     ) {
         item {
             UserBalanceCard(
-                onNavigateToTopUp = {},
+                onNavigateToTopUp = onNavigateToTopUp,
                 onRefresh = {},
                 balance = "85.40",
                 balancePercentage = 65

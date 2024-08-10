@@ -73,36 +73,49 @@ fun RecentSubscription(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
         ) {
-            LazyColumn(
+            SubscriptionsFeed(
+                userSubscriptions = userSubscriptions,
+                onSubscriptionClick = onSubscriptionClick,
                 modifier = Modifier
                     .heightIn(max = max(200.dp, with(LocalDensity.current) { 200.sp.toDp() }))
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(
-                    items = userSubscriptions,
-                    key = { it.toneId }
-                ) { tone ->
-                    ToneItem(
-                        title = tone.toneName,
-                        subtitle = tone.dueDate,
-                        trailingContent = {
-                            SubscriptionTrailingContent(
-                                title = DummyUser.user.accountBalance.toString(),
-                                subtitle = stringResource(id = R.string.feature_home_recent_subscription_rate_Description)
-                            )
-                        },
-                        imageUrl = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.medium)
-                            .clickable {
-                                onSubscriptionClick(tone.toneId)
-                            }
+            )
+        }
+    }
+}
+
+@Composable
+fun SubscriptionsFeed(
+    modifier: Modifier = Modifier,
+    onSubscriptionClick: (toneId: String?) -> Unit,
+    userSubscriptions: List<UserToneSubscriptions>,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(
+            items = userSubscriptions,
+            key = { it.toneId }
+        ) { tone ->
+            ToneItem(
+                title = tone.toneName,
+                subtitle = tone.dueDate,
+                trailingContent = {
+                    SubscriptionTrailingContent(
+                        title = DummyUser.user.accountBalance.toString(),
+                        subtitle = stringResource(id = R.string.feature_home_recent_subscription_rate_Description)
                     )
-                }
-            }
+                },
+                imageUrl = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        onSubscriptionClick(tone.toneId)
+                    }
+            )
         }
     }
 }
