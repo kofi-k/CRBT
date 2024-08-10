@@ -3,6 +3,7 @@ package com.crbt.designsystem.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -54,7 +55,7 @@ fun DynamicAsyncImage(
 
         Image(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxSize(),
             contentScale = ContentScale.Crop,
             painter = if (isError.not() && !isLocalInspection && imageUrl != null) {
                 imageLoader

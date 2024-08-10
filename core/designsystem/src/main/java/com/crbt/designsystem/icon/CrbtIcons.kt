@@ -2,10 +2,13 @@
 package com.crbt.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PhoneCallback
+import androidx.compose.material.icons.automirrored.filled.Shortcut
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
+import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
@@ -16,20 +19,24 @@ import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Subscriptions
 import androidx.compose.material.icons.outlined.SyncAlt
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowRight
+import androidx.compose.material.icons.rounded.AttachMoney
+import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Category
-import androidx.compose.material.icons.rounded.DarkMode
-import androidx.compose.material.icons.rounded.DisplaySettings
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Language
-import androidx.compose.material.icons.rounded.LightMode
-import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.ManageAccounts
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Payment
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Pin
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.School
@@ -42,6 +49,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * CRBT icons. Material icons are [ImageVector]s, custom icons are drawable resource IDs.
  */
 object CrbtIcons {
+    val Close = Icons.Rounded.Close
+    val Notifications = Icons.Rounded.Notifications
     val Refresh = Icons.Rounded.Refresh
     val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
     val ArrowForward = Icons.AutoMirrored.Rounded.ArrowForward
@@ -61,6 +70,26 @@ object CrbtIcons {
     val Calendar = Icons.Rounded.CalendarMonth
     val Email = Icons.Filled.Email
     val Help = Icons.AutoMirrored.Rounded.HelpOutline
+
+
+    //services icons
+    val Check = Icons.Rounded.Check
+    val Recharge = Icons.AutoMirrored.Filled.Shortcut
+    val Packages = Icons.Rounded.Inventory2
+    val CallBack = Icons.AutoMirrored.Filled.PhoneCallback
+    val Dollar = Icons.Rounded.AttachMoney
+
+
+    // subscription icons
+    val Album = Icons.Rounded.Album
+    val Tones = Icons.Rounded.AudioFile
+    val Add = Icons.Rounded.Add
+
+    // profile icons
+    val Logout = Icons.AutoMirrored.Rounded.Logout
+    val Permissions = Icons.Rounded.ManageAccounts
+    val RewardPoints = Icons.Rounded.EmojiEvents
+    val PaymentMethods = Icons.Rounded.Payment
 
     // bottom nav icons
     val Subscription = Icons.Rounded.Subscriptions

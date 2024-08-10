@@ -3,10 +3,9 @@
 package com.crbt.designsystem.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,17 +29,17 @@ fun CrbtTopAppBar(
     @StringRes titleRes: Int,
     navigationIcon: ImageVector,
     navigationIconContentDescription: String,
-    actionIcon: ImageVector,
-    actionIconContentDescription: String,
     modifier: Modifier = Modifier,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
     onNavigationClick: () -> Unit = {},
-    onActionClick: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+    titleContent: @Composable () -> Unit = {
+        Text(text = stringResource(id = titleRes))
+    },
     showNavigationIcon: Boolean = true,
-    showAction: Boolean = true,
 ) {
     TopAppBar(
-        title = { Text(text = stringResource(id = titleRes)) },
+        title = titleContent,
         navigationIcon = {
             if (showNavigationIcon) {
                 IconButton(onClick = onNavigationClick) {
@@ -52,17 +51,7 @@ fun CrbtTopAppBar(
                 }
             }
         },
-        actions = {
-            if (showAction) {
-                IconButton(onClick = onActionClick) {
-                    Icon(
-                        imageVector = actionIcon,
-                        contentDescription = actionIconContentDescription,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-            }
-        },
+        actions = actions,
         colors = colors,
         modifier = modifier.testTag("FauTopAppBar"),
     )
@@ -77,8 +66,6 @@ private fun FauTopAppBarPreview() {
             titleRes = R.string.core_designsystem_untitled,
             navigationIcon = Icons.Default.Search,
             navigationIconContentDescription = "Navigation icon",
-            actionIcon = Icons.Default.MoreVert,
-            actionIconContentDescription = "Action icon",
         )
     }
 }

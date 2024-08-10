@@ -1,6 +1,7 @@
 package com.crbt.designsystem.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.School
@@ -16,6 +17,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
 
@@ -40,7 +42,7 @@ fun RowScope.CrbtNavigationBarItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    alwaysShowLabel: Boolean = true,
+    alwaysShowLabel: Boolean = false,
     icon: @Composable () -> Unit,
     selectedIcon: @Composable () -> Unit = icon,
     label: @Composable (() -> Unit)? = null,
@@ -53,13 +55,6 @@ fun RowScope.CrbtNavigationBarItem(
         enabled = enabled,
         label = label,
         alwaysShowLabel = alwaysShowLabel,
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = CrbtNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = CrbtNavigationDefaults.navigationContentColor(),
-            selectedTextColor = CrbtNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = CrbtNavigationDefaults.navigationContentColor(),
-            indicatorColor = CrbtNavigationDefaults.navigationIndicatorColor(),
-        ),
     )
 }
 
@@ -99,7 +94,13 @@ fun FauNavigationBarPreview() {
     )
 
     CrbtTheme {
-        CrbtNavigationBar {
+        CrbtNavigationBar(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp)
+                .clip(MaterialTheme.shapes.extraLarge)
+            ,
+        ) {
             items.forEachIndexed { index, item ->
                 CrbtNavigationBarItem(
                     icon = {
@@ -114,7 +115,9 @@ fun FauNavigationBarPreview() {
                             contentDescription = item,
                         )
                     },
-                    label = { Text(item) },
+                    label = {
+//                        Text(item)
+                            },
                     selected = index == 0,
                     onClick = { },
                 )
