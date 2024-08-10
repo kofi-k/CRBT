@@ -2,4 +2,5 @@
 <resources>
     <string name="core_ui_need_help">Need help?</string>
     <string name="core_ui_untitled">Untitled</string>
+    <string name="core_ui_search">Search</string>
 </resources>
