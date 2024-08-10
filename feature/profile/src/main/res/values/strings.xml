@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_profile_logout">Logout</string>
+    <string name="feature_profile_reward_points">Reward points</string>
+    <string name="feature_profile_reward_points_description">Redeem your reward points</string>
+    <string name="feature_profile_placeholder_subtext">Short description</string>
+    <string name="feature_profile_payment_methods">Payment Methods</string>
+    <string name="feature_profile_payment_methods_description">Add or remove payment methods</string>
+    <string name="feature_profile_currency">Currency</string>
+    <string name="feature_profile_currency_description">Choose your currency</string>
+    <string name="feature_profile_language">Language</string>
+    <string name="feature_profile_language_description">Choose your language</string>
+    <string name="feature_profile_permissions">Permissions</string>
+    <string name="feature_profile_permissions_description">Manage app permissions</string>
+</resources>

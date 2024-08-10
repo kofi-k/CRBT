@@ -14,7 +14,14 @@ fun NavController.navigateToProfile(navOptions: NavOptions) =
 fun NavGraphBuilder.profileScreen(
 ) {
     composable(route = PROFILE_ROUTE) {
-
+        ProfileScreen(
+            onRewardPointsClicked = { /*TODO*/ },
+            onPaymentMethodsClicked = { /*TODO*/ },
+            onCurrencyClicked = { /*TODO*/ },
+            onLanguageClicked = { /*TODO*/ },
+            onPermissionsClicked = { /*TODO*/ },
+            onLogout = { /*TODO*/ }
+        )
     }
 }
 
