@@ -7,15 +7,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -50,34 +51,56 @@ import com.example.crbtjetcompose.feature.home.R
 
 
 @Composable
-fun HomeScreen() {
-    Column(
+fun HomeScreen(
+    onSubscriptionClick: (String?) -> Unit = {}
+) {
+    val listState = rememberLazyListState()
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        state = listState,
+        contentPadding = PaddingValues(
+            vertical = 24.dp
+        )
     ) {
-        UserBalanceCard(
-            onNavigateToTopUp = {},
-            onRefresh = {},
-            balance = "85.40",
-            balancePercentage = 65
-        )
+        item {
+            UserBalanceCard(
+                onNavigateToTopUp = {},
+                onRefresh = {},
+                balance = "85.40",
+                balancePercentage = 65
+            )
+        }
 
-        LatestMusicCard(
-            artist = DummyTones.tones[0].artist,
-            title = DummyTones.tones[0].toneName,
-            backgroundUrl = DummyTones.tones[0].toneImageUrl,
-            onCardClick = {}
-        )
+        item {
+            LatestMusicCard(
+                artist = DummyTones.tones[0].artist,
+                title = DummyTones.tones[0].toneName,
+                backgroundUrl = DummyTones.tones[0].toneImageUrl,
+                onCardClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
 
-        // todo put popular tones here
+        item {
+            PopularTodayTabLayout(
+                navigateToSubscriptions = onSubscriptionClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
-        RecentSubscription(
-            onSubscriptionClick = {},
-            userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions( DummyUser.user)
-        )
+        item {
+            RecentSubscription(
+                onSubscriptionClick = {},
+                userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(DummyUser.user),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
     }
 }
 
@@ -96,6 +119,7 @@ internal fun UserBalanceCard(
             containerColor = Color.Transparent
         ),
         modifier = Modifier
+            .padding(horizontal = 16.dp)
             .drawWithCache {
                 val brush = Brush.linearGradient(
                     listOf(
@@ -169,9 +193,12 @@ fun LatestMusicCard(
     artist: String,
     title: String,
     backgroundUrl: String?,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         DynamicAsyncImage(
             imageUrl = backgroundUrl,
             imageRes = R.drawable.paps_image,

@@ -15,6 +15,8 @@ fun NavController.navigateToHome(navOptions: NavOptions) =
 fun NavGraphBuilder.homeScreen(
 ) {
     composable(route = HOME_ROUTE) {
-        HomeScreen()
+        HomeScreen(
+            onSubscriptionClick = {}
+        )
     }
 }

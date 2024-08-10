@@ -57,7 +57,9 @@ fun RecentSubscription(
         ) {
             Text(
                 text = stringResource(id = R.string.feature_home_recent_subscription_title),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
+                )
             )
             IconButton(onClick = { onSubscriptionClick(null) }) {
                 Icon(
