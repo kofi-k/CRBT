@@ -1,17 +1,21 @@
 package com.example.crbtjetcompose.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,19 +23,25 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.CrbtNavigationBar
 import com.crbt.designsystem.components.CrbtNavigationBarItem
 import com.crbt.designsystem.components.CrbtTopAppBar
+import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 
@@ -42,6 +52,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 @Composable
 fun CrbtApp(appState: CrbtAppState) {
     val destination = appState.currentTopLevelDestination
+    val currentRoute = appState.currentDestination?.route
     Scaffold(
         modifier = Modifier.semantics {
             testTagsAsResourceId = true
@@ -55,7 +66,11 @@ fun CrbtApp(appState: CrbtAppState) {
                     destinations = appState.topLevelDestinations,
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.currentDestination,
-                    modifier = Modifier.testTag("CrbtBottomBar"),
+                    modifier =
+                    Modifier.testTag("CrbtBottomBar"),
+//                        .padding(horizontal = 16.dp)
+//                        .padding(bottom = 8.dp)
+//                        .clip(MaterialTheme.shapes.extraLarge)
                 )
             }
         },
@@ -77,22 +92,75 @@ fun CrbtApp(appState: CrbtAppState) {
                     titleRes = destination.titleTextId,
                     navigationIcon = Icons.Default.Search,
                     navigationIconContentDescription = "",
-                    actionIcon = CrbtIcons.MoreVert,
-                    actionIconContentDescription = "",
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = Color.Transparent,
                     ),
-                    onActionClick = { },
                     onNavigationClick = {
                         // todo handle navigation
                     },
-                    showAction = true, // todo handle action visibility based on destination
                     showNavigationIcon = false, // todo handle navigation icon visibility based on destination
+                    actions = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = CrbtIcons.Notifications,
+                                contentDescription = CrbtIcons.Notifications.name,
+                            )
+                        }
+                    },
+                    titleContent = {
+                        when (destination) {
+                            TopLevelDestination.HOME -> {
+                                Column {
+                                    Text(
+                                        text = stringResource(id = R.string.core_designsystem_welecome),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(
+                                            slightlyDeemphasizedAlpha
+                                        ),
+                                    )
+                                    Text(
+                                        text = DummyUser.user.firstName,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                    )
+                                }
+                            }
+
+                            TopLevelDestination.SERVICES -> {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.core_designsystem_services_ussd),
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                    )
+                                    Text(
+                                        text = stringResource(id = R.string.core_designsystem_what_would_you_like_to_do),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(
+                                            slightlyDeemphasizedAlpha
+                                        ),
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                Text(text = stringResource(id = destination.titleTextId))
+                            }
+                        }
+                    }
                 )
             }
 
             CrbtNavHost(
                 appState = appState,
+                modifier = Modifier.fillMaxSize()
             )
         }
 
@@ -127,7 +195,9 @@ private fun CrbtBottomBar(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) },
+                label = {
+//                    Text(stringResource(destination.iconTextId))
+                },
                 modifier = Modifier,
                 alwaysShowLabel = false
             )
@@ -142,7 +212,7 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
     } ?: false
 
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun PreviewBottomBar() {
     CrbtTheme {
@@ -150,7 +220,10 @@ fun PreviewBottomBar() {
             destinations = TopLevelDestination.entries,
             onNavigateToDestination = {},
             currentDestination = null,
-            modifier = Modifier,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp)
+                .clip(MaterialTheme.shapes.extraLarge)
         )
     }
 }
