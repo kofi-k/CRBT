@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_services_check_balance">Check</string>
+    <string name="feature_services_check_description">Check short description</string>
+    <string name="feature_services_packages">Packages</string>
+    <string name="feature_services_packages_description">Packages short description</string>
+    <string name="feature_services_recharge">Recharge</string>
+    <string name="feature_services_recharge_description">Recharge short description</string>
+    <string name="feature_services_transfer">Transfer</string>
+    <string name="feature_services_transfer_description">Transfer short description</string>
+    <string name="feature_services_call_back">Call me back</string>
+    <string name="feature_services_call_back_description">Call me back short description</string>
+    <string name="feature_services_buy">Buy</string>
+    <string name="feature_services_buy_description">Buy short description</string>
+    <string name="feature_services_search_title">Search</string>
+</resources>
