@@ -3,16 +3,9 @@ package com.example.crbtjetcompose.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,6 +34,11 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.home.navigation.ACCOUNT_HISTORY_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_PROFILE
+import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
+import com.crbt.services.navigation.TOPUP_ROUTE
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -53,6 +51,31 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 fun CrbtApp(appState: CrbtAppState) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
+
+    val showNavIcon =
+        destination != null && appState.currentDestination.isTopLevelDestinationInHierarchy(
+            destination
+        ) && currentRoute != destination.name
+
+    val showTopBar =
+        destination != null && currentRoute !in listOf(
+            ONBOARDING_ROUTE, ONBOARDING_PROFILE
+        )
+
+    val titleRes = when  {
+        destination != null -> destination.titleTextId
+        else -> when (currentRoute) {
+            TOPUP_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_topup
+            TOPUP_CHECKOUT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
+            ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
+            else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
+        }
+    }
+
+    println(
+        "destination: $destination, currentRoute: $currentRoute, showNavIcon: $showNavIcon, showTopBar: $showTopBar"
+    )
+
     Scaffold(
         modifier = Modifier.semantics {
             testTagsAsResourceId = true
@@ -74,37 +97,38 @@ fun CrbtApp(appState: CrbtAppState) {
                 )
             }
         },
-    ) { padding ->
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(padding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Horizontal,
-                    ),
-                ),
-        ) {
-            // Show the top app bar on top level destinations.
-            if (destination != null) {
+        topBar = {
+            if (showTopBar) {
                 CrbtTopAppBar(
-                    titleRes = destination.titleTextId,
-                    navigationIcon = Icons.Default.Search,
+                    titleRes = titleRes,
+                    navigationIcon = CrbtIcons.ArrowBack,
                     navigationIconContentDescription = "",
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = Color.Transparent,
                     ),
                     onNavigationClick = {
-                        // todo handle navigation
+                        appState.navController.navigateUp()
                     },
-                    showNavigationIcon = false, // todo handle navigation icon visibility based on destination
+                    showNavigationIcon = !showNavIcon,
                     actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = CrbtIcons.Notifications,
-                                contentDescription = CrbtIcons.Notifications.name,
-                            )
+                        when (destination) {
+                            TopLevelDestination.PROFILE -> {
+                                IconButton(onClick = { /*TODO*/ }) {
+                                    Icon(
+                                        imageVector = CrbtIcons.Edit,
+                                        contentDescription = CrbtIcons.Edit.name,
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                IconButton(onClick = { /*TODO*/ }) {
+                                    Icon(
+                                        imageVector = CrbtIcons.Notifications,
+                                        contentDescription = CrbtIcons.Notifications.name,
+                                    )
+                                }
+                            }
                         }
                     },
                     titleContent = {
@@ -151,19 +175,20 @@ fun CrbtApp(appState: CrbtAppState) {
                             }
 
                             else -> {
-                                Text(text = stringResource(id = destination.titleTextId))
+                                Text(text = stringResource(id = titleRes))
                             }
                         }
                     }
                 )
             }
-
-            CrbtNavHost(
-                appState = appState,
-                modifier = Modifier.fillMaxSize()
-            )
         }
-
+    ) { padding ->
+        CrbtNavHost(
+            appState = appState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        )
     }
 }
 

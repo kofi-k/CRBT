@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.crbt.home.navigation.homeScreen
-import com.crbt.home.navigation.navigateToHome
 import com.crbt.onboarding.navigation.ONBOARDING_PROFILE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
+import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.services.navigation.servicesScreen
 import com.crbt.subscription.navigation.subscriptionScreen
 import com.example.crbtjetcompose.ui.CrbtAppState
@@ -36,8 +36,18 @@ fun CrbtNavHost(
                 navController.navigate(ONBOARDING_PROFILE)
             }
         )
-        homeScreen()
-        servicesScreen()
+        homeScreen(
+            navController = navController,
+            navigateToTopUp = {
+//                navController.navigate(TOPUP_ROUTE)
+            }
+        )
+        servicesScreen(
+            navigateToHome = {
+                appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+            },
+            navController = navController
+        )
         subscriptionScreen()
         profileScreen()
     }
