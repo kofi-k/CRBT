@@ -28,9 +28,11 @@ import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.ManageAccounts
@@ -61,15 +63,11 @@ object CrbtIcons {
     val MoreVert = Icons.Default.MoreVert
     val Search = Icons.Rounded.Search
     val Language = Icons.Rounded.Language
-    val SettingsBorder = Icons.Outlined.Settings
-    val FeaturedCourseCategory = Icons.Rounded.Category
-    val FeaturedCourseCategoryBorder = Icons.Outlined.Category
-    val CoursesForYou = Icons.Rounded.School
-    val CoursesForYouBorder = Icons.Outlined.School
     val ExpandMore = Icons.Rounded.ExpandMore
     val Calendar = Icons.Rounded.CalendarMonth
     val Email = Icons.Filled.Email
     val Help = Icons.AutoMirrored.Rounded.HelpOutline
+    val Edit = Icons.Rounded.EditNote
 
 
     //services icons
@@ -78,6 +76,7 @@ object CrbtIcons {
     val Packages = Icons.Rounded.Inventory2
     val CallBack = Icons.AutoMirrored.Filled.PhoneCallback
     val Dollar = Icons.Rounded.AttachMoney
+    val Info = Icons.Rounded.Info
 
 
     // subscription icons

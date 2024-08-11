@@ -1,6 +1,5 @@
 package com.crbt.designsystem.components
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -35,13 +34,13 @@ import com.example.crbtjetcompose.core.designsystem.R
 enum class InputType {
     TEXT,
     PHONE_NUMBER,
+    MONEY
 }
 
 @Composable
 fun CustomInputField(
     modifier: Modifier = Modifier,
-    @StringRes label: Int? = null,
-    customString: String = "",
+    label: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
     onValueChange: (String) -> Unit,
@@ -74,11 +73,7 @@ fun CustomInputField(
         value = value,
         onValueChange = onValueChange,
         label = {
-            if (label != null) {
-                Text(text = stringResource(id = label))
-            } else {
-                Text(text = customString)
-            }
+                Text(text = label)
         },
         leadingIcon = leadingIcon,
         modifier = modifier,
