@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.crbt.android.application.jacoco)
     alias(libs.plugins.crbt.android.hilt)
     alias(libs.plugins.roborazzi)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -17,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0.0" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -29,10 +30,14 @@ android {
         }
         release {
             isMinifyEnabled = false
+            applicationIdSuffix = CRBTBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.named("debug").get()
+            // Ensure Baseline Profile is fresh for release builds.
+            baselineProfile.automaticGenerationDuringBuild = true
         }
     }
 
@@ -89,7 +94,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.hilt.android.testing)
 
-
+    baselineProfile(projects.benchmark)
 }
 
 dependencyGuard {

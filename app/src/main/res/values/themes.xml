@@ -14,7 +14,7 @@
     </style>
 
     <style name="Theme.CRBT.Splash" parent="NightAdjusted.Theme.Splash">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ui_crbtlogo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/crbtlogo_light</item>
         <item name="postSplashScreenTheme">@style/Theme.CRBT</item>
     </style>
 

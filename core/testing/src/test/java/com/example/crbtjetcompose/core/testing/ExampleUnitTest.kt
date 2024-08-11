@@ -1,4 +1,4 @@
-package com.crbt.common
+package com.example.crbtjetcompose.core.testing
 
 import org.junit.Test
 

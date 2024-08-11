@@ -12,4 +12,5 @@
     <string name="feature_profile_language_description">Choose your language</string>
     <string name="feature_profile_permissions">Permissions</string>
     <string name="feature_profile_permissions_description">Manage app permissions</string>
+    <string name="feature_profile_payments">Payments</string>
 </resources>

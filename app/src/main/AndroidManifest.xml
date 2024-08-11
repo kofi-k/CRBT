@@ -7,14 +7,15 @@
     <application
         android:name=".CrbtComposeApp"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
-        android:icon="@mipmap/crbtlogo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/crbtlogo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CRBT.Splash">
-        <profileable android:shell="true" tools:targetApi="q" />
+        <profileable
+            android:shell="true"
+            tools:targetApi="q" />
 
         <activity
             android:name=".ui.MainActivity"
