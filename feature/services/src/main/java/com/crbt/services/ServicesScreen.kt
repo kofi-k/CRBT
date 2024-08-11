@@ -67,7 +67,7 @@ fun UpperServices(
                 ListCard(
                     onClick = onRechargeClick,
                     headlineText = stringResource(id = R.string.feature_services_recharge),
-                    subText = stringResource(id = R.string.feature_services_check_description),
+                    subText = stringResource(id = R.string.feature_services_recharge_description),
                     leadingContentIcon = CrbtIcons.Recharge
                 )
             }

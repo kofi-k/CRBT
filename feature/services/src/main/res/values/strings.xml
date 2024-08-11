@@ -13,4 +13,16 @@
     <string name="feature_services_buy">Buy</string>
     <string name="feature_services_buy_description">Buy short description</string>
     <string name="feature_services_search_title">Search</string>
+    <string name="feature_services_balance">Balance</string>
+    <string name="feature_services_etb">ETB %s</string>
+    <string name="feature_services_recharge_amount_title">Set amount</string>
+    <string name="feature_services_recharge_amount_subtitle">How much would you like to top up?</string>
+    <string name="feature_services_mode_of_payment_title">"Mode of payment "</string>
+    <string name="feature_services_payment_option">Payment options</string>
+    <string name="feature_services_topup">Top up</string>
+    <string name="feature_services_confirm">Confirm</string>
+    <string name="feature_services_amount_topup">"Amount Top up "</string>
+    <string name="feature_services_account_balance">Account Balance</string>
+    <string name="feature_services_topup_amount">Top Up Amount</string>
+    <string name="feature_services_date">Date</string>
 </resources>

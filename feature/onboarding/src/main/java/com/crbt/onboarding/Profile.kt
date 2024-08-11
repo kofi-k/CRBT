@@ -32,7 +32,6 @@ import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.NameValidationState
 import com.example.crbtjetcompose.feature.onboarding.R
 
@@ -127,7 +126,7 @@ internal fun UsernameDetails(
         val focusManager = LocalFocusManager.current
 
         CustomInputField(
-            label = R.string.feature_onboarding_profile_first_name_label,
+            label = stringResource(id = R.string.feature_onboarding_profile_first_name_label),
             value = firstName.text,
             onValueChange = {
                 firstName.text = it
@@ -182,7 +181,7 @@ internal fun UsernameDetails(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CustomInputField(
-            label = R.string.feature_onboarding_profile_last_name_label,
+            label = stringResource(id = R.string.feature_onboarding_profile_last_name_label),
             value = lastName.text,
             onValueChange = {
                 lastName.text = it
