@@ -29,6 +29,7 @@ import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.designsystem.theme.CustomGradientColors
 import com.example.crbtjetcompose.feature.profile.R
 
 @Composable
@@ -96,10 +97,7 @@ fun ProfileHeader() {
             .clip(MaterialTheme.shapes.large)
             .drawWithCache {
                 val brush = Brush.linearGradient(
-                    listOf(
-                        Color(0xFF9E82F0),
-                        Color(0xFF42A5F5)
-                    )
+                    CustomGradientColors
                 )
                 onDrawBehind {
                     drawRoundRect(

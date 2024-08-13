@@ -45,7 +45,6 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
 import com.rejowan.ccpc.Country
-import com.rejowan.ccpc.Country.UnitedStates
 import com.rejowan.ccpc.CountryCodePicker
 import com.rejowan.ccpc.PickerCustomization
 import com.rejowan.ccpc.ViewCustomization
@@ -55,16 +54,19 @@ import com.example.crbtjetcompose.core.ui.R as CoreUiR
 fun PhoneEntryScreen(
     onPhoneNumberChanged: (String, Boolean) -> Unit,
 ) {
+
+    var countryCode by remember {
+        mutableStateOf(Country.Ethiopia.countryCode)
+    }
+
     var phoneNumberState by remember {
         mutableStateOf(
             PhoneNumberValidationState(
-                countryCode = "GH",
+                countryCode = countryCode,
             ),
         )
     }
-    var countryCode by remember {
-        mutableStateOf("GH")
-    }
+
 
     LaunchedEffect(countryCode) {
         phoneNumberState = PhoneNumberValidationState(
@@ -201,7 +203,7 @@ fun PhoneEntryTextField(
             modifier = Modifier.fillMaxWidth(),
         ) {
             var country by remember {
-                mutableStateOf(UnitedStates)
+                mutableStateOf(Country.Ethiopia)
             }
             val background by animateColorAsState(
                 targetValue = if (showsErrors) {

@@ -9,6 +9,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -100,6 +101,14 @@ val DarkDefaultColorScheme = darkColorScheme(
 const val stronglyDeemphasizedAlpha = 0.6f
 const val slightlyDeemphasizedAlpha = 0.87f
 const val extremelyDeemphasizedAlpha = 0.32f
+
+/**
+ *  Gradient colors
+ * */
+val CustomGradientColors =   listOf(
+    Color(0xFF9E82F0),
+    Color(0xFF42A5F5)
+)
 
 /**
  * CRBT theme.

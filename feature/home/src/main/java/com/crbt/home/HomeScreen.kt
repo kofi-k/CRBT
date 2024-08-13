@@ -45,6 +45,7 @@ import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
@@ -123,12 +124,7 @@ internal fun UserBalanceCard(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .drawWithCache {
-                val brush = Brush.linearGradient(
-                    listOf(
-                        Color(0xFF9E82F0),
-                        Color(0xFF42A5F5)
-                    )
-                )
+                val brush = Brush.linearGradient(CustomGradientColors)
                 onDrawBehind {
                     drawRoundRect(
                         brush,

@@ -4,8 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.crbt.data.core.data.CRBTLanguage
 import com.crbt.data.core.data.OnboardingScreenData
@@ -150,18 +156,32 @@ fun OnboardingScreen(
         }
     }
 
-    if (showBottomSheet) {
+    AnimatedVisibility(
+        visible = showBottomSheet,
+        enter = slideInVertically(),
+        exit = slideOutVertically() + fadeOut()
+    ) {
         ModalBottomSheet(
             onDismissRequest = {
                 showBottomSheet = false
-                scope.launch { sheetState.hide() }
+                scope.launch {
+                    sheetState.hide()
+                }
             },
             sheetState = sheetState,
             windowInsets = WindowInsets(0, 0, 0, 0),
             scrimColor = Color.Black.copy(alpha = 0.5f),
+            properties = ModalBottomSheetDefaults.properties(
+                isFocusable = false,
+                shouldDismissOnBackPress = false,
+            ),
         ) {
             CrbtOnboardingBottomSheet(
-                onOTPVerified = onOTPVerified,
+                onOTPVerified = {
+                    showBottomSheet = false
+                    scope.launch { sheetState.hide() }
+                    onOTPVerified()
+                },
                 screenData = screenData,
                 onboardingSetupData = onboardingSetupData,
                 onNextClicked = onNextClicked,
@@ -187,8 +207,6 @@ internal fun CrbtOnboardingBottomSheet(
     onPhoneNumberEntered: (String, Boolean) -> Unit,
 
     ) {
-
-
     BottomSheetContent(
         onNextClicked = onNextClicked,
         isNextButtonEnabled = isNextEnabled,
@@ -272,10 +290,9 @@ fun BottomSheetContent(
         ProcessButton(
             onClick = if (onShowVerifyOtp) onOTPVerified else onNextClicked,
             text = stringResource(
-                id =  if (onShowVerifyOtp) R.string.feature_onboarding_verify_button else
-                R.string.feature_onboarding_next_button
-            )
-            ,
+                id = if (onShowVerifyOtp) R.string.feature_onboarding_verify_button else
+                    R.string.feature_onboarding_next_button
+            ),
             isEnabled = if (onShowVerifyOtp) true else isNextButtonEnabled,
             modifier = Modifier.fillMaxWidth()
         )
