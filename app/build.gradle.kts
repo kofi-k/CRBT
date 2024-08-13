@@ -27,6 +27,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
+            isDebuggable = false
         }
         release {
             isMinifyEnabled = false
@@ -37,7 +38,7 @@ android {
             )
             signingConfig = signingConfigs.named("debug").get()
             // Ensure Baseline Profile is fresh for release builds.
-            baselineProfile.automaticGenerationDuringBuild = true
+//            baselineProfile.automaticGenerationDuringBuild = true
         }
     }
 
@@ -94,7 +95,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.hilt.android.testing)
 
-    baselineProfile(projects.benchmark)
+//    baselineProfile(projects.benchmark)
 }
 
 dependencyGuard {

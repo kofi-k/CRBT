@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,7 +63,7 @@ fun CrbtApp(appState: CrbtAppState) {
             ONBOARDING_ROUTE, ONBOARDING_PROFILE
         )
 
-    val titleRes = when  {
+    val titleRes = when {
         destination != null -> destination.titleTextId
         else -> when (currentRoute) {
             TOPUP_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_topup
@@ -90,10 +91,14 @@ fun CrbtApp(appState: CrbtAppState) {
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.currentDestination,
                     modifier =
-                    Modifier.testTag("CrbtBottomBar"),
-//                        .padding(horizontal = 16.dp)
-//                        .padding(bottom = 8.dp)
-//                        .clip(MaterialTheme.shapes.extraLarge)
+                    Modifier
+                        .testTag("CrbtBottomBar")
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 24.dp,
+                                topEnd = 24.dp
+                            )
+                        )
                 )
             }
         },
@@ -246,9 +251,12 @@ fun PreviewBottomBar() {
             onNavigateToDestination = {},
             currentDestination = null,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 24.dp,
+                        topEnd = 24.dp
+                    )
+                )
         )
     }
 }
