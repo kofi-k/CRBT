@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,11 +21,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.crbt.data.core.data.model.DummyUser
+import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
@@ -48,10 +49,7 @@ fun RecentSubscription(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onSubscriptionClick(null)
-                },
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ) {
@@ -92,8 +90,7 @@ fun SubscriptionsFeed(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(vertical = 16.dp),
     ) {
         items(
             items = userSubscriptions,
@@ -102,6 +99,7 @@ fun SubscriptionsFeed(
             ToneItem(
                 title = tone.toneName,
                 subtitle = tone.dueDate,
+                colors = ListItemDefaults.colors(),
                 trailingContent = {
                     SubscriptionTrailingContent(
                         title = DummyUser.user.accountBalance.toString(),
@@ -111,7 +109,6 @@ fun SubscriptionsFeed(
                 imageUrl = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         onSubscriptionClick(tone.toneId)
                     }
@@ -144,7 +141,7 @@ fun SubscriptionTrailingContent(
 
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun PreviewRecentSubscription() {
     CrbtTheme {

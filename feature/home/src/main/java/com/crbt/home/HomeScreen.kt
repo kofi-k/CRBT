@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.DynamicAsyncImage
+import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
@@ -55,7 +56,7 @@ import com.example.crbtjetcompose.feature.home.R
 fun HomeScreen(
     onSubscriptionClick: (String?) -> Unit = {},
     onNavigateToTopUp: () -> Unit = {},
-
+    onPopularTodayClick: (String?) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -90,14 +91,14 @@ fun HomeScreen(
 
         item {
             PopularTodayTabLayout(
-                navigateToSubscriptions = onSubscriptionClick,
+                navigateToSubscriptions = onPopularTodayClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
         item {
             RecentSubscription(
-                onSubscriptionClick = {},
+                onSubscriptionClick = onSubscriptionClick,
                 userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(DummyUser.user),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,17 +141,6 @@ internal fun UserBalanceCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Surface(
-                shape = MaterialTheme.shapes.large,
-            ) {
-                PercentIndicator(
-                    percentage = balancePercentage,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .padding(4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(16.dp))
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -315,7 +305,7 @@ fun PreviewLatestMusicCard() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun PreviewHomeScreen() {
     CrbtTheme {
