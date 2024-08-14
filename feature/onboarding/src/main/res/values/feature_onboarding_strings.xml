@@ -14,11 +14,4 @@
     <string name="feature_onboarding_authentication_resend_code">Request a new code</string>
     <string name="feature_onboarding_resend_code_availability">Available again in %s</string>
     <string name="feature_onboarding_authentication_help"> Need Help?</string>
-    <string name="feature_onboarding_profile_setup_title">Profile</string>
-    <string name="feature_onboarding_profile_first_name_label">First Name</string>
-    <string name="feature_onboarding_profile_last_name_label">Last Name</string>
-    <string name="feature_onboarding_profile_email_label">Email from CRBT</string>
-    <string name="feature_onboarding_save_profile_button">Save Profile</string>
-    <string name="feature_onboarding_updates_title">Updates and Recommendations</string>
-    <string name="feature_onboarding_updates_subtitle">Stay in touch with the best playlist updates</string>
-</resources>
+   </resources>

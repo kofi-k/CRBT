@@ -172,7 +172,7 @@ fun OnboardingScreen(
             windowInsets = WindowInsets(0, 0, 0, 0),
             scrimColor = Color.Black.copy(alpha = 0.5f),
             properties = ModalBottomSheetDefaults.properties(
-                isFocusable = false,
+                isFocusable = true,
                 shouldDismissOnBackPress = false,
             ),
         ) {

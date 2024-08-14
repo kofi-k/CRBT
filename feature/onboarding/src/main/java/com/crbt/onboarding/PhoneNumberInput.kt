@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.PhoneEntryScreen
 import com.example.crbtjetcompose.feature.onboarding.R
 
@@ -21,6 +22,7 @@ fun PhoneNumberInput(
     onPhoneNumberChanged: (String, Boolean) -> Unit,
 ) {
     OnboardingSheetContainer(
+        modifier = modifier,
         titleRes = R.string.feature_onboarding_welcome_title,
         subtitleRes = R.string.feature_onboarding_phone_number_entry_message,
         content = {

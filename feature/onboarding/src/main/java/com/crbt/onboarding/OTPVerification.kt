@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.otp.OtpScreen
 import com.example.crbtjetcompose.feature.onboarding.R
 

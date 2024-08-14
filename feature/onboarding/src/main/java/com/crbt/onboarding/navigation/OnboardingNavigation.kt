@@ -7,7 +7,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.crbt.onboarding.OnboardingScreen
 import com.crbt.onboarding.OnboardingViewModel
-import com.crbt.onboarding.Profile
 
 
 const val ONBOARDING_ROUTE = "onboarding_route"
@@ -19,7 +18,6 @@ fun NavController.navigateToOnboarding(navOptions: NavOptions) =
 
 fun NavGraphBuilder.onboardingScreen(
     onNavigateToOnboardingProfile: () -> Unit,
-    onNavigateToHome: () -> Unit,
 ) {
     composable(route = ONBOARDING_ROUTE) {
         val viewModel: OnboardingViewModel = hiltViewModel()
@@ -44,14 +42,5 @@ fun NavGraphBuilder.onboardingScreen(
 //        }
     }
 
-    composable(route = ONBOARDING_PROFILE) {
-        Profile(
-            onUserProfileResponse = { _, _, _ -> },
-            onEmailCheckChanged = {},
-            onSaveButtonClicked = {
-                onNavigateToHome()
-            }
-        )
-    }
 
 }
