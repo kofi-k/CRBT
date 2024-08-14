@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,18 +30,19 @@ fun ToneItem(
     title: String,
     subtitle: String,
     trailingContent: @Composable () -> Unit,
-    imageUrl: String?
+    imageUrl: String?,
+    colors: ListItemColors = ListItemDefaults.colors(
+        containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
+            stronglyDeemphasizedAlpha
+        ),
+        headlineColor = MaterialTheme.colorScheme.onSurface,
+        supportingColor = MaterialTheme.colorScheme.onSurface.copy(
+            alpha = slightlyDeemphasizedAlpha
+        ),
+    ),
 ) {
     ListItem(
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
-                stronglyDeemphasizedAlpha
-            ),
-            headlineColor = MaterialTheme.colorScheme.onSurface,
-            supportingColor = MaterialTheme.colorScheme.onSurface.copy(
-                alpha = slightlyDeemphasizedAlpha
-            ),
-        ),
+        colors = colors,
         headlineContent = {
             Text(
                 text = title,
