@@ -13,4 +13,11 @@
     <string name="feature_profile_permissions">Permissions</string>
     <string name="feature_profile_permissions_description">Manage app permissions</string>
     <string name="feature_profile_payments">Payments</string>
+    <string name="feature_profile_setup_title">User profile info</string>
+    <string name="feature_profile_save_profile_button">Save Profile</string>
+    <string name="feature_profile_updates_title">Updates and Recommendations</string>
+    <string name="feature_profile_updates_subtitle">Stay in touch with the best playlist updates</string>
+    <string name="feature_profile_first_name_label">First Name</string>
+    <string name="feature_profile_last_name_label">Last Name</string>
+    <string name="feature_profile_email_label">Email from CRBT</string>
 </resources>

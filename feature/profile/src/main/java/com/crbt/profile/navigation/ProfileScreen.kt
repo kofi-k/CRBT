@@ -40,6 +40,7 @@ fun ProfileScreen(
     onLanguageClicked: () -> Unit,
     onPermissionsClicked: () -> Unit,
     onLogout: () -> Unit,
+    onEditProfileClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -49,7 +50,9 @@ fun ProfileScreen(
             ),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        ProfileHeader()
+        ProfileHeader(
+            onEditProfileClick = onEditProfileClick
+        )
 
         ProfileSettings(
             onRewardPointsClicked = onRewardPointsClicked,
@@ -73,9 +76,11 @@ fun ProfileScreen(
 
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(
+    onEditProfileClick: () -> Unit = {}
+) {
     ListCard(
-        onClick = { /*TODO*/ },
+        onClick = onEditProfileClick,
         headlineText = DummyUser.user.firstName,
         leadingContentIcon = CrbtIcons.MoreVert,
         subText = DummyUser.user.phoneNumber,

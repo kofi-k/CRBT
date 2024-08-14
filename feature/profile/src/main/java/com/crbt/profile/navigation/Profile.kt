@@ -1,4 +1,4 @@
-package com.crbt.onboarding
+package com.crbt.profile.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,14 +32,13 @@ import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.validationStates.NameValidationState
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.example.crbtjetcompose.feature.profile.R
 
 @Composable
 fun Profile(
     modifier: Modifier = Modifier,
-    onUserProfileResponse: (String, String, Boolean) -> Unit,
-    onEmailCheckChanged: (Boolean) -> Unit,
     onSaveButtonClicked: () -> Unit,
 ) {
     Column(
@@ -47,24 +46,23 @@ fun Profile(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
         Text(
-            text = stringResource(id = R.string.feature_onboarding_profile_setup_title),
+            text = stringResource(id = R.string.feature_profile_setup_title),
             style = MaterialTheme.typography.headlineSmall,
         )
         Spacer(modifier = Modifier.height(16.dp))
         UsernameDetails(
             modifier = modifier,
-            onUserProfileResponse = onUserProfileResponse,
+            onUserProfileResponse = { _, _, _ -> /*todo handle with vm*/ },
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
-            titleRes = R.string.feature_onboarding_updates_title,
-            subtitleRes = R.string.feature_onboarding_updates_subtitle,
+            titleRes = R.string.feature_profile_updates_title,
+            subtitleRes = R.string.feature_profile_updates_subtitle,
             content = {
                 EmailCheck(
                     modifier = modifier,
-                    onEmailCheckChanged = onEmailCheckChanged,
+                    onEmailCheckChanged = { /*todo handle with vm*/ },
                 )
             }
         )
@@ -100,7 +98,7 @@ internal fun EmailCheck(
             },
         )
         Text(
-            text = stringResource(id = R.string.feature_onboarding_profile_email_label),
+            text = stringResource(id = R.string.feature_profile_email_label),
             style = MaterialTheme.typography.bodyMedium,
         )
     }
@@ -126,7 +124,7 @@ internal fun UsernameDetails(
         val focusManager = LocalFocusManager.current
 
         CustomInputField(
-            label = stringResource(id = R.string.feature_onboarding_profile_first_name_label),
+            label = stringResource(id = R.string.feature_profile_first_name_label),
             value = firstName.text,
             onValueChange = {
                 firstName.text = it
@@ -181,7 +179,7 @@ internal fun UsernameDetails(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CustomInputField(
-            label = stringResource(id = R.string.feature_onboarding_profile_last_name_label),
+            label = stringResource(id = R.string.feature_profile_last_name_label),
             value = lastName.text,
             onValueChange = {
                 lastName.text = it
@@ -258,8 +256,6 @@ fun EmailCheckPreview() {
 @Composable
 fun ProfilePreview() {
     Profile(
-        onUserProfileResponse = { _, _, _ -> },
-        onEmailCheckChanged = {},
         onSaveButtonClicked = {},
     )
 }
