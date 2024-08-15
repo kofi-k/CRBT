@@ -1,5 +1,6 @@
 package com.crbt.ui.core.ui
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -27,10 +28,12 @@ import com.example.crbtjetcompose.core.ui.R
 @Composable
 fun ToneItem(
     modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     trailingContent: @Composable () -> Unit,
     imageUrl: String?,
+    @DrawableRes imageRes: Int = R.drawable.avatar,
     colors: ListItemColors = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
             stronglyDeemphasizedAlpha
@@ -65,8 +68,8 @@ fun ToneItem(
         leadingContent = {
             DynamicAsyncImage(
                 imageUrl = imageUrl,
-                imageRes = R.drawable.avatar,
-                modifier = Modifier
+                imageRes = imageRes,
+                modifier = imageModifier
                     .size(50.dp)
                     .clip(CircleShape)
             )

@@ -22,4 +22,5 @@ dependencies {
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.country.code.picker)
     implementation(libs.play.services.auth.api.phone)
+    implementation(libs.androidx.graphics.shapes)
 }
