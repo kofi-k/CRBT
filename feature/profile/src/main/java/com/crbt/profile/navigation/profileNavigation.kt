@@ -4,6 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.crbt.profile.Profile
+import com.crbt.profile.ProfileRoute
 
 
 const val PROFILE_ROUTE = "profile_route"
@@ -17,26 +19,25 @@ fun NavController.navigateToProfileEdit() =
     navigate(PROFILE_EDIT_ROUTE)
 
 fun NavGraphBuilder.profileScreen(
-    onNavigateToHome: () -> Unit,
+    onLogout: () -> Unit,
     navController: NavController
 ) {
     composable(route = PROFILE_ROUTE) {
-        ProfileScreen(
-            onRewardPointsClicked = { /*TODO*/ },
-            onPaymentMethodsClicked = { /*TODO*/ },
-            onCurrencyClicked = { /*TODO*/ },
-            onLanguageClicked = { /*TODO*/ },
-            onPermissionsClicked = { /*TODO*/ },
-            onLogout = { /*TODO*/ },
+        ProfileRoute(
+            onLogout = {
+                onLogout()
+                navController.popBackStack()
+            },
             onEditProfileClick = {
                 navController.navigateToProfileEdit()
-            }
+            },
+            onRewardPointsClicked = { /*TODO*/ },
         )
     }
 
     composable(route = PROFILE_EDIT_ROUTE) {
         Profile(
-            onSaveButtonClicked = onNavigateToHome
+            onSaveButtonClicked = { navController.navigateUp() }
         )
     }
 }

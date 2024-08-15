@@ -1,4 +1,4 @@
-package com.crbt.profile.navigation
+package com.crbt.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,12 +33,8 @@ import com.crbt.designsystem.theme.CustomGradientColors
 import com.example.crbtjetcompose.feature.profile.R
 
 @Composable
-fun ProfileScreen(
+fun ProfileRoute(
     onRewardPointsClicked: () -> Unit,
-    onPaymentMethodsClicked: () -> Unit,
-    onCurrencyClicked: () -> Unit,
-    onLanguageClicked: () -> Unit,
-    onPermissionsClicked: () -> Unit,
     onLogout: () -> Unit,
     onEditProfileClick: () -> Unit = {}
 ) {
@@ -56,10 +52,10 @@ fun ProfileScreen(
 
         ProfileSettings(
             onRewardPointsClicked = onRewardPointsClicked,
-            onPaymentMethodsClicked = onPaymentMethodsClicked,
-            onCurrencyClicked = onCurrencyClicked,
-            onLanguageClicked = onLanguageClicked,
-            onPermissionsClicked = onPermissionsClicked,
+            onPaymentMethodsClicked = {},
+            onCurrencyClicked = {},
+            onLanguageClicked = {},
+            onPermissionsClicked = {},
         )
 
         OutlinedButton(
@@ -209,12 +205,8 @@ fun ProfileSettings(
 @Preview
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(
+    ProfileRoute(
         onRewardPointsClicked = {},
-        onPaymentMethodsClicked = {},
-        onCurrencyClicked = {},
-        onLanguageClicked = {},
-        onPermissionsClicked = {},
         onLogout = {}
     )
 }
