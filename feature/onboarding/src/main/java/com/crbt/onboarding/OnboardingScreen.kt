@@ -56,6 +56,7 @@ import com.crbt.data.core.data.OnboardingSetupData
 import com.crbt.data.core.data.OnboardingSetupProcess
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.designsystem.theme.bodyFontFamily
 import com.example.crbtjetcompose.feature.onboarding.R
 import kotlinx.coroutines.launch
 import com.example.crbtjetcompose.core.ui.R as UiR
@@ -65,14 +66,11 @@ import com.example.crbtjetcompose.core.ui.R as UiR
 @Composable
 fun OnboardingScreen(
     onOTPVerified: () -> Unit,
-    screenData: OnboardingScreenData,
-    onboardingSetupData: OnboardingSetupData,
-    onNextClicked: () -> Unit,
-    isNextEnabled: Boolean,
-    onLanguageSelected: (CRBTLanguage) -> Unit,
-    onPhoneNumberEntered: (String, Boolean) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val viewModel: OnboardingViewModel = hiltViewModel()
+    val screenData = viewModel.onboardingScreenData
+    val onboardingSetupData = viewModel.onboardingSetupData
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     Box(
@@ -123,6 +121,7 @@ fun OnboardingScreen(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Black,
+                        fontFamily = bodyFontFamily
                     ),
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
@@ -184,10 +183,10 @@ fun OnboardingScreen(
                 },
                 screenData = screenData,
                 onboardingSetupData = onboardingSetupData,
-                onNextClicked = onNextClicked,
-                isNextEnabled = isNextEnabled,
-                onLanguageSelected = onLanguageSelected,
-                onPhoneNumberEntered = onPhoneNumberEntered
+                onNextClicked = { viewModel.onNextClicked() },
+                isNextEnabled = viewModel.isNextEnabled,
+                onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
+                onLanguageSelected = viewModel::onLanguageSelected,
             )
         }
     }
@@ -304,14 +303,7 @@ fun BottomSheetContent(
 @Preview(showBackground = true)
 @Composable
 fun OnboardingScreenPreview() {
-    val viewModel: OnboardingViewModel = hiltViewModel()
     OnboardingScreen(
         onOTPVerified = {},
-        screenData = viewModel.onboardingScreenData,
-        onboardingSetupData = viewModel.onboardingSetupData,
-        onNextClicked = {},
-        isNextEnabled = true,
-        onLanguageSelected = {},
-        onPhoneNumberEntered = { _, _ -> }
     )
 }
