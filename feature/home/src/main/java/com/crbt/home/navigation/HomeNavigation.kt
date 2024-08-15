@@ -21,13 +21,15 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
 fun NavGraphBuilder.homeScreen(
     navController: NavController,
     navigateToTopUp: () -> Unit,
+    onPopularTodayClick: (String?) -> Unit
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
             onSubscriptionClick = { subscriptionId ->
                 navController.navigate("$ACCOUNT_HISTORY_ROUTE$subscriptionId")
             },
-            onNavigateToTopUp = navigateToTopUp
+            onNavigateToTopUp = navigateToTopUp,
+            onPopularTodayClick = onPopularTodayClick
         )
     }
     composable(

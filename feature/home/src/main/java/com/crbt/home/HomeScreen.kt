@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ThemePreviews
@@ -82,7 +82,9 @@ fun HomeScreen(
                 artist = DummyTones.tones[0].artist,
                 title = DummyTones.tones[0].toneName,
                 backgroundUrl = DummyTones.tones[0].toneImageUrl,
-                onCardClick = {},
+                onCardClick = {
+                    onPopularTodayClick(null)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
