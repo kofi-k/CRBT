@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
+import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
@@ -183,6 +185,8 @@ fun RechargeAmountCard(
                             focusManager.moveFocus(FocusDirection.Down)
                         },
                     ),
+                    colors = OutlinedTextFieldDefaults.colors(),
+                    textFieldType = TextFieldType.OUTLINED,
                     showsErrors = amountSatate.showErrors(),
                     errorText = amountSatate.getError() ?: "",
                 )
