@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Subscriptions
@@ -25,24 +26,36 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.AttachMoney
 import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Contacts
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.ManageAccounts
+import androidx.compose.material.icons.rounded.Mic
+import androidx.compose.material.icons.rounded.NotificationAdd
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.Payment
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Pin
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.Sms
 import androidx.compose.material.icons.rounded.Subscriptions
 import androidx.compose.material.icons.rounded.SyncAlt
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -59,6 +72,7 @@ object CrbtIcons {
     val ArrowUp = Icons.Default.KeyboardArrowUp
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
+
     val OtpCode = Icons.Rounded.Pin
     val MoreVert = Icons.Default.MoreVert
     val Search = Icons.Rounded.Search
@@ -68,7 +82,18 @@ object CrbtIcons {
     val Email = Icons.Filled.Email
     val Help = Icons.AutoMirrored.Rounded.HelpOutline
     val Edit = Icons.Rounded.EditNote
+    val FilterList = Icons.Rounded.FilterList
+    val Delete = Icons.Rounded.Delete
+    val EditNote = Icons.Rounded.EditNote
 
+    val Camera = Icons.Rounded.Camera
+    val Photos = Icons.Rounded.PhotoLibrary
+    val Microphone = Icons.Rounded.Mic
+    val Storage = Icons.Rounded.Category
+    val Contacts = Icons.Rounded.Contacts
+    val Location = Icons.Rounded.LocationOn
+    val Sms = Icons.Rounded.Sms
+    val Ussd = Icons.Rounded.Numbers
 
     //services icons
     val Check = Icons.Rounded.Check
@@ -77,12 +102,16 @@ object CrbtIcons {
     val CallBack = Icons.AutoMirrored.Filled.PhoneCallback
     val Dollar = Icons.Rounded.AttachMoney
     val Info = Icons.Rounded.Info
+    val Money = Icons.Rounded.AttachMoney
+    val Share = Icons.Rounded.Share
 
 
     // subscription icons
     val Album = Icons.Rounded.Album
     val Tones = Icons.Rounded.AudioFile
     val Add = Icons.Rounded.Add
+    val Subscribe = Icons.Rounded.NotificationAdd
+    val Play = Icons.Rounded.PlayCircle
 
     // profile icons
     val Logout = Icons.AutoMirrored.Rounded.Logout

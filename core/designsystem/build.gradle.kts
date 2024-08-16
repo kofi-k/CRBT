@@ -20,5 +20,5 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
     implementation(libs.androidx.ui.text.google.fonts)
-
+    implementation(libs.androidx.graphics.shapes)
 }

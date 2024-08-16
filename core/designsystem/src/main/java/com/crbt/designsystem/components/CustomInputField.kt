@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -27,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.extremelyDeemphasizedAlpha
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.example.crbtjetcompose.core.designsystem.R
 
 
@@ -35,6 +35,11 @@ enum class InputType {
     TEXT,
     PHONE_NUMBER,
     MONEY
+}
+
+enum class TextFieldType {
+    OUTLINED,
+    FILLED
 }
 
 @Composable
@@ -53,71 +58,125 @@ fun CustomInputField(
     errorText: String = "",
     messageText: String = "",
     colors: TextFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
-        unfocusedContainerColor = MaterialTheme.colorScheme.outlineVariant.copy(
-            stronglyDeemphasizedAlpha,
-        ),
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent,
         errorIndicatorColor = Color.Transparent,
         errorTextColor = MaterialTheme.colorScheme.error,
         errorLeadingIconColor = MaterialTheme.colorScheme.error,
-        ),
+    ),
     shape: Shape = MaterialTheme.shapes.medium,
+    textFieldType: TextFieldType = TextFieldType.FILLED,
 ) {
     var showPassword by remember { mutableStateOf(false) }
 
-
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = {
-                Text(text = label)
-        },
-        leadingIcon = leadingIcon,
-        modifier = modifier,
-        singleLine = true,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        enabled = enabled,
-        colors = colors,
-        trailingIcon = {
-            AnimatedVisibility(
-                visible = value.isNotEmpty() && enabled,
-                enter = scaleIn(),
-                exit = scaleOut(),
-            ) {
-                IconButton(onClick = onClear) {
-                    Icon(
-                        imageVector = Icons.Filled.Cancel,
-                        contentDescription = "clear text",
-                        modifier = Modifier.size(24.dp),
+    when (textFieldType) {
+        TextFieldType.FILLED -> {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                label = {
+                    Text(text = label)
+                },
+                leadingIcon = leadingIcon,
+                modifier = modifier,
+                singleLine = true,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                enabled = enabled,
+                colors = colors,
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = value.isNotEmpty() && enabled,
+                        enter = scaleIn(),
+                        exit = scaleOut(),
+                    ) {
+                        IconButton(onClick = onClear) {
+                            Icon(
+                                imageVector = Icons.Filled.Cancel,
+                                contentDescription = "clear text",
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                    }
+                },
+                placeholder = {
+                    if (inputType == InputType.PHONE_NUMBER) {
+                        Text(
+                            text = stringResource(id = R.string.core_designsystem_phone_number_placeholder),
+                            color = MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = extremelyDeemphasizedAlpha,
+                            ),
+                        )
+                    } else {
+                        Unit
+                    }
+                },
+                visualTransformation = VisualTransformation.None,
+                supportingText = {
+                    TextFieldError(
+                        textError = errorText,
+                        isError = showsErrors,
+                        messageText = messageText,
                     )
-                }
-            }
-        },
-        placeholder = {
-            if (inputType == InputType.PHONE_NUMBER) {
-                Text(
-                    text = stringResource(id = R.string.core_designsystem_phone_number_placeholder),
-                    color = MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = extremelyDeemphasizedAlpha,
-                    ),
-                )
-            } else {
-                Unit
-            }
-        },
-        visualTransformation = VisualTransformation.None,
-        supportingText = {
-            TextFieldError(
-                textError = errorText,
-                isError = showsErrors,
-                messageText = messageText,
+                },
+                isError = showsErrors && enabled,
+                shape = shape,
             )
-        },
-        isError = showsErrors && enabled,
-        shape = shape,
-    )
+        }
+
+        TextFieldType.OUTLINED -> {
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                label = {
+                    Text(text = label)
+                },
+                leadingIcon = leadingIcon,
+                modifier = modifier,
+                singleLine = true,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                enabled = enabled,
+                colors = colors,
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = value.isNotEmpty() && enabled,
+                        enter = scaleIn(),
+                        exit = scaleOut(),
+                    ) {
+                        IconButton(onClick = onClear) {
+                            Icon(
+                                imageVector = Icons.Filled.Cancel,
+                                contentDescription = "clear text",
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                    }
+                },
+                placeholder = {
+                    if (inputType == InputType.PHONE_NUMBER) {
+                        Text(
+                            text = stringResource(id = R.string.core_designsystem_phone_number_placeholder),
+                            color = MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = extremelyDeemphasizedAlpha,
+                            ),
+                        )
+                    } else {
+                        Unit
+                    }
+                },
+                visualTransformation = VisualTransformation.None,
+                supportingText = {
+                    TextFieldError(
+                        textError = errorText,
+                        isError = showsErrors,
+                        messageText = messageText,
+                    )
+                },
+                isError = showsErrors && enabled,
+                shape = shape,
+            )
+        }
+    }
 }
