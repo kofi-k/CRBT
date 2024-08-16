@@ -17,4 +17,5 @@
     <string name="feature_subscription_transaction_id">Transaction Number</string>
     <string name="feature_subscription_date">Date</string>
     <string name="feature_subscription_add_subscription_title">Add Subscription</string>
+    <string name="feature_subscription_gift_subscription_title">Gift Subscription</string>
 </resources>
