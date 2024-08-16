@@ -39,10 +39,16 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.LocalGradientColors
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.home.navigation.ACCOUNT_HISTORY_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
 import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
+import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
+import com.crbt.subscription.navigation.GIFT_SUBSCRIPTION_ROUTE
+import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
+import com.crbt.subscription.navigation.TONES_ROUTE
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -61,21 +67,23 @@ fun CrbtApp(appState: CrbtAppState) {
             destination
         ) && currentRoute != destination.name
 
-    val showBottomBar = currentRoute !in listOf(
-        ONBOARDING_ROUTE
+    val showNavigationBars = currentRoute !in listOf(
+        ONBOARDING_ROUTE,
+        ONBOARDING_COMPLETE_ROUTE,
+        ONBOARDING_PROFILE_ROUTE
     )
 
-    val showTopBar = currentRoute !in listOf(
-        ONBOARDING_ROUTE
-    )
 
     val titleRes = when {
         destination != null -> destination.titleTextId
         else -> when (currentRoute) {
             TOPUP_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_topup
-            TOPUP_CHECKOUT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
+            TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
             ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
+            TONES_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_tones
+            ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
+            GIFT_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_gift_subscription_title
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
         }
     }
@@ -95,7 +103,7 @@ fun CrbtApp(appState: CrbtAppState) {
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 bottomBar = {
-                    if (showBottomBar) {
+                    if (showNavigationBars) {
                         CrbtBottomBar(
                             destinations = appState.topLevelDestinations,
                             onNavigateToDestination = appState::navigateToTopLevelDestination,
@@ -113,7 +121,7 @@ fun CrbtApp(appState: CrbtAppState) {
                     }
                 },
                 topBar = {
-                    if (showTopBar) {
+                    if (showNavigationBars) {
                         CrbtTopAppBar(
                             titleRes = titleRes,
                             navigationIcon = CrbtIcons.ArrowBack,

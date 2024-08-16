@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.crbt.home.navigation.homeScreen
-import com.crbt.home.navigation.navigateToHome
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.onboarding.navigation.navigateToOnboarding
 import com.crbt.onboarding.navigation.onboardingScreen
-import com.crbt.profile.navigation.navigateToProfileEdit
 import com.crbt.profile.navigation.profileScreen
 import com.crbt.services.navigation.navigateToTopUp
 import com.crbt.services.navigation.servicesScreen
+import com.crbt.subscription.navigation.navigateToTones
 import com.crbt.subscription.navigation.subscriptionScreen
 import com.example.crbtjetcompose.ui.CrbtAppState
 
@@ -29,11 +29,15 @@ fun CrbtNavHost(
         modifier = modifier
     ) {
         onboardingScreen(
-            onNavigateToOnboardingProfile = navController::navigateToProfileEdit
+            navigateToHome = {
+                appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+            },
+            navController = navController
         )
         homeScreen(
             navController = navController,
-            navigateToTopUp = navController::navigateToTopUp
+            navigateToTopUp = navController::navigateToTopUp,
+            onPopularTodayClick = navController::navigateToTones
         )
         servicesScreen(
             navigateToHome = {
@@ -41,10 +45,15 @@ fun CrbtNavHost(
             },
             navController = navController
         )
-        subscriptionScreen()
+        subscriptionScreen(
+            navController = navController,
+            onSubscriptionComplete = {
+                appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+            }
+        )
         profileScreen(
             navController = navController,
-            onNavigateToHome = navController::navigateToHome
+            onLogout = navController::navigateToOnboarding
         )
     }
 }
