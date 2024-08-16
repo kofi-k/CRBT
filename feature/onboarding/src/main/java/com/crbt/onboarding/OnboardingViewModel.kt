@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.crbt.data.core.data.CRBTLanguage
 import com.crbt.data.core.data.OnboardingScreenData
 import com.crbt.data.core.data.OnboardingSetupData
 import com.crbt.data.core.data.OnboardingSetupProcess
@@ -54,8 +53,8 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _onboardingScreenData = createOnboardingScreenData()
     }
 
-    fun onLanguageSelected(language: CRBTLanguage) {
-        _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = language)
+    fun onLanguageSelected(languageId: String) {
+        _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = languageId)
         _isNextEnabled = getIsNextEnabled()
     }
 

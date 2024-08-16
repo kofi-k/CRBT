@@ -14,15 +14,11 @@ const val ONBOARDING_COMPLETE_ROUTE = "onboarding_complete_route"
 
 
 fun NavController.navigateToOnboarding() =
-    navigate(ONBOARDING_ROUTE) {
-        popUpTo(ONBOARDING_ROUTE) {
-            inclusive = false
-        }
-    }
+    navigate(ONBOARDING_ROUTE)
 
-fun NavGraphBuilder.onboardingScreen(
+fun NavGraphBuilder. onboardingScreen(
     navigateToHome: () -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     composable(route = ONBOARDING_ROUTE) {
         OnboardingScreen(
@@ -42,7 +38,10 @@ fun NavGraphBuilder.onboardingScreen(
 
     composable(route = ONBOARDING_COMPLETE_ROUTE) {
         OnboardingFinishedScreen(
-            navigateToHome = navigateToHome
+            navigateToHome = {
+                navController.popBackStack(ONBOARDING_ROUTE, true)
+                navigateToHome()
+            }
         )
     }
 }

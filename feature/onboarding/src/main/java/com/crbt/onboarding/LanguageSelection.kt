@@ -1,15 +1,15 @@
 package com.crbt.onboarding
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,12 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.crbt.data.core.data.CRBTLanguage
+import com.crbt.data.core.data.CRBTSettingsData
+import com.crbt.designsystem.components.SurfaceCard
+import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.example.crbtjetcompose.feature.onboarding.R
@@ -31,16 +33,14 @@ import com.example.crbtjetcompose.feature.onboarding.R
 
 @Composable
 fun LanguageSelection(
-    modifier: Modifier = Modifier,
-    onLanguageSelected: (CRBTLanguage) -> Unit,
-    selectedLanguage: CRBTLanguage
+    onLanguageSelected: (String) -> Unit,
+    selectedLanguage: String
 ) {
     OnboardingSheetContainer(
         titleRes = R.string.feature_onboarding_language_selection_title,
         subtitleRes = R.string.feature_onboarding_language_selection_subtitle,
         content = {
             LanguageSelectionMenu(
-                modifier = modifier,
                 onLanguageSelected = onLanguageSelected,
                 selectedLanguage = selectedLanguage
             )
@@ -51,72 +51,72 @@ fun LanguageSelection(
 @Composable
 fun LanguageSelectionMenu(
     modifier: Modifier = Modifier,
-    onLanguageSelected: (CRBTLanguage) -> Unit,
-    selectedLanguage: CRBTLanguage
+    onLanguageSelected: (String) -> Unit,
+    selectedLanguage: String
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
 
 
-    Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.outlineVariant.copy(
-            alpha = stronglyDeemphasizedAlpha
-        ),
-    ) {
-        Column {
-            CustomInputButton(
-                text = stringResource(id = selectedLanguage.languageResValue),
-                onClick = {
-                    expanded = !expanded
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = CrbtIcons.ArrowRight,
-                        contentDescription = CrbtIcons.ArrowRight.name,
-                        modifier = Modifier.rotate(rotateIcon),
-                    )
-                },
-                elevation = if (expanded) null else ButtonDefaults.buttonElevation(),
-            )
-            AnimatedVisibility(visible = expanded) {
-                Column(
-                    modifier = Modifier
-                ) {
-                    CRBTLanguage.entries.forEach { language ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(id = language.languageResValue)) },
-                            onClick = {
-                                onLanguageSelected(language)
-                                expanded = false
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
+    SurfaceCard(
+        modifier = modifier
+            .wrapContentHeight()
+            .animateContentSize(),
+        color = MaterialTheme.colorScheme.surfaceBright,
+        content = {
+            Column {
+                CustomInputButton(
+                    text = stringResource(
+                        id = CRBTSettingsData.languages.first { it.id == selectedLanguage }.name
+                    ),
+                    onClick = {
+                        expanded = !expanded
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = CrbtIcons.ArrowRight,
+                            contentDescription = CrbtIcons.ArrowRight.name,
+                            modifier = Modifier.rotate(rotateIcon),
                         )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                )
+                if (expanded) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        CRBTSettingsData.languages.forEach { language ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(id = language.name)) },
+                                onClick = {
+                                    onLanguageSelected(language.id)
+                                    expanded = false
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                                    .padding(start = 32.dp),
+                            )
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-
-@Preview
-@Composable
-fun LanguageSelectionPreview() {
-    LanguageSelection(
-        onLanguageSelected = {},
-        selectedLanguage = CRBTLanguage.ENGLISH
     )
 }
 
-@Preview
+
+@ThemePreviews
 @Composable
 fun LanguageSelectionMenuPreview() {
-    LanguageSelectionMenu(
-        onLanguageSelected = {},
-        selectedLanguage = CRBTLanguage.ENGLISH
-    )
+    CrbtTheme {
+        LanguageSelection(
+            onLanguageSelected = {},
+            selectedLanguage = CRBTSettingsData.languages.first().id
+        )
+    }
 }

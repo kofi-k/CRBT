@@ -48,9 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.crbt.data.core.data.CRBTLanguage
 import com.crbt.data.core.data.OnboardingScreenData
 import com.crbt.data.core.data.OnboardingSetupData
 import com.crbt.data.core.data.OnboardingSetupProcess
@@ -202,7 +200,7 @@ internal fun CrbtOnboardingBottomSheet(
     onboardingSetupData: OnboardingSetupData,
     onNextClicked: () -> Unit,
     isNextEnabled: Boolean,
-    onLanguageSelected: (CRBTLanguage) -> Unit,
+    onLanguageSelected: (String) -> Unit,
     onPhoneNumberEntered: (String, Boolean) -> Unit,
 
     ) {
