@@ -5,12 +5,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -59,7 +55,6 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
-import com.crbt.ui.core.ui.CustomRotatingMorphShape
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
@@ -156,15 +151,16 @@ fun UserProfileImage(
 
     val animatePickedProfileImageState = animateFloatAsState(
         targetValue = if (profileImage != Uri.EMPTY) 1f else 0f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioHighBouncy,
-            stiffness = Spring.StiffnessMediumLow,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = LinearEasing,
         ),
         label = "animatePickedProfileImageState",
     )
 
     val imageModifier = if (profileImage != Uri.EMPTY) {
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .size(260.dp)
     } else {
         Modifier.size(200.dp)
