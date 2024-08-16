@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.InputType
+import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.validationStates.NameValidationState
 import com.example.crbtjetcompose.core.ui.R
@@ -87,18 +89,8 @@ fun UsernameDetails(
             ),
             showsErrors = lastName.showErrors(),
             errorText = firstName.getError() ?: "",
-            colors = TextFieldDefaults.colors(
-//                focusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
-//                unfocusedContainerColor = MaterialTheme.colorScheme.outlineVariant.copy(
-//                    stronglyDeemphasizedAlpha,
-//                ),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                errorTextColor = MaterialTheme.colorScheme.error,
-                errorLeadingIconColor = MaterialTheme.colorScheme.error,
-            ),
+            colors = OutlinedTextFieldDefaults.colors(),
+            textFieldType = TextFieldType.OUTLINED
         )
         Spacer(modifier = Modifier.height(8.dp))
         CustomInputField(
@@ -140,18 +132,8 @@ fun UsernameDetails(
                     lastName.enableShowErrors()
                 },
             ),
-            colors = TextFieldDefaults.colors(
-//                focusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
-//                unfocusedContainerColor = MaterialTheme.colorScheme.outlineVariant.copy(
-//                    stronglyDeemphasizedAlpha,
-//                ),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                errorTextColor = MaterialTheme.colorScheme.error,
-                errorLeadingIconColor = MaterialTheme.colorScheme.error,
-            ),
+            colors = OutlinedTextFieldDefaults.colors(),
+            textFieldType = TextFieldType.OUTLINED,
             showsErrors = lastName.showErrors(),
             errorText = lastName.getError() ?: "",
         )
