@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -44,6 +46,7 @@ import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
@@ -69,83 +72,92 @@ fun CrbtSubscribeScreen(
             .padding(horizontal = 16.dp)
     ) {
         item {
-            CustomInputField(
-                label = stringResource(id = R.string.feature_subscription_name_label),
-                value = subscriptionName,
-                onValueChange = {
-                    subscriptionName = it
-                },
+            Column(
                 modifier = Modifier
                     .fillMaxWidth(),
-                inputType = InputType.TEXT,
-                onClear = {
-                    subscriptionName = ""
-                },
-                leadingIcon = {},
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                CustomInputField(
+                    label = stringResource(id = R.string.feature_subscription_name_label),
+                    value = subscriptionName,
+                    onValueChange = {
+                        subscriptionName = it
                     },
-                ),
-                colors = OutlinedTextFieldDefaults.colors(),
-                textFieldType = TextFieldType.OUTLINED
-            )
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    inputType = InputType.TEXT,
+                    onClear = {
+                        subscriptionName = ""
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = CrbtIcons.EditNote,
+                            contentDescription = CrbtIcons.Album.name,
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                        },
+                    ),
+                    colors = OutlinedTextFieldDefaults.colors(),
+                    textFieldType = TextFieldType.OUTLINED
+                )
+                CustomInputField(
+                    label = stringResource(id = R.string.feature_subscription_price_label),
+                    value = "10.67", // todo replace with subscription price
+                    onValueChange = {
+                        subscriptionName = it
+                    },
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    inputType = InputType.TEXT,
+                    onClear = {
+                        subscriptionName = ""
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = CrbtIcons.Dollar,
+                            contentDescription = CrbtIcons.Dollar.name,
+                        )
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(),
+                    textFieldType = TextFieldType.OUTLINED
+                )
+            }
         }
 
         item {
-            CustomInputField(
-                label = stringResource(id = R.string.feature_subscription_price_label),
-                value = subscriptionName,
-                onValueChange = {
-                    subscriptionName = it
-                },
-                enabled = false,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth(),
-                inputType = InputType.TEXT,
-                onClear = {
-                    subscriptionName = ""
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = CrbtIcons.Dollar,
-                        contentDescription = CrbtIcons.Dollar.name,
-                    )
-                },
-                colors = OutlinedTextFieldDefaults.colors(),
-                textFieldType = TextFieldType.OUTLINED
-            )
-        }
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                BillingType(
+                    onBillingTypeSelected = {},
+                    billingType = SubscriptionBillingType.Monthly
+                )
 
-        item {
-            BillingType(
-                onBillingTypeSelected = {},
-                billingType = SubscriptionBillingType.Monthly
-            )
-        }
+                SubscriptionDate(
+                    onDatePicked = {},
+                    date = null
+                )
 
-        item {
-            SubscriptionDate(
-                onDatePicked = {},
-                dateOfBirth = null
-            )
-        }
-
-        item {
-            ProcessButton(
-                onClick = {
-                    // do some viewmodel stuff for the subscription and then call the callback
-                    onSubscriptionComplete()
-                },
-                text = stringResource(id = R.string.feature_subscription_button_text),
-            )
+                ProcessButton(
+                    onClick = {
+                        // do some viewmodel stuff for the subscription and then call the callback
+                        onSubscriptionComplete()
+                    },
+                    text = stringResource(id = R.string.feature_subscription_button_text),
+                )
+            }
         }
     }
-
 }
 
 
@@ -192,7 +204,10 @@ fun BillingType(
                         }
                     }
                 }
-            }
+            },
+            color = MaterialTheme.colorScheme.outlineVariant.copy(
+                stronglyDeemphasizedAlpha,
+            )
         )
     }
 
@@ -202,13 +217,14 @@ fun BillingType(
 @Composable
 fun SubscriptionDate(
     onDatePicked: (Long) -> Unit,
-    dateOfBirth: Long?,
+    date: Long?,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val dateFormat = SimpleDateFormat(simpleDateFormatPattern, Locale.getDefault())
+    var pickedDate by remember { mutableStateOf(date) }
 
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-    val dateString = dateOfBirth?.let { dateFormat.format(it) }
+    val dateString = pickedDate?.let { dateFormat.format(it) }
         ?: stringResource(id = R.string.feature_subscription_date_placeholder)
 
     CustomInputButton(
@@ -234,6 +250,7 @@ fun SubscriptionDate(
             title = stringResource(id = R.string.feature_subscription_date_title),
             onDateSelected = {
                 onDatePicked(it)
+                pickedDate = it
                 showDatePicker = false
             },
             onDismiss = { showDatePicker = false }

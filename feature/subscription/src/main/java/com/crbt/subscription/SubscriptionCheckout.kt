@@ -42,7 +42,7 @@ fun SubscriptionCheckout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
         SurfaceCard(content = {
@@ -116,11 +116,13 @@ fun SubscriptionCheckout(
             }
         })
 
-        OutlinedButton(onClick = { /*TODO share receipt*/ }) {
+        OutlinedButton(
+            onClick = { /*TODO share receipt logic here probably gonna be an intent or some shit like that*/ },
+             modifier = Modifier.fillMaxWidth()
+            ) {
             Icon(imageVector = CrbtIcons.Share, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = stringResource(id = R.string.feature_subscription_share_receipt))
-
         }
 
         ProcessButton(
