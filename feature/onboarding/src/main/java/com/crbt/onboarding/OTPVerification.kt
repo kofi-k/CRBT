@@ -38,7 +38,7 @@ fun OTPVerificationScreen(
     onOtpModified: (String, Boolean) -> Unit = { _, _ -> },
 ) {
     OtpScreen(
-        otpValue = "1234",
+        otpValue = "123456",
         onOtpModified = { otp, isComplete ->
             onOtpModified(otp, isComplete)
         },

@@ -1,15 +1,12 @@
 package com.crbt.onboarding
 
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,26 +15,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,119 +61,32 @@ import com.example.crbtjetcompose.core.ui.R as UiR
 fun OnboardingScreen(
     onOTPVerified: () -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val viewModel: OnboardingViewModel = hiltViewModel()
     val screenData = viewModel.onboardingScreenData
     val onboardingSetupData = viewModel.onboardingSetupData
     val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(R.drawable.onboarding_onboardingbackground),
-            contentDescription = "background image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.25f))
-        )
 
-        Column(
-            modifier = Modifier
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier =
-                Modifier
-                    .fillMaxHeight(0.5f)
-            ) {
-                Image(
-                    painter = painterResource(id = UiR.drawable.ui_crbtlogo),
-                    contentDescription = "logo",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(200.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+    BackHandler {
+        if (bottomSheetScaffoldState.bottomSheetState.isVisible && screenData.onboardingScreenIndex == 0) {
+            scope.launch {
+                bottomSheetScaffoldState.bottomSheetState.hide()
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxHeight(0.5f)
-            ) {
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = stringResource(id = R.string.feature_onboarding_page_one_title),
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Black,
-                        fontFamily = bodyFontFamily
-                    ),
-                    modifier = Modifier
-                        .padding(horizontal = 32.dp)
-                )
-
-                Text(
-                    text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                    )
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                IconButton(
-                    onClick = {
-                        showBottomSheet = true
-                        scope.launch { sheetState.show() }
-                    },
-                ) {
-                    Icon(
-                        imageVector = CrbtIcons.ArrowForward,
-                        contentDescription = "Next",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .size(72.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(32.dp))
-            }
+        } else {
+            viewModel.onPreviousClicked()
         }
     }
 
-    AnimatedVisibility(
-        visible = showBottomSheet,
-        enter = slideInVertically(),
-        exit = slideOutVertically() + fadeOut()
-    ) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                showBottomSheet = false
-                scope.launch {
-                    sheetState.hide()
-                }
-            },
-            sheetState = sheetState,
-            windowInsets = WindowInsets(0, 0, 0, 0),
-            scrimColor = Color.Black.copy(alpha = 0.5f),
-            properties = ModalBottomSheetDefaults.properties(
-                isFocusable = true,
-                shouldDismissOnBackPress = false,
-            ),
-        ) {
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
             CrbtOnboardingBottomSheet(
                 onOTPVerified = {
-                    showBottomSheet = false
-                    scope.launch { sheetState.hide() }
-                    onOTPVerified()
+                    scope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.hide()
+                        onOTPVerified()
+                    }
                 },
                 screenData = screenData,
                 onboardingSetupData = onboardingSetupData,
@@ -185,7 +94,107 @@ fun OnboardingScreen(
                 isNextEnabled = viewModel.isNextEnabled,
                 onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
                 onLanguageSelected = viewModel::onLanguageSelected,
+                modifier = Modifier
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Vertical,
+                        ),
+                    ),
             )
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(
+                WindowInsets(0, 0, 0, 0)
+            ),
+    ) {
+        val scrim = if (bottomSheetScaffoldState.bottomSheetState.isVisible) {
+            Color.Black.copy(alpha = 0.5f)
+        } else {
+            Color.Transparent
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(scrim),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(R.drawable.onboarding_onboardingbackground),
+                contentDescription = "background image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.25f))
+            )
+            Column(
+                modifier = Modifier
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier =
+                    Modifier
+                        .fillMaxHeight(0.5f)
+                ) {
+                    Image(
+                        painter = painterResource(id = UiR.drawable.ui_crbtlogo),
+                        contentDescription = "logo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(200.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight(0.5f)
+                ) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = stringResource(id = R.string.feature_onboarding_page_one_title),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Black,
+                            fontFamily = bodyFontFamily
+                        ),
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp)
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = CrbtIcons.ArrowForward,
+                            contentDescription = "Next",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(72.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
         }
     }
 }
@@ -202,13 +211,14 @@ internal fun CrbtOnboardingBottomSheet(
     isNextEnabled: Boolean,
     onLanguageSelected: (String) -> Unit,
     onPhoneNumberEntered: (String, Boolean) -> Unit,
-
+    modifier: Modifier = Modifier,
     ) {
     BottomSheetContent(
         onNextClicked = onNextClicked,
         isNextButtonEnabled = isNextEnabled,
         onShowVerifyOtp = screenData.onboardingSetupProcess == OnboardingSetupProcess.OTP_VERIFICATION,
         onOTPVerified = onOTPVerified,
+        modifier = modifier,
         content = {
             AnimatedContent(
                 targetState = screenData,
@@ -271,6 +281,7 @@ private fun getTransitionDirection(
 
 @Composable
 fun BottomSheetContent(
+    modifier: Modifier = Modifier,
     onNextClicked: () -> Unit,
     onOTPVerified: () -> Unit,
     isNextButtonEnabled: Boolean,
@@ -280,7 +291,8 @@ fun BottomSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .then(modifier),
     ) {
         content()
         Spacer(modifier = Modifier.height(32.dp))
