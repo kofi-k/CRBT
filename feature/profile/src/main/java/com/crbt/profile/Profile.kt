@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -40,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.CornerRounding
@@ -166,58 +169,82 @@ fun UserProfileImage(
         Modifier.size(200.dp)
     }
 
-
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .then(imageModifier)
-            .clip(MorphPolygonShape(morph, animatePickedProfileImageState.value))
-            .background(
-                color = if (profileImage == Uri.EMPTY)
-                    MaterialTheme.colorScheme.surface
-                else Color.Transparent
-            )
-            .clickable(onClick = onPickImage)
-            .then(modifier),
+            .fillMaxWidth()
+            .wrapContentSize(),
     ) {
-        if (profileImage != Uri.EMPTY) {
-            AsyncImage(
-                contentScale = ContentScale.Crop,
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(profileImage)
-                    .crossfade(true)
-                    .build(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentDescription = "image",
-            )
-        } else {
-            Icon(
-                imageVector = CrbtIcons.Person,
-                contentDescription = CrbtIcons.Person.name,
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(160.dp),
-            )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .then(imageModifier)
+                .clip(MorphPolygonShape(morph, animatePickedProfileImageState.value))
+                .background(
+                    color = if (profileImage == Uri.EMPTY)
+                        MaterialTheme.colorScheme.surface
+                    else Color.Transparent
+                )
+                .clickable(onClick = onPickImage)
+                .then(modifier),
+        ) {
+            if (profileImage != Uri.EMPTY) {
+                AsyncImage(
+                    contentScale = ContentScale.Crop,
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(profileImage)
+                        .crossfade(true)
+                        .build(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentDescription = "image",
+                )
+            } else {
+                Icon(
+                    imageVector = CrbtIcons.Person,
+                    contentDescription = CrbtIcons.Person.name,
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(160.dp),
+                )
+            }
         }
 
-        // delete image icon button if there is an image
-        if (profileImage != Uri.EMPTY) {
+        val icon = if (profileImage != Uri.EMPTY) CrbtIcons.Delete else CrbtIcons.AddPhoto
+        val colors = if (profileImage != Uri.EMPTY) {
+            IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            )
+        } else {IconButtonDefaults.filledIconButtonColors()}
+        val animteXOffset by animateDpAsState(
+            targetValue = if (profileImage == Uri.EMPTY) 0.dp else (-18).dp,
+            animationSpec = tween(
+                durationMillis = 300,
+                easing = LinearEasing,
+            ),
+            label = "animteXOffset",
+        )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset {
+                    IntOffset(animteXOffset.roundToPx(), (-24))
+                }
+        ) {
             FilledIconButton(
                 onClick = {
-                    onRemoveImage(Uri.EMPTY)
+                    if(profileImage != Uri.EMPTY) {
+                        onRemoveImage(Uri.EMPTY)
+                    } else {
+                        onPickImage()
+                    }
                 },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(x = (-18).dp, y = (-16).dp),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                ),
+                colors = colors,
             ) {
                 Icon(
-                    imageVector = CrbtIcons.Delete,
+                    imageVector = icon,
                     contentDescription = null,
                 )
             }
