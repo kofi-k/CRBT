@@ -1,6 +1,6 @@
 package com.example.crbtjetcompose.core.network.model
 
-import com.example.crbtjetcompose.core.model.data.CrbtSongsResource
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import kotlinx.serialization.Serializable
 
 
@@ -29,20 +29,19 @@ data class NetworkSongsResource(
 
 
 /**
- *  Convert [NetworkSongsResource] to [CrbtSongsResource]
- *  todo create an entity for [NetworkSongsResource] and from the entity to [CrbtSongsResource]
+ *  Convert [NetworkSongsResource] to [CrbtSongResource]
+ *  todo create an entity for [NetworkSongsResource] and from the entity to [CrbtSongResource]
  * */
 
-fun NetworkSongsResource.asExternalModel(): CrbtSongsResource {
-    return CrbtSongsResource(
+fun NetworkSongsResource.asExternalModel(): CrbtSongResource {
+    return CrbtSongResource(
         id = id,
         songTitle = songTitle,
-        artistName = artisteName,
+        artisteName = artisteName,
         song = song,
         profile = profile,
         subServiceId = subServiceId,
         albumName = albumName,
-        artisteName = artisteName,
         lang = lang,
         date = date,
         numberOfListeners = numberOfListeners,
