@@ -52,7 +52,7 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.CustomRotatingMorphShape
 import com.crbt.ui.core.ui.SearchToolbar
 import com.crbt.ui.core.ui.ToneItem
-import com.example.crbtjetcompose.core.model.data.Tones
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.feature.subscription.R
 
 @Composable
@@ -138,12 +138,12 @@ fun LazyListScope.subscriptionTonesFeed(
                 key = { it.id }
             ) { tone ->
                 SubscriptionTone(
-                    title = tone.toneName,
-                    subtitle = tone.artist,
+                    title = tone.songTitle,
+                    subtitle = tone.artisteName,
                     onSubscriptionToneClick = onSubscriptionToneClick,
                     onGiftSubscriptionClick = onGiftSubscriptionClick,
                     toneId = tone.id,
-                    imageUrl = tone.toneImageUrl,
+                    imageUrl = tone.profile,
                     showDivider = tones.indexOf(tone) != tones.size - 1
                 )
             }
@@ -162,7 +162,7 @@ fun SubscriptionTone(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
-    imageUrl: String? = DummyTones.tones[0].toneImageUrl,
+    imageUrl: String? = DummyTones.tones[0].profile,
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
     toneId: String,
@@ -275,7 +275,7 @@ fun SubscriptionTone(
  */
 sealed interface SubscriptionTonesUiState {
     data object Loading : SubscriptionTonesUiState
-    data class Success(val tones: List<Tones>) : SubscriptionTonesUiState
+    data class Success(val tones: List<CrbtSongResource>) : SubscriptionTonesUiState
     data class Error(val message: String) : SubscriptionTonesUiState
 }
 

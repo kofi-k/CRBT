@@ -4,23 +4,25 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,24 +32,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.util.simpleDateFormatPattern
-import com.crbt.designsystem.components.CustomInputField
-import com.crbt.designsystem.components.InputType
+import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
-import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.CustomInputButton
+import com.crbt.ui.core.ui.OnboardingSheetContainer
+import com.crbt.ui.core.ui.PhoneEntryScreen
 import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
 import java.text.SimpleDateFormat
@@ -56,108 +64,186 @@ import java.util.TimeZone
 
 
 @Composable
-fun CrbtSubscribeScreen(
-    onSubscriptionComplete: () -> Unit
+internal fun CrbtSubscribeScreen(
+    onSubscriptionComplete: () -> Unit,
+    onBackClicked: () -> Unit,
+    viewModel: SubscriptionViewModel = hiltViewModel(),
 ) {
 
-    var subscriptionName by remember {
-        mutableStateOf("")
-    }
-    val focusManager = LocalFocusManager.current
+    val isGiftSub by viewModel.isGiftSubscription.collectAsStateWithLifecycle()
+    val crbtSong = viewModel.crbtSongResource
 
-    LazyColumn(
-        contentPadding = PaddingValues(vertical = 16.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        SubscribeHeader(
+            onBackClicked = onBackClicked,
+            artisteName = crbtSong.artisteName,
+            songTitle = crbtSong.songTitle,
+            songProfileUrl = crbtSong.profile
+        )
+        SubscribeContent(
+            isGiftSubscription = isGiftSub ?: false,
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
+            onDatePicked = {},
+            date = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            subscriptionComplete = onSubscriptionComplete,
+            subscriptionPrice = 10.30,
+            isSubscriptionProcessing = false,
+            isButtonEnabled = true
+        )
+    }
+}
+
+
+@Composable
+fun SubscribeHeader(
+    onBackClicked: () -> Unit,
+    artisteName: String,
+    songTitle: String,
+    songProfileUrl: String
+) {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .height(260.dp)
+            .clip(MaterialTheme.shapes.large)
     ) {
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                CustomInputField(
-                    label = stringResource(id = R.string.feature_subscription_name_label),
-                    value = subscriptionName,
-                    onValueChange = {
-                        subscriptionName = it
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    inputType = InputType.TEXT,
-                    onClear = {
-                        subscriptionName = ""
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = CrbtIcons.EditNote,
-                            contentDescription = CrbtIcons.Album.name,
-                        )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        },
-                    ),
-                    colors = OutlinedTextFieldDefaults.colors(),
-                    textFieldType = TextFieldType.OUTLINED
+        DynamicAsyncImage(
+            imageUrl = songProfileUrl,
+            modifier = Modifier.fillMaxSize(),
+        )
+        Column(
+            modifier = Modifier
+                .padding(top = 36.dp, start = 16.dp)
+                .fillMaxSize()
+                .align(Alignment.TopStart),
+        ) {
+            IconButton(
+                onClick = onBackClicked,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
                 )
-                CustomInputField(
-                    label = stringResource(id = R.string.feature_subscription_price_label),
-                    value = "10.67", // todo replace with subscription price
-                    onValueChange = {
-                        subscriptionName = it
-                    },
-                    enabled = false,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    inputType = InputType.TEXT,
-                    onClear = {
-                        subscriptionName = ""
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = CrbtIcons.Dollar,
-                            contentDescription = CrbtIcons.Dollar.name,
-                        )
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(),
-                    textFieldType = TextFieldType.OUTLINED
+            ) {
+                Icon(
+                    imageVector = CrbtIcons.ArrowBack,
+                    contentDescription = null,
                 )
             }
         }
 
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                BillingType(
-                    onBillingTypeSelected = {},
-                    billingType = SubscriptionBillingType.Monthly
-                )
-
-                SubscriptionDate(
-                    onDatePicked = {},
-                    date = null
-                )
-
-                ProcessButton(
-                    onClick = {
-                        // do some viewmodel stuff for the subscription and then call the callback
-                        onSubscriptionComplete()
-                    },
-                    text = stringResource(id = R.string.feature_subscription_button_text),
-                )
-            }
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(bottom = 16.dp, start = 16.dp),
+        ) {
+            Text(
+                text = artisteName,
+                style = MaterialTheme.typography.displayLarge,
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = songTitle,
+                color = Color.White
+            )
         }
     }
+}
+
+@Composable
+fun SubscribeContent(
+    modifier: Modifier = Modifier,
+    isGiftSubscription: Boolean,
+    onGiftPhoneNumberChanged: (String, Boolean) -> Unit = { _, _ -> },
+    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
+    billingType: SubscriptionBillingType,
+    onDatePicked: (Long) -> Unit,
+    date: Long?,
+    subscriptionComplete: () -> Unit,
+    subscriptionPrice: Double,
+    isSubscriptionProcessing: Boolean,
+    isButtonEnabled: Boolean
+) {
+    val title = if (isGiftSubscription) {
+        stringResource(id = R.string.feature_subscription_gift_song_title, "")
+    } else {
+        stringResource(id = R.string.feature_subscription_subscribe_to_song_title, "")
+    }
+    OnboardingSheetContainer(
+        title = title,
+        subtitle = stringResource(id = R.string.feature_subscription_subscribe_to_song_subtitle),
+        content = {
+            if (isGiftSubscription) {
+                Spacer(modifier = Modifier.height(8.dp))
+                PhoneEntryScreen(onPhoneNumberChanged = onGiftPhoneNumberChanged)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            BillingType(
+                onBillingTypeSelected = onBillingTypeSelected,
+                billingType = billingType
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            SubscriptionDate(
+                onDatePicked = onDatePicked,
+                date = date
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            ProcessButton(
+                onClick = subscriptionComplete,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.linearGradient(
+                            CustomGradientColors
+                        ),
+                        shape = ButtonDefaults.shape
+                    ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                textContent = {
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                ).toSpanStyle()
+                            ) {
+                                val text = if (isGiftSubscription) {
+                                    stringResource(id = R.string.feature_subscription_gift_button)
+                                } else {
+                                    stringResource(R.string.feature_subscription_subscribe_button)
+                                }
+                                append(text)
+                                    append(" ")
+                                    append(
+                                        stringResource(
+                                            id = R.string.feature_subscription_etb,
+                                            subscriptionPrice
+                                        )
+                                    )
+
+                            }
+                        }
+                    )
+                },
+                isEnabled = isButtonEnabled,
+                isProcessing = isSubscriptionProcessing
+            )
+        },
+        modifier = modifier
+    )
 }
 
 
@@ -258,10 +344,53 @@ fun SubscriptionDate(
     }
 }
 
+
 @ThemePreviews
 @Composable
-fun CrbtSubscribeScreenPreview() {
+fun CrbtSubscribeHeaderPreview() {
+    val song = DummyTones.tones[0]
     CrbtTheme {
-        CrbtSubscribeScreen {}
+        SubscribeHeader(
+            onBackClicked = {},
+            artisteName = song.artisteName,
+            songTitle = song.songTitle,
+            songProfileUrl = song.profile
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+fun CrbtSubscribeContentPreview() {
+    CrbtTheme {
+        SubscribeContent(
+            isGiftSubscription = false,
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
+            onDatePicked = {},
+            date = null,
+            subscriptionComplete = {},
+            subscriptionPrice = 10.30,
+            isSubscriptionProcessing = false,
+            isButtonEnabled = true
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+fun CrbtSubscribeContentPreview2() {
+    CrbtTheme {
+        SubscribeContent(
+            isGiftSubscription = true,
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
+            onDatePicked = {},
+            date = null,
+            subscriptionComplete = {},
+            subscriptionPrice = 10.30,
+            isSubscriptionProcessing = false,
+            isButtonEnabled = true
+        )
     }
 }

@@ -25,7 +25,6 @@ import com.example.crbtjetcompose.feature.subscription.R
 
 @Composable
 fun SubscriptionsRoute(
-    onCategoryClick: (String) -> Unit,
     onTonesClick: () -> Unit,
     onAlbumClick: () -> Unit,
 ) {
@@ -48,7 +47,7 @@ fun SubscriptionsRoute(
             modifier = Modifier
         )
         Categories(
-            onCategoryClick = onCategoryClick,
+            onCategoryClick = {},
         )
 
         Column(
@@ -96,7 +95,6 @@ fun SubscriptionsRoute(
 @Composable
 fun SubscriptionsScreenPreview() {
     SubscriptionsRoute(
-        onCategoryClick = {},
         onTonesClick = {},
         onAlbumClick = {},
     )
