@@ -77,7 +77,7 @@ fun PhoneEntryScreen(
     PhoneEntryTextField(
         onPhoneNumberChanged = {
             phoneNumberState.text = it
-            onPhoneNumberChanged(it, phoneNumberState.isValid)
+            onPhoneNumberChanged("$countryCode$it", phoneNumberState.isValid)
         },
         phoneNumber = phoneNumberState.text,
         onClear = {
