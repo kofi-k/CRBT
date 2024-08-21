@@ -72,16 +72,16 @@ fun HomeScreen(
             UserBalanceCard(
                 onNavigateToTopUp = onNavigateToTopUp,
                 onRefresh = {},
-                balance = "85.40",
+                balance = DummyUser.user.accountBalance.toString(),
                 balancePercentage = 65
             )
         }
 
         item {
             LatestMusicCard(
-                artist = DummyTones.tones[0].artist,
-                title = DummyTones.tones[0].toneName,
-                backgroundUrl = DummyTones.tones[0].toneImageUrl,
+                artist = DummyTones.tones[0].artisteName,
+                title = DummyTones.tones[0].songTitle,
+                backgroundUrl = DummyTones.tones[0].profile,
                 onCardClick = {
                     onPopularTodayClick(null)
                 },

@@ -52,7 +52,6 @@ enum class SubscriptionTabs {
     Monthly,
     BiWeekly,
     Weekly,
-    FreeTrials
 }
 
 @Composable
@@ -222,7 +221,6 @@ fun SubscriptionTabRow(
                 SubscriptionTabs.Monthly -> "Monthly"
                 SubscriptionTabs.BiWeekly -> "Bi-Weekly"
                 SubscriptionTabs.Weekly -> "Weekly"
-                SubscriptionTabs.FreeTrials -> "Free Trials"
             }
             Text(
                 text = text,

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -173,9 +174,9 @@ fun DailyPopularTones(
                 key = { tone -> tone.id }
             ) { tone ->
                 MusicCard(
-                    artist = tone.artist,
-                    title = tone.toneName,
-                    imageUrl = tone.toneImageUrl,
+                    artist = tone.artisteName,
+                    title = tone.songTitle,
+                    imageUrl = tone.profile,
                     onCardClick = { onToneSelected(tone.id) }
                 )
             }
@@ -195,6 +196,7 @@ fun MusicCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
+            .widthIn(max = 120.dp)
             .clickable(
                 onClick = onCardClick,
                 interactionSource = remember { MutableInteractionSource() },
