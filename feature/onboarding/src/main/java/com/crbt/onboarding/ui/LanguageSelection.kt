@@ -1,4 +1,4 @@
-package com.crbt.onboarding
+package com.crbt.onboarding.ui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,7 +21,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.crbt.data.core.data.CRBTSettingsData
+import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
@@ -37,8 +37,8 @@ fun LanguageSelection(
     selectedLanguage: String
 ) {
     OnboardingSheetContainer(
-        titleRes = R.string.feature_onboarding_language_selection_title,
-        subtitleRes = R.string.feature_onboarding_language_selection_subtitle,
+        title = stringResource(id = R.string.feature_onboarding_language_selection_title),
+        subtitle = stringResource(id = R.string.feature_onboarding_language_selection_subtitle),
         content = {
             LanguageSelectionMenu(
                 onLanguageSelected = onLanguageSelected,
@@ -67,7 +67,7 @@ fun LanguageSelectionMenu(
             Column {
                 CustomInputButton(
                     text = stringResource(
-                        id = CRBTSettingsData.languages.first { it.id == selectedLanguage }.name
+                        id = CRBTSettingsData.languages.first { it.code == selectedLanguage }.name
                     ),
                     onClick = {
                         expanded = !expanded
@@ -93,7 +93,7 @@ fun LanguageSelectionMenu(
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = language.name)) },
                                 onClick = {
-                                    onLanguageSelected(language.id)
+                                    onLanguageSelected(language.code)
                                     expanded = false
                                 },
                                 modifier = Modifier
@@ -116,7 +116,7 @@ fun LanguageSelectionMenuPreview() {
     CrbtTheme {
         LanguageSelection(
             onLanguageSelected = {},
-            selectedLanguage = CRBTSettingsData.languages.first().id
+            selectedLanguage = CRBTSettingsData.languages.first().code
         )
     }
 }

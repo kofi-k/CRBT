@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.crbt.onboarding.OnboardingFinishedScreen
 import com.crbt.onboarding.OnboardingScreen
-import com.crbt.onboarding.Profile
+import com.crbt.onboarding.ui.Profile
 
 
 const val ONBOARDING_ROUTE = "onboarding_route"
@@ -16,14 +16,18 @@ const val ONBOARDING_COMPLETE_ROUTE = "onboarding_complete_route"
 fun NavController.navigateToOnboarding() =
     navigate(ONBOARDING_ROUTE)
 
-fun NavGraphBuilder. onboardingScreen(
+fun NavGraphBuilder.onboardingScreen(
     navigateToHome: () -> Unit,
     navController: NavController,
 ) {
     composable(route = ONBOARDING_ROUTE) {
         OnboardingScreen(
             onOTPVerified = {
-                navController.navigate(ONBOARDING_PROFILE_ROUTE)
+                navController.navigate(ONBOARDING_PROFILE_ROUTE) {
+                    popUpTo(ONBOARDING_ROUTE) {
+                        inclusive = true
+                    }
+                }
             },
         )
     }

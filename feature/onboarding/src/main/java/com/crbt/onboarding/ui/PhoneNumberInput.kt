@@ -1,4 +1,4 @@
-package com.crbt.onboarding
+package com.crbt.onboarding.ui
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +23,8 @@ fun PhoneNumberInput(
 ) {
     OnboardingSheetContainer(
         modifier = modifier,
-        titleRes = R.string.feature_onboarding_welcome_title,
-        subtitleRes = R.string.feature_onboarding_phone_number_entry_message,
+        title = stringResource(id = R.string.feature_onboarding_welcome_title),
+        subtitle = stringResource(id = R.string.feature_onboarding_phone_number_entry_message),
         content = {
             PhoneEntryScreen { phoneNumber, isValid ->
                 onPhoneNumberChanged(phoneNumber, isValid)
@@ -45,6 +45,6 @@ fun PhoneNumberInput(
 @Composable
 fun PhoneNumberInputPreview() {
     CrbtTheme {
-    PhoneNumberInput {_, _ -> }
+        PhoneNumberInput { _, _ -> }
     }
 }

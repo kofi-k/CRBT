@@ -1,4 +1,4 @@
-package com.crbt.onboarding
+package com.crbt.onboarding.ui
 
 import android.os.Build.VERSION_CODES
 import androidx.annotation.RequiresApi
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
@@ -17,16 +18,18 @@ import com.example.crbtjetcompose.feature.onboarding.R
 @Composable
 fun OTPVerification(
     modifier: Modifier = Modifier,
+    onOtpModified: (String, Boolean) -> Unit,
+    otpValue: String ,
+    phoneNumber: String,
 ) {
     OnboardingSheetContainer(
         modifier = modifier,
-        titleRes = R.string.feature_onboarding_authentication_title,
-        subtitleRes = R.string.feature_onboarding_authentication_subtitle,
+        title = stringResource(id = R.string.feature_onboarding_authentication_title),
+        subtitle = stringResource(id = R.string.feature_onboarding_authentication_subtitle, phoneNumber),
         content = {
             OTPVerificationScreen(
-                onOtpModified = { otp, isComplete ->
-                    // todo
-                }
+                onOtpModified = onOtpModified,
+                otpValue = otpValue,
             )
         }
     )
@@ -36,12 +39,11 @@ fun OTPVerification(
 @Composable
 fun OTPVerificationScreen(
     onOtpModified: (String, Boolean) -> Unit = { _, _ -> },
+    otpValue: String,
 ) {
     OtpScreen(
-        otpValue = "123456",
-        onOtpModified = { otp, isComplete ->
-            onOtpModified(otp, isComplete)
-        },
+        otpValue = otpValue,
+        onOtpModified = onOtpModified,
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -57,7 +59,10 @@ fun OTPVerificationScreen(
 fun PreviewOTPVerification() {
     CrbtTheme {
         OTPVerification(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            onOtpModified = { _, _ -> },
+            otpValue = "123456",
+            phoneNumber = "123456789"
         )
     }
 }

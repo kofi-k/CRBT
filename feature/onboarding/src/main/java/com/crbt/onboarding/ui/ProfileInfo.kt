@@ -1,4 +1,4 @@
-package com.crbt.onboarding
+package com.crbt.onboarding.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,8 +40,8 @@ fun Profile(
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
-            titleRes = R.string.feature_onboarding_updates_title,
-            subtitleRes = R.string.feature_onboarding_updates_subtitle,
+            title = stringResource(id = R.string.feature_onboarding_updates_title),
+            subtitle = stringResource(id = R.string.feature_onboarding_updates_subtitle),
             content = {
                 EmailCheck(
                     modifier = modifier,

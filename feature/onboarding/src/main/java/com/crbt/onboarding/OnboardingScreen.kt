@@ -1,6 +1,8 @@
 package com.crbt.onboarding
 
+import android.app.Activity
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
@@ -30,14 +32,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -45,12 +51,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.crbt.data.core.data.OnboardingScreenData
-import com.crbt.data.core.data.OnboardingSetupData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.OnboardingSetupProcess
+import com.crbt.data.core.data.model.OnboardingScreenData
+import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.bodyFontFamily
+import com.crbt.onboarding.ui.LanguageSelection
+import com.crbt.onboarding.ui.OTPVerification
+import com.crbt.onboarding.ui.OnboardingViewModel
+import com.crbt.onboarding.ui.PhoneNumberInput
+import com.crbt.onboarding.ui.phoneAuth.AuthState
+import com.crbt.onboarding.ui.phoneAuth.PhoneAuthViewModel
 import com.example.crbtjetcompose.feature.onboarding.R
 import kotlinx.coroutines.launch
 import com.example.crbtjetcompose.core.ui.R as UiR
@@ -61,36 +74,81 @@ import com.example.crbtjetcompose.core.ui.R as UiR
 fun OnboardingScreen(
     onOTPVerified: () -> Unit,
 ) {
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false
+        )
+    )
     val viewModel: OnboardingViewModel = hiltViewModel()
+    val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
+    val authState by phoneAuthViewModel.authState.collectAsStateWithLifecycle()
     val screenData = viewModel.onboardingScreenData
     val onboardingSetupData = viewModel.onboardingSetupData
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     BackHandler {
-        if (bottomSheetScaffoldState.bottomSheetState.isVisible && screenData.onboardingScreenIndex == 0) {
-            scope.launch {
-                bottomSheetScaffoldState.bottomSheetState.hide()
-            }
-        } else {
-            viewModel.onPreviousClicked()
-        }
+        viewModel.onPreviousClicked()
     }
+
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContent = {
             CrbtOnboardingBottomSheet(
-                onOTPVerified = {
-                    scope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.hide()
-                        onOTPVerified()
-                    }
-                },
                 screenData = screenData,
                 onboardingSetupData = onboardingSetupData,
-                onNextClicked = { viewModel.onNextClicked() },
+                onNextClicked = {
+                    when (screenData.onboardingSetupProcess) {
+
+                        OnboardingSetupProcess.PHONE_NUMBER_ENTRY -> {
+                            phoneAuthViewModel.sendVerificationCode(
+                                onOtpSent = {
+                                    viewModel.onNextClicked()
+                                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                                },
+                                phoneNumber = onboardingSetupData.phoneNumber,
+                                activity = context as Activity
+                            )
+                        }
+
+                        OnboardingSetupProcess.OTP_VERIFICATION -> {
+                            when (authState) {
+                                is AuthState.Error -> {
+                                    onOTPVerified() // todo remove this line, it's for testing
+                                    viewModel.onDoneClicked()
+                                    Toast.makeText(
+                                        context,
+                                        (authState as AuthState.Error).message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                is AuthState.Success -> {
+                                    onOTPVerified()
+                                    viewModel.onDoneClicked()
+                                    Toast.makeText(
+                                        context,
+                                        "OTP Verified Successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                else -> {}
+                            }
+                            phoneAuthViewModel.verifyCode(
+                                onOtpVerified = onOTPVerified,
+                                otpCode = viewModel.otpCode
+                            )
+                        }
+
+                        else -> {
+                            viewModel.onNextClicked()
+                        }
+                    }
+                },
                 isNextEnabled = viewModel.isNextEnabled,
                 onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
                 onLanguageSelected = viewModel::onLanguageSelected,
@@ -100,6 +158,9 @@ fun OnboardingScreen(
                             WindowInsetsSides.Vertical,
                         ),
                     ),
+                buttonLoading = authState is AuthState.Loading,
+                onOtpModified = viewModel::onOtpCodeChanged,
+                otpValue = viewModel.otpCode
             )
         },
         modifier = Modifier
@@ -176,7 +237,9 @@ fun OnboardingScreen(
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
                         )
                     )
+
                     Spacer(modifier = Modifier.height(32.dp))
+
                     IconButton(
                         onClick = {
                             scope.launch {
@@ -204,21 +267,32 @@ private const val CONTENT_ANIMATION_DURATION = 300
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 internal fun CrbtOnboardingBottomSheet(
-    onOTPVerified: () -> Unit,
     screenData: OnboardingScreenData,
     onboardingSetupData: OnboardingSetupData,
     onNextClicked: () -> Unit,
     isNextEnabled: Boolean,
     onLanguageSelected: (String) -> Unit,
     onPhoneNumberEntered: (String, Boolean) -> Unit,
+    onOtpModified: (String, Boolean) -> Unit,
+    otpValue: String,
     modifier: Modifier = Modifier,
-    ) {
+    buttonLoading: Boolean,
+) {
+    val buttonText = when (screenData.onboardingSetupProcess) {
+        OnboardingSetupProcess.OTP_VERIFICATION -> {
+            stringResource(id = R.string.feature_onboarding_verify_button)
+        }
+
+        else -> {
+            stringResource(id = R.string.feature_onboarding_next_button)
+        }
+    }
     BottomSheetContent(
+        modifier = modifier,
         onNextClicked = onNextClicked,
         isNextButtonEnabled = isNextEnabled,
-        onShowVerifyOtp = screenData.onboardingSetupProcess == OnboardingSetupProcess.OTP_VERIFICATION,
-        onOTPVerified = onOTPVerified,
-        modifier = modifier,
+        buttonText = buttonText,
+        buttonLoading = buttonLoading,
         content = {
             AnimatedContent(
                 targetState = screenData,
@@ -256,6 +330,9 @@ internal fun CrbtOnboardingBottomSheet(
                     OnboardingSetupProcess.OTP_VERIFICATION -> {
                         OTPVerification(
                             modifier = Modifier.fillMaxWidth(),
+                            onOtpModified = onOtpModified,
+                            otpValue = otpValue,
+                            phoneNumber = onboardingSetupData.phoneNumber
                         )
                     }
 
@@ -283,10 +360,10 @@ private fun getTransitionDirection(
 fun BottomSheetContent(
     modifier: Modifier = Modifier,
     onNextClicked: () -> Unit,
-    onOTPVerified: () -> Unit,
     isNextButtonEnabled: Boolean,
-    onShowVerifyOtp: Boolean,
     content: @Composable () -> Unit,
+    buttonLoading: Boolean,
+    buttonText: String = stringResource(id = R.string.feature_onboarding_next_button),
 ) {
     Column(
         modifier = Modifier
@@ -297,13 +374,11 @@ fun BottomSheetContent(
         content()
         Spacer(modifier = Modifier.height(32.dp))
         ProcessButton(
-            onClick = if (onShowVerifyOtp) onOTPVerified else onNextClicked,
-            text = stringResource(
-                id = if (onShowVerifyOtp) R.string.feature_onboarding_verify_button else
-                    R.string.feature_onboarding_next_button
-            ),
-            isEnabled = if (onShowVerifyOtp) true else isNextButtonEnabled,
-            modifier = Modifier.fillMaxWidth()
+            onClick = onNextClicked,
+            text = buttonText,
+            isEnabled = isNextButtonEnabled,
+            modifier = Modifier.fillMaxWidth(),
+            isProcessing = buttonLoading
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

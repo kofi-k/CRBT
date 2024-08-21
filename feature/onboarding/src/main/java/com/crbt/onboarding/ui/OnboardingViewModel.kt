@@ -1,13 +1,15 @@
-package com.crbt.onboarding
+package com.crbt.onboarding.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.crbt.data.core.data.OnboardingScreenData
-import com.crbt.data.core.data.OnboardingSetupData
 import com.crbt.data.core.data.OnboardingSetupProcess
-import com.crbt.data.core.data.userProfileIsComplete
+import com.crbt.data.core.data.model.CRBTSettingsData
+import com.crbt.data.core.data.model.OnboardingScreenData
+import com.crbt.data.core.data.model.OnboardingSetupData
+import com.crbt.data.core.data.model.userProfileIsComplete
+import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -28,6 +30,10 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
     private var _onboardingScreenData by mutableStateOf(createOnboardingScreenData())
     val onboardingScreenData: OnboardingScreenData
         get() = _onboardingScreenData
+
+    private var _otpCode by mutableStateOf("")
+    val otpCode: String
+        get() = _otpCode
 
     private var onboardingIndex = 0
 
@@ -53,14 +59,14 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _onboardingScreenData = createOnboardingScreenData()
     }
 
-    fun onLanguageSelected(languageId: String) {
+    fun onLanguageSelected(languageId: String = CRBTSettingsData.languages.first { it.code == "en" }.code) {
         _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = languageId)
-        _isNextEnabled = getIsNextEnabled()
+        _isNextEnabled = true
     }
 
     fun onPhoneNumberEntered(phoneNumber: String, isPhoneNumberValid: Boolean) {
         _onboardingSetupData = _onboardingSetupData.copy(phoneNumber = phoneNumber)
-        _isNextEnabled = true
+        _isNextEnabled = isPhoneNumberValid
     }
 
     fun onUserProfileEntered(firstName: String, lastName: String) {
@@ -68,6 +74,10 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _isNextEnabled = getIsNextEnabled()
     }
 
+    fun onOtpCodeChanged(otp: String, isComplete: Boolean) {
+        _otpCode = otp
+        _isNextEnabled = getIsNextEnabled()
+    }
 
 
     private fun changeOnboardingSetupData(index: Int) {
@@ -76,11 +86,11 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _isNextEnabled = getIsNextEnabled()
     }
 
-    private fun getIsNextEnabled() : Boolean {
+    private fun getIsNextEnabled(): Boolean {
         return when (onboardingOrder[onboardingIndex]) {
             OnboardingSetupProcess.LANGUAGE_SELECTION -> true
             OnboardingSetupProcess.PHONE_NUMBER_ENTRY -> _onboardingSetupData.phoneNumber.isNotEmpty() // todo use libphonenumber to validate
-            OnboardingSetupProcess.OTP_VERIFICATION -> true // todo validate otp
+            OnboardingSetupProcess.OTP_VERIFICATION -> _otpCode.length == OTP_LENGTH
             OnboardingSetupProcess.USER_PROFILE_SETUP -> _onboardingSetupData.userProfileIsComplete()
         }
     }
