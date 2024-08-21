@@ -13,13 +13,18 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.SkipNext
+import androidx.compose.material.icons.outlined.SkipPrevious
 import androidx.compose.material.icons.outlined.Subscriptions
 import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddAPhoto
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.AttachMoney
 import androidx.compose.material.icons.rounded.AudioFile
+import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material.icons.rounded.Category
@@ -41,6 +46,8 @@ import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.NotificationAdd
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Numbers
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.Payment
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PhotoLibrary
@@ -81,6 +88,7 @@ object CrbtIcons {
     val EditNote = Icons.Rounded.EditNote
 
     val Camera = Icons.Rounded.Camera
+    val AddPhoto = Icons.Rounded.AddAPhoto
     val Photos = Icons.Rounded.PhotoLibrary
     val Microphone = Icons.Rounded.Mic
     val Storage = Icons.Rounded.Category
@@ -112,6 +120,14 @@ object CrbtIcons {
     val Permissions = Icons.Rounded.ManageAccounts
     val RewardPoints = Icons.Rounded.EmojiEvents
     val PaymentMethods = Icons.Rounded.Payment
+
+    // music icons
+    val Audiotrack = Icons.Rounded.Audiotrack
+    val PlayOutline = Icons.Outlined.PlayArrow
+    val Pause = Icons.Rounded.Pause
+    val PauseCircle = Icons.Rounded.PauseCircle
+    val Next = Icons.Outlined.SkipNext
+    val Previous = Icons.Outlined.SkipPrevious
 
     // bottom nav icons
     val Subscription = Icons.Rounded.Subscriptions

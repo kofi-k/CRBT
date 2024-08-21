@@ -1,6 +1,6 @@
 package com.crbt.ui.core.ui
 
-import com.crbt.data.core.data.CRBTSettingsData
+import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.icon.CrbtIcons
 
 val permissionIcons = mapOf(

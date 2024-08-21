@@ -26,6 +26,14 @@ fun ProcessButton(
     onClick: () -> Unit,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     text: String = stringResource(R.string.core_designsystem_process_button_default_text),
+    textContent: @Composable () -> Unit = {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Medium
+            ),
+        )
+    },
     isEnabled: Boolean = true,
     isProcessing: Boolean = false,
 ) {
@@ -40,12 +48,7 @@ fun ProcessButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 1.dp),
         ) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium
-                ),
-            )
+            if (!isProcessing) textContent()
             AnimatedVisibility(isProcessing) {
                 CircularProgressIndicator(
                     modifier = Modifier
