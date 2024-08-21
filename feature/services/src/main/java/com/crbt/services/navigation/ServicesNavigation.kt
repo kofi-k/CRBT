@@ -22,8 +22,8 @@ fun NavController.navigateToTopUp() =
     navigate(TOPUP_ROUTE)
 
 fun NavGraphBuilder.servicesScreen(
-    navigateToHome: () -> Unit,
     navController: NavController,
+    navigateToTopLevel: () -> Unit
 ) {
     composable(route = SERVICES_ROUTE) {
         ServicesScreen(
@@ -46,7 +46,13 @@ fun NavGraphBuilder.servicesScreen(
 
     composable(route = TOPUP_CHECKOUT_ROUTE) {
         TopUpCheckoutScreen(
-            onCompleteTopUp = navigateToHome
+            onCompleteTopUp = {
+                navController.navigate(SERVICES_ROUTE){
+                    popUpTo(SERVICES_ROUTE){
+                        inclusive = true
+                    }
+                }
+            }
         )
     }
 }

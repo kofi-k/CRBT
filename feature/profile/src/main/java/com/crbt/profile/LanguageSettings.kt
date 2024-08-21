@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.crbt.data.core.data.CRBTSettingsData
+import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.example.crbtjetcompose.feature.profile.R
@@ -27,7 +27,7 @@ fun LanguageSettings(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
-    var selectedLanguage by remember { mutableStateOf(CRBTSettingsData.languages.first().id) }
+    var selectedLanguage by remember { mutableStateOf(CRBTSettingsData.languages.first().code) }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -53,18 +53,18 @@ fun LanguageSettings(
                 CRBTSettingsData.languages.forEach { language ->
                     ListCard(
                         onClick = {
-                            onLanguageCheckChange(language.id)
-                            selectedLanguage = language.id
+                            onLanguageCheckChange(language.code)
+                            selectedLanguage = language.code
                         },
                         headlineText = stringResource(id = language.name),
                         leadingContentIcon = CrbtIcons.Language,
                         leadingContent = {},
                         trailingContent = {
                             RadioButton(
-                                selected = selectedLanguage == language.id,
+                                selected = selectedLanguage == language.code,
                                 onClick = {
-                                    onLanguageCheckChange(language.id)
-                                    selectedLanguage = language.id
+                                    onLanguageCheckChange(language.code)
+                                    selectedLanguage = language.code
                                     expanded = false
                                 }
                             )

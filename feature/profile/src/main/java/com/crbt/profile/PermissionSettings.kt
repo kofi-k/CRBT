@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.tracing.trace
-import com.crbt.data.core.data.CRBTSettingsData
+import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.components.scrollbar.DecorativeScrollbar
@@ -54,7 +54,13 @@ fun PermissionSettings(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
-    var allowedPermissions by remember { mutableStateOf(setOf<String>()) }
+    val allowedPermissions by remember {
+        mutableStateOf(
+            setOf(
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+            )
+        )
+    }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -76,11 +82,11 @@ fun PermissionSettings(
         if (expanded) {
             AllowedPermissions(
                 onPermissionCheckChange = { permissionId, isSelected ->
-                    allowedPermissions = if (isSelected) {
-                        allowedPermissions.plus(permissionId)
-                    } else {
-                        allowedPermissions.minus(permissionId)
-                    }
+//                    allowedPermissions = if (isSelected) {
+//                        allowedPermissions.plus(permissionId)
+//                    } else {
+//                        allowedPermissions.minus(permissionId)
+//                    }
                     onPermissionCheckChange(permissionId, isSelected)
                 },
                 allowedPermissions = allowedPermissions
@@ -114,13 +120,13 @@ fun AllowedPermissions(
         ) {
             items(
                 items = CRBTSettingsData.permissions,
-                key = { it.id }
+                key = { it.code }
             ) {
                 SinglePermissionButton(
                     name = stringResource(it.name),
-                    permissionId = it.id,
+                    permissionId = it.code,
                     icon = permissionIcons[it.name] ?: CrbtIcons.Permissions,
-                    isSelected = it.id in allowedPermissions,
+                    isSelected = it.code in allowedPermissions,
                     onClick = onPermissionCheckChange
                 )
             }
@@ -180,7 +186,6 @@ private fun SinglePermissionButton(
         }
     }
 }
-
 
 
 @ThemePreviews

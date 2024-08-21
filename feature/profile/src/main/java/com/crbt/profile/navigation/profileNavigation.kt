@@ -24,10 +24,7 @@ fun NavGraphBuilder.profileScreen(
 ) {
     composable(route = PROFILE_ROUTE) {
         ProfileRoute(
-            onLogout = {
-                navController.popBackStack(PROFILE_ROUTE, inclusive = true)
-                onLogout()
-            },
+            onLogout = onLogout,
             onEditProfileClick = {
                 navController.navigateToProfileEdit()
             },

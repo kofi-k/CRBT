@@ -111,8 +111,8 @@ fun Profile(
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
-            titleRes = R.string.feature_profile_updates_title,
-            subtitleRes = R.string.feature_profile_updates_subtitle,
+            title = stringResource(id = R.string.feature_profile_updates_title),
+            subtitle = stringResource(id = R.string.feature_profile_updates_subtitle),
             content = {
                 EmailCheck(
                     modifier = modifier,
@@ -216,7 +216,9 @@ fun UserProfileImage(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
             )
-        } else {IconButtonDefaults.filledIconButtonColors()}
+        } else {
+            IconButtonDefaults.filledIconButtonColors()
+        }
         val animteXOffset by animateDpAsState(
             targetValue = if (profileImage == Uri.EMPTY) 0.dp else (-18).dp,
             animationSpec = tween(
@@ -235,7 +237,7 @@ fun UserProfileImage(
         ) {
             FilledIconButton(
                 onClick = {
-                    if(profileImage != Uri.EMPTY) {
+                    if (profileImage != Uri.EMPTY) {
                         onRemoveImage(Uri.EMPTY)
                     } else {
                         onPickImage()
