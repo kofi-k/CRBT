@@ -1,5 +1,7 @@
 package com.example.crbtjetcompose.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -46,13 +48,13 @@ import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
 import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
-import com.crbt.subscription.navigation.GIFT_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
 import com.crbt.subscription.navigation.TONES_ROUTE
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalComposeUiApi::class,
@@ -70,7 +72,14 @@ fun CrbtApp(appState: CrbtAppState) {
     val showNavigationBars = currentRoute !in listOf(
         ONBOARDING_ROUTE,
         ONBOARDING_COMPLETE_ROUTE,
-        ONBOARDING_PROFILE_ROUTE
+        ONBOARDING_PROFILE_ROUTE,
+        ADD_SUBSCRIPTION_ROUTE
+    )
+
+    val showBottomBar = currentRoute !in listOf(
+        ONBOARDING_ROUTE,
+        ONBOARDING_COMPLETE_ROUTE,
+        ONBOARDING_PROFILE_ROUTE,
     )
 
 
@@ -83,7 +92,6 @@ fun CrbtApp(appState: CrbtAppState) {
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
             TONES_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_tones
             ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
-            GIFT_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_gift_subscription_title
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
         }
     }
@@ -103,7 +111,7 @@ fun CrbtApp(appState: CrbtAppState) {
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 bottomBar = {
-                    if (showNavigationBars) {
+                    if (showBottomBar) {
                         CrbtBottomBar(
                             destinations = appState.topLevelDestinations,
                             onNavigateToDestination = appState::navigateToTopLevelDestination,
