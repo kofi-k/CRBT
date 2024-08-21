@@ -13,4 +13,5 @@ dependencies {
     implementation(projects.core.ui)
     implementation(libs.country.code.picker)
     implementation(libs.androidx.graphics.shapes)
+    implementation(libs.firebase.auth.ktx)
 }
