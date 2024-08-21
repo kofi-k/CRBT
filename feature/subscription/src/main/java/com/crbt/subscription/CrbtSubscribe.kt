@@ -1,5 +1,8 @@
 package com.crbt.subscription
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
@@ -34,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.SubscriptionBillingType
+import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
@@ -63,15 +68,19 @@ import java.util.Locale
 import java.util.TimeZone
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 internal fun CrbtSubscribeScreen(
-    onSubscriptionComplete: () -> Unit,
+    onSubscribeClick: () -> Unit,
     onBackClicked: () -> Unit,
     viewModel: SubscriptionViewModel = hiltViewModel(),
 ) {
 
     val isGiftSub by viewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val crbtSong = viewModel.crbtSongResource
+    val ussdState by viewModel.ussdState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
 
     Column(
         modifier = Modifier
@@ -94,9 +103,21 @@ internal fun CrbtSubscribeScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
-            subscriptionComplete = onSubscriptionComplete,
+            onSubscribeClick = {
+                viewModel.runUssdCode("*804#", {
+                    onSubscribeClick()
+                    Toast.makeText(context, "Subscribed successfully", Toast.LENGTH_SHORT).show()
+                }, { errorCode ->
+                    Toast.makeText(
+                        context,
+                        "Failed to subscribe with code $errorCode",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    onSubscribeClick()
+                })
+            },
             subscriptionPrice = 10.30,
-            isSubscriptionProcessing = false,
+            isSubscriptionProcessing = ussdState is UssdUiState.Loading,
             isButtonEnabled = true
         )
     }
@@ -143,17 +164,17 @@ fun SubscribeHeader(
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(bottom = 16.dp, start = 16.dp),
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
         ) {
             Text(
-                text = artisteName,
+                text = songTitle,
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = songTitle,
+                text = artisteName,
                 color = Color.White
             )
         }
@@ -169,7 +190,7 @@ fun SubscribeContent(
     billingType: SubscriptionBillingType,
     onDatePicked: (Long) -> Unit,
     date: Long?,
-    subscriptionComplete: () -> Unit,
+    onSubscribeClick: () -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
     isButtonEnabled: Boolean
@@ -199,7 +220,7 @@ fun SubscribeContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             ProcessButton(
-                onClick = subscriptionComplete,
+                onClick = onSubscribeClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -226,13 +247,13 @@ fun SubscribeContent(
                                     stringResource(R.string.feature_subscription_subscribe_button)
                                 }
                                 append(text)
-                                    append(" ")
-                                    append(
-                                        stringResource(
-                                            id = R.string.feature_subscription_etb,
-                                            subscriptionPrice
-                                        )
+                                append(" ")
+                                append(
+                                    stringResource(
+                                        id = R.string.feature_subscription_etb,
+                                        subscriptionPrice
                                     )
+                                )
 
                             }
                         }
@@ -369,7 +390,7 @@ fun CrbtSubscribeContentPreview() {
             billingType = SubscriptionBillingType.Monthly,
             onDatePicked = {},
             date = null,
-            subscriptionComplete = {},
+            onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
             isButtonEnabled = true
@@ -387,7 +408,7 @@ fun CrbtSubscribeContentPreview2() {
             billingType = SubscriptionBillingType.Monthly,
             onDatePicked = {},
             date = null,
-            subscriptionComplete = {},
+            onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
             isButtonEnabled = true

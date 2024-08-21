@@ -1,5 +1,7 @@
 package com.crbt.subscription.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -36,9 +38,10 @@ fun NavController.navigateToSubscription(navOptions: NavOptions) =
 fun NavController.navigateToTones(toneId: String? = null, navOptions: NavOptions? = null) =
     navigate("$TONES_ROUTE$toneId", navOptions)
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,
-    onSubscriptionComplete: () -> Unit,
+    navigateToTopLevel: () -> Unit
 ) {
     composable(route = SUBSCRIPTION_ROUTE) {
         SubscriptionsRoute(
@@ -71,7 +74,7 @@ fun NavGraphBuilder.subscriptionScreen(
         )
     ) {
         CrbtSubscribeScreen(
-            onSubscriptionComplete = {
+            onSubscribeClick = {
                 navController.navigate(SUBSCRIPTION_COMPLETE_ROUTE)
             },
             onBackClicked = {
@@ -81,9 +84,14 @@ fun NavGraphBuilder.subscriptionScreen(
     }
 
     composable(route = SUBSCRIPTION_COMPLETE_ROUTE) {
-        SubscriptionCheckout {
-            onSubscriptionComplete()
-            navController.popBackStack()
-        }
+        SubscriptionCheckout(
+            onDoneClicked = {
+                navController.navigate(SUBSCRIPTION_ROUTE){
+                    popUpTo(SUBSCRIPTION_ROUTE){
+                        inclusive = true
+                    }
+                }
+            }
+        )
     }
 }
