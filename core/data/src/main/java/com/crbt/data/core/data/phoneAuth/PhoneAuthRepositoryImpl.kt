@@ -33,4 +33,9 @@ class PhoneAuthRepositoryImpl @Inject constructor(
         return auth.signInWithCredential(credential)
     }
 
+    override fun signOut() {
+        auth.signOut()
+        //todo extra logic for sign out
+    }
+
 }

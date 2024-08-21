@@ -8,7 +8,7 @@ object DummyTones {
     val tones = listOf(
         CrbtSongResource(
             profile = "https://images.unsplash.com/photo-1535925191244-17536ca4f8b6?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            songTitle = "Paps Album",
+            songTitle = "Paps On The Beat",
             artisteName = "Paps",
             id = "1",
             song = "",
@@ -27,8 +27,8 @@ object DummyTones {
         ),
         CrbtSongResource(
             profile = "https://images.unsplash.com/photo-1522863602463-afebb8886ab2?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            songTitle = "Another Album",
-            artisteName = "Artist",
+            songTitle = "Hello World",
+            artisteName = "Paps & Friends",
             id = "2",
             song = "",
             isSubscribed = true,
@@ -46,8 +46,8 @@ object DummyTones {
         ),
         CrbtSongResource(
             profile = "https://images.unsplash.com/photo-1533619043865-1c2e2f32ff2f?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            songTitle = "Another Album",
-            artisteName = "Artist",
+            songTitle = "This is not the real song",
+            artisteName = "Paps",
             id = "3",
             song = "",
             isSubscribed = true,
@@ -65,8 +65,8 @@ object DummyTones {
         ),
         CrbtSongResource(
             profile = "https://images.unsplash.com/photo-1517230878791-4d28214057c2?q=80&w=2369&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            songTitle = "Another Album",
-            artisteName = "Artist",
+            songTitle = "Freestyle",
+            artisteName = "Kofi k",
             id = "4",
             song = "",
             isSubscribed = true,

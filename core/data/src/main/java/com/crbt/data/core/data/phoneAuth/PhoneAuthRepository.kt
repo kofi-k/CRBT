@@ -14,6 +14,8 @@ interface PhoneAuthRepository {
     )
 
     fun verifyCode(verificationId: String, code: String): Task<AuthResult>
+
+    fun signOut()
 }
 
 

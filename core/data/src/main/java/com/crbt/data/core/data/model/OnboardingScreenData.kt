@@ -1,4 +1,6 @@
-package com.crbt.data.core.data
+package com.crbt.data.core.data.model
+
+import com.crbt.data.core.data.OnboardingSetupProcess
 
 
 data class OnboardingScreenData(

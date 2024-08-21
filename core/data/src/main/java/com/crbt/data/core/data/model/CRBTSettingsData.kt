@@ -1,21 +1,21 @@
-package com.crbt.data.core.data
+package com.crbt.data.core.data.model
 
 import androidx.annotation.StringRes
 import com.example.crbtjetcompose.core.data.R
 
 
 data class CRBTSettingsData(
-    val id: String,
-   @StringRes val name: Int,
+    val code: String,
+    @StringRes val name: Int,
 ) {
     companion object {
         val languages = listOf(
-            CRBTSettingsData("1", R.string.core_data_amharic),
-            CRBTSettingsData("2", R.string.core_data_oromiffa),
-            CRBTSettingsData("3", R.string.core_data_tigrigna),
-            CRBTSettingsData("4", R.string.core_data_somalia),
-            CRBTSettingsData("5", R.string.core_data_arabic),
-            CRBTSettingsData("6", R.string.core_data_english),
+            CRBTSettingsData("amh", R.string.core_data_amharic),
+            CRBTSettingsData("omf", R.string.core_data_oromiffa),
+            CRBTSettingsData("tgn", R.string.core_data_tigrigna),
+            CRBTSettingsData("sml", R.string.core_data_somalia),
+            CRBTSettingsData("arb", R.string.core_data_arabic),
+            CRBTSettingsData("en", R.string.core_data_english),
         )
 
         // camera, photos, microphone, storage, contacts, location, sms, ussd,

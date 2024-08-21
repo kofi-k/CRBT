@@ -11,11 +11,13 @@ import android.telephony.TelephonyManager
 import android.telephony.TelephonyManager.UssdResponseCallback
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class UssdRepository(
-    private val context: Context,
+class UssdRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
 ) {
     private val _ussdState = MutableStateFlow<UssdUiState>(UssdUiState.Idle)
     val ussdState: StateFlow<UssdUiState> get() = _ussdState
@@ -27,7 +29,7 @@ class UssdRepository(
 
         if (ActivityCompat.checkSelfPermission(
                 context,
-                android.Manifest.permission.CALL_PHONE
+                Manifest.permission.CALL_PHONE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             // Request permission if not granted
