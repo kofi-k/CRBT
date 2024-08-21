@@ -8,15 +8,15 @@ option java_multiple_files = true;
 
 message UserPreferences {
   reserved 2;
-  repeated  string user_id = 1;
-  repeated  string user_first_name = 3;
-  repeated  string user_last_name = 4;
-  repeated  string user_email = 5;
-  repeated  string user_phone_number = 6;
-  repeated  string user_language_code = 7;
-  repeated string user_profile_url = 14;
-  repeated string user_payment_method = 15;
-  repeated string user_currency = 16;
+  string user_id = 1;
+  string user_first_name = 3;
+  string user_last_name = 4;
+  string user_email = 5;
+  string user_phone_number = 6;
+  string user_language_code = 7;
+  string user_profile_url = 14;
+  string user_payment_method = 15;
+  string user_currency = 16;
 
   // Each map is used to store a set of string IDs. The bool has no meaning, but proto3 doesn't
   // have a Set type so this is the closest we can get to a Set.
@@ -29,7 +29,6 @@ message UserPreferences {
   bool is_user_signed_in = 12;
 
   bool use_dynamic_color = 13;
-
 
 
 }
