@@ -25,4 +25,8 @@
     <string name="feature_services_account_balance">Account Balance</string>
     <string name="feature_services_topup_amount">Top Up Amount</string>
     <string name="feature_services_date">Date</string>
+    <string name="feature_services_gift_button">Gift</string>
+    <string name="feature_services_cancel">Cancel</string>
+    <string name="feature_services_purchase_confirmation">Proceed to purchase %s at %s ETB</string>
+    <string name="feature_services_gift_purchase_contact_info">Enter number of recipient</string>
 </resources>
