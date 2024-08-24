@@ -14,20 +14,20 @@ data class UserToneSubscriptions internal  constructor(
     val dueDate: String,
 ) {
     // will have to replace [crbtUser] with the actual user subscription data
-    constructor(tones: Tones, crbtUser: CrbtUser): this(
-        toneId = tones.id,
-        toneName = tones.toneName,
-        artist = tones.artist,
-        toneUrl = tones.toneUrl,
-        toneImageUrl = tones.toneImageUrl,
+    constructor(crbtSongResource: CrbtSongResource, crbtUser: CrbtUser): this(
+        toneId = crbtSongResource.id,
+        toneName = crbtSongResource.songTitle,
+        artist = crbtSongResource.artisteName,
+        toneUrl = crbtSongResource.song,
+        toneImageUrl = crbtSongResource.profile,
         dueDate = "Due in 2 days" // todo get this due date based from the user subscription data
     )
 }
 
 /**
- *  Maps a list of [Tones] to a list of [UserToneSubscriptions] using the [crbtUser] data
+ *  Maps a list of [CrbtSongResource] to a list of [UserToneSubscriptions] using the [crbtUser] data
  *  @param crbtUser the user data
  *  @return a list of [UserToneSubscriptions]
  * */
-fun List<Tones>.mapToUserToneSubscriptions(crbtUser: CrbtUser): List<UserToneSubscriptions> =
+fun List<CrbtSongResource>.mapToUserToneSubscriptions(crbtUser: CrbtUser): List<UserToneSubscriptions> =
     map { UserToneSubscriptions(it, crbtUser) }

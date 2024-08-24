@@ -7,27 +7,36 @@ import androidx.navigation.compose.composable
 import com.crbt.services.RechargeScreen
 import com.crbt.services.ServicesScreen
 import com.crbt.services.TopUpCheckoutScreen
+import com.crbt.services.packages.PackagesScreen
 
+const val TOPUP_AMOUNT_ARG = "topup_amount"
 const val SERVICES_ROUTE = "services_route"
-const val TOPUP_ROUTE = "top_up_route"
-const val TOPUP_CHECKOUT_ROUTE = "top_up_checkout_route"
+const val TOPUP_ROUTE = "$SERVICES_ROUTE/topup"
+const val TOPUP_CHECKOUT_ROUTE =
+    "$SERVICES_ROUTE/topup_checkout$TOPUP_AMOUNT_ARG={$TOPUP_AMOUNT_ARG}"
 
+const val PACKAGES_ROUTE = "$SERVICES_ROUTE/packages"
 
 fun NavController.navigateToServices(navOptions: NavOptions) =
     navigate(SERVICES_ROUTE, navOptions)
 
+fun NavController.navigateToTopUp() =
+    navigate(TOPUP_ROUTE)
+
 fun NavGraphBuilder.servicesScreen(
-    navigateToHome: () -> Unit,
     navController: NavController,
+    navigateToTopLevel: () -> Unit
 ) {
     composable(route = SERVICES_ROUTE) {
         ServicesScreen(
-            onCheckClick = { /*TODO*/ },
-            onPackageClick = { /*TODO*/ },
-            onRechargeClick = { /*TODO*/ },
+            onPackageClick = {
+                navController.navigate(PACKAGES_ROUTE)
+            },
+            onRechargeClick = {
+                navController.navigate(TOPUP_ROUTE)
+            },
             onTransferClick = { /*TODO*/ },
             onCallBackClick = { /*TODO*/ },
-            onBuyClick = { /*TODO*/ }
         )
     }
 
@@ -41,7 +50,17 @@ fun NavGraphBuilder.servicesScreen(
 
     composable(route = TOPUP_CHECKOUT_ROUTE) {
         TopUpCheckoutScreen(
-            onCompleteTopUp = navigateToHome
+            onCompleteTopUp = {
+                navController.navigate(SERVICES_ROUTE) {
+                    popUpTo(SERVICES_ROUTE) {
+                        inclusive = true
+                    }
+                }
+            }
         )
+    }
+
+    composable(route = PACKAGES_ROUTE) {
+        PackagesScreen()
     }
 }

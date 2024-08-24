@@ -3,4 +3,7 @@
     <string name="core_ui_need_help">Need help?</string>
     <string name="core_ui_untitled">Untitled</string>
     <string name="core_ui_search">Search</string>
+    <string name="core_ui_first_name_label">First name</string>
+    <string name="core_ui_last_name_label">Last name</string>
+    <string name="core_ui_email_label">Email from CRBT</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.crbt.services
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
@@ -37,6 +39,7 @@ import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
+import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
@@ -59,7 +62,17 @@ fun RechargeScreen(
         )
 
         RechargeAmountCard(
-            onAmountChange = {},
+            onAmountChange = { amount, isValid ->
+               /*
+               * todo some viewmodel logic here to update the amount,
+               *  and enable the top up button if the amount is valid
+               *
+               * might as well pass the amount to the checkout screen via
+               * the onTopUpClick lambda or we can have a shared viewmodel tied to this navigation
+               * backstack entry so that state can be shared between the screens ...(quite an overkill for this simple screen 🤷‍♂️)
+               *
+               *  */
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -106,7 +119,7 @@ fun Balance(
 @Composable
 fun RechargeAmountCard(
     modifier: Modifier = Modifier,
-    onAmountChange: (String) -> Unit,
+    onAmountChange: (String, Boolean) -> Unit,
 ) {
     val amountSatate by remember {
         mutableStateOf(AmountValidationState())
@@ -141,7 +154,7 @@ fun RechargeAmountCard(
                     value = amountSatate.text,
                     onValueChange = {
                         amountSatate.text = it
-                        onAmountChange(amountSatate.text)
+                        onAmountChange(amountSatate.text, amountSatate.isValid)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,7 +167,7 @@ fun RechargeAmountCard(
                     inputType = InputType.MONEY,
                     onClear = {
                         amountSatate.text = ""
-                        onAmountChange(amountSatate.text)
+                        onAmountChange(amountSatate.text, amountSatate.isValid)
                     },
                     leadingIcon = {
                         Icon(
@@ -172,6 +185,8 @@ fun RechargeAmountCard(
                             focusManager.moveFocus(FocusDirection.Down)
                         },
                     ),
+                    colors = OutlinedTextFieldDefaults.colors(),
+                    textFieldType = TextFieldType.OUTLINED,
                     showsErrors = amountSatate.showErrors(),
                     errorText = amountSatate.getError() ?: "",
                 )
@@ -209,6 +224,10 @@ fun RechargeModeOfPaymentCard(
                         .fillMaxWidth()
                         .animateContentSize(),
                 ) {
+                    val rotateIcon by animateFloatAsState(
+                        targetValue = if (expanded) 90f else 0f,
+                        label = "rotateIcon"
+                    )
                     ListCard(
                         onClick = {
                             expanded = !expanded
@@ -218,8 +237,9 @@ fun RechargeModeOfPaymentCard(
                         trailingContent = {
                             IconButton(onClick = { expanded = !expanded }) {
                                 Icon(
-                                    imageVector = CrbtIcons.ArrowForward,
-                                    contentDescription = CrbtIcons.ArrowForward.name
+                                    imageVector = CrbtIcons.ArrowRight,
+                                    contentDescription = CrbtIcons.ArrowForward.name,
+                                    modifier = Modifier.rotate(rotateIcon)
                                 )
                             }
                         },
@@ -227,16 +247,14 @@ fun RechargeModeOfPaymentCard(
                             .fillMaxWidth()
                             .clip(MaterialTheme.shapes.medium)
                     )
-                    AnimatedVisibility(
-                        visible = expanded,
-                    ) {
+                    if (expanded) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            // todo add payment options
+                            Text(text = "Payment Options shows here")
                         }
                     }
                 }
@@ -248,7 +266,7 @@ fun RechargeModeOfPaymentCard(
 @Preview
 @Composable
 fun RechargeAmountCardPreview() {
-    RechargeAmountCard(onAmountChange = {})
+    RechargeAmountCard(onAmountChange = {_, _, ->})
 }
 
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.tracing.trace
+import com.crbt.data.core.data.DummyTones
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.example.crbtjetcompose.feature.home.R
@@ -172,9 +174,9 @@ fun DailyPopularTones(
                 key = { tone -> tone.id }
             ) { tone ->
                 MusicCard(
-                    artist = tone.artist,
-                    title = tone.toneName,
-                    imageUrl = tone.toneImageUrl,
+                    artist = tone.artisteName,
+                    title = tone.songTitle,
+                    imageUrl = tone.profile,
                     onCardClick = { onToneSelected(tone.id) }
                 )
             }
@@ -194,6 +196,7 @@ fun MusicCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
+            .widthIn(max = 120.dp)
             .clickable(
                 onClick = onCardClick,
                 interactionSource = remember { MutableInteractionSource() },

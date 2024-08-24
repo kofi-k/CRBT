@@ -20,7 +20,11 @@ data object DummyUser {
             userId = "dkfwo23902",
             lastName = "Kebede",
             firstName = "Kebede T.",
-            phoneNumber = "0912345678",
+            phoneNumber = "251 523 9678",
             accountBalance = 100.0
         )
+}
+
+fun CrbtUser.fullName(): String {
+    return "$firstName $lastName"
 }

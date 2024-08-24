@@ -1,57 +1,51 @@
 package com.crbt.onboarding.navigation
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.crbt.onboarding.OnboardingFinishedScreen
 import com.crbt.onboarding.OnboardingScreen
-import com.crbt.onboarding.OnboardingViewModel
-import com.crbt.onboarding.Profile
+import com.crbt.onboarding.ui.Profile
 
 
 const val ONBOARDING_ROUTE = "onboarding_route"
-const val ONBOARDING_PROFILE = "onboarding_profile_route"
+const val ONBOARDING_PROFILE_ROUTE = "onboarding_profile_route"
+const val ONBOARDING_COMPLETE_ROUTE = "onboarding_complete_route"
 
 
-fun NavController.navigateToOnboarding(navOptions: NavOptions) =
-    navigate(ONBOARDING_ROUTE, navOptions)
+fun NavController.navigateToOnboarding() =
+    navigate(ONBOARDING_ROUTE)
 
 fun NavGraphBuilder.onboardingScreen(
-    onNavigateToOnboardingProfile: () -> Unit,
-    onNavigateToHome: () -> Unit,
+    navigateToHome: () -> Unit,
+    navController: NavController,
 ) {
     composable(route = ONBOARDING_ROUTE) {
-        val viewModel: OnboardingViewModel = hiltViewModel()
-        val screenData = viewModel.onboardingScreenData
-        val onboardingSetupData = viewModel.onboardingSetupData
         OnboardingScreen(
-            onNextClicked = { viewModel.onNextClicked() },
             onOTPVerified = {
-                onNavigateToOnboardingProfile()
-                viewModel.onDoneClicked()
+                navController.navigate(ONBOARDING_PROFILE_ROUTE) {
+                    popUpTo(ONBOARDING_ROUTE) {
+                        inclusive = true
+                    }
+                }
             },
-            screenData = screenData,
-            onboardingSetupData = onboardingSetupData,
-            onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
-            onLanguageSelected = viewModel::onLanguageSelected,
-            isNextEnabled = viewModel.isNextEnabled
-
         )
-
-//        BackHandler {
-//            viewModel.onPreviousClicked()  //todo handle back press in onboarding
-//        }
     }
 
-    composable(route = ONBOARDING_PROFILE) {
+    composable(route = ONBOARDING_PROFILE_ROUTE) {
         Profile(
-            onUserProfileResponse = { _, _, _ -> },
-            onEmailCheckChanged = {},
             onSaveButtonClicked = {
-                onNavigateToHome()
+                navController.navigate(ONBOARDING_COMPLETE_ROUTE)
             }
         )
     }
 
+    composable(route = ONBOARDING_COMPLETE_ROUTE) {
+        OnboardingFinishedScreen(
+            navigateToHome = {
+                navController.popBackStack(ONBOARDING_ROUTE, true)
+                navigateToHome()
+            }
+        )
+    }
 }

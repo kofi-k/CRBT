@@ -15,12 +15,10 @@ import com.example.crbtjetcompose.feature.services.R
 
 @Composable
 fun ServicesScreen(
-    onCheckClick: () -> Unit,
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
     onTransferClick: () -> Unit,
     onCallBackClick: () -> Unit,
-    onBuyClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -29,22 +27,21 @@ fun ServicesScreen(
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
     ) {
         UpperServices(
-            onCheckClick = onCheckClick,
+            onCheckBalance = {/*TODO show dialog with balance*/},
             onPackageClick = onPackageClick,
             onRechargeClick = onRechargeClick
         )
         LowerServices(
             onTransferClick = onTransferClick,
             onCallBackClick = onCallBackClick,
-            onBuyClick = onBuyClick
+            onTopUpClick = onRechargeClick //TODO change to onTopUpClick
         )
-
     }
 }
 
 @Composable
 fun UpperServices(
-    onCheckClick: () -> Unit,
+    onCheckBalance: () -> Unit,
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
 ) {
@@ -53,7 +50,7 @@ fun UpperServices(
         content = {
             Column {
                 ListCard(
-                    onClick = onCheckClick,
+                    onClick = onCheckBalance,
                     headlineText = stringResource(id = R.string.feature_services_check_balance),
                     subText = stringResource(id = R.string.feature_services_check_description),
                     leadingContentIcon = CrbtIcons.Check
@@ -80,7 +77,7 @@ fun UpperServices(
 fun LowerServices(
     onTransferClick: () -> Unit,
     onCallBackClick: () -> Unit,
-    onBuyClick: () -> Unit,
+    onTopUpClick: () -> Unit,
 ){
     SurfaceCard(
         modifier = Modifier.fillMaxWidth(),
@@ -99,9 +96,9 @@ fun LowerServices(
                     leadingContentIcon = CrbtIcons.CallBack
                 )
                 ListCard(
-                    onClick = onBuyClick,
-                    headlineText = stringResource(id = R.string.feature_services_buy),
-                    subText = stringResource(id = R.string.feature_services_buy_description),
+                    onClick = onTopUpClick,
+                    headlineText = stringResource(id = R.string.feature_services_topup),
+                    subText = stringResource(id = R.string.feature_services_topup_amount),
                     leadingContentIcon = CrbtIcons.Dollar
                 )
             }

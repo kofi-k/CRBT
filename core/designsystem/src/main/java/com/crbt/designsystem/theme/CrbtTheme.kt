@@ -7,8 +7,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -102,6 +104,24 @@ const val slightlyDeemphasizedAlpha = 0.87f
 const val extremelyDeemphasizedAlpha = 0.32f
 
 /**
+ *  Gradient colors
+ * */
+val CustomGradientColors =   listOf(
+    Color(0xFF9E82F0),
+    Color(0xFF42A5F5)
+)
+
+/**
+ * Dark Android gradient colors
+ */
+val DarkAndroidGradientColors = GradientColors(container = surfaceContainerLowDark, )
+
+/**
+ * Dark Android background theme
+ */
+val DarkAndroidBackgroundTheme = BackgroundTheme(color = surfaceContainerLowDark, tonalElevation = 2.dp )
+
+/**
  * CRBT theme.
  *
  * @param darkTheme Whether the theme should use a dark color scheme (follows system by default).
@@ -116,13 +136,31 @@ fun CrbtTheme(
         else -> LightDefaultColorScheme
     }
 
-    val defaultBackgroundTheme = BackgroundTheme(
-        color = colorScheme.surface,
-//        tonalElevation = 2.dp,
+    val emptyGradientColors = GradientColors(container = colorScheme.surfaceColorAtElevation(2.dp))
+    val defaultGradientColors = GradientColors(
+        top = colorScheme.inverseOnSurface,
+        bottom = colorScheme.primaryContainer,
+        container = colorScheme.surface,
     )
 
+    val gradientColors = when(darkTheme) {
+        true ->  DarkAndroidGradientColors
+        else -> emptyGradientColors
+    }
+
+    val defaultBackgroundTheme = BackgroundTheme(
+        color = colorScheme.surface,
+        tonalElevation = 2.dp,
+    )
+
+    val backgroundTheme = when(darkTheme) {
+        true -> DarkAndroidBackgroundTheme
+        else -> defaultBackgroundTheme
+    }
+
     CompositionLocalProvider(
-        LocalBackgroundTheme provides defaultBackgroundTheme,
+        LocalGradientColors provides gradientColors,
+        LocalBackgroundTheme provides backgroundTheme,
     ){
         MaterialTheme(
             colorScheme = colorScheme,

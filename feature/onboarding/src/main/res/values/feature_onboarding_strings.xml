@@ -10,15 +10,11 @@
     <string name="feature_onboarding_next_button">Next</string>
     <string name="feature_onboarding_privacy_policy_message">By registering you accept our <b>Terms of Use</b> and <b>Privacy Policy</b></string>
     <string name="feature_onboarding_authentication_title">We’ve sent you a code</string>
-    <string name="feature_onboarding_authentication_subtitle">For extra security, we’ve texted you a login code. Enter it here:</string>
+    <string name="feature_onboarding_authentication_subtitle">To proceed, enter the verification code sent to <b>%s</b></string>
     <string name="feature_onboarding_authentication_resend_code">Request a new code</string>
     <string name="feature_onboarding_resend_code_availability">Available again in %s</string>
     <string name="feature_onboarding_authentication_help"> Need Help?</string>
-    <string name="feature_onboarding_profile_setup_title">Profile</string>
-    <string name="feature_onboarding_profile_first_name_label">First Name</string>
-    <string name="feature_onboarding_profile_last_name_label">Last Name</string>
-    <string name="feature_onboarding_profile_email_label">Email from CRBT</string>
-    <string name="feature_onboarding_save_profile_button">Save Profile</string>
     <string name="feature_onboarding_updates_title">Updates and Recommendations</string>
     <string name="feature_onboarding_updates_subtitle">Stay in touch with the best playlist updates</string>
+    <string name="feature_onboarding_email_label">Email from CRBT</string>
 </resources>

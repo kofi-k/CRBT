@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,10 +40,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.DynamicAsyncImage
+import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
@@ -54,7 +56,7 @@ import com.example.crbtjetcompose.feature.home.R
 fun HomeScreen(
     onSubscriptionClick: (String?) -> Unit = {},
     onNavigateToTopUp: () -> Unit = {},
-
+    onPopularTodayClick: (String?) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -70,17 +72,19 @@ fun HomeScreen(
             UserBalanceCard(
                 onNavigateToTopUp = onNavigateToTopUp,
                 onRefresh = {},
-                balance = "85.40",
+                balance = DummyUser.user.accountBalance.toString(),
                 balancePercentage = 65
             )
         }
 
         item {
             LatestMusicCard(
-                artist = DummyTones.tones[0].artist,
-                title = DummyTones.tones[0].toneName,
-                backgroundUrl = DummyTones.tones[0].toneImageUrl,
-                onCardClick = {},
+                artist = DummyTones.tones[0].artisteName,
+                title = DummyTones.tones[0].songTitle,
+                backgroundUrl = DummyTones.tones[0].profile,
+                onCardClick = {
+                    onPopularTodayClick(null)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -89,14 +93,14 @@ fun HomeScreen(
 
         item {
             PopularTodayTabLayout(
-                navigateToSubscriptions = onSubscriptionClick,
+                navigateToSubscriptions = onPopularTodayClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
         item {
             RecentSubscription(
-                onSubscriptionClick = {},
+                onSubscriptionClick = onSubscriptionClick,
                 userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(DummyUser.user),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,12 +127,7 @@ internal fun UserBalanceCard(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .drawWithCache {
-                val brush = Brush.linearGradient(
-                    listOf(
-                        Color(0xFF9E82F0),
-                        Color(0xFF42A5F5)
-                    )
-                )
+                val brush = Brush.linearGradient(CustomGradientColors)
                 onDrawBehind {
                     drawRoundRect(
                         brush,
@@ -144,17 +143,6 @@ internal fun UserBalanceCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Surface(
-                shape = MaterialTheme.shapes.large,
-            ) {
-                PercentIndicator(
-                    percentage = balancePercentage,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .padding(4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(16.dp))
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -319,7 +307,7 @@ fun PreviewLatestMusicCard() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreviews
 @Composable
 fun PreviewHomeScreen() {
     CrbtTheme {

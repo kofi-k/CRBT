@@ -1,11 +1,13 @@
 package com.crbt.ui.core.ui
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,21 +28,24 @@ import com.example.crbtjetcompose.core.ui.R
 @Composable
 fun ToneItem(
     modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     trailingContent: @Composable () -> Unit,
-    imageUrl: String?
+    imageUrl: String?,
+    @DrawableRes imageRes: Int = R.drawable.avatar,
+    colors: ListItemColors = ListItemDefaults.colors(
+        containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
+            stronglyDeemphasizedAlpha
+        ),
+        headlineColor = MaterialTheme.colorScheme.onSurface,
+        supportingColor = MaterialTheme.colorScheme.onSurface.copy(
+            alpha = slightlyDeemphasizedAlpha
+        ),
+    ),
 ) {
     ListItem(
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
-                stronglyDeemphasizedAlpha
-            ),
-            headlineColor = MaterialTheme.colorScheme.onSurface,
-            supportingColor = MaterialTheme.colorScheme.onSurface.copy(
-                alpha = slightlyDeemphasizedAlpha
-            ),
-        ),
+        colors = colors,
         headlineContent = {
             Text(
                 text = title,
@@ -63,8 +68,8 @@ fun ToneItem(
         leadingContent = {
             DynamicAsyncImage(
                 imageUrl = imageUrl,
-                imageRes = R.drawable.avatar,
-                modifier = Modifier
+                imageRes = imageRes,
+                modifier = imageModifier
                     .size(50.dp)
                     .clip(CircleShape)
             )

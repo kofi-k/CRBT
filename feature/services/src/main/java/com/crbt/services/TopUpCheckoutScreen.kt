@@ -2,8 +2,6 @@ package com.crbt.services
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,14 +18,17 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.model.DummyUser
+import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
-import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.ui.core.ui.InfoRow
 import com.example.crbtjetcompose.feature.services.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun TopUpCheckoutScreen(
@@ -61,7 +62,6 @@ fun TopUpCheckoutScreen(
                         style = MaterialTheme.typography.headlineLarge,
                     )
 
-
                     Text(
                         text = buildAnnotatedString {
                             withStyle(MaterialTheme.typography.titleMedium.toSpanStyle()) {
@@ -86,6 +86,9 @@ fun TopUpCheckoutScreen(
                                 modifier = Modifier
                                     .fillMaxWidth(),
                             ) {
+                                val dateFormat =
+                                    SimpleDateFormat(simpleDateFormatPattern, Locale.getDefault())
+                                val dateString = dateFormat.format(System.currentTimeMillis())
                                 InfoRow(
                                     title = stringResource(id = R.string.feature_services_account_balance),
                                     value = stringResource(
@@ -110,7 +113,7 @@ fun TopUpCheckoutScreen(
                                 )
                                 InfoRow(
                                     title = stringResource(id = R.string.feature_services_date),
-                                    value = System.currentTimeMillis().toString(),
+                                    value = dateString,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
                             }
@@ -126,36 +129,6 @@ fun TopUpCheckoutScreen(
             modifier = Modifier.fillMaxWidth()
         )
     }
-}
-
-@Composable
-fun InfoRow(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(
-                slightlyDeemphasizedAlpha
-            )
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(
-                slightlyDeemphasizedAlpha
-            )
-        )
-    }
-
 }
 
 

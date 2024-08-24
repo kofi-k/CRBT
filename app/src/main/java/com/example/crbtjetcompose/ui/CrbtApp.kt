@@ -1,18 +1,14 @@
 package com.example.crbtjetcompose.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,12 +35,26 @@ import com.crbt.designsystem.components.CrbtNavigationBarItem
 import com.crbt.designsystem.components.CrbtTopAppBar
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.designsystem.theme.CrbtBackground
+import com.crbt.designsystem.theme.CrbtGradientBackground
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.LocalGradientColors
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.home.navigation.ACCOUNT_HISTORY_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
+import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
+import com.crbt.services.navigation.TOPUP_ROUTE
+import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
+import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
+import com.crbt.subscription.navigation.TONES_ROUTE
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalComposeUiApi::class,
@@ -53,117 +63,165 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 fun CrbtApp(appState: CrbtAppState) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
-    Scaffold(
-        modifier = Modifier.semantics {
-            testTagsAsResourceId = true
-        },
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = {
-            if (destination != null) {
-                CrbtBottomBar(
-                    destinations = appState.topLevelDestinations,
-                    onNavigateToDestination = appState::navigateToTopLevelDestination,
-                    currentDestination = appState.currentDestination,
-                    modifier =
-                    Modifier.testTag("CrbtBottomBar"),
-//                        .padding(horizontal = 16.dp)
-//                        .padding(bottom = 8.dp)
-//                        .clip(MaterialTheme.shapes.extraLarge)
-                )
-            }
-        },
-    ) { padding ->
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(padding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Horizontal,
-                    ),
-                ),
-        ) {
-            // Show the top app bar on top level destinations.
-            if (destination != null) {
-                CrbtTopAppBar(
-                    titleRes = destination.titleTextId,
-                    navigationIcon = Icons.Default.Search,
-                    navigationIconContentDescription = "",
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color.Transparent,
-                    ),
-                    onNavigationClick = {
-                        // todo handle navigation
-                    },
-                    showNavigationIcon = false, // todo handle navigation icon visibility based on destination
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = CrbtIcons.Notifications,
-                                contentDescription = CrbtIcons.Notifications.name,
-                            )
-                        }
-                    },
-                    titleContent = {
-                        when (destination) {
-                            TopLevelDestination.HOME -> {
-                                Column {
-                                    Text(
-                                        text = stringResource(id = R.string.core_designsystem_welecome),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurface.copy(
-                                            slightlyDeemphasizedAlpha
-                                        ),
-                                    )
-                                    Text(
-                                        text = DummyUser.user.firstName,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Bold
-                                        ),
-                                    )
-                                }
-                            }
+    val showNavIcon =
+        destination != null && appState.currentDestination.isTopLevelDestinationInHierarchy(
+            destination
+        ) && currentRoute != destination.name
 
-                            TopLevelDestination.SERVICES -> {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = stringResource(id = R.string.core_designsystem_services_ussd),
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Bold
-                                        ),
-                                    )
-                                    Text(
-                                        text = stringResource(id = R.string.core_designsystem_what_would_you_like_to_do),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurface.copy(
-                                            slightlyDeemphasizedAlpha
-                                        ),
-                                    )
-                                }
-                            }
+    val showNavigationBars = currentRoute !in listOf(
+        ONBOARDING_ROUTE,
+        ONBOARDING_COMPLETE_ROUTE,
+        ONBOARDING_PROFILE_ROUTE,
+        ADD_SUBSCRIPTION_ROUTE
+    )
 
-                            else -> {
-                                Text(text = stringResource(id = destination.titleTextId))
-                            }
-                        }
-                    }
-                )
-            }
+    val showBottomBar = currentRoute !in listOf(
+        ONBOARDING_ROUTE,
+        ONBOARDING_COMPLETE_ROUTE,
+        ONBOARDING_PROFILE_ROUTE,
+    )
 
-            CrbtNavHost(
-                appState = appState,
-                modifier = Modifier.fillMaxSize()
-            )
+
+    val titleRes = when {
+        destination != null -> destination.titleTextId
+        else -> when (currentRoute) {
+            TOPUP_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_topup
+            TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
+            ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
+            PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
+            TONES_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_tones
+            ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
+            else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
         }
+    }
 
+
+    CrbtBackground(
+        modifier = Modifier
+    ) {
+        CrbtGradientBackground(
+            gradientColors = LocalGradientColors.current
+        ) {
+            Scaffold(
+                modifier = Modifier.semantics {
+                    testTagsAsResourceId = true
+                },
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                bottomBar = {
+                    if (showBottomBar) {
+                        CrbtBottomBar(
+                            destinations = appState.topLevelDestinations,
+                            onNavigateToDestination = appState::navigateToTopLevelDestination,
+                            currentDestination = appState.currentDestination,
+                            modifier =
+                            Modifier
+                                .testTag("CrbtBottomBar")
+                                .clip(
+                                    RoundedCornerShape(
+                                        topStart = 24.dp,
+                                        topEnd = 24.dp
+                                    )
+                                )
+                        )
+                    }
+                },
+                topBar = {
+                    if (showNavigationBars) {
+                        CrbtTopAppBar(
+                            titleRes = titleRes,
+                            navigationIcon = CrbtIcons.ArrowBack,
+                            navigationIconContentDescription = "",
+                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                                containerColor = Color.Transparent,
+                            ),
+                            onNavigationClick = {
+                                appState.navController.navigateUp()
+                            },
+                            showNavigationIcon = !showNavIcon,
+                            actions = {
+                                when (destination) {
+                                    TopLevelDestination.PROFILE -> {
+                                        IconButton(onClick = { /*TODO*/ }) {
+                                            Icon(
+                                                imageVector = CrbtIcons.Edit,
+                                                contentDescription = CrbtIcons.Edit.name,
+                                            )
+                                        }
+                                    }
+
+                                    else -> {
+                                        IconButton(onClick = { /*TODO*/ }) {
+                                            Icon(
+                                                imageVector = CrbtIcons.Notifications,
+                                                contentDescription = CrbtIcons.Notifications.name,
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            titleContent = {
+                                when (destination) {
+                                    TopLevelDestination.HOME -> {
+                                        Column {
+                                            Text(
+                                                text = stringResource(id = R.string.core_designsystem_welecome),
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.onSurface.copy(
+                                                    slightlyDeemphasizedAlpha
+                                                ),
+                                            )
+                                            Text(
+                                                text = DummyUser.user.firstName,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                            )
+                                        }
+                                    }
+
+                                    TopLevelDestination.SERVICES -> {
+                                        Column(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.core_designsystem_services_ussd),
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontWeight = FontWeight.Bold
+                                                ),
+                                            )
+                                            Text(
+                                                text = stringResource(id = R.string.core_designsystem_what_would_you_like_to_do),
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.onSurface.copy(
+                                                    slightlyDeemphasizedAlpha
+                                                ),
+                                            )
+                                        }
+                                    }
+
+                                    else -> {
+                                        Text(text = stringResource(id = titleRes))
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+            ) { padding ->
+                CrbtNavHost(
+                    appState = appState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                )
+            }
+        }
     }
 }
 
@@ -221,9 +279,12 @@ fun PreviewBottomBar() {
             onNavigateToDestination = {},
             currentDestination = null,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 24.dp,
+                        topEnd = 24.dp
+                    )
+                )
         )
     }
 }

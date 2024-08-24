@@ -11,4 +11,6 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.ui)
+    implementation(libs.androidx.graphics.shapes)
+    implementation(libs.coil.kt.compose)
 }

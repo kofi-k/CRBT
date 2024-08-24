@@ -2,4 +2,25 @@
 <resources>
     <string name="feature_subscription_tones">Tones</string>
     <string name="feature_subscription_albums">Albums</string>
+    <string name="feature_subscription_subscribe_gift_title">Subscribe Gift</string>
+    <string name="feature_subscription_laguage_change_title">Language</string>
+    <string name="feature_subscription_date_placeholder">Pick date</string>
+    <string name="feature_subscription_date_title">Subscription date</string>
+    <string name="feature_subscription_button_text">Add Subscription</string>
+    <string name="feature_subscription_billing_type_label">Billing</string>
+    <string name="feature_subscription_name_label">Subscription name</string>
+    <string name="feature_subscription_price_label">Price</string>
+    <string name="feature_subscription_share_receipt">Share receipt</string>
+    <string name="feature_subscription_done">Done</string>
+    <string name="feature_subscription_etb">ETB %s</string>
+    <string name="feature_subscription_from_text">From</string>
+    <string name="feature_subscription_transaction_id">Transaction Number</string>
+    <string name="feature_subscription_date">Date</string>
+    <string name="feature_subscription_add_subscription_title">Add Subscription</string>
+    <string name="feature_subscription_gift_subscription_title">Gift Subscription</string>
+    <string name="feature_subscription_subscribe_to_song_title">Subscribe to this song %s</string>
+    <string name="feature_subscription_gift_song_title">Gift this song %s</string>
+    <string name="feature_subscription_gift_button">Gift for</string>
+    <string name="feature_subscription_subscribe_button">Subscribe for</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">Provide your subscription plan</string>
 </resources>

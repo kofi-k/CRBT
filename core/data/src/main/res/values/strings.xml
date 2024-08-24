@@ -6,4 +6,15 @@
     <string name="core_data_somalia">Somalia</string>
     <string name="core_data_arabic">Arabic</string>
     <string name="core_data_english">English</string>
+    <string name="core_data_monthly_bill_title">Monthly</string>
+    <string name="core_data_bi_weekly_bill_title">Bi-Weekly</string>
+    <string name="core_data_weekly_bill_title">Weekly</string>
+    <string name="core_data_camera">Camera</string>
+    <string name="core_data_photos">Photos</string>
+    <string name="core_data_microphone">Microphone</string>
+    <string name="core_data_storage">Storage</string>
+    <string name="core_data_contacts">Contacts</string>
+    <string name="core_data_location">Location</string>
+    <string name="core_data_sms">SMS</string>
+    <string name="core_data_ussd">USSD</string>
 </resources>

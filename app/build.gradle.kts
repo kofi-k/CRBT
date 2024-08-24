@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.crbt.android.application.compose)
     alias(libs.plugins.crbt.android.application.flavors)
     alias(libs.plugins.crbt.android.application.jacoco)
+    alias(libs.plugins.crbt.android.application.firebase)
+    id("com.google.android.gms.oss-licenses-plugin")
     alias(libs.plugins.crbt.android.hilt)
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.baselineprofile)
@@ -27,6 +29,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
+            isDebuggable = false
         }
         release {
             isMinifyEnabled = false
@@ -37,7 +40,7 @@ android {
             )
             signingConfig = signingConfigs.named("debug").get()
             // Ensure Baseline Profile is fresh for release builds.
-            baselineProfile.automaticGenerationDuringBuild = true
+//            baselineProfile.automaticGenerationDuringBuild = true
         }
     }
 
@@ -63,6 +66,9 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.model)
     implementation(projects.core.designsystem)
+    implementation(projects.core.datastore)
+    implementation(projects.core.domain)
+
 
 
     implementation(libs.firebase.auth.ktx)
@@ -84,6 +90,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.guava)
     implementation(libs.coil.kt)
 
+    implementation(libs.exoplayer.core)
+    implementation(libs.exoplayer.ui)
+    implementation(libs.extension.mediasession)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.session)
+
     ksp(libs.hilt.compiler)
 
     // Tooling
@@ -94,7 +106,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(libs.hilt.android.testing)
 
-    baselineProfile(projects.benchmark)
+//    baselineProfile(projects.benchmark)
 }
 
 dependencyGuard {

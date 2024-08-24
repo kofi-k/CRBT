@@ -1,11 +1,13 @@
 package com.crbt.home
 
-import com.example.crbtjetcompose.core.model.data.Tones
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 
 
 /**
  *  A sealed hierarchy describing the possible states of the popular tones for the day
  *  for the home screen
+ *
+ *  this might be [CrbtSongResource]'s that have a lot of user subscriptions
  * */
 sealed interface PopularTonesUiState {
     /**
@@ -26,5 +28,5 @@ sealed interface PopularTonesUiState {
     /**
      * A state indicating that there are popular tones to show given the list of tones
      * */
-    data class Shown(val tones: List<Tones>) : PopularTonesUiState
+    data class Shown(val tones: List<CrbtSongResource>) : PopularTonesUiState
 }

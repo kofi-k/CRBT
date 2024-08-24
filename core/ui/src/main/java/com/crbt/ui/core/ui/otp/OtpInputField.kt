@@ -37,7 +37,7 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import kotlinx.coroutines.delay
 
-const val OTP_LENGTH = 4
+const val OTP_LENGTH = 6
 
 /**
  * A composable function for creating an OTP input field.
@@ -199,7 +199,7 @@ internal fun CharacterContainer(
 fun OtpInputFieldPreview() {
     CrbtTheme {
         OtpInputField(
-            otpText = "1234",
+            otpText = "123456",
             otpLength = 6,
             onOtpModified = { _, _ -> },
             modifier = Modifier.fillMaxWidth(),

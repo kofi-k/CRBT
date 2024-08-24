@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.crbtjetcompose.debug" />
+                  <option name="mobileSdkAppId" value="1:802455062215:android:0126da767858c97f6560e2" />
+                  <option name="projectId" value="crbt-71c0b" />
+                  <option name="projectNumber" value="802455062215" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

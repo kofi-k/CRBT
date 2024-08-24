@@ -22,4 +22,11 @@ dependencies {
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.country.code.picker)
     implementation(libs.play.services.auth.api.phone)
+    implementation(libs.androidx.graphics.shapes)
+    implementation(libs.androidx.media3.common)
+    implementation(libs.exoplayer.core)
+    implementation(libs.exoplayer.ui)
+    implementation(libs.extension.mediasession)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.session)
 }
