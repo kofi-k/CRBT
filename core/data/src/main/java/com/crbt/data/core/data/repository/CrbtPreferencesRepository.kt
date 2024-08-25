@@ -11,14 +11,13 @@ interface CrbtPreferencesRepository {
 
     suspend fun setUserId(userId: String)
 
-    suspend fun setUserName(firstName: String, lastName: String)
+    suspend fun setUserName(firstName: String, lastName: String, email: String, phoneNumber: String)
 
-    suspend fun setUserEmail(email: String)
-
-    suspend fun setUserPhoneNumber(phoneNumber: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
 
     suspend fun setUserLanguageCode(languageCode: String)
+
+    suspend fun setUserPaymentMethod(paymentMethod: String)
 }
 
