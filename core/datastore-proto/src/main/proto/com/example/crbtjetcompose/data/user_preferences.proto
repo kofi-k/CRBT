@@ -17,11 +17,13 @@ message UserPreferences {
   string user_profile_url = 14;
   string user_payment_method = 15;
   string user_currency = 16;
+  string current_crbt_subscription_id = 17;
 
   // Each map is used to store a set of string IDs. The bool has no meaning, but proto3 doesn't
   // have a Set type so this is the closest we can get to a Set.
   map<string, bool> subscribed_crbt_tone_ids = 8;
   map<string, bool> unsubscribed_crbt_tone_ids = 9;
+  map<string, bool> gifted_crbt_tone_ids = 18;
 
   ThemeBrandProto theme_brand = 10;
   DarkThemeConfigProto dark_theme_config = 11;
