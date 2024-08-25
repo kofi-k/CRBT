@@ -15,7 +15,19 @@ interface PhoneAuthRepository {
 
     fun verifyCode(verificationId: String, code: String): Task<AuthResult>
 
-    fun signOut()
+    suspend fun signOut(): SignOutState
+
+    suspend fun getSignedInUser(): SignedInUser?
+
+}
+
+sealed interface SignOutState {
+    data object Success : SignOutState
+    data class Error(val message: String) : SignOutState
 }
 
 
+data class SignedInUser(
+    val userId: String,
+    val phoneNumber: String,
+)
