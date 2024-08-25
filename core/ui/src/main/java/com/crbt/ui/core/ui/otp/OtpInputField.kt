@@ -88,15 +88,18 @@ fun OtpInputField(
             imeAction = ImeAction.Done,
         ),
         decorationBox = {
-            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 repeat(otpLength) { index ->
                     CharacterContainer(
                         index = index,
                         text = otpText,
                         shouldShowCursor = shouldShowCursor,
                         shouldCursorBlink = shouldCursorBlink,
+                        modifier = Modifier
+                            .weight(1f)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
         },
@@ -121,6 +124,7 @@ internal fun CharacterContainer(
     text: String,
     shouldShowCursor: Boolean,
     shouldCursorBlink: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val isFocused = text.length == index
     val character = when {
@@ -141,39 +145,41 @@ internal fun CharacterContainer(
         }
     }
 
+    val color by animateColorAsState(
+        if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
+        label = "CharacterContainerColorAnimation",
+    )
+    val borderDp by animateDpAsState(
+        targetValue = when {
+            isFocused -> 2.dp
+            else -> 0.dp
+        },
+        label = "CharacterContainerBorderAnimation",
+    )
+
     Box(
         contentAlignment = Alignment.Center,
+        modifier = modifier
+            .then(
+                Modifier
+                    .border(
+                        width = borderDp,
+                        color = color,
+                        shape = RoundedCornerShape(6.dp),
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(
+                            stronglyDeemphasizedAlpha,
+                        ),
+                        shape = RoundedCornerShape(6.dp),
+                    )
+                    .padding(
+                        vertical = 4.dp,
+                    )
+            )
     ) {
-
-        val color by animateColorAsState(
-            if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
-            label = "CharacterContainerColorAnimation",
-        )
-        val borderDp by animateDpAsState(
-            targetValue = when {
-                isFocused -> 2.dp
-                else -> 0.dp
-            },
-            label = "CharacterContainerBorderAnimation",
-        )
-
         Text(
-            modifier = Modifier
-                .width(54.dp)
-                .border(
-                    width = borderDp,
-                    color = color,
-                    shape = RoundedCornerShape(6.dp),
-                )
-                .background(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(
-                        stronglyDeemphasizedAlpha,
-                    ),
-                    shape = RoundedCornerShape(6.dp),
-                )
-                .padding(
-                    vertical = 4.dp,
-                ),
+            modifier = Modifier,
             text = character,
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onSurface,

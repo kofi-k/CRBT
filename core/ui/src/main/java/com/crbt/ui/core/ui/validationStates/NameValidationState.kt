@@ -8,15 +8,3 @@ class NameValidationState : GenericTextFieldState<String>(
     errorFor = { nameValidationError(it) },
     initialText = "",
 )
-
-
-class AmountValidationState : GenericTextFieldState<String>(
-    validator = {
-        it.toDoubleOrNull() != null && it.toDouble() > 0 && it.length <= 4
-    },
-    errorFor = {
-        "Invalid amount"
-    },
-    initialText = "",
-)
-
