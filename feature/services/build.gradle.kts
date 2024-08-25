@@ -12,4 +12,5 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.ui)
     implementation(libs.country.code.picker)
+    implementation(project(":core:domain"))
 }

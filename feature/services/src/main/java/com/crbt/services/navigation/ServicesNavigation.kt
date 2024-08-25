@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.crbt.services.RechargeScreen
-import com.crbt.services.ServicesScreen
+import com.crbt.services.ServicesRoute
 import com.crbt.services.TopUpCheckoutScreen
 import com.crbt.services.packages.PackagesScreen
 
@@ -28,15 +28,13 @@ fun NavGraphBuilder.servicesScreen(
     navigateToTopLevel: () -> Unit
 ) {
     composable(route = SERVICES_ROUTE) {
-        ServicesScreen(
-            onPackageClick = {
+        ServicesRoute(
+            navigateToPackages = {
                 navController.navigate(PACKAGES_ROUTE)
             },
-            onRechargeClick = {
+            navigateToRecharge = {
                 navController.navigate(TOPUP_ROUTE)
             },
-            onTransferClick = { /*TODO*/ },
-            onCallBackClick = { /*TODO*/ },
         )
     }
 

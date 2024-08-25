@@ -1,25 +1,94 @@
 package com.crbt.services
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.repository.UssdUiState
+import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.example.crbtjetcompose.feature.services.R
+import kotlinx.coroutines.launch
 
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ServicesRoute(
+    navigateToPackages: () -> Unit,
+    navigateToRecharge: () -> Unit,
+) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    val viewModel: ServicesViewModel = hiltViewModel()
+    val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
+    ServicesScreen(
+        onPackageClick = navigateToPackages,
+        onRechargeClick = navigateToRecharge,
+        onCheckBalance = {
+            viewModel.runUssdCode(
+                ussdCode = CHECK_BALANCE_USSD,
+                onSuccess = {
+                    showDialog = true
+                },
+                onError = {
+                    showDialog = true
+                }
+            )
+        },
+        isCheckingBalance = ussdUiState is UssdUiState.Loading
+    )
+    if (showDialog) {
+        BalanceDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            ussdUiState = ussdUiState
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServicesScreen(
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
-    onTransferClick: () -> Unit,
-    onCallBackClick: () -> Unit,
+    onCheckBalance: () -> Unit,
+    isCheckingBalance: Boolean,
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    var bottomSheetType by remember { mutableStateOf(ServicesType.CALL_ME_BACK) }
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -27,15 +96,49 @@ fun ServicesScreen(
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
     ) {
         UpperServices(
-            onCheckBalance = {/*TODO show dialog with balance*/},
+            onCheckBalance = onCheckBalance,
             onPackageClick = onPackageClick,
-            onRechargeClick = onRechargeClick
+            onRechargeClick = onRechargeClick,
+            isCheckingBalance = isCheckingBalance
         )
         LowerServices(
-            onTransferClick = onTransferClick,
-            onCallBackClick = onCallBackClick,
+            onTransferClick = {
+                showBottomSheet = true
+                bottomSheetType = ServicesType.TRANSFER
+            },
+            onCallBackClick = {
+                showBottomSheet = true
+                bottomSheetType = ServicesType.CALL_ME_BACK
+            },
             onTopUpClick = onRechargeClick //TODO change to onTopUpClick
         )
+    }
+
+    AnimatedVisibility(
+        visible = showBottomSheet,
+        enter = slideInVertically(),
+        exit = slideOutVertically()
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            ServicesBottomSheet(
+                servicesType = bottomSheetType,
+                onPhoneNumberChanged = { _, _ -> },
+                onAmountChange = { },
+                sheetState = sheetState,
+                onDismiss = {
+                    showBottomSheet = false
+                    scope.launch {
+                        sheetState.hide()
+                    }
+                },
+                onConfirmClick = { },
+                actionLoading = false,
+                actionEnabled = true
+            )
+        }
     }
 }
 
@@ -44,6 +147,7 @@ fun UpperServices(
     onCheckBalance: () -> Unit,
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
+    isCheckingBalance: Boolean,
 ) {
     SurfaceCard(
         modifier = Modifier.fillMaxWidth(),
@@ -53,7 +157,13 @@ fun UpperServices(
                     onClick = onCheckBalance,
                     headlineText = stringResource(id = R.string.feature_services_check_balance),
                     subText = stringResource(id = R.string.feature_services_check_description),
-                    leadingContentIcon = CrbtIcons.Check
+                    leadingContentIcon = CrbtIcons.Check,
+                    trailingContent = {
+                        if (isCheckingBalance) {
+                            CircularProgressIndicator()
+                        }
+                    },
+                    clickEnabled = !isCheckingBalance
                 )
                 ListCard(
                     onClick = onPackageClick,
@@ -78,7 +188,7 @@ fun LowerServices(
     onTransferClick: () -> Unit,
     onCallBackClick: () -> Unit,
     onTopUpClick: () -> Unit,
-){
+) {
     SurfaceCard(
         modifier = Modifier.fillMaxWidth(),
         content = {
@@ -103,5 +213,58 @@ fun LowerServices(
                 )
             }
         }
+    )
+}
+
+@Composable
+fun BalanceDialog(
+    onDismiss: () -> Unit,
+    ussdUiState: UssdUiState
+) {
+    val message = when (ussdUiState) {
+        is UssdUiState.Error -> stringResource(id = R.string.feature_services_error_check_balance) to ussdUiState.errorCode.toString()
+        is UssdUiState.Success -> stringResource(id = R.string.feature_services_balance_check) to ussdUiState.response
+        else -> stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled) to
+                stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled)
+    }
+    AlertDialog(
+        title = {
+            Text(text = message.first)
+        },
+        text = {
+            Text(text = message.second)
+        },
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(id = R.string.feature_services_ok))
+            }
+        },
+        icon = {
+            when (ussdUiState) {
+                is UssdUiState.Error -> Icon(
+                    imageVector = CrbtIcons.Close,
+                    contentDescription = null
+                )
+
+                is UssdUiState.Success -> Icon(
+                    imageVector = CrbtIcons.Check,
+                    contentDescription = null
+                )
+
+                else -> Unit
+            }
+        }
+    )
+}
+
+
+// preview dialog
+@Preview
+@Composable
+fun BalanceDialogPreview() {
+    BalanceDialog(
+        onDismiss = { },
+        ussdUiState = UssdUiState.Success("100")
     )
 }
