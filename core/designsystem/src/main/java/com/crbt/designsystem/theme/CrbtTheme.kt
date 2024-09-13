@@ -98,7 +98,6 @@ val DarkDefaultColorScheme = darkColorScheme(
 )
 
 
-
 const val stronglyDeemphasizedAlpha = 0.6f
 const val slightlyDeemphasizedAlpha = 0.87f
 const val extremelyDeemphasizedAlpha = 0.32f
@@ -106,7 +105,7 @@ const val extremelyDeemphasizedAlpha = 0.32f
 /**
  *  Gradient colors
  * */
-val CustomGradientColors =   listOf(
+val CustomGradientColors = listOf(
     Color(0xFF9E82F0),
     Color(0xFF42A5F5)
 )
@@ -114,12 +113,13 @@ val CustomGradientColors =   listOf(
 /**
  * Dark Android gradient colors
  */
-val DarkAndroidGradientColors = GradientColors(container = surfaceContainerLowDark, )
+val DarkAndroidGradientColors = GradientColors(container = surfaceContainerLowDark)
 
 /**
  * Dark Android background theme
  */
-val DarkAndroidBackgroundTheme = BackgroundTheme(color = surfaceContainerLowDark, tonalElevation = 2.dp )
+val DarkAndroidBackgroundTheme =
+    BackgroundTheme(color = surfaceContainerLowDark, tonalElevation = 2.dp)
 
 /**
  * CRBT theme.
@@ -143,8 +143,8 @@ fun CrbtTheme(
         container = colorScheme.surface,
     )
 
-    val gradientColors = when(darkTheme) {
-        true ->  DarkAndroidGradientColors
+    val gradientColors = when (darkTheme) {
+        true -> DarkAndroidGradientColors
         else -> emptyGradientColors
     }
 
@@ -153,7 +153,7 @@ fun CrbtTheme(
         tonalElevation = 2.dp,
     )
 
-    val backgroundTheme = when(darkTheme) {
+    val backgroundTheme = when (darkTheme) {
         true -> DarkAndroidBackgroundTheme
         else -> defaultBackgroundTheme
     }
@@ -161,10 +161,10 @@ fun CrbtTheme(
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
         LocalBackgroundTheme provides backgroundTheme,
-    ){
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = FauTypography,
+            typography = CrbtTypography,
             content = content,
             shapes = Shapes
         )

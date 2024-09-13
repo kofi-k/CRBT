@@ -19,8 +19,20 @@ import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 fun ListCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    clickEnabled: Boolean = true,
     headlineText: String,
     subText: String? = null,
+    supportingContent: @Composable (() -> Unit)? = {
+        subText?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    slightlyDeemphasizedAlpha
+                )
+            )
+        }
+    },
     leadingContentIcon: ImageVector,
     leadingContent: @Composable (() -> Unit)? = {
         FilledTonalIconButton(onClick = onClick) {
@@ -32,13 +44,17 @@ fun ListCard(
         }
     },
     trailingContent: @Composable (() -> Unit)? = {},
-    colors: ListItemColors = ListItemDefaults.colors()
+    colors: ListItemColors = ListItemDefaults.colors(),
+    overlineContent: @Composable (() -> Unit)? = {},
 ) {
     ListItem(
         modifier = Modifier
             .fillMaxWidth()
             .then(modifier)
-            .clickable { onClick() },
+            .clickable(
+                onClick = onClick,
+                enabled = clickEnabled
+            ),
         headlineContent = {
             Text(
                 text = headlineText,
@@ -47,19 +63,10 @@ fun ListCard(
                 ),
             )
         },
-        supportingContent = {
-            subText?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(
-                        slightlyDeemphasizedAlpha
-                    )
-                )
-            }
-        },
+        supportingContent = supportingContent,
         leadingContent = leadingContent,
         trailingContent = trailingContent,
-        colors = colors
+        colors = colors,
+        overlineContent = overlineContent
     )
 }
