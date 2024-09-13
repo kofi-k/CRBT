@@ -10,12 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +31,7 @@ import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.ui.core.ui.BalanceDialog
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
 
@@ -213,58 +210,5 @@ fun LowerServices(
                 )
             }
         }
-    )
-}
-
-@Composable
-fun BalanceDialog(
-    onDismiss: () -> Unit,
-    ussdUiState: UssdUiState
-) {
-    val message = when (ussdUiState) {
-        is UssdUiState.Error -> stringResource(id = R.string.feature_services_error_check_balance) to ussdUiState.errorCode.toString()
-        is UssdUiState.Success -> stringResource(id = R.string.feature_services_balance_check) to ussdUiState.response
-        else -> stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled) to
-                stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled)
-    }
-    AlertDialog(
-        title = {
-            Text(text = message.first)
-        },
-        text = {
-            Text(text = message.second)
-        },
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(id = R.string.feature_services_ok))
-            }
-        },
-        icon = {
-            when (ussdUiState) {
-                is UssdUiState.Error -> Icon(
-                    imageVector = CrbtIcons.Close,
-                    contentDescription = null
-                )
-
-                is UssdUiState.Success -> Icon(
-                    imageVector = CrbtIcons.Check,
-                    contentDescription = null
-                )
-
-                else -> Unit
-            }
-        }
-    )
-}
-
-
-// preview dialog
-@Preview
-@Composable
-fun BalanceDialogPreview() {
-    BalanceDialog(
-        onDismiss = { },
-        ussdUiState = UssdUiState.Success("100")
     )
 }

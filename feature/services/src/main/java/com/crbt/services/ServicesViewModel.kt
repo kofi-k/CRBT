@@ -26,7 +26,7 @@ class ServicesViewModel @Inject constructor(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (Int) -> Unit) {
+    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             repository.runUssdCode(ussdCode, onSuccess, onError)
         }

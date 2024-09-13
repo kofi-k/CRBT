@@ -29,4 +29,8 @@
     <string name="feature_services_cancel">Cancel</string>
     <string name="feature_services_purchase_confirmation">Proceed to purchase %s at %s ETB</string>
     <string name="feature_services_gift_purchase_contact_info">Enter number of recipient</string>
+    <string name="feature_services_error_check_balance">Error checking balance</string>
+    <string name="feature_services_balance_check">Your current balance</string>
+    <string name="feature_services_ok">Okay</string>
+    <string name="feature_services_call_back_button">Request</string>
 </resources>
