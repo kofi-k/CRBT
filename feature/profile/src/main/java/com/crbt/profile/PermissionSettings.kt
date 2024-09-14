@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
-import androidx.tracing.trace
+import androidx.compose.ui.util.trace
 import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ThemePreviews

@@ -51,8 +51,11 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.circle
 import androidx.graphics.shapes.rectangle
 import androidx.graphics.shapes.toPath
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.crbt.data.core.data.util.copyImageToInternalStorage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
@@ -68,10 +71,13 @@ import com.example.crbtjetcompose.feature.profile.R
 fun Profile(
     modifier: Modifier = Modifier,
     onSaveButtonClicked: () -> Unit,
+    profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
+    val userData by profileViewModel.userData.collectAsStateWithLifecycle()
     var profileImage by remember {
-        mutableStateOf(Uri.EMPTY)
+        mutableStateOf(Uri.parse(userData.profileUrl))
     }
+    val context = LocalContext.current
     val pickPhoto = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -107,7 +113,11 @@ fun Profile(
         Spacer(modifier = Modifier.height(24.dp))
         UsernameDetails(
             modifier = modifier,
-            onUserProfileResponse = { _, _, _ -> /*todo handle with vm*/ },
+            onUserProfileResponse = { firstName, lastName, _ ->
+                profileViewModel.onNameChanged(firstName, lastName)
+            },
+            initialFirstName = userData.firstName,
+            initialLastName = userData.lastName,
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
@@ -123,7 +133,18 @@ fun Profile(
         Spacer(modifier = Modifier.height(16.dp))
 
         ProcessButton(
-            onClick = onSaveButtonClicked,
+            onClick = {
+                profileViewModel.saveProfile()
+                if (profileImage != Uri.EMPTY) {
+                    profileViewModel.saveProfileImage(
+                        copyImageToInternalStorage(
+                            context,
+                            profileImage
+                        ).toString()
+                    )
+                }
+                onSaveButtonClicked()
+            },
             modifier = modifier
                 .fillMaxWidth(),
             text = stringResource(id = R.string.feature_profile_save_profile_button)
