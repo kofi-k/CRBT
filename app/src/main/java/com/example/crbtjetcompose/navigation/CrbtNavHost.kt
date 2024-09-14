@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.crbt.home.navigation.homeScreen
-import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
 import com.crbt.services.navigation.navigateToTopUp
@@ -24,7 +23,7 @@ import com.example.crbtjetcompose.ui.CrbtAppState
 fun CrbtNavHost(
     appState: CrbtAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = ONBOARDING_ROUTE, // todo set the start destination based on the user's state as signed in or not
+    startDestination: String,
 ) {
     val navController = appState.navController
 
@@ -61,8 +60,8 @@ fun CrbtNavHost(
                 navController = navController,
                 onLogout = {
 //                    navController.navigate(ONBOARDING_ROUTE) {
-//                        popUpTo(ONBOARDING_ROUTE) {
-//                            inclusive = false
+//                        popUpTo(PROFILE_ROUTE) {
+//                            inclusive = true
 //                        }
 //                    }
                 }

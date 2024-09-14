@@ -20,6 +20,7 @@ import com.crbt.services.navigation.SERVICES_ROUTE
 import com.crbt.services.navigation.navigateToServices
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.navigateToSubscription
+import com.example.crbtjetcompose.core.model.data.UserPreferencesData
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,6 +32,7 @@ fun rememberCrbtAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     networkMonitor: NetworkMonitor,
+    userPreferencesData: UserPreferencesData
 ): CrbtAppState {
     return remember(
         navController,
@@ -39,6 +41,7 @@ fun rememberCrbtAppState(
             navController = navController,
             networkMonitor = networkMonitor,
             coroutineScope = coroutineScope,
+            userPreferencesData = userPreferencesData
         )
     }
 }
@@ -49,6 +52,7 @@ class CrbtAppState(
     val navController: NavHostController,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope,
+    userPreferencesData: UserPreferencesData
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -63,12 +67,25 @@ class CrbtAppState(
             else -> null
         }
 
+    val startDestination: String = when (userPreferencesData.userId.isBlank()) {
+        true -> ONBOARDING_ROUTE
+        false -> HOME_ROUTE
+    }
+
+
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = false,
+        )
+
+    val internetSpeed = networkMonitor.internetSpeed
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = 0.0,
         )
 
     val shouldShowBottomBar: Boolean

@@ -6,14 +6,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
+import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
+import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,13 +35,36 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
 
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+
+    private val viewModel: MainActivityViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen =
             installSplashScreen() // todo add implementation to keep splash screen on while user preferences data is loading
         super.onCreate(savedInstanceState)
+
+        var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.onEach { state ->
+                    uiState = state
+                }.collect()
+            }
+        }
+
+        // Keep the splash screen on-screen until the UI state is loaded. This condition is
+        // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
+        // the UI.
+        splashScreen.setKeepOnScreenCondition {
+            uiState is MainActivityUiState.Loading
+        }
+
         enableEdgeToEdge()
+
 
         setContent {
             val darkTheme = isSystemInDarkTheme()
@@ -53,14 +88,22 @@ class MainActivity : ComponentActivity() {
                 onDispose {}
             }
 
-            val appState = rememberCrbtAppState(
-                networkMonitor = networkMonitor,
-            )
 
             CrbtTheme {
-                CompositionLocalProvider {
+                CompositionLocalProvider(
+                    LocalAnalyticsHelper provides analyticsHelper,
+                ) {
+                    val appState = (uiState as? MainActivityUiState.Success)?.userData?.let {
+                        rememberCrbtAppState(
+                            networkMonitor = networkMonitor,
+                            userPreferencesData = it,
+                        )
+                    }
+
                     CrbtTheme {
-                        CrbtApp(appState)
+                        if (appState != null) {
+                            CrbtApp(appState)
+                        }
                     }
                 }
             }

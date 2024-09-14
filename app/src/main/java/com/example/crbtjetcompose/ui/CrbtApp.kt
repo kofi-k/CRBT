@@ -1,35 +1,50 @@
 package com.example.crbtjetcompose.ui
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration.Indefinite
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.crbt.data.core.data.model.DummyUser
+import com.crbt.data.core.data.util.INTERNET_SPEED_CHECK_URL
 import com.crbt.designsystem.components.CrbtNavigationBar
 import com.crbt.designsystem.components.CrbtNavigationBarItem
 import com.crbt.designsystem.components.CrbtTopAppBar
@@ -45,11 +60,13 @@ import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
+import com.crbt.services.navigation.PACKAGES_ROUTE
 import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
 import com.crbt.subscription.navigation.TONES_ROUTE
+import com.crbt.ui.core.ui.launchCustomChromeTab
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -63,6 +80,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 fun CrbtApp(appState: CrbtAppState) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
+    val context = LocalContext.current
 
     val showNavIcon =
         destination != null && appState.currentDestination.isTopLevelDestinationInHierarchy(
@@ -92,7 +110,21 @@ fun CrbtApp(appState: CrbtAppState) {
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
             TONES_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_tones
             ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
+            PACKAGES_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_packages
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
+        }
+    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val internetSpeed by appState.internetSpeed.collectAsStateWithLifecycle()
+
+    val notConnectedMessage = stringResource(R.string.not_connected)
+    LaunchedEffect(isOffline) {
+        if (isOffline) {
+            snackbarHostState.showSnackbar(
+                message = notConnectedMessage,
+                duration = Indefinite,
+            )
         }
     }
 
@@ -107,6 +139,7 @@ fun CrbtApp(appState: CrbtAppState) {
                 modifier = Modifier.semantics {
                     testTagsAsResourceId = true
                 },
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -129,6 +162,7 @@ fun CrbtApp(appState: CrbtAppState) {
                     }
                 },
                 topBar = {
+                    val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
                     if (showNavigationBars) {
                         CrbtTopAppBar(
                             titleRes = titleRes,
@@ -142,22 +176,48 @@ fun CrbtApp(appState: CrbtAppState) {
                             },
                             showNavigationIcon = !showNavIcon,
                             actions = {
-                                when (destination) {
-                                    TopLevelDestination.PROFILE -> {
-                                        IconButton(onClick = { /*TODO*/ }) {
-                                            Icon(
-                                                imageVector = CrbtIcons.Edit,
-                                                contentDescription = CrbtIcons.Edit.name,
-                                            )
-                                        }
-                                    }
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    TextButton(onClick = {
+                                        launchCustomChromeTab(
+                                            context = context,
+                                            uri = Uri.parse(INTERNET_SPEED_CHECK_URL),
+                                            toolbarColor = backgroundColor
+                                        )
+                                    }) {
 
-                                    else -> {
-                                        IconButton(onClick = { /*TODO*/ }) {
-                                            Icon(
-                                                imageVector = CrbtIcons.Notifications,
-                                                contentDescription = CrbtIcons.Notifications.name,
-                                            )
+                                        Text(
+                                            text = stringResource(
+                                                id = R.string.internet_speed,
+                                                internetSpeed
+                                            ),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                        Icon(
+                                            imageVector = CrbtIcons.SwapVert,
+                                            contentDescription = CrbtIcons.SwapVert.name,
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                    }
+                                    when (destination) {
+                                        TopLevelDestination.PROFILE -> {
+                                            IconButton(onClick = { /*TODO*/ }) {
+                                                Icon(
+                                                    imageVector = CrbtIcons.Edit,
+                                                    contentDescription = CrbtIcons.Edit.name,
+                                                )
+                                            }
+                                        }
+
+                                        else -> {
+                                            IconButton(onClick = { /*TODO*/ }) {
+                                                Icon(
+                                                    imageVector = CrbtIcons.Notifications,
+                                                    contentDescription = CrbtIcons.Notifications.name,
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -186,7 +246,7 @@ fun CrbtApp(appState: CrbtAppState) {
                                     TopLevelDestination.SERVICES -> {
                                         Column(
                                             modifier = Modifier.fillMaxWidth(),
-                                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                                            horizontalAlignment = androidx.compose.ui.Alignment.Start,
                                             verticalArrangement = Arrangement.Center
                                         ) {
                                             Text(
@@ -216,6 +276,7 @@ fun CrbtApp(appState: CrbtAppState) {
             ) { padding ->
                 CrbtNavHost(
                     appState = appState,
+                    startDestination = appState.startDestination,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
@@ -262,7 +323,6 @@ private fun CrbtBottomBar(
         }
     }
 }
-
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
     this?.hierarchy?.any {

@@ -1,4 +1,3 @@
-
 package com.example.crbtjetcompose.util
 
 import android.util.Log
@@ -29,3 +28,5 @@ class ProfileVerifierLogger @Inject constructor(
         )
     }
 }
+
+

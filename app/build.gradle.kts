@@ -29,7 +29,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
-            isDebuggable = false
+//            isDebuggable = false
         }
         release {
             isMinifyEnabled = false
@@ -68,6 +68,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.datastore)
     implementation(projects.core.domain)
+    implementation(projects.core.analytics)
 
 
 
