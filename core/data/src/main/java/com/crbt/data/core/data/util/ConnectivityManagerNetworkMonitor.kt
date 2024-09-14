@@ -1,5 +1,3 @@
-
-
 package com.crbt.data.core.data.util
 
 import android.content.Context
@@ -18,9 +16,11 @@ import com.crbt.common.core.common.network.Dispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
@@ -75,6 +75,17 @@ class ConnectivityManagerNetworkMonitor @Inject constructor(
     }
         .flowOn(ioDispatcher)
         .conflate()
+
+    override val internetSpeed: Flow<Double> = flow {
+        while (true) {
+            val speed = measureInternetSpeedWithTrafficStats()
+            emit(speed)
+            delay(5000)
+        }
+    }
+        .flowOn(ioDispatcher)
+        .conflate()
+
 
     @Suppress("DEPRECATION")
     private fun ConnectivityManager.isCurrentlyConnected() = when {
