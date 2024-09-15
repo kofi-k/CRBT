@@ -1,6 +1,7 @@
 package com.crbt.home
 
-import androidx.compose.animation.core.animateFloatAsState
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,9 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,39 +28,52 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
+import com.crbt.data.core.data.repository.UssdUiState
+import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.ui.core.ui.BalanceDialog
 import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     onSubscriptionClick: (String?) -> Unit = {},
     onNavigateToTopUp: () -> Unit = {},
     onPopularTodayClick: (String?) -> Unit = {}
 ) {
+    val viewModel: HomeViewModel = hiltViewModel()
+    val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -71,10 +86,24 @@ fun HomeScreen(
         item {
             UserBalanceCard(
                 onNavigateToTopUp = onNavigateToTopUp,
-                onRefresh = {},
+                onRefresh = {
+                    viewModel.runUssdCode(
+                        ussdCode = CHECK_BALANCE_USSD,
+                        onSuccess = {
+                            showDialog = true
+                        },
+                        onError = {
+                            showDialog = true
+                        }
+                    )
+                },
+                isRefreshing = ussdUiState is UssdUiState.Loading,
                 balance = DummyUser.user.accountBalance.toString(),
-                balancePercentage = 65
             )
+        }
+
+        item {
+            CrbtAds()
         }
 
         item {
@@ -108,6 +137,15 @@ fun HomeScreen(
             )
         }
     }
+
+    if (showDialog) {
+        BalanceDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            ussdUiState = ussdUiState
+        )
+    }
 }
 
 @Composable
@@ -115,7 +153,6 @@ internal fun UserBalanceCard(
     onNavigateToTopUp: () -> Unit,
     onRefresh: () -> Unit,
     balance: String,
-    balancePercentage: Int,
     isRefreshing: Boolean = false
 ) {
     Card(
@@ -151,28 +188,32 @@ internal fun UserBalanceCard(
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Black
                     ),
+                    color = Color.White
                 )
                 Text(
                     text = stringResource(id = R.string.feature_home_balance_subtitle),
+                    color = Color.White
                 )
             }
             Spacer(modifier = Modifier.size(16.dp))
             IconButton(
                 onClick = onRefresh
             ) {
+                when (isRefreshing) {
+                    true -> CircularProgressIndicator(
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                        color = Color.White
+                    )
 
-                val rotateIcon by animateFloatAsState(
-                    targetValue = if (isRefreshing) 360f else 0f,
-                    label = "rotateIcon"
-                )
+                    else ->
+                        Icon(
+                            imageVector = CrbtIcons.Refresh,
+                            contentDescription = CrbtIcons.Refresh.name,
+                            modifier = Modifier,
+                            tint = Color.White
+                        )
+                }
 
-                Icon(
-                    imageVector = CrbtIcons.Refresh,
-                    contentDescription = CrbtIcons.Refresh.name,
-                    modifier = Modifier.graphicsLayer(
-                        rotationZ = rotateIcon
-                    ),
-                )
             }
         }
     }
@@ -245,55 +286,6 @@ fun LatestMusicCard(
 }
 
 
-@Composable
-fun PercentIndicator(
-    modifier: Modifier = Modifier,
-    percentage: Int,
-    color: Color = MaterialTheme.colorScheme.primary,
-    backgroundColor: Color = MaterialTheme.colorScheme.outline.copy(stronglyDeemphasizedAlpha)
-) {
-
-    val animatedPercentage by animateFloatAsState(
-        targetValue = percentage.toFloat(),
-        label = "animatedPercentage"
-    )
-
-    Box(
-        modifier = modifier
-            .clip(CircleShape)
-            .drawBehind {
-                // Draw the background arc (gray)
-                drawArc(
-                    color = backgroundColor,
-                    startAngle = 0f,
-                    sweepAngle = 360f,
-                    useCenter = false,
-                    size = size.copy(width = size.minDimension, height = size.minDimension),
-                    style = Stroke(width = 40f)
-                )
-                // Draw the percentage arc (colored)
-                drawArc(
-                    color = color,
-                    startAngle = -90f,
-                    sweepAngle = 360f * animatedPercentage / 100,
-                    useCenter = false,
-                    size = size.copy(width = size.minDimension, height = size.minDimension),
-                    style = Stroke(width = 40f)
-                )
-            }
-            .size(100.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "$percentage%",
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.Bold
-            ),
-        )
-    }
-}
-
-
 @Preview
 @Composable
 fun PreviewLatestMusicCard() {
@@ -307,6 +299,7 @@ fun PreviewLatestMusicCard() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ThemePreviews
 @Composable
 fun PreviewHomeScreen() {

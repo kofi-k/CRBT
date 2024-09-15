@@ -20,7 +20,8 @@ class CrbtPreferencesDataSource @Inject constructor(
                 profileUrl = it.userProfileUrl,
                 currency = it.userCurrency,
                 firstName = it.userFirstName,
-                lastName = it.userLastName
+                lastName = it.userLastName,
+                email = it.userEmail,
             )
         }
 
@@ -69,11 +70,19 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
+    suspend fun setPhoneNumber(phoneNumber: String) {
+        userPreferences.updateData {
+            it.copy {
+                userPhoneNumber = phoneNumber
+            }
+        }
+    }
+
+
     suspend fun setUserInfo(
         firstName: String,
         lastName: String,
         email: String,
-        phoneNumber: String
     ) {
         try {
             userPreferences.updateData {
@@ -81,7 +90,6 @@ class CrbtPreferencesDataSource @Inject constructor(
                     userFirstName = firstName
                     userLastName = lastName
                     userEmail = email
-                    userPhoneNumber = phoneNumber
                 }
             }
         } catch (ioException: IOException) {
@@ -106,6 +114,28 @@ class CrbtPreferencesDataSource @Inject constructor(
             userPreferences.updateData {
                 it.copy {
                     unsubscribedCrbtToneIds.put(ids, true)
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
+    suspend fun clearUserPreferences() {
+        try {
+            userPreferences.updateData {
+                it.copy {
+                    userId = ""
+                    userPhoneNumber = ""
+                    userLanguageCode = ""
+                    userPaymentMethod = ""
+                    userProfileUrl = ""
+                    userCurrency = ""
+                    userFirstName = ""
+                    userLastName = ""
+                    userEmail = ""
+                    subscribedCrbtToneIds.clear()
+                    unsubscribedCrbtToneIds.clear()
                 }
             }
         } catch (ioException: IOException) {

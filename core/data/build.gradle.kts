@@ -14,6 +14,8 @@ dependencies {
     api(projects.core.common)
     api(projects.core.network)
     api(projects.core.datastore)
+    implementation(projects.core.analytics)
+
     implementation(libs.firebase.auth.ktx)
     implementation(libs.room.ktx)
     implementation(libs.androidx.media3.common)
