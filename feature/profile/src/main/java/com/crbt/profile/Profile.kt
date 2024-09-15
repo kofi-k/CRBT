@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +57,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.util.copyImageToInternalStorage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.ThemePreviews
@@ -64,6 +67,7 @@ import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
+import com.example.crbtjetcompose.core.model.data.CrbtUser
 import com.example.crbtjetcompose.feature.profile.R
 
 
@@ -73,8 +77,36 @@ fun Profile(
     onSaveButtonClicked: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val userData by profileViewModel.userData.collectAsStateWithLifecycle()
-    var profileImage by remember {
+    val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
+
+    when (userResult) {
+        is Result.Loading -> CircularProgressIndicator()
+        is Result.Error -> Unit
+        is Result.Success -> {
+            ProfileContent(
+                modifier = modifier,
+                userData = (userResult as Result.Success<CrbtUser>).data,
+                onSaveButtonClicked = onSaveButtonClicked,
+                saveProfile = { firstName, lastName ->
+                    profileViewModel.saveProfile(firstName, lastName)
+                },
+                saveProfileImage = { profileUrl ->
+                    profileViewModel.saveProfileImage(profileUrl)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileContent(
+    modifier: Modifier = Modifier,
+    userData: CrbtUser,
+    onSaveButtonClicked: () -> Unit,
+    saveProfile: (firstName: String, lastName: String) -> Unit,
+    saveProfileImage: (String) -> Unit,
+) {
+    var profileImage by rememberSaveable {
         mutableStateOf(Uri.parse(userData.profileUrl))
     }
     val context = LocalContext.current
@@ -86,6 +118,15 @@ fun Profile(
             }
         },
     )
+    var firstName by rememberSaveable {
+        mutableStateOf(userData.firstName)
+    }
+    var lastName by rememberSaveable {
+        mutableStateOf(userData.lastName)
+    }
+    var isButtonEnabled by rememberSaveable {
+        mutableStateOf(false)
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -113,11 +154,13 @@ fun Profile(
         Spacer(modifier = Modifier.height(24.dp))
         UsernameDetails(
             modifier = modifier,
-            onUserProfileResponse = { firstName, lastName, _ ->
-                profileViewModel.onNameChanged(firstName, lastName)
+            onUserProfileResponse = { fName, lName, isValid ->
+                firstName = fName
+                lastName = lName
+                isButtonEnabled = isValid
             },
-            initialFirstName = userData.firstName,
-            initialLastName = userData.lastName,
+            initialFirstName = firstName,
+            initialLastName = lastName,
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
@@ -134,9 +177,9 @@ fun Profile(
 
         ProcessButton(
             onClick = {
-                profileViewModel.saveProfile()
+                saveProfile(firstName, lastName)
                 if (profileImage != Uri.EMPTY) {
-                    profileViewModel.saveProfileImage(
+                    saveProfileImage(
                         copyImageToInternalStorage(
                             context,
                             profileImage
@@ -145,6 +188,7 @@ fun Profile(
                 }
                 onSaveButtonClicked()
             },
+            isEnabled = isButtonEnabled,
             modifier = modifier
                 .fillMaxWidth(),
             text = stringResource(id = R.string.feature_profile_save_profile_button)

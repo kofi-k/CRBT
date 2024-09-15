@@ -1,5 +1,6 @@
 package com.crbt.profile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
@@ -19,6 +22,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
@@ -28,22 +36,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.model.DummyUser
+import com.crbt.data.core.data.model.fullName
+import com.crbt.data.core.data.phoneAuth.SignOutState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
-import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.example.crbtjetcompose.feature.profile.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileRoute(
     onRewardPointsClicked: () -> Unit,
     onLogout: () -> Unit,
-    onEditProfileClick: () -> Unit = {}
+    onEditProfileClick: () -> Unit = {},
+    profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
+    val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    var signingOut by remember { mutableStateOf(false) }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,9 +70,23 @@ fun ProfileRoute(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            ProfileHeader(
-                onEditProfileClick = onEditProfileClick
-            )
+            when (userResult) {
+                is Result.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is Result.Error -> Unit
+
+                is Result.Success -> {
+                    val user = (userResult as Result.Success).data
+                    ProfileHeader(
+                        onEditProfileClick = onEditProfileClick,
+                        userName = user.fullName().ifBlank { DummyUser.user.firstName },
+                        phoneNumber = user.phoneNumber.ifBlank { DummyUser.user.phoneNumber },
+                        userImageUrl = user.profileUrl
+                    )
+                }
+            }
         }
 
         item {
@@ -70,13 +100,36 @@ fun ProfileRoute(
             Spacer(modifier = Modifier.heightIn(min = 16.dp))
 
             OutlinedButton(
-                onClick = onLogout,
+                onClick = {
+                    scope.launch {
+                        when (profileViewModel.signOut()) {
+                            is SignOutState.Success -> {
+                                onLogout()
+                            }
+
+                            is SignOutState.Error -> Unit
+
+                            is SignOutState.Loading -> {
+                                signingOut = true
+                            }
+                        }
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large
             ) {
                 Icon(imageVector = CrbtIcons.Logout, contentDescription = CrbtIcons.Logout.name)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = stringResource(id = R.string.feature_profile_logout))
+                val text = if (signingOut) {
+                    stringResource(id = R.string.feature_profile_logging_out)
+                } else {
+                    stringResource(id = R.string.feature_profile_logout)
+                }
+                Text(text = text)
+                AnimatedVisibility(visible = signingOut) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CircularProgressIndicator()
+                }
             }
         }
     }
@@ -85,19 +138,24 @@ fun ProfileRoute(
 
 @Composable
 fun ProfileHeader(
-    onEditProfileClick: () -> Unit = {}
+    onEditProfileClick: () -> Unit = {},
+    userName: String,
+    phoneNumber: String,
+    userImageUrl: String
 ) {
     ListCard(
         onClick = onEditProfileClick,
-        headlineText = DummyUser.user.firstName,
+        headlineText = userName,
         leadingContentIcon = CrbtIcons.MoreVert,
-        subText = DummyUser.user.phoneNumber,
+        subText = phoneNumber,
         leadingContent = {
             Box(
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
             ) {
                 DynamicAsyncImage(
-                    imageUrl = "",
+                    imageUrl = userImageUrl,
                     imageRes = com.example.crbtjetcompose.core.ui.R.drawable.avatar
                 )
             }
