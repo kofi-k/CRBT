@@ -118,8 +118,8 @@ fun SubscriptionCheckout(
 
         OutlinedButton(
             onClick = { /*TODO share receipt logic here probably gonna be an intent or some shit like that*/ },
-             modifier = Modifier.fillMaxWidth()
-            ) {
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Icon(imageVector = CrbtIcons.Share, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = stringResource(id = R.string.feature_subscription_share_receipt))
@@ -128,6 +128,7 @@ fun SubscriptionCheckout(
         ProcessButton(
             text = stringResource(id = R.string.feature_subscription_done),
             onClick = onDoneClicked,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 
