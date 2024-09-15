@@ -21,13 +21,15 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setUserId(userId: String) =
         crbtPreferencesDataSource.setUserId(userId)
 
-    override suspend fun setUserName(
+    override suspend fun setUserInfo(
         firstName: String,
         lastName: String,
         email: String,
-        phoneNumber: String
     ) =
-        crbtPreferencesDataSource.setUserInfo(firstName, lastName, email, phoneNumber)
+        crbtPreferencesDataSource.setUserInfo(firstName, lastName, email)
+
+    override suspend fun setPhoneNumber(phoneNumber: String) =
+        crbtPreferencesDataSource.setPhoneNumber(phoneNumber)
 
     override suspend fun setUserProfilePictureUrl(profilePictureUrl: String) =
         crbtPreferencesDataSource.setUserProfilePictureUrl(profilePictureUrl)
@@ -41,4 +43,7 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         crbtPreferencesDataSource.setUserPaymentMethod(paymentMethod)
         analyticsHelper.logUserPreferedCurrency(paymentMethod)
     }
+
+    override suspend fun clearUserPreferences() =
+        crbtPreferencesDataSource.clearUserPreferences()
 }

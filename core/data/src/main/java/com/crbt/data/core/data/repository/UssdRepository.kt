@@ -23,7 +23,7 @@ class UssdRepository @Inject constructor(
     val ussdState: StateFlow<UssdUiState> get() = _ussdState
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (Int) -> Unit) {
+    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         val telephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
@@ -58,19 +58,18 @@ class UssdRepository @Inject constructor(
                 request: String,
                 failureCode: Int
             ) {
-                _ussdState.value = UssdUiState.Error(failureCode)
-                onError(failureCode)
+                _ussdState.value = UssdUiState.Error("Failed with code: $failureCode")
+                onError("Failed with code: $failureCode")
             }
         }, Handler(Looper.getMainLooper()))
     }
 }
 
-
 sealed class UssdUiState {
     data object Idle : UssdUiState()
     data object Loading : UssdUiState()
     data class Success(val response: String) : UssdUiState()
-    data class Error(val errorCode: Int) : UssdUiState()
+    data class Error(val error: String) : UssdUiState()
 }
 
 
