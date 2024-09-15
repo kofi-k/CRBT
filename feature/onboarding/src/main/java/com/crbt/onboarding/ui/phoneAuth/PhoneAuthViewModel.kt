@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
+import com.example.crbtjetcompose.core.network.repository.CrbtNetworkRepository
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.PhoneAuthCredential
@@ -20,7 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhoneAuthViewModel @Inject constructor(
-    private val repository: PhoneAuthRepository
+    private val repository: PhoneAuthRepository,
+    private val crbtPreferencesRepository: CrbtPreferencesRepository,
+    private val crbtNetworkRepository: CrbtNetworkRepository,
 ) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -66,10 +70,17 @@ class PhoneAuthViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = repository.verifyCode(_verificationId.value ?: "", otpCode).await()
+                val tokenUid = result.user?.uid
+                crbtNetworkRepository.login(
+                    phone = repository.getSignedInUser()?.phoneNumber ?: "",
+                    idToken = tokenUid ?: ""
+                ) // todo proceed on success of this call
                 _authState.value = AuthState.Success(result)
+                crbtPreferencesRepository.setUserId(tokenUid ?: "")
                 onOtpVerified()
             } catch (e: Exception) {
                 _authState.value = AuthState.Error(e.message)
+                crbtPreferencesRepository.setUserId("fakeUserId") // todo remove this, just for testing
             }
         }
     }

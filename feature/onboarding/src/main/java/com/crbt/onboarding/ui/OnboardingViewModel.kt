@@ -4,17 +4,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.OnboardingSetupProcess
 import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.data.core.data.model.userProfileIsComplete
+import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor() : ViewModel() {
+class OnboardingViewModel @Inject constructor(
+    private val crbtPreferencesRepository: CrbtPreferencesRepository,
+    private val phoneAuthRepository: PhoneAuthRepository
+) : ViewModel() {
 
     private val onboardingOrder: List<OnboardingSetupProcess> = listOf(
         OnboardingSetupProcess.LANGUAGE_SELECTION,
@@ -59,9 +66,22 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _onboardingScreenData = createOnboardingScreenData()
     }
 
+    fun saveUserProfile() {
+        viewModelScope.launch {
+            crbtPreferencesRepository.setUserInfo(
+                firstName = _onboardingSetupData.firstName,
+                lastName = _onboardingSetupData.lastName,
+                email = "",
+            )
+            crbtPreferencesRepository.setPhoneNumber(
+                phoneNumber = phoneAuthRepository.getSignedInUser()?.phoneNumber ?: "",
+            )
+        }
+    }
+
     fun onLanguageSelected(languageId: String = CRBTSettingsData.languages.first { it.code == "en" }.code) {
         _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = languageId)
-        _isNextEnabled = true
+        _isNextEnabled = getIsNextEnabled()
     }
 
     fun onPhoneNumberEntered(phoneNumber: String, isPhoneNumberValid: Boolean) {
@@ -69,9 +89,9 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
         _isNextEnabled = isPhoneNumberValid
     }
 
-    fun onUserProfileEntered(firstName: String, lastName: String) {
+    fun onUserProfileEntered(firstName: String, lastName: String, isValid: Boolean) {
         _onboardingSetupData = _onboardingSetupData.copy(firstName = firstName, lastName = lastName)
-        _isNextEnabled = getIsNextEnabled()
+        _isNextEnabled = isValid
     }
 
     fun onOtpCodeChanged(otp: String, isComplete: Boolean) {

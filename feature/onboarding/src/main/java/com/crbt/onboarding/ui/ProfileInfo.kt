@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.OnboardingSheetContainer
@@ -21,7 +22,8 @@ import com.example.crbtjetcompose.feature.onboarding.R
 @Composable
 fun Profile(
     modifier: Modifier = Modifier,
-    onSaveButtonClicked: () -> Unit,
+    onOnboardingComplete: () -> Unit,
+    onboardingViewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     Column(
         modifier = modifier
@@ -36,7 +38,9 @@ fun Profile(
         Spacer(modifier = Modifier.height(16.dp))
         UsernameDetails(
             modifier = modifier,
-            onUserProfileResponse = { _, _, _ -> /*todo handle with vm*/ },
+            onUserProfileResponse = onboardingViewModel::onUserProfileEntered,
+            initialFirstName = "",
+            initialLastName = "",
         )
         Spacer(modifier = Modifier.height(8.dp))
         OnboardingSheetContainer(
@@ -52,9 +56,13 @@ fun Profile(
         Spacer(modifier = Modifier.height(16.dp))
 
         ProcessButton(
-            onClick = onSaveButtonClicked,
+            onClick = {
+                onboardingViewModel.saveUserProfile()
+                onOnboardingComplete()
+            },
             modifier = modifier
                 .fillMaxWidth(),
+            isEnabled = onboardingViewModel.isNextEnabled
         )
     }
 }
@@ -65,6 +73,8 @@ fun Profile(
 fun UsernameDetailsPreview() {
     UsernameDetails(
         onUserProfileResponse = { _, _, _ -> },
+        initialFirstName = "kofi k.",
+        initialLastName = "",
     )
 }
 
@@ -72,6 +82,6 @@ fun UsernameDetailsPreview() {
 @Composable
 fun ProfilePreview() {
     Profile(
-        onSaveButtonClicked = {},
+        onOnboardingComplete = {},
     )
 }

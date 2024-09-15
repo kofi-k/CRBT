@@ -2,7 +2,6 @@ package com.crbt.onboarding
 
 import android.app.Activity
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
@@ -27,17 +26,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +53,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -57,7 +65,7 @@ import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.designsystem.theme.bodyFontFamily
+import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.onboarding.ui.LanguageSelection
 import com.crbt.onboarding.ui.OTPVerification
 import com.crbt.onboarding.ui.OnboardingViewModel
@@ -80,6 +88,8 @@ fun OnboardingScreen(
             skipHiddenState = false
         )
     )
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val viewModel: OnboardingViewModel = hiltViewModel()
     val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
     val authState by phoneAuthViewModel.authState.collectAsStateWithLifecycle()
@@ -90,6 +100,25 @@ fun OnboardingScreen(
 
     BackHandler {
         viewModel.onPreviousClicked()
+    }
+
+    val codeSentMessage = stringResource(id = R.string.feature_onboarding_otp_sent)
+    LaunchedEffect(authState) {
+
+        val message = when (authState) {
+            is AuthState.Error -> (authState as AuthState.Error).message
+            is AuthState.CodeSent -> codeSentMessage
+            else -> null
+        }
+
+        if ((authState is AuthState.Error || authState is AuthState.CodeSent)
+            && message != null
+        ) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short,
+            )
+        }
     }
 
 
@@ -107,7 +136,6 @@ fun OnboardingScreen(
                             phoneAuthViewModel.sendVerificationCode(
                                 onOtpSent = {
                                     viewModel.onNextClicked()
-                                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                                 },
                                 phoneNumber = onboardingSetupData.phoneNumber,
                                 activity = context as Activity
@@ -119,21 +147,17 @@ fun OnboardingScreen(
                                 is AuthState.Error -> {
                                     onOTPVerified() // todo remove this line, it's for testing
                                     viewModel.onDoneClicked()
-                                    Toast.makeText(
-                                        context,
-                                        (authState as AuthState.Error).message,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    scope.launch {
+                                        bottomSheetScaffoldState.bottomSheetState.hide()
+                                    }
                                 }
 
                                 is AuthState.Success -> {
                                     onOTPVerified()
                                     viewModel.onDoneClicked()
-                                    Toast.makeText(
-                                        context,
-                                        "OTP Verified Successfully",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    scope.launch {
+                                        bottomSheetScaffoldState.bottomSheetState.hide()
+                                    }
                                 }
 
                                 else -> {}
@@ -168,6 +192,7 @@ fun OnboardingScreen(
             .windowInsetsPadding(
                 WindowInsets(0, 0, 0, 0)
             ),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) {
         val scrim = if (bottomSheetScaffoldState.bottomSheetState.isVisible) {
             Color.Black.copy(alpha = 0.5f)
@@ -192,74 +217,93 @@ fun OnboardingScreen(
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.25f))
             )
-            Column(
-                modifier = Modifier
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier =
-                    Modifier
-                        .fillMaxHeight(0.5f)
-                ) {
-                    Image(
-                        painter = painterResource(id = UiR.drawable.ui_crbtlogo),
-                        contentDescription = "logo",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .size(200.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxHeight(0.5f)
-                ) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        text = stringResource(id = R.string.feature_onboarding_page_one_title),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Black,
-                            fontFamily = bodyFontFamily
-                        ),
-                        modifier = Modifier
-                            .padding(horizontal = 32.dp)
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                    ) {
-                        Icon(
-                            imageVector = CrbtIcons.ArrowForward,
-                            contentDescription = "Next",
-                            tint = Color.White,
-                            modifier = Modifier
-                                .size(72.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
+        }
+        OnboardingTextContent(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        ) {
+            scope.launch {
+                bottomSheetScaffoldState.bottomSheetState.expand()
             }
         }
     }
+}
+
+@Composable
+fun OnboardingTextContent(
+    modifier: Modifier = Modifier,
+    onClicked: () -> Unit
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxHeight(0.5f)
+        ) {
+            Image(
+                painter = painterResource(id = UiR.drawable.ui_crbtlogo),
+                contentDescription = "logo",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+        Spacer(modifier = Modifier.height(32.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxHeight(0.5f)
+        ) {
+            Text(
+                text = stringResource(id = R.string.feature_onboarding_page_one_title),
+                style = MaterialTheme.typography.displayLarge.copy(
+                    fontSize = MaterialTheme.typography.displayMedium.fontSize,
+                    fontWeight = FontWeight.Bold,
+                ),
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            IconButton(
+                onClick = onClicked,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                )
+            ) {
+                Icon(
+                    imageVector = CrbtIcons.ArrowForward,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(86.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+
 }
 
 private const val CONTENT_ANIMATION_DURATION = 300
@@ -385,10 +429,12 @@ fun BottomSheetContent(
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun OnboardingScreenPreview() {
-    OnboardingScreen(
-        onOTPVerified = {},
-    )
+    CrbtTheme {
+        OnboardingTextContent(
+            onClicked = {},
+        )
+    }
 }
