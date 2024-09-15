@@ -6,4 +6,8 @@
     <string name="core_ui_first_name_label">First name</string>
     <string name="core_ui_last_name_label">Last name</string>
     <string name="core_ui_email_label">Email from CRBT</string>
+    <string name="core_ui_error_check_balance">Error checking balance</string>
+    <string name="core_ui_balance_check">Your current balance</string>
+    <string name="core_ui_ok">Okay</string>
+    <string name="core_ui_dismiss">Dismiss</string>
 </resources>

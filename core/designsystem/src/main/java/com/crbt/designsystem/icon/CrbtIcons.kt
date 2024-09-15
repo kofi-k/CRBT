@@ -59,6 +59,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Sms
 import androidx.compose.material.icons.rounded.Subscriptions
+import androidx.compose.material.icons.rounded.SwapVert
 import androidx.compose.material.icons.rounded.SyncAlt
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -73,6 +74,7 @@ object CrbtIcons {
     val ArrowForward = Icons.AutoMirrored.Rounded.ArrowForward
     val ArrowUp = Icons.Default.KeyboardArrowUp
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
+    val SwapVert = Icons.Rounded.SwapVert
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
 
     val OtpCode = Icons.Rounded.Pin

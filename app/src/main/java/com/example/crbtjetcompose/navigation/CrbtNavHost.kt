@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.crbt.home.navigation.homeScreen
+import com.crbt.onboarding.navigation.navigateToOnboarding
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
 import com.crbt.services.navigation.navigateToTopUp
@@ -59,11 +60,7 @@ fun CrbtNavHost(
             profileScreen(
                 navController = navController,
                 onLogout = {
-//                    navController.navigate(ONBOARDING_ROUTE) {
-//                        popUpTo(PROFILE_ROUTE) {
-//                            inclusive = true
-//                        }
-//                    }
+                    navController.navigateToOnboarding()
                 }
             )
         }
