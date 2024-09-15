@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.core.network.di
 
+import android.content.Context
 import androidx.tracing.trace
 import com.example.crbtjetcompose.core.network.BuildConfig
 import com.example.crbtjetcompose.core.network.retrofit.RetrofitCrbtNetworkApi
@@ -7,6 +8,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -30,6 +32,24 @@ internal object NetworkModule {
     fun providesNetworkJson(): Json = Json {
         explicitNulls = false
         ignoreUnknownKeys = true
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context,
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
     }
 
     @Singleton
