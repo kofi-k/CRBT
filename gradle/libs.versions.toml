@@ -4,34 +4,34 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-navigationCompose = "2.7.7"
+lifecycleRuntimeKtx = "2.8.5"
+activityCompose = "1.9.2"
+navigationCompose = "2.8.0"
 firebaseAuthKtx = "23.0.0"
-media3Common = "1.4.0"
+media3Common = "1.4.1"
 compiler = "3.2.0-alpha11"
 
 accompanist = "0.34.0"
-androidDesugarJdkLibs = "2.0.4"
+androidDesugarJdkLibs = "2.1.2"
 # AGP and tools should be updated together
-androidTools = "31.5.2"
+androidTools = "31.6.0"
 androidxActivity = "1.9.0"
 androidxAppCompat = "1.7.0"
 androidxBrowser = "1.8.0"
-androidxComposeBom = "2024.06.00"
+androidxComposeBom = "2024.09.01"
 androidxComposeCompiler = "1.5.14"
-androidxComposeUiTest = "1.7.0-beta07"
-androidxComposeMaterial3Adaptive = "1.0.0-beta04"
+androidxComposeUiTest = "1.7.1"
+androidxComposeMaterial3Adaptive = "1.0.0"
 androidxComposeRuntimeTracing = "1.0.0-beta01"
 androidxCore = "1.13.1"
 androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.1.1"
 androidxEspresso = "3.6.1"
 androidxHiltNavigationCompose = "1.2.0"
-androidxLifecycle = "2.8.4"
-androidxMacroBenchmark = "1.2.4"
+androidxLifecycle = "2.8.5"
+androidxMacroBenchmark = "1.3.0"
 androidxMetrics = "1.0.0-beta01"
-androidxNavigation = "2.8.0-beta07"
+androidxNavigation = "2.8.0"
 androidxProfileinstaller = "1.3.1"
 androidxTestCore = "1.6.1"
 androidxTestExt = "1.2.1"
@@ -70,16 +70,16 @@ room = "2.6.1"
 secrets = "2.0.1"
 truth = "1.4.2"
 turbine = "1.1.0"
-uiTextGoogleFonts = "1.7.0-beta07"
+uiTextGoogleFonts = "1.7.1"
 material = "1.12.0"
 lottieCompose = "6.4.0"
 roomPaging = "2.6.1"
-runtimeAndroid = "1.6.8"
+runtimeAndroid = "1.7.1"
 libphonenumber = "8.13.26"
 countryCodePicker = "0.1"
 authApiPhone = "18.1.0"
 androidxAutofill = "1.1.0"
-graphicShapes = "1.0.0-rc01"
+graphicShapes = "1.0.1"
 exoplayer = "2.19.1"
 
 [libraries]
@@ -214,8 +214,8 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
-baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxMacroBenchmark"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxMacroBenchmark" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

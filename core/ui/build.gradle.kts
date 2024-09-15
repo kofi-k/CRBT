@@ -11,6 +11,7 @@ android {
 dependencies {
     api(projects.core.data)
     api(projects.core.common)
+    implementation(projects.core.analytics)
 
     api(libs.androidx.metrics)
     api(projects.core.designsystem)
@@ -29,4 +30,5 @@ dependencies {
     implementation(libs.extension.mediasession)
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.session)
+    implementation(libs.androidx.browser)
 }
