@@ -24,17 +24,13 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -53,32 +49,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.tracing.trace
-import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.DynamicAsyncImage
-import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
-import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.services.ServiceSheetContainer
 import com.crbt.services.ServicesViewModel
-import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
+import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.example.crbtjetcompose.core.model.data.CrbtPackage
 import com.example.crbtjetcompose.core.model.data.PackageItem
 import com.example.crbtjetcompose.feature.services.R
-import com.rejowan.ccpc.Country
 import kotlinx.coroutines.launch
 
 
@@ -279,7 +268,7 @@ fun PurchasePackageBottomSheet(
             sheetState = sheetState,
             content = {
                 if (isGiftPurchase) {
-                    GiftPurchaseContent(
+                    GiftPurchasePhoneNumber(
                         onPhoneNumberChanged = onPhoneNumberChanged,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -333,75 +322,6 @@ fun ButtonActionRow(
     }
 }
 
-
-@Composable
-fun GiftPurchaseContent(
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    modifier: Modifier
-) {
-    val phoneNumberState by remember {
-        mutableStateOf(
-            PhoneNumberValidationState(
-                countryCode = Country.Ethiopia.countryCode,
-            ),
-        )
-    }
-    val focusManager = LocalFocusManager.current
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        CustomInputField(
-            onValueChange = {
-                phoneNumberState.text = it
-                onPhoneNumberChanged(it, phoneNumberState.isValid)
-            },
-            value = phoneNumberState.text,
-            inputType = InputType.PHONE_NUMBER,
-            textFieldType = TextFieldType.OUTLINED,
-            label = stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_phone_number_placeholder),
-            leadingIcon = {
-                Icon(
-                    imageVector = CrbtIcons.Phone,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(),
-            onClear = {
-                phoneNumberState.text = ""
-                onPhoneNumberChanged(phoneNumberState.text, phoneNumberState.isValid)
-            },
-            showsErrors = phoneNumberState.showErrors(),
-            errorText = phoneNumberState.getError() ?: "",
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    phoneNumberState.enableShowErrors()
-                    onPhoneNumberChanged(phoneNumberState.text, phoneNumberState.isValid)
-                    focusManager.clearFocus()
-                }
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        IconButton(
-            onClick = { /*TODO open contacts, remember to request for permission if not granted already */ },
-            modifier = Modifier.size(40.dp)
-        ) {
-            Icon(
-                imageVector = CrbtIcons.Contacts,
-                contentDescription = CrbtIcons.Contacts.name,
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
 
 fun LazyListScope.packageItemsFeed(
     packageItems: List<PackageItem>,
@@ -580,7 +500,7 @@ fun ItemCardPreview() {
 @Composable
 fun GiftPurchaseContentPreview() {
     CrbtTheme {
-        GiftPurchaseContent(
+        GiftPurchasePhoneNumber(
             onPhoneNumberChanged = { _, _ -> },
             modifier = Modifier.fillMaxWidth()
         )

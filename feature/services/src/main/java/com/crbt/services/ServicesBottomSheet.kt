@@ -33,7 +33,7 @@ import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.services.packages.ButtonActionRow
-import com.crbt.services.packages.GiftPurchaseContent
+import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
 import com.example.crbtjetcompose.feature.services.R
 
@@ -143,7 +143,7 @@ fun CallMeBackContent(
     Column(
         modifier = modifier
     ) {
-        GiftPurchaseContent(
+        GiftPurchasePhoneNumber(
             onPhoneNumberChanged = onPhoneNumberChanged,
             modifier = Modifier.fillMaxWidth()
         )
@@ -178,7 +178,7 @@ fun TransferContent(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        GiftPurchaseContent(
+        GiftPurchasePhoneNumber(
             onPhoneNumberChanged = onPhoneNumberChanged,
             modifier = Modifier.fillMaxWidth()
         )
