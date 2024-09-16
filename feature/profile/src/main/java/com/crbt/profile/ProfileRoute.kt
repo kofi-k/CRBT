@@ -23,10 +23,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
@@ -48,7 +44,6 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.example.crbtjetcompose.feature.profile.R
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileRoute(
@@ -58,8 +53,7 @@ fun ProfileRoute(
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
-    var signingOut by remember { mutableStateOf(false) }
+    val signOutState by profileViewModel.signOutState.collectAsStateWithLifecycle()
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,32 +95,20 @@ fun ProfileRoute(
 
             OutlinedButton(
                 onClick = {
-                    scope.launch {
-                        when (profileViewModel.signOut()) {
-                            is SignOutState.Success -> {
-                                onLogout()
-                            }
-
-                            is SignOutState.Error -> Unit
-
-                            is SignOutState.Loading -> {
-                                signingOut = true
-                            }
-                        }
-                    }
+                    profileViewModel.signOut(signedOut = onLogout)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large
             ) {
                 Icon(imageVector = CrbtIcons.Logout, contentDescription = CrbtIcons.Logout.name)
                 Spacer(modifier = Modifier.width(8.dp))
-                val text = if (signingOut) {
+                val text = if (signOutState is SignOutState.Loading) {
                     stringResource(id = R.string.feature_profile_logging_out)
                 } else {
                     stringResource(id = R.string.feature_profile_logout)
                 }
                 Text(text = text)
-                AnimatedVisibility(visible = signingOut) {
+                AnimatedVisibility(visible = signOutState is SignOutState.Loading) {
                     Spacer(modifier = Modifier.width(8.dp))
                     CircularProgressIndicator()
                 }

@@ -8,6 +8,7 @@ import com.crbt.data.core.data.phoneAuth.SignOutState
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.example.crbtjetcompose.core.model.data.CrbtUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -43,8 +44,18 @@ class ProfileViewModel @Inject constructor(
                 initialValue = Result.Loading,
             )
 
-    suspend fun signOut(): SignOutState {
-        return phoneAuthRepository.signOut()
+    private val _signOutState = MutableStateFlow<SignOutState>(SignOutState.Idle)
+    val signOutState: StateFlow<SignOutState> = _signOutState
+
+    fun signOut(signedOut: () -> Unit) {
+        _signOutState.value = SignOutState.Loading
+        viewModelScope.launch {
+            val result = phoneAuthRepository.signOut()
+            _signOutState.value = result
+            if (result is SignOutState.Success) {
+                signedOut()
+            }
+        }
     }
 
 

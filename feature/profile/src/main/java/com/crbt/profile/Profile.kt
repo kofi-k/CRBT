@@ -125,7 +125,7 @@ fun ProfileContent(
         mutableStateOf(userData.lastName)
     }
     var isButtonEnabled by rememberSaveable {
-        mutableStateOf(false)
+        mutableStateOf(firstName.isNotBlank() && lastName.isNotBlank())
     }
     Column(
         modifier = modifier
