@@ -26,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,10 +43,8 @@ import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
+import com.rejowan.ccpc.CCPUtils.Companion.getEmojiFlag
 import com.rejowan.ccpc.Country
-import com.rejowan.ccpc.CountryCodePicker
-import com.rejowan.ccpc.PickerCustomization
-import com.rejowan.ccpc.ViewCustomization
 import com.example.crbtjetcompose.core.ui.R as CoreUiR
 
 @Composable
@@ -55,11 +52,11 @@ fun PhoneEntryScreen(
     onPhoneNumberChanged: (String, Boolean) -> Unit,
 ) {
 
-    var countryCode by remember {
+    val countryCode by remember {
         mutableStateOf(Country.Ethiopia.countryCode)
     }
 
-    var phoneNumberState by remember {
+    val phoneNumberState by remember {
         mutableStateOf(
             PhoneNumberValidationState(
                 countryCode = countryCode,
@@ -67,12 +64,6 @@ fun PhoneEntryScreen(
         )
     }
 
-
-    LaunchedEffect(countryCode) {
-        phoneNumberState = PhoneNumberValidationState(
-            countryCode = countryCode,
-        )
-    }
 
     PhoneEntryTextField(
         onPhoneNumberChanged = {
@@ -86,9 +77,6 @@ fun PhoneEntryScreen(
         },
         onDone = { phoneNumberState.enableShowErrors() },
         showsErrors = phoneNumberState.showErrors(),
-        onCountrySelected = {
-            countryCode = it.countryCode
-        },
     )
     Spacer(modifier = Modifier.height(14.dp))
 }
@@ -191,7 +179,6 @@ fun PhoneEntryTextField(
     onDone: () -> Unit = {},
     showsErrors: Boolean = false,
     focusManager: FocusManager = LocalFocusManager.current,
-    onCountrySelected: (Country) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -202,9 +189,6 @@ fun PhoneEntryTextField(
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            var country by remember {
-                mutableStateOf(Country.Ethiopia)
-            }
             val background by animateColorAsState(
                 targetValue = if (showsErrors) {
                     MaterialTheme.colorScheme.errorContainer
@@ -216,32 +200,7 @@ fun PhoneEntryTextField(
                 label = "phone_number_border_color",
             )
 
-            CountryCodePicker(
-                modifier = Modifier
-                    .height(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(
-                            stronglyDeemphasizedAlpha,
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                    ),
-                selectedCountry = country,
-                onCountrySelected = {
-                    country = it
-                    onCountrySelected(it)
-                },
-                viewCustomization = ViewCustomization(
-                    showFlag = true,
-                    showCountryIso = false,
-                    showCountryName = false,
-                    showCountryCode = true,
-                    clipToFull = false,
-                ),
-                pickerCustomization = PickerCustomization(
-                    showFlag = false,
-                ),
-                showSheet = true,
-            )
+            CountryCodeChip(country = Country.Ethiopia)
 
             PhoneNumberInput(
                 onPhoneNumberChanged = onPhoneNumberChanged,
@@ -277,6 +236,48 @@ fun PhoneEntryTextField(
     }
 }
 
+@Composable
+fun CountryCodeChip(
+    country: Country
+) {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .background(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(
+                    stronglyDeemphasizedAlpha,
+                ),
+                shape = MaterialTheme.shapes.medium,
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+
+        Text(
+            text = getEmojiFlag(country.countryIso),
+            modifier = Modifier.padding(start = 16.dp, end = 10.dp),
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+
+        Text(
+            text = country.countryCode,
+            modifier = Modifier.padding(end = 16.dp),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CountryCodeChipPreview() {
+    CrbtTheme {
+        CountryCodeChip(
+            country = Country.Ethiopia
+        )
+    }
+}
+
 @Preview
 @Composable
 fun PhoneEntryTextFieldPreview() {
@@ -287,7 +288,6 @@ fun PhoneEntryTextFieldPreview() {
             onClear = {},
             onDone = {},
             showsErrors = false,
-            onCountrySelected = {},
         )
     }
 }
