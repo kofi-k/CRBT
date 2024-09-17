@@ -62,9 +62,9 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.CustomInputButton
+import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
-import com.crbt.ui.core.ui.PhoneEntryScreen
 import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
 import java.text.SimpleDateFormat
@@ -237,7 +237,10 @@ fun SubscribeContent(
         content = {
             if (isGiftSubscription) {
                 Spacer(modifier = Modifier.height(8.dp))
-                PhoneEntryScreen(onPhoneNumberChanged = onGiftPhoneNumberChanged)
+                GiftPurchasePhoneNumber(
+                    onPhoneNumberChanged = onGiftPhoneNumberChanged,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             BillingType(

@@ -103,6 +103,7 @@ fun SubscriptionsRoute(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @ThemePreviews
 @Composable
 fun SubscriptionsScreenPreview() {
