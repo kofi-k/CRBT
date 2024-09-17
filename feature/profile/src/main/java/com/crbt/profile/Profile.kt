@@ -10,15 +10,18 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -127,72 +130,84 @@ fun ProfileContent(
     var isButtonEnabled by rememberSaveable {
         mutableStateOf(firstName.isNotBlank() && lastName.isNotBlank())
     }
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+    val listState = rememberLazyListState()
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = listState,
+        contentPadding = PaddingValues(
+            vertical = 24.dp,
+            horizontal = 16.dp
+        )
     ) {
-        Text(
-            text = stringResource(id = R.string.feature_profile_setup_title),
-            style = MaterialTheme.typography.headlineSmall,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        UserProfileImage(
-            profileImage = profileImage,
-            onPickImage = {
-                pickPhoto.launch(
-                    PickVisualMediaRequest(
-                        ActivityResultContracts.PickVisualMedia.ImageOnly,
-                    ),
-                )
-            },
-            onRemoveImage = {
-                profileImage = it
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        UsernameDetails(
-            modifier = modifier,
-            onUserProfileResponse = { fName, lName, isValid ->
-                firstName = fName
-                lastName = lName
-                isButtonEnabled = isValid
-            },
-            initialFirstName = firstName,
-            initialLastName = lastName,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OnboardingSheetContainer(
-            title = stringResource(id = R.string.feature_profile_updates_title),
-            subtitle = stringResource(id = R.string.feature_profile_updates_subtitle),
-            content = {
-                EmailCheck(
-                    modifier = modifier,
-                    onEmailCheckChanged = { /*todo handle with vm*/ },
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ProcessButton(
-            onClick = {
-                saveProfile(firstName, lastName)
-                if (profileImage != Uri.EMPTY) {
-                    saveProfileImage(
-                        copyImageToInternalStorage(
-                            context,
-                            profileImage
-                        ).toString()
+        item {
+            Text(
+                text = stringResource(id = R.string.feature_profile_setup_title),
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier
+                    .fillMaxWidth(),
+            )
+        }
+        item {
+            UserProfileImage(
+                profileImage = profileImage,
+                onPickImage = {
+                    pickPhoto.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly,
+                        ),
+                    )
+                },
+                onRemoveImage = {
+                    profileImage = it
+                },
+                modifier = Modifier,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            UsernameDetails(
+                modifier = modifier,
+                onUserProfileResponse = { fName, lName, isValid ->
+                    firstName = fName
+                    lastName = lName
+                    isButtonEnabled = isValid
+                },
+                initialFirstName = firstName,
+                initialLastName = lastName,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OnboardingSheetContainer(
+                title = stringResource(id = R.string.feature_profile_updates_title),
+                subtitle = stringResource(id = R.string.feature_profile_updates_subtitle),
+                content = {
+                    EmailCheck(
+                        modifier = modifier,
+                        onEmailCheckChanged = { /*todo handle with vm*/ },
                     )
                 }
-                onSaveButtonClicked()
-            },
-            isEnabled = isButtonEnabled,
-            modifier = modifier
-                .fillMaxWidth(),
-            text = stringResource(id = R.string.feature_profile_save_profile_button)
-        )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ProcessButton(
+                onClick = {
+                    saveProfile(firstName, lastName)
+                    if (profileImage != Uri.EMPTY) {
+                        saveProfileImage(
+                            copyImageToInternalStorage(
+                                context,
+                                profileImage
+                            ).toString()
+                        )
+                    }
+                    onSaveButtonClicked()
+                },
+                isEnabled = isButtonEnabled,
+                modifier = modifier
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.feature_profile_save_profile_button)
+            )
+        }
     }
 }
 
