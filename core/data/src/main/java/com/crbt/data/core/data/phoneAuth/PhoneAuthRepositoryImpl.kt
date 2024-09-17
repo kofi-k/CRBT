@@ -36,16 +36,15 @@ class PhoneAuthRepositoryImpl @Inject constructor(
         return auth.signInWithCredential(credential)
     }
 
-    override suspend fun signOut(): SignOutState {
-        return try {
-            SignOutState.Loading
-            auth.signOut()
-            crbtPreferencesRepository.clearUserPreferences()
-            SignOutState.Success
-        } catch (e: Exception) {
-            SignOutState.Error(e.message ?: "Error")
-        }
+    override suspend fun signOut(): SignOutState = try {
+        SignOutState.Loading
+        auth.signOut()
+        crbtPreferencesRepository.clearUserPreferences()
+        SignOutState.Success
+    } catch (e: Exception) {
+        SignOutState.Error(e.message ?: "Error")
     }
+
 
     override suspend fun getSignedInUser(): SignedInUser? = auth.currentUser.toSignedInUser()
 

@@ -22,6 +22,7 @@ interface PhoneAuthRepository {
 }
 
 sealed interface SignOutState {
+    data object Idle : SignOutState
     data object Loading : SignOutState
     data object Success : SignOutState
     data class Error(val message: String) : SignOutState
