@@ -31,4 +31,5 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.session)
     implementation(libs.androidx.browser)
+    implementation(libs.androidx.activity.compose)
 }
