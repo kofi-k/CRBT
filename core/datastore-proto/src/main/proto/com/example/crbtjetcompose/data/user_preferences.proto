@@ -18,6 +18,7 @@ message UserPreferences {
   string user_payment_method = 15;
   string user_currency = 16;
   string current_crbt_subscription_id = 17;
+  double user_balance = 19;
 
   // Each map is used to store a set of string IDs. The bool has no meaning, but proto3 doesn't
   // have a Set type so this is the closest we can get to a Set.

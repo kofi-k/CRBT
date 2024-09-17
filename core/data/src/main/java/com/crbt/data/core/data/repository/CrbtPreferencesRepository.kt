@@ -22,5 +22,7 @@ interface CrbtPreferencesRepository {
     suspend fun setUserPaymentMethod(paymentMethod: String)
 
     suspend fun clearUserPreferences()
+
+    suspend fun setUserBalance(balance: Double)
 }
 

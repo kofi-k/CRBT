@@ -22,7 +22,7 @@ data object DummyUser {
             lastName = "Kebede",
             firstName = "Kebede T.",
             phoneNumber = "251 523 9678",
-            accountBalance = 100.0,
+            accountBalance = 0.0,
             profileUrl = ""
         )
 }

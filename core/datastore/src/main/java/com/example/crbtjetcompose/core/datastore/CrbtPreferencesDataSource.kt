@@ -22,6 +22,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                 firstName = it.userFirstName,
                 lastName = it.userLastName,
                 email = it.userEmail,
+                currentBalance = it.userBalance
             )
         }
 
@@ -74,6 +75,14 @@ class CrbtPreferencesDataSource @Inject constructor(
         userPreferences.updateData {
             it.copy {
                 userPhoneNumber = phoneNumber
+            }
+        }
+    }
+
+    suspend fun setCurrentBalance(balance: Double) {
+        userPreferences.updateData {
+            it.copy {
+                userBalance = balance
             }
         }
     }

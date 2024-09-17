@@ -46,4 +46,7 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun clearUserPreferences() =
         crbtPreferencesDataSource.clearUserPreferences()
+
+    override suspend fun setUserBalance(balance: Double) =
+        crbtPreferencesDataSource.setCurrentBalance(balance)
 }
