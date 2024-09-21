@@ -17,4 +17,7 @@
     <string name="core_data_location">Location</string>
     <string name="core_data_sms">SMS</string>
     <string name="core_data_ussd">USSD</string>
+    <string name="core_data_chapa">Chapa</string>
+    <string name="core_data_santim_pay">Santim pay</string>
+    <string name="core_data_telebir">Telebir</string>
 </resources>
