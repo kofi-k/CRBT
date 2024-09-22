@@ -143,6 +143,10 @@ fun OnboardingScreen(
                         }
 
                         OnboardingSetupProcess.OTP_VERIFICATION -> {
+                            phoneAuthViewModel.verifyCode(
+                                onOtpVerified = onOTPVerified,
+                                otpCode = viewModel.otpCode
+                            )
                             when (authState) {
                                 is AuthState.Error -> {
                                     onOTPVerified() // todo remove this line, it's for testing
@@ -162,10 +166,6 @@ fun OnboardingScreen(
 
                                 else -> {}
                             }
-                            phoneAuthViewModel.verifyCode(
-                                onOtpVerified = onOTPVerified,
-                                otpCode = viewModel.otpCode
-                            )
                         }
 
                         else -> {

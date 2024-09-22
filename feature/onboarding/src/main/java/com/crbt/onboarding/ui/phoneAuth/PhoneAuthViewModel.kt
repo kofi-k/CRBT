@@ -80,7 +80,6 @@ class PhoneAuthViewModel @Inject constructor(
                 onOtpVerified()
             } catch (e: Exception) {
                 _authState.value = AuthState.Error(e.message)
-                crbtPreferencesRepository.setUserId("fakeUserId") // todo remove this, just for testing
             }
         }
     }

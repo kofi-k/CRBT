@@ -57,12 +57,12 @@ fun Profile(
 
         ProcessButton(
             onClick = {
-                onboardingViewModel.saveUserProfile()
-                onOnboardingComplete()
+                onboardingViewModel.saveUserProfile(onSaved = onOnboardingComplete)
             },
             modifier = modifier
                 .fillMaxWidth(),
-            isEnabled = onboardingViewModel.isNextEnabled
+            isEnabled = onboardingViewModel.isNextEnabled,
+            isProcessing = onboardingViewModel.profileSaveState is ProfileSaveState.Loading
         )
     }
 }

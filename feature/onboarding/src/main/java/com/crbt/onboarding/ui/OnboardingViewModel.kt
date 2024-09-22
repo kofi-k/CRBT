@@ -48,6 +48,8 @@ class OnboardingViewModel @Inject constructor(
     val isNextEnabled
         get() = _isNextEnabled
 
+    var profileSaveState by mutableStateOf<ProfileSaveState>(ProfileSaveState.Idle)
+
     fun onNextClicked() {
         if (onboardingIndex < onboardingOrder.size - 1) {
             changeOnboardingSetupData(onboardingIndex + 1)
@@ -66,16 +68,22 @@ class OnboardingViewModel @Inject constructor(
         _onboardingScreenData = createOnboardingScreenData()
     }
 
-    fun saveUserProfile() {
+    fun saveUserProfile(onSaved: () -> Unit) {
+        profileSaveState = ProfileSaveState.Loading
         viewModelScope.launch {
-            crbtPreferencesRepository.setUserInfo(
-                firstName = _onboardingSetupData.firstName,
-                lastName = _onboardingSetupData.lastName,
-                email = "",
-            )
-            crbtPreferencesRepository.setPhoneNumber(
-                phoneNumber = phoneAuthRepository.getSignedInUser()?.phoneNumber ?: "",
-            )
+            try {
+                crbtPreferencesRepository.setUserInfo(
+                    firstName = _onboardingSetupData.firstName,
+                    lastName = _onboardingSetupData.lastName,
+                    email = "",
+                )
+                crbtPreferencesRepository.setPhoneNumber(
+                    phoneNumber = phoneAuthRepository.getSignedInUser()?.phoneNumber ?: "",
+                )
+                onSaved()
+            } catch (e: Exception) {
+                profileSaveState = ProfileSaveState.Error(e.message ?: "Error")
+            }
         }
     }
 
@@ -126,4 +134,10 @@ class OnboardingViewModel @Inject constructor(
         )
     }
 
+}
+
+sealed interface ProfileSaveState {
+    data object Idle : ProfileSaveState
+    data object Loading : ProfileSaveState
+    data class Error(val message: String) : ProfileSaveState
 }
