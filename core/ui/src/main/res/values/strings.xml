@@ -8,6 +8,14 @@
     <string name="core_ui_email_label">Email from CRBT</string>
     <string name="core_ui_error_check_balance">Error checking balance</string>
     <string name="core_ui_balance_check">Your current balance</string>
+    <string name="core_ui_recharge_error">Recharge error</string>
+    <string name="core_ui_recharge_success">Recharge success</string>
+    <string name="core_ui_call_me_back_error">Error requesting call me back</string>
+    <string name="core_ui_call_me_back_success">Call me back request success</string>
+    <string name="core_ui_transfer_error">Transfer failed</string>
+    <string name="core_ui_transfer_success">Transfer success</string>
+    <string name="core_ui_subscription_error">Subscription failed</string>
+    <string name="core_ui_subscription_success">Subscribed to <b>CRBT!</b></string>
     <string name="core_ui_ok">Okay</string>
     <string name="core_ui_dismiss">Dismiss</string>
 </resources>

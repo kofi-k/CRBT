@@ -10,4 +10,5 @@ data class UserPreferencesData(
     val firstName: String,
     val lastName: String,
     val email: String,
+    val currentBalance: Double,
 )

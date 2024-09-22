@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Camera
+import androidx.compose.material.icons.rounded.CardGiftcard
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
@@ -118,6 +119,7 @@ object CrbtIcons {
     val Add = Icons.Rounded.Add
     val Subscribe = Icons.Rounded.NotificationAdd
     val Play = Icons.Rounded.PlayCircle
+    val Gift = Icons.Rounded.CardGiftcard
 
     // profile icons
     val Logout = Icons.AutoMirrored.Rounded.Logout
