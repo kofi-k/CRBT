@@ -40,7 +40,7 @@ fun CrbtAds() {
             .height(221.dp),
         itemWidth = 186.dp,
         itemSpacing = 8.dp,
-        contentPadding = PaddingValues(start = 16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
     ) { index ->
         val ad = CrbtAdvertisements.ads[index]
         AdvertCard(

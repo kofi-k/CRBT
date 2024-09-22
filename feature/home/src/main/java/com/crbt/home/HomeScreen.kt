@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.data.core.data.repository.UssdUiState
@@ -53,7 +54,8 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
-import com.crbt.ui.core.ui.BalanceDialog
+import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.UssdResponseDialog
 import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
 
@@ -67,6 +69,7 @@ fun HomeScreen(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
+    val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
     var showDialog by remember {
@@ -98,7 +101,7 @@ fun HomeScreen(
                     )
                 },
                 isRefreshing = ussdUiState is UssdUiState.Loading,
-                balance = DummyUser.user.accountBalance.toString(),
+                userPreferenceUiState = userDataUiState
             )
         }
 
@@ -139,11 +142,12 @@ fun HomeScreen(
     }
 
     if (showDialog) {
-        BalanceDialog(
+        UssdResponseDialog(
             onDismiss = {
                 showDialog = false
             },
-            ussdUiState = ussdUiState
+            ussdUiState = ussdUiState,
+            crbtUssdType = CrbtUssdType.BALANCE_CHECK
         )
     }
 }
@@ -152,8 +156,8 @@ fun HomeScreen(
 internal fun UserBalanceCard(
     onNavigateToTopUp: () -> Unit,
     onRefresh: () -> Unit,
-    balance: String,
-    isRefreshing: Boolean = false
+    isRefreshing: Boolean = false,
+    userPreferenceUiState: UserPreferenceUiState
 ) {
     Card(
         onClick = onNavigateToTopUp,
@@ -183,13 +187,22 @@ internal fun UserBalanceCard(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = stringResource(id = R.string.feature_home_balance, balance),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Black
-                    ),
-                    color = Color.White
-                )
+                when (userPreferenceUiState) {
+                    is UserPreferenceUiState.Success ->
+                        Text(
+                            text = stringResource(
+                                id = R.string.feature_home_balance,
+                                userPreferenceUiState.userData.currentBalance
+                            ),
+                            style = MaterialTheme.typography.headlineLarge.copy(
+                                fontWeight = FontWeight.Black
+                            ),
+                            color = Color.White
+                        )
+
+                    else -> CircularProgressIndicator()
+                }
+
                 Text(
                     text = stringResource(id = R.string.feature_home_balance_subtitle),
                     color = Color.White
