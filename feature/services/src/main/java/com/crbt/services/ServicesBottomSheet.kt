@@ -50,7 +50,8 @@ fun ServicesBottomSheet(
     onAmountChange: (String) -> Unit,
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onConfirmTransferClick: () -> Unit,
+    onConfirmCallMeBackClick: () -> Unit,
     actionLoading: Boolean,
     actionEnabled: Boolean
 ) {
@@ -70,8 +71,8 @@ fun ServicesBottomSheet(
                 servicesType = servicesType,
                 onPhoneNumberChanged = onPhoneNumberChanged,
                 onAmountChange = onAmountChange,
-                onConfirmCallMeBack = onConfirmClick,
-                onConfirmTransfer = onConfirmClick,
+                onConfirmCallMeBack = onConfirmCallMeBackClick,
+                onConfirmTransfer = onConfirmTransferClick,
                 actionLoading = actionLoading,
                 actionEnabled = actionEnabled,
                 onDismiss = onDismiss

@@ -25,12 +25,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.repository.UssdUiState
+import com.crbt.data.core.data.util.CALL_ME_BACK_USSD
 import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.ui.core.ui.BalanceDialog
+import com.crbt.ui.core.ui.UssdResponseDialog
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
 
@@ -39,17 +41,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun ServicesRoute(
     navigateToPackages: () -> Unit,
-    navigateToRecharge: () -> Unit,
+    navigateTotopUp: () -> Unit,
 ) {
     var showDialog by remember {
         mutableStateOf(false)
+    }
+    var crbtUssdType by remember {
+        mutableStateOf(CrbtUssdType.BALANCE_CHECK)
     }
     val viewModel: ServicesViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
     ServicesScreen(
         onPackageClick = navigateToPackages,
-        onRechargeClick = navigateToRecharge,
+        onRechargeClick = {},
+        onTopUpClick = navigateTotopUp,
         onCheckBalance = {
+            crbtUssdType = CrbtUssdType.BALANCE_CHECK
             viewModel.runUssdCode(
                 ussdCode = CHECK_BALANCE_USSD,
                 onSuccess = {
@@ -57,17 +64,48 @@ fun ServicesRoute(
                 },
                 onError = {
                     showDialog = true
-                }
+                },
+                ussdType = CrbtUssdType.BALANCE_CHECK
             )
         },
-        isCheckingBalance = ussdUiState is UssdUiState.Loading
+        isCheckingBalance = ussdUiState is UssdUiState.Loading && crbtUssdType == CrbtUssdType.BALANCE_CHECK,
+        onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
+        onAmountChange = {},
+        onConfirmTransferClick = {
+            crbtUssdType = CrbtUssdType.TRANSFER
+//            viewModel.runUssdCode(
+//                ussdCode = "$CHECK_BALANCE_USSD${viewModel.phoneNumber}#",
+//                onSuccess = {
+//                    showDialog = true
+//                },
+//                onError = {
+//                    showDialog = true
+//                }
+//            )
+        },
+        onConfirmCallMeBackClick = {
+            crbtUssdType = CrbtUssdType.CALL_ME_BACK
+            viewModel.runUssdCode(
+                ussdCode = "$CALL_ME_BACK_USSD${viewModel.phoneNumber}#",
+                onSuccess = {
+                    showDialog = true
+                },
+                onError = {
+                    showDialog = true
+                },
+                ussdType = CrbtUssdType.CALL_ME_BACK
+            )
+        },
+        actionLoading = ussdUiState is UssdUiState.Loading,
+        actionEnabled = viewModel.isPhoneNumberValid || (ussdUiState !is UssdUiState.Loading),
     )
     if (showDialog) {
-        BalanceDialog(
+        UssdResponseDialog(
             onDismiss = {
                 showDialog = false
             },
-            ussdUiState = ussdUiState
+            ussdUiState = ussdUiState,
+            crbtUssdType = crbtUssdType
         )
     }
 }
@@ -77,8 +115,15 @@ fun ServicesRoute(
 fun ServicesScreen(
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
+    onTopUpClick: () -> Unit,
     onCheckBalance: () -> Unit,
     isCheckingBalance: Boolean,
+    onPhoneNumberChanged: (String, Boolean) -> Unit,
+    onAmountChange: (String) -> Unit,
+    onConfirmTransferClick: () -> Unit,
+    onConfirmCallMeBackClick: () -> Unit,
+    actionLoading: Boolean,
+    actionEnabled: Boolean
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -106,7 +151,7 @@ fun ServicesScreen(
                 showBottomSheet = true
                 bottomSheetType = ServicesType.CALL_ME_BACK
             },
-            onTopUpClick = onRechargeClick //TODO change to onTopUpClick
+            onTopUpClick = onTopUpClick //TODO change to onTopUpClick
         )
     }
 
@@ -121,8 +166,8 @@ fun ServicesScreen(
         ) {
             ServicesBottomSheet(
                 servicesType = bottomSheetType,
-                onPhoneNumberChanged = { _, _ -> },
-                onAmountChange = { },
+                onPhoneNumberChanged = onPhoneNumberChanged,
+                onAmountChange = onAmountChange,
                 sheetState = sheetState,
                 onDismiss = {
                     showBottomSheet = false
@@ -130,9 +175,10 @@ fun ServicesScreen(
                         sheetState.hide()
                     }
                 },
-                onConfirmClick = { },
-                actionLoading = false,
-                actionEnabled = true
+                onConfirmTransferClick = onConfirmTransferClick,
+                onConfirmCallMeBackClick = onConfirmCallMeBackClick,
+                actionLoading = actionLoading,
+                actionEnabled = actionEnabled
             )
         }
     }

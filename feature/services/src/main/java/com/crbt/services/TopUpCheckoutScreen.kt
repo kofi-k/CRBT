@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,6 +18,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.ProcessButton
@@ -25,6 +28,7 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.InfoRow
 import com.example.crbtjetcompose.feature.services.R
 import java.text.SimpleDateFormat
@@ -34,6 +38,9 @@ import java.util.Locale
 fun TopUpCheckoutScreen(
     onCompleteTopUp: () -> Unit,
 ) {
+    val viewModel: ServicesViewModel = hiltViewModel()
+    val userPreferenceUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
+    val topUpAmount by viewModel.topUpAmount.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +79,7 @@ fun TopUpCheckoutScreen(
                                     fontWeight = Bold
                                 ).toSpanStyle()
                             ) {
-                                append("10") // todo replace with top up amount
+                                append(topUpAmount)
                             }
                         }
                     )
@@ -93,7 +100,13 @@ fun TopUpCheckoutScreen(
                                     title = stringResource(id = R.string.feature_services_account_balance),
                                     value = stringResource(
                                         id = R.string.feature_services_etb,
-                                        DummyUser.user.accountBalance
+                                        when (userPreferenceUiState) {
+                                            is UserPreferenceUiState.Success -> {
+                                                (userPreferenceUiState as UserPreferenceUiState.Success).userData.currentBalance
+                                            }
+
+                                            else -> DummyUser.user.accountBalance
+                                        }
                                     ),
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
@@ -104,7 +117,7 @@ fun TopUpCheckoutScreen(
                                     title = stringResource(id = R.string.feature_services_topup_amount),
                                     value = stringResource(
                                         id = R.string.feature_services_etb,
-                                        "10"
+                                        topUpAmount ?: ""
                                     ),
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
@@ -137,7 +150,7 @@ fun TopUpCheckoutScreen(
 fun TopUpCheckoutScreenPreview() {
     CrbtTheme {
         TopUpCheckoutScreen(
-            onCompleteTopUp = {}
+            onCompleteTopUp = {},
         )
     }
 }
