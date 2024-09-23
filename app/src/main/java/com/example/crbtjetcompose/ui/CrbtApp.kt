@@ -3,6 +3,7 @@ package com.example.crbtjetcompose.ui
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.crbt.data.core.data.model.DummyUser
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.util.INTERNET_SPEED_CHECK_URL
 import com.crbt.designsystem.components.CrbtNavigationBar
 import com.crbt.designsystem.components.CrbtNavigationBarItem
@@ -54,6 +57,7 @@ import com.crbt.designsystem.theme.CrbtBackground
 import com.crbt.designsystem.theme.CrbtGradientBackground
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.LocalGradientColors
+import com.crbt.designsystem.theme.extremelyDeemphasizedAlpha
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.home.navigation.ACCOUNT_HISTORY_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
@@ -77,7 +81,10 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
     ExperimentalComposeUiApi::class,
 )
 @Composable
-fun CrbtApp(appState: CrbtAppState) {
+fun CrbtApp(
+    appState: CrbtAppState,
+    startDestination: String,
+) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
     val context = LocalContext.current
@@ -127,6 +134,8 @@ fun CrbtApp(appState: CrbtAppState) {
             )
         }
     }
+
+    val userData by appState.userData.collectAsStateWithLifecycle()
 
 
     CrbtBackground(
@@ -180,13 +189,29 @@ fun CrbtApp(appState: CrbtAppState) {
                                     horizontalArrangement = Arrangement.End,
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    TextButton(onClick = {
-                                        launchCustomChromeTab(
-                                            context = context,
-                                            uri = Uri.parse(INTERNET_SPEED_CHECK_URL),
-                                            toolbarColor = backgroundColor
+                                    val color by animateColorAsState(
+                                        targetValue = if (isOffline || internetSpeed == 0.0) {
+                                            MaterialTheme.colorScheme.onSurface.copy(
+                                                alpha = extremelyDeemphasizedAlpha
+                                            )
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurface
+                                        },
+                                        label = "Internet Speed Color"
+                                    )
+
+                                    TextButton(
+                                        onClick = {
+                                            launchCustomChromeTab(
+                                                context = context,
+                                                uri = Uri.parse(INTERNET_SPEED_CHECK_URL),
+                                                toolbarColor = backgroundColor
+                                            )
+                                        },
+                                        colors = ButtonDefaults.textButtonColors(
+                                            contentColor = MaterialTheme.colorScheme.onSurface
                                         )
-                                    }) {
+                                    ) {
 
                                         Text(
                                             text = stringResource(
@@ -198,12 +223,16 @@ fun CrbtApp(appState: CrbtAppState) {
                                         Icon(
                                             imageVector = CrbtIcons.SwapVert,
                                             contentDescription = CrbtIcons.SwapVert.name,
-                                            modifier = Modifier.size(12.dp)
+                                            modifier = Modifier.size(12.dp),
+                                            tint = color
                                         )
                                     }
                                     when (destination) {
                                         TopLevelDestination.PROFILE -> {
-                                            IconButton(onClick = { /*TODO*/ }) {
+                                            IconButton(onClick = {
+                                                appState.navigateToProfileEdit()
+                                            }
+                                            ) {
                                                 Icon(
                                                     imageVector = CrbtIcons.Edit,
                                                     contentDescription = CrbtIcons.Edit.name,
@@ -234,7 +263,7 @@ fun CrbtApp(appState: CrbtAppState) {
                                                 ),
                                             )
                                             Text(
-                                                text = DummyUser.user.firstName,
+                                                text = (userData as Result.Success).data.firstName,
                                                 color = MaterialTheme.colorScheme.onSurface,
                                                 style = MaterialTheme.typography.titleMedium.copy(
                                                     fontWeight = FontWeight.Bold
@@ -246,7 +275,7 @@ fun CrbtApp(appState: CrbtAppState) {
                                     TopLevelDestination.SERVICES -> {
                                         Column(
                                             modifier = Modifier.fillMaxWidth(),
-                                            horizontalAlignment = androidx.compose.ui.Alignment.Start,
+                                            horizontalAlignment = Alignment.Start,
                                             verticalArrangement = Arrangement.Center
                                         ) {
                                             Text(
@@ -274,13 +303,17 @@ fun CrbtApp(appState: CrbtAppState) {
                     }
                 }
             ) { padding ->
-                CrbtNavHost(
-                    appState = appState,
-                    startDestination = appState.startDestination,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                )
+                when (userData) {
+                    is Result.Loading -> CircularProgressIndicator()
+                    is Result.Error -> Unit
+                    is Result.Success -> CrbtNavHost(
+                        appState = appState,
+                        startDestination = startDestination,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    )
+                }
             }
         }
     }
