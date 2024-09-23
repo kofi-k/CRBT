@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -18,8 +19,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.domain.UserPreferenceUiState
+import com.crbt.home.navigation.HOME_ROUTE
+import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +41,9 @@ class MainActivity : ComponentActivity() {
     lateinit var networkMonitor: NetworkMonitor
 
     @Inject
+    lateinit var crbtPreferencesRepository: CrbtPreferencesRepository
+
+    @Inject
     lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -43,10 +51,10 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen =
-            installSplashScreen() // todo add implementation to keep splash screen on while user preferences data is loading
+            installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
+        var uiState: UserPreferenceUiState by mutableStateOf(UserPreferenceUiState.Loading)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -60,7 +68,7 @@ class MainActivity : ComponentActivity() {
         // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
         // the UI.
         splashScreen.setKeepOnScreenCondition {
-            uiState is MainActivityUiState.Loading
+            uiState is UserPreferenceUiState.Loading
         }
 
         enableEdgeToEdge()
@@ -93,16 +101,30 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(
                     LocalAnalyticsHelper provides analyticsHelper,
                 ) {
-                    val appState = (uiState as? MainActivityUiState.Success)?.userData?.let {
-                        rememberCrbtAppState(
-                            networkMonitor = networkMonitor,
-                            userPreferencesData = it,
-                        )
-                    }
+                    val appState = rememberCrbtAppState(
+                        networkMonitor = networkMonitor,
+                        userRepository = crbtPreferencesRepository,
+                    )
+
 
                     CrbtTheme {
-                        if (appState != null) {
-                            CrbtApp(appState)
+                        /*
+                        * todo
+                        *  best to use signed i user from firebase auth for this
+                        * */
+                        when (uiState) {
+                            is UserPreferenceUiState.Loading -> CircularProgressIndicator()
+                            is UserPreferenceUiState.Success -> {
+                                val user = (uiState as UserPreferenceUiState.Success).userData
+                                val startDestination: String = when (user.userId.isBlank()) {
+                                    true -> ONBOARDING_ROUTE
+                                    false -> HOME_ROUTE
+                                }
+                                CrbtApp(
+                                    appState = appState,
+                                    startDestination = startDestination,
+                                )
+                            }
                         }
                     }
                 }
