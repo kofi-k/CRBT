@@ -7,4 +7,8 @@ data class UserPreferencesData(
     val profileUrl: String,
     val paymentMethod: String,
     val currency: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val currentBalance: Double,
 )

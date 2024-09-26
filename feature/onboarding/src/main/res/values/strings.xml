@@ -6,4 +6,5 @@
     <string name="feature_onboarding_explore_button">Explore now</string>
     <string name="feature_onboarding_profile_setup_title">User profile info</string>
     <string name="feature_onboarding_trending">trending</string>
+    <string name="feature_onboarding_otp_sent">OTP code sent to your provided number</string>
 </resources>

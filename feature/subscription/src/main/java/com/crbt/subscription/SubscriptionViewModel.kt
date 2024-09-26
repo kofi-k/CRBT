@@ -25,7 +25,7 @@ class SubscriptionViewModel @Inject constructor(
     private val repository: UssdRepository,
 ) : ViewModel() {
 
-    val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
+    private val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
     val isGiftSubscription: StateFlow<Boolean?> = savedStateHandle.getStateFlow(GIFT_SUB_ARG, null)
     val ussdState: StateFlow<UssdUiState> get() = repository.ussdState
 
@@ -36,7 +36,7 @@ class SubscriptionViewModel @Inject constructor(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (Int) -> Unit) {
+    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             repository.runUssdCode(ussdCode, onSuccess, onError)
         }
@@ -47,7 +47,8 @@ class SubscriptionViewModel @Inject constructor(
         val permissions = arrayOf(
             Manifest.permission.CALL_PHONE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.READ_MEDIA_AUDIO
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_CONTACTS
         )
         val requestCode = 1
 

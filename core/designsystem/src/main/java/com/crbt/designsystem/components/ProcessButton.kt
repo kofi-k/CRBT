@@ -39,7 +39,7 @@ fun ProcessButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         enabled = !isProcessing && isEnabled,
         colors = colors,
     ) {

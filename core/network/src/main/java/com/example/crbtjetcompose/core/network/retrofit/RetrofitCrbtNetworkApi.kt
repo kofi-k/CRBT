@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.core.network.retrofit
 
+import com.example.crbtjetcompose.core.network.model.Login
 import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
 import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
 import kotlinx.serialization.Serializable
@@ -24,6 +25,11 @@ interface RetrofitCrbtNetworkApi {
     @POST("service/unsubscribe")
     suspend fun unsubscribe(
         @Body subscriptionRequest: SubscriptionRequest
+    )
+
+    @POST("auth/login")
+    suspend fun login(
+        @Body loginRequest: Login
     )
 
 }

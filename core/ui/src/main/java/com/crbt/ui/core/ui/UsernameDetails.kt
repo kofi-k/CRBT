@@ -31,12 +31,14 @@ import com.example.crbtjetcompose.core.ui.R
 fun UsernameDetails(
     modifier: Modifier = Modifier,
     onUserProfileResponse: (String, String, Boolean) -> Unit,
+    initialFirstName: String,
+    initialLastName: String,
 ) {
     val firstName by remember {
-        mutableStateOf(NameValidationState())
+        mutableStateOf(NameValidationState(initialText = initialFirstName))
     }
     val lastName by remember {
-        mutableStateOf(NameValidationState())
+        mutableStateOf(NameValidationState(initialText = initialLastName))
     }
 
     Column(
@@ -67,6 +69,11 @@ fun UsernameDetails(
             inputType = InputType.TEXT,
             onClear = {
                 firstName.text = ""
+                onUserProfileResponse(
+                    firstName.text,
+                    lastName.text,
+                    firstName.isValid && lastName.isValid,
+                )
             },
             leadingIcon = {
                 Icon(
@@ -112,6 +119,11 @@ fun UsernameDetails(
             inputType = InputType.TEXT,
             onClear = {
                 lastName.text = ""
+                onUserProfileResponse(
+                    firstName.text,
+                    lastName.text,
+                    firstName.isValid && lastName.isValid,
+                )
             },
             leadingIcon = {
                 Icon(

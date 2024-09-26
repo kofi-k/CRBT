@@ -21,22 +21,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
@@ -55,41 +49,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.tracing.trace
-import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.DynamicAsyncImage
-import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
-import com.crbt.designsystem.components.TextFieldType
-import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
-import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
+import com.crbt.services.ServiceSheetContainer
+import com.crbt.services.ServicesViewModel
+import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.example.crbtjetcompose.core.model.data.CrbtPackage
 import com.example.crbtjetcompose.core.model.data.PackageItem
 import com.example.crbtjetcompose.feature.services.R
-import com.rejowan.ccpc.Country
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun PackagesScreen() {
+    val viewModel: ServicesViewModel = hiltViewModel()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         PackageContent(
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
+            onPurchasePackage = {}, //TODO implement onPurchasePackage
+            actionEnabled = viewModel.isPhoneNumberValid,
+            actionLoading = false, //TODO implement actionLoading state
         )
     }
 }
@@ -98,6 +92,10 @@ fun PackagesScreen() {
 @Composable
 fun PackageContent(
     modifier: Modifier = Modifier,
+    onPhoneNumberChanged: (String, Boolean) -> Unit,
+    actionEnabled: Boolean,
+    actionLoading: Boolean,
+    onPurchasePackage: (String) -> Unit,
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var expandedItemId by remember { mutableStateOf<String?>(null) }
@@ -157,6 +155,7 @@ fun PackageContent(
                     showBottomSheet = false
                     scope.launch {
                         sheetState.hide()
+                        onPurchasePackage(expandedItemId!!)
                     }
                 },
                 onDismissClick = {
@@ -166,10 +165,12 @@ fun PackageContent(
                     }
                 },
                 isGiftPurchase = isGiftPurchase,
-                onPhoneNumberChange = {},
+                onPhoneNumberChanged = onPhoneNumberChanged,
                 price = PackageItem.dummyPackages.first().price,
                 packageName = PackageItem.dummyPackages.first().title,
-                sheetState = sheetState
+                sheetState = sheetState,
+                actionEnabled = if (isGiftPurchase) actionEnabled else true,
+                actionLoading = actionLoading
             )
         }
     }
@@ -240,58 +241,47 @@ fun PurchasePackageBottomSheet(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
     isGiftPurchase: Boolean,
-    onPhoneNumberChange: (String) -> Unit,
+    onPhoneNumberChanged: (String, Boolean) -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(),
     price: String,
     packageName: String,
+    actionEnabled: Boolean,
+    actionLoading: Boolean
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        ModalBottomSheet(
-            onDismissRequest = onDismissClick,
+        val title = if (isGiftPurchase) {
+            stringResource(id = R.string.feature_services_gift_purchase_contact_info) to
+                    stringResource(id = R.string.feature_services_gift_button)
+        } else {
+            stringResource(
+                id = R.string.feature_services_purchase_confirmation,
+                packageName,
+                price
+            ) to stringResource(id = R.string.feature_services_buy)
+        }
+        ServiceSheetContainer(
+            onDismiss = onDismissClick,
+            title = title.first,
             sheetState = sheetState,
             content = {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    when {
-                        isGiftPurchase -> Text(
-                            text = stringResource(id = R.string.feature_services_gift_purchase_contact_info),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-
-                        else -> Text(
-                            text = stringResource(
-                                id = R.string.feature_services_purchase_confirmation,
-                                packageName,
-                                price
-                            ),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider()
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (isGiftPurchase) {
-                        GiftPurchaseContent(
-                            onPhoneNumberChange = onPhoneNumberChange,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                    ButtonActionRow(
-                        onConfirmClick = onConfirmClick,
-                        onDismissClick = onDismissClick,
+                if (isGiftPurchase) {
+                    GiftPurchasePhoneNumber(
+                        onPhoneNumberChanged = onPhoneNumberChanged,
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
+                ButtonActionRow(
+                    onConfirmClick = onConfirmClick,
+                    onDismissClick = onDismissClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    actionText = title.second,
+                    actionLoading = actionLoading,
+                    actionEnabled = if (isGiftPurchase) actionEnabled else true
+                )
             },
         )
     }
@@ -301,7 +291,10 @@ fun PurchasePackageBottomSheet(
 fun ButtonActionRow(
     onConfirmClick: () -> Unit,
     onDismissClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    actionText: String,
+    actionLoading: Boolean,
+    actionEnabled: Boolean
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -320,85 +313,15 @@ fun ButtonActionRow(
         Spacer(modifier = Modifier.width(16.dp))
         ProcessButton(
             onClick = onConfirmClick,
-            text = stringResource(id = R.string.feature_services_buy),
+            text = actionText,
             colors = ButtonDefaults.filledTonalButtonColors(),
-            modifier = Modifier.width(100.dp)
+            isProcessing = actionLoading,
+            isEnabled = actionEnabled,
+            modifier = Modifier.wrapContentSize(),
         )
     }
 }
 
-@Preview
-@Composable
-fun ButtonActionRowPreview() {
-    CrbtTheme {
-        ButtonActionRow(
-            onConfirmClick = {},
-            onDismissClick = {}
-        )
-    }
-}
-
-@Composable
-fun GiftPurchaseContent(
-    onPhoneNumberChange: (String) -> Unit,
-    modifier: Modifier
-) {
-    val phoneNumberState by remember {
-        mutableStateOf(
-            PhoneNumberValidationState(
-                countryCode = Country.Ethiopia.countryCode,
-            ),
-        )
-    }
-    val focusManager = LocalFocusManager.current
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        CustomInputField(
-            onValueChange = {
-                phoneNumberState.text = it
-                onPhoneNumberChange(it)
-            },
-            value = phoneNumberState.text,
-            inputType = InputType.PHONE_NUMBER,
-            textFieldType = TextFieldType.OUTLINED,
-            label = stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_phone_number_placeholder),
-            colors = OutlinedTextFieldDefaults.colors(),
-            onClear = {
-                phoneNumberState.text = ""
-                onPhoneNumberChange("")
-            },
-            showsErrors = phoneNumberState.showErrors(),
-            errorText = phoneNumberState.getError() ?: "",
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    phoneNumberState.enableShowErrors()
-                    onPhoneNumberChange(phoneNumberState.text)
-                    focusManager.clearFocus()
-                }
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        IconButton(
-            onClick = { /*TODO open contacts, remember to request for permission if not granted already */ },
-            modifier = Modifier.size(40.dp)
-        ) {
-            Icon(
-                imageVector = CrbtIcons.Contacts,
-                contentDescription = CrbtIcons.Contacts.name,
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
 
 fun LazyListScope.packageItemsFeed(
     packageItems: List<PackageItem>,
@@ -551,15 +474,8 @@ fun ItemCard(
     }
 }
 
-@ThemePreviews
-@Composable
-fun PackageContentPreview() {
-    CrbtTheme {
-        PackageContent()
-    }
-}
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ItemCardPreview() {
     CrbtTheme {
@@ -579,19 +495,15 @@ fun ItemCardPreview() {
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
+//GiftPurchaseContentPreview
+@Preview(showBackground = true)
 @Composable
-fun BottomSheetPreview() {
+fun GiftPurchaseContentPreview() {
     CrbtTheme {
-        PurchasePackageBottomSheet(
-            onConfirmClick = {},
-            onDismissClick = {},
-            isGiftPurchase = false,
-            onPhoneNumberChange = {},
-            price = "1000",
-            packageName = "5G Package"
+        GiftPurchasePhoneNumber(
+            onPhoneNumberChanged = { _, _ -> },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
+

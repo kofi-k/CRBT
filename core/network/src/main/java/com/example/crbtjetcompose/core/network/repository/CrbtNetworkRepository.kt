@@ -16,5 +16,10 @@ interface CrbtNetworkRepository {
     suspend fun unsubscribe(
         subscriptionRequest: SubscriptionRequest
     )
+
+    suspend fun login(
+        phone: String,
+        idToken: String
+    )
 }
 

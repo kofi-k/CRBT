@@ -10,6 +10,7 @@ fun CrbtUser.asEntity() = CrbtUser(
     lastName = lastName,
     email = email,
     accountBalance = accountBalance,
+    profileUrl = profileUrl,
 )
 
 // dummy user object
@@ -17,11 +18,12 @@ data object DummyUser {
     val user =
         CrbtUser(
             email = "sampleuser@gmail.com",
-            userId = "dkfwo23902",
+            userId = "",
             lastName = "Kebede",
             firstName = "Kebede T.",
             phoneNumber = "251 523 9678",
-            accountBalance = 100.0
+            accountBalance = 0.0,
+            profileUrl = ""
         )
 }
 

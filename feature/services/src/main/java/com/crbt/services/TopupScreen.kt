@@ -2,12 +2,14 @@ package com.crbt.services
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -17,8 +19,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +30,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.CrbtPaymentOptions
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.InputType
@@ -42,14 +51,26 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
 import com.example.crbtjetcompose.feature.services.R
 
 
 @Composable
-fun RechargeScreen(
-    onTopUpClick: () -> Unit
+fun TopupScreen(
+    onTopUpClick: (String) -> Unit,
+    viewModel: ServicesViewModel = hiltViewModel(),
+    topUpViewModel: TopUpViewModel = hiltViewModel()
 ) {
+    val userPreferenceUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
+
+    var isAmountValid by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var selectedModeOfPayment by remember {
+        mutableIntStateOf(0)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,34 +78,35 @@ fun RechargeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Balance(
-            balance = DummyUser.user.accountBalance.toString(),
+            balance = when (userPreferenceUiState) {
+                is UserPreferenceUiState.Success -> {
+                    (userPreferenceUiState as UserPreferenceUiState.Success).userData.currentBalance.toString()
+                }
+
+                else -> DummyUser.user.accountBalance.toString()
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
         RechargeAmountCard(
             onAmountChange = { amount, isValid ->
-               /*
-               * todo some viewmodel logic here to update the amount,
-               *  and enable the top up button if the amount is valid
-               *
-               * might as well pass the amount to the checkout screen via
-               * the onTopUpClick lambda or we can have a shared viewmodel tied to this navigation
-               * backstack entry so that state can be shared between the screens ...(quite an overkill for this simple screen 🤷‍♂️)
-               *
-               *  */
+                topUpViewModel.onAmountChange(amount)
+                isAmountValid = isValid
             },
-            modifier = Modifier.fillMaxWidth()
         )
 
         RechargeModeOfPaymentCard(
-            onSelectedModeOfPayment = {},
-            modifier = Modifier.fillMaxWidth()
+            onSelectedModeOfPayment = {
+                selectedModeOfPayment = it
+            },
+            listOfPaymentOptions = CrbtPaymentOptions.entries,
         )
 
         ProcessButton(
-            onClick = onTopUpClick,
+            onClick = { onTopUpClick(topUpViewModel.amount) },
             text = stringResource(id = R.string.feature_services_topup),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isEnabled = isAmountValid && selectedModeOfPayment != 0
         )
 
     }
@@ -118,10 +140,9 @@ fun Balance(
 
 @Composable
 fun RechargeAmountCard(
-    modifier: Modifier = Modifier,
     onAmountChange: (String, Boolean) -> Unit,
 ) {
-    val amountSatate by remember {
+    val amountState by remember {
         mutableStateOf(AmountValidationState())
     }
 
@@ -151,23 +172,23 @@ fun RechargeAmountCard(
 
                 CustomInputField(
                     label = stringResource(id = R.string.feature_services_etb, ""),
-                    value = amountSatate.text,
+                    value = amountState.text,
                     onValueChange = {
-                        amountSatate.text = it
-                        onAmountChange(amountSatate.text, amountSatate.isValid)
+                        amountState.text = it
+                        onAmountChange(amountState.text, amountState.isValid)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { focusState ->
-                            amountSatate.onFocusChange(focusState.isFocused)
+                            amountState.onFocusChange(focusState.isFocused)
                             if (!focusState.isFocused) {
-                                amountSatate.enableShowErrors()
+                                amountState.enableShowErrors()
                             }
                         },
                     inputType = InputType.MONEY,
                     onClear = {
-                        amountSatate.text = ""
-                        onAmountChange(amountSatate.text, amountSatate.isValid)
+                        amountState.text = ""
+                        onAmountChange(amountState.text, amountState.isValid)
                     },
                     leadingIcon = {
                         Icon(
@@ -181,14 +202,14 @@ fun RechargeAmountCard(
                     ),
                     keyboardActions = KeyboardActions(
                         onNext = {
-                            amountSatate.enableShowErrors()
+                            amountState.enableShowErrors()
                             focusManager.moveFocus(FocusDirection.Down)
                         },
                     ),
                     colors = OutlinedTextFieldDefaults.colors(),
                     textFieldType = TextFieldType.OUTLINED,
-                    showsErrors = amountSatate.showErrors(),
-                    errorText = amountSatate.getError() ?: "",
+                    showsErrors = amountState.showErrors(),
+                    errorText = amountState.getError() ?: "",
                 )
             }
         }
@@ -198,8 +219,8 @@ fun RechargeAmountCard(
 
 @Composable
 fun RechargeModeOfPaymentCard(
-    modifier: Modifier = Modifier,
-    onSelectedModeOfPayment: (String) -> Unit,
+    onSelectedModeOfPayment: (Int) -> Unit,
+    listOfPaymentOptions: List<CrbtPaymentOptions>
 ) {
     SurfaceCard(
         content = {
@@ -211,6 +232,9 @@ fun RechargeModeOfPaymentCard(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 var expanded by remember { mutableStateOf(false) }
+                var selectedModeOfPayment by remember {
+                    mutableIntStateOf(0)
+                }
 
                 Text(
                     text = stringResource(id = R.string.feature_services_mode_of_payment_title),
@@ -228,11 +252,15 @@ fun RechargeModeOfPaymentCard(
                         targetValue = if (expanded) 90f else 0f,
                         label = "rotateIcon"
                     )
+
                     ListCard(
                         onClick = {
                             expanded = !expanded
                         },
-                        headlineText = stringResource(id = R.string.feature_services_payment_option),
+                        headlineText = stringResource(
+                            id = CrbtPaymentOptions.entries.find { it.id == selectedModeOfPayment }?.title
+                                ?: R.string.feature_services_payment_option
+                        ),
                         leadingContentIcon = CrbtIcons.PaymentMethods,
                         trailingContent = {
                             IconButton(onClick = { expanded = !expanded }) {
@@ -240,6 +268,24 @@ fun RechargeModeOfPaymentCard(
                                     imageVector = CrbtIcons.ArrowRight,
                                     contentDescription = CrbtIcons.ArrowForward.name,
                                     modifier = Modifier.rotate(rotateIcon)
+                                )
+                            }
+                        },
+                        leadingContent = {
+                            val selectedOption =
+                                CrbtPaymentOptions.entries.find { it.id == selectedModeOfPayment }
+                            when (selectedOption) {
+                                null -> Icon(
+                                    imageVector = CrbtIcons.PaymentMethods,
+                                    contentDescription = CrbtIcons.PaymentMethods.name,
+                                )
+
+                                else -> Image(
+                                    painter = painterResource(id = selectedOption.imageRes),
+                                    contentDescription = stringResource(id = selectedOption.title),
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(50.dp)
                                 )
                             }
                         },
@@ -254,7 +300,28 @@ fun RechargeModeOfPaymentCard(
                                 .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Text(text = "Payment Options shows here")
+                            listOfPaymentOptions.forEachIndexed { _, crbtPaymentOptions ->
+                                ListCard(
+                                    onClick = {
+                                        selectedModeOfPayment = crbtPaymentOptions.id
+                                        onSelectedModeOfPayment(crbtPaymentOptions.id)
+                                        expanded = false
+                                    },
+                                    headlineText = stringResource(id = crbtPaymentOptions.title),
+                                    leadingContentIcon = CrbtIcons.PaymentMethods,
+                                    leadingContent = {
+                                        Image(
+                                            painter = painterResource(id = crbtPaymentOptions.imageRes),
+                                            contentDescription = stringResource(id = crbtPaymentOptions.title),
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
                         }
                     }
                 }
@@ -266,14 +333,14 @@ fun RechargeModeOfPaymentCard(
 @Preview
 @Composable
 fun RechargeAmountCardPreview() {
-    RechargeAmountCard(onAmountChange = {_, _, ->})
+    RechargeAmountCard(onAmountChange = { _, _ -> })
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun RechargeScreenPreview() {
-    RechargeScreen(
+    TopupScreen(
         onTopUpClick = {}
     )
 }

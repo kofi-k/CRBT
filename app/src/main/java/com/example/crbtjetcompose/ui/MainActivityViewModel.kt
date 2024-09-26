@@ -1,13 +1,26 @@
 package com.example.crbtjetcompose.ui
 
 import androidx.lifecycle.ViewModel
-import com.crbt.data.core.data.repository.CrbtPreferencesRepository
+import androidx.lifecycle.viewModelScope
+import com.crbt.domain.GetUserDataPreferenceUseCase
+import com.crbt.domain.UserPreferenceUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    crbtPreferencesRepository: CrbtPreferencesRepository
-)  : ViewModel() {
+    getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase
+) : ViewModel() {
 
+    val uiState: StateFlow<UserPreferenceUiState> =
+        getUserDataPreferenceUseCase()
+            .stateIn(
+                scope = viewModelScope,
+                initialValue = UserPreferenceUiState.Loading,
+                started = SharingStarted.Eagerly,
+            )
 }
+

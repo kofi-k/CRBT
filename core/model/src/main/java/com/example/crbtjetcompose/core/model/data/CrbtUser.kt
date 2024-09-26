@@ -11,6 +11,7 @@ package com.example.crbtjetcompose.core.model.data
 data class CrbtUser(
     val userId: String,
     val phoneNumber: String,
+    val profileUrl: String,
     val firstName: String,
     val lastName: String,
     val email: String,

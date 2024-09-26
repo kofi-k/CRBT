@@ -10,12 +10,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
+import com.crbt.common.core.common.result.Result
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.home.navigation.navigateToHome
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_ROUTE
 import com.crbt.profile.navigation.navigateToProfile
+import com.crbt.profile.navigation.navigateToProfileEdit
 import com.crbt.services.navigation.SERVICES_ROUTE
 import com.crbt.services.navigation.navigateToServices
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
@@ -24,6 +27,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
 @Composable
@@ -31,6 +35,7 @@ fun rememberCrbtAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     networkMonitor: NetworkMonitor,
+    userRepository: CrbtPreferencesRepository
 ): CrbtAppState {
     return remember(
         navController,
@@ -39,6 +44,7 @@ fun rememberCrbtAppState(
             navController = navController,
             networkMonitor = networkMonitor,
             coroutineScope = coroutineScope,
+            userRepository = userRepository
         )
     }
 }
@@ -49,6 +55,7 @@ class CrbtAppState(
     val navController: NavHostController,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope,
+    userRepository: CrbtPreferencesRepository
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -63,12 +70,29 @@ class CrbtAppState(
             else -> null
         }
 
+    val userData = userRepository.userPreferencesData
+        .onStart { Result.Loading }
+        .map { Result.Success(it) }
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = Result.Loading,
+        )
+
+
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = false,
+        )
+
+    val internetSpeed = networkMonitor.internetSpeed
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = 0.0,
         )
 
     val shouldShowBottomBar: Boolean
@@ -120,4 +144,7 @@ class CrbtAppState(
             }
         }
     }
+
+    fun navigateToProfileEdit() = navController.navigateToProfileEdit()
+
 }

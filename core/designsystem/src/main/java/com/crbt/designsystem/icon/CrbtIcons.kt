@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Camera
+import androidx.compose.material.icons.rounded.CardGiftcard
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
@@ -50,6 +51,7 @@ import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.Payment
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Pin
 import androidx.compose.material.icons.rounded.PlayCircle
@@ -58,6 +60,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Sms
 import androidx.compose.material.icons.rounded.Subscriptions
+import androidx.compose.material.icons.rounded.SwapVert
 import androidx.compose.material.icons.rounded.SyncAlt
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -72,6 +75,7 @@ object CrbtIcons {
     val ArrowForward = Icons.AutoMirrored.Rounded.ArrowForward
     val ArrowUp = Icons.Default.KeyboardArrowUp
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
+    val SwapVert = Icons.Rounded.SwapVert
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
 
     val OtpCode = Icons.Rounded.Pin
@@ -106,6 +110,7 @@ object CrbtIcons {
     val Info = Icons.Rounded.Info
     val Money = Icons.Rounded.AttachMoney
     val Share = Icons.Rounded.Share
+    val Phone = Icons.Rounded.Phone
 
 
     // subscription icons
@@ -114,6 +119,7 @@ object CrbtIcons {
     val Add = Icons.Rounded.Add
     val Subscribe = Icons.Rounded.NotificationAdd
     val Play = Icons.Rounded.PlayCircle
+    val Gift = Icons.Rounded.CardGiftcard
 
     // profile icons
     val Logout = Icons.AutoMirrored.Rounded.Logout

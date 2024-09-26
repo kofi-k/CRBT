@@ -17,13 +17,17 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class UssdRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context
 ) {
     private val _ussdState = MutableStateFlow<UssdUiState>(UssdUiState.Idle)
     val ussdState: StateFlow<UssdUiState> get() = _ussdState
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun runUssdCode(ussdCode: String, onSuccess: () -> Unit, onError: (Int) -> Unit) {
+    fun runUssdCode(
+        ussdCode: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit,
+    ) {
         val telephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
@@ -58,19 +62,30 @@ class UssdRepository @Inject constructor(
                 request: String,
                 failureCode: Int
             ) {
-                _ussdState.value = UssdUiState.Error(failureCode)
-                onError(failureCode)
+                val errorMessage = when (failureCode) {
+                    TelephonyManager.USSD_ERROR_SERVICE_UNAVAIL -> "USSD service unavailable."
+                    TelephonyManager.USSD_RETURN_FAILURE -> "USSD request failed."
+                    else -> "Unknown error"
+                }
+                _ussdState.value = UssdUiState.Error("$errorMessage Request: $request")
+                onError("$errorMessage Request: $request")
             }
         }, Handler(Looper.getMainLooper()))
     }
 }
 
-
 sealed class UssdUiState {
     data object Idle : UssdUiState()
     data object Loading : UssdUiState()
     data class Success(val response: String) : UssdUiState()
-    data class Error(val errorCode: Int) : UssdUiState()
+    data class Error(val error: String) : UssdUiState()
+}
+
+
+fun String.extractBalance(): Double? {
+    return this.split(" ")
+        .firstOrNull { it.toDoubleOrNull() != null }
+        ?.toDoubleOrNull()
 }
 
 

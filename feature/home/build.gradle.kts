@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(libs.androidx.graphics.shapes)
+    implementation(project(":core:domain"))
 }
