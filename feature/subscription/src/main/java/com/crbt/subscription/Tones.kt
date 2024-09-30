@@ -165,32 +165,32 @@ fun TonesScreen(
                 )
             }
 
-            if (playingNow != null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 8.dp),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    MusicCard(
-                        onPlayPauseClick = {
-                            viewModel.playPause()
-                        },
-                        onSkipPreviousClick = {
-                            viewModel.next()
-                        },
-                        onSkipNextClick = {
-                            viewModel.next()
-                        },
-                        musicTitle = tones[toneIndex].songTitle,
-                        musicArtist = tones[toneIndex].artisteName,
-                        isPlaying = musicFiles.indexOf(playingNow) == toneIndex,
-                        musicCoverUrl = tones[toneIndex].profile,
-                        modifier = Modifier
-                    )
-                }
-            }
+        }
+    }
+    if (playingNow != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            MusicCard(
+                onPlayPauseClick = {
+                    viewModel.playPause()
+                },
+                onSkipPreviousClick = {
+                    viewModel.next()
+                },
+                onSkipNextClick = {
+                    viewModel.next()
+                },
+                musicTitle = tones[toneIndex].songTitle,
+                musicArtist = tones[toneIndex].artisteName,
+                isPlaying = musicFiles.indexOf(playingNow) == toneIndex,
+                musicCoverUrl = tones[toneIndex].profile,
+                modifier = Modifier
+            )
         }
     }
 }

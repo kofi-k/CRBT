@@ -25,7 +25,6 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
-import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 
 
 @Composable
@@ -41,6 +40,7 @@ fun MusicCard(
 ) {
 
     SurfaceCard(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
         content = {
             Row(
                 modifier = Modifier
@@ -102,7 +102,6 @@ fun MusicInfo(
             Text(
                 text = musicArtist,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(slightlyDeemphasizedAlpha),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
