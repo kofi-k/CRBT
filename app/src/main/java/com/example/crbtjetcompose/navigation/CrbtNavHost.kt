@@ -11,9 +11,7 @@ import com.crbt.home.navigation.homeScreen
 import com.crbt.onboarding.navigation.navigateToOnboarding
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
-import com.crbt.services.navigation.navigateToTopUp
 import com.crbt.services.navigation.servicesScreen
-import com.crbt.subscription.navigation.navigateToTones
 import com.crbt.subscription.navigation.subscriptionScreen
 import com.example.crbtjetcompose.ui.CrbtAppState
 
@@ -42,8 +40,12 @@ fun CrbtNavHost(
             )
             homeScreen(
                 navController = navController,
-                navigateToTopUp = navController::navigateToTopUp,
-                onPopularTodayClick = navController::navigateToTones
+                navigateToTopUp = {
+                    appState.navigateToTopUp()
+                },
+                onPopularTodayClick = {
+                    appState.navigateToTones()
+                }
             )
             servicesScreen(
                 navController = navController,

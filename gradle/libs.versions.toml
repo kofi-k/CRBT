@@ -203,7 +203,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomPaging" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
-
+#    implementation("com.github.romellfudi.VoIpUSSD:ussd-library:1.4.a")
+voipUssd = { group = "com.github.romellfudi.VoIpUSSD", name = "ussd-library", version = "1.4.a" }
 
 
 [plugins]
