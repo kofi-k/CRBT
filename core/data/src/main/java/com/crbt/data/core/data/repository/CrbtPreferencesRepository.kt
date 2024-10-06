@@ -24,5 +24,10 @@ interface CrbtPreferencesRepository {
     suspend fun clearUserPreferences()
 
     suspend fun setUserBalance(balance: Double)
+
+    suspend fun setCurrentCrbtSubscriptionId(subscriptionId: String)
+
+    suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
+
 }
 

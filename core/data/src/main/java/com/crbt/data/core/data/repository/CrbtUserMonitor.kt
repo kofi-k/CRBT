@@ -13,7 +13,30 @@ class CrbtUserMonitor @Inject constructor(
 
     override suspend fun isDifferentUser(phoneNumber: String): Boolean {
         return crbtPreferencesRepository.userPreferencesData
-            .map { it.phoneNumber != phoneNumber }
+            .map {
+                when (isCurrentPhoneNumberEmpty()) {
+                    true -> {
+                        crbtPreferencesRepository.setPhoneNumber(phoneNumber)
+                        return@map true
+                    }
+
+                    false -> {
+                        val isDifferentUser = it.phoneNumber != phoneNumber
+                        if (isDifferentUser) {
+                            crbtPreferencesRepository.clearUserPreferences()
+                            crbtPreferencesRepository.setPhoneNumber(phoneNumber)
+                        }
+                        isDifferentUser
+                    }
+                }
+            }
             .first()
     }
+
+    private suspend fun isCurrentPhoneNumberEmpty(): Boolean {
+        return crbtPreferencesRepository.userPreferencesData
+            .map { it.phoneNumber.isBlank() }
+            .first()
+    }
+
 }

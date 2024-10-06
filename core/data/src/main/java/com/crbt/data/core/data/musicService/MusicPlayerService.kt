@@ -1,65 +1,92 @@
 package com.crbt.data.core.data.musicService
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
-import com.example.crbtjetcompose.core.model.data.MusicResource
+import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.IOException
+import javax.inject.Inject
 
-class MusicPlayer(private val context: Context) {
+
+sealed class PlayerState {
+    data object Idle : PlayerState()
+    data object Loading : PlayerState()
+    data object Playing : PlayerState()
+    data object Paused : PlayerState()
+    data class Buffering(val percent: Int) : PlayerState()
+    data class Error(val message: String) : PlayerState()
+    data object Completed : PlayerState()
+}
+
+
+class MusicPlayer @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     private var mediaPlayer: MediaPlayer? = null
-    private var currentTrackIndex: Int = 0
-    private var musicFiles: List<MusicResource> = emptyList()
 
-    fun setMusicFiles(files: List<MusicResource>) {
-        musicFiles = files
-    }
-
-    fun play() {
+    fun play(
+        url: String,
+        onBufferingUpdate: (Int) -> Unit,
+        onError: (String) -> Unit,
+        onCompletion: () -> Unit
+    ) {
         if (mediaPlayer == null) {
-            startPlaying()
+            mediaPlayer = MediaPlayer()
         } else {
-            mediaPlayer?.start()
+            mediaPlayer?.reset()
+        }
+
+        mediaPlayer?.apply {
+            try {
+                val audioAttributes = AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+
+                setAudioAttributes(audioAttributes)
+
+                setDataSource(url)
+
+                setOnPreparedListener {
+                    Log.d("MusicPlayer", "Prepared, starting playback.")
+                    start()
+                }
+
+                setOnBufferingUpdateListener { _, percent ->
+                    onBufferingUpdate(percent)
+                }
+
+                setOnErrorListener { _, what, extra ->
+                    onError("Error: $what, Extra: $extra")
+                    true
+                }
+
+                setOnCompletionListener {
+                    onCompletion()
+                }
+
+                prepareAsync()
+            } catch (e: IOException) {
+                onError("Failed to play media: ${e.message}")
+            }
         }
     }
+
 
     fun pause() {
         mediaPlayer?.pause()
     }
 
-    fun next() {
-        currentTrackIndex = (currentTrackIndex + 1) % musicFiles.size
-        startPlaying()
-    }
-
-    fun playTrack(index: Int) {
-        if (index in musicFiles.indices) {
-            currentTrackIndex = index
-            startPlaying()
+    fun stop() {
+        mediaPlayer?.apply {
+            stop()
+            release()
         }
-    }
-
-    private fun startPlaying() {
-        if (musicFiles.isEmpty()) {
-            // Handle empty list case
-            return
-        }
-        mediaPlayer?.release()
-        val track = musicFiles[currentTrackIndex]
-        mediaPlayer = MediaPlayer.create(context, Uri.parse(track.data))
-        mediaPlayer?.start()
-    }
-
-
-    fun getCurrentTrack(): MusicResource? {
-        return if (musicFiles.isNotEmpty()) musicFiles[currentTrackIndex] else null
+        mediaPlayer = null
     }
 
     fun isPlaying(): Boolean {
-        return mediaPlayer?.isPlaying ?: false
-    }
-
-    fun release() {
-        mediaPlayer?.release()
-        mediaPlayer = null
+        return mediaPlayer?.isPlaying == true
     }
 }

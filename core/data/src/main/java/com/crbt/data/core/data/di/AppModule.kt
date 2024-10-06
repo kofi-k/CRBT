@@ -3,6 +3,7 @@ package com.crbt.data.core.data.di
 
 import android.content.ContentResolver
 import android.content.Context
+import com.romellfudi.ussdlibrary.USSDController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +20,13 @@ object AppModule {
     @Singleton
     fun provideContentResolver(@ApplicationContext context: Context): ContentResolver {
         return context.contentResolver
+    }
+
+    @Provides
+    @Singleton
+    fun provideUssdController(
+        @ApplicationContext context: Context
+    ): USSDController {
+        return USSDController.getInstance(context)
     }
 }

@@ -20,9 +20,8 @@ class CrbtMusicRepositoryImpl @Inject constructor(
             emit(CrbtMusicResourceUiState.Loading)
             try {
                 val songs = crbtNetworkRepository
-                    .getSongs(1, 10)
+                    .getSongs()
                     .map(NetworkSongsResource::asExternalModel)
-
                 emit(CrbtMusicResourceUiState.Success(songs))
             } catch (e: Exception) {
                 emit(CrbtMusicResourceUiState.Error(e.message ?: "An error occurred"))

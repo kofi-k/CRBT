@@ -49,4 +49,12 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUserBalance(balance: Double) =
         crbtPreferencesDataSource.setCurrentBalance(balance)
+
+    override suspend fun setCurrentCrbtSubscriptionId(subscriptionId: String) =
+        crbtPreferencesDataSource.setCurrentCrbtSubscriptionId(subscriptionId)
+
+
+    override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
+        crbtPreferencesDataSource.setUserInterestedCrbtLanguages(code, isInterested)
+
 }

@@ -83,9 +83,8 @@ sealed class UssdUiState {
 
 
 fun String.extractBalance(): Double? {
-    return this.split(" ")
-        .firstOrNull { it.toDoubleOrNull() != null }
-        ?.toDoubleOrNull()
+    val regex = Regex("""(\d+(\.\d+)?)\s*BIR""", RegexOption.IGNORE_CASE)
+    val match = regex.find(this)
+
+    return match?.groupValues?.get(1)?.toDoubleOrNull()
 }
-
-

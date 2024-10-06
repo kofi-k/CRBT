@@ -39,7 +39,7 @@ class PhoneAuthRepositoryImpl @Inject constructor(
     override suspend fun signOut(): SignOutState = try {
         SignOutState.Loading
         auth.signOut()
-        crbtPreferencesRepository.clearUserPreferences()
+        crbtPreferencesRepository.setUserId("")
         SignOutState.Success
     } catch (e: Exception) {
         SignOutState.Error(e.message ?: "Error")
