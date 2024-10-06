@@ -51,7 +51,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.UssdUiState
-import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
@@ -81,7 +80,7 @@ internal fun CrbtSubscribeScreen(
 ) {
 
     val isGiftSub by viewModel.isGiftSubscription.collectAsStateWithLifecycle()
-    val crbtSong = viewModel.crbtSongResource
+    val crbtSong by viewModel.crbtSongResource.collectAsStateWithLifecycle()
     val ussdState by viewModel.ussdState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -116,9 +115,9 @@ internal fun CrbtSubscribeScreen(
     ) {
         SubscribeHeader(
             onBackClicked = onBackClicked,
-            artisteName = crbtSong.artisteName,
-            songTitle = crbtSong.songTitle,
-            songProfileUrl = crbtSong.profile
+            artisteName = crbtSong?.artisteName ?: "",
+            songTitle = crbtSong?.songTitle ?: "",
+            songProfileUrl = crbtSong?.profile ?: ""
         )
         SubscribeContent(
             isGiftSubscription = isGiftSub ?: false,
@@ -131,11 +130,11 @@ internal fun CrbtSubscribeScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             onSubscribeClick = {
-                viewModel.runUssdCode(CHECK_BALANCE_USSD, {}, { _ -> })
+                viewModel.runUssdCode(crbtSong?.ussdCode ?: "", {}, { _ -> })
             },
-            subscriptionPrice = 10.30,
+            subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
             isSubscriptionProcessing = ussdState is UssdUiState.Loading,
-            isButtonEnabled = true
+            isButtonEnabled = crbtSong != null
         )
     }
 
@@ -169,8 +168,9 @@ fun SubscribeHeader(
             )
     ) {
         DynamicAsyncImage(
-            imageUrl = songProfileUrl,
             modifier = Modifier.fillMaxSize(),
+            imageUrl = songProfileUrl,
+            imageRes = R.drawable.feature_subscription_onboardingbackground
         )
         Column(
             modifier = Modifier
