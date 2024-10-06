@@ -16,3 +16,7 @@ data class UserPreferencesData(
     val currentCrbtSubscriptionId: String,
     val giftedCrbtToneIds: Set<String>,
 )
+
+
+fun UserPreferencesData.isProfileSetupComplete(): Boolean =
+    firstName.isNotBlank() && lastName.isNotBlank()
