@@ -29,7 +29,8 @@ import com.crbt.designsystem.theme.CrbtTheme
 
 @Composable
 fun MusicCard(
-    onPlayPauseClick: () -> Unit,
+    onPlay: () -> Unit,
+    onPaused: () -> Unit,
     onSkipPreviousClick: () -> Unit,
     onSkipNextClick: () -> Unit,
     musicTitle: String,
@@ -58,7 +59,8 @@ fun MusicCard(
                 )
 
                 MusicControls(
-                    onPlayPauseClick = onPlayPauseClick,
+                    onPlay = onPlay,
+                    onPaused = onPaused,
                     onSkipPreviousClick = onSkipPreviousClick,
                     onSkipNextClick = onSkipNextClick,
                     isPlaying = isPlaying
@@ -111,7 +113,8 @@ fun MusicInfo(
 
 @Composable
 fun MusicControls(
-    onPlayPauseClick: () -> Unit,
+    onPlay: () -> Unit,
+    onPaused: () -> Unit,
     onSkipPreviousClick: () -> Unit,
     onSkipNextClick: () -> Unit,
     isPlaying: Boolean,
@@ -129,7 +132,7 @@ fun MusicControls(
             Icon(imageVector = CrbtIcons.Previous, contentDescription = null)
         }
         IconButton(
-            onClick = onPlayPauseClick,
+            onClick = if (isPlaying) onPaused else onPlay,
             modifier = Modifier
                 .size(48.dp),
         ) {
@@ -154,13 +157,14 @@ fun MusicControls(
 fun MusicCardPreview() {
     CrbtTheme {
         MusicCard(
-            onPlayPauseClick = {},
+            onPlay = {},
             onSkipPreviousClick = {},
             onSkipNextClick = {},
             musicTitle = "Music Title",
             musicArtist = "Music Artist",
             isPlaying = true,
-            musicCoverUrl = DummyTones.tones[0].profile
+            musicCoverUrl = DummyTones.tones[0].profile,
+            onPaused = {}
         )
     }
 }
