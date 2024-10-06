@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
@@ -70,6 +71,7 @@ fun HomeScreen(
     val viewModel: HomeViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
     val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
+    val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
     var showDialog by remember {
@@ -110,17 +112,34 @@ fun HomeScreen(
         }
 
         item {
-            LatestMusicCard(
-                artist = DummyTones.tones[0].artisteName,
-                title = DummyTones.tones[0].songTitle,
-                backgroundUrl = DummyTones.tones[0].profile,
-                onCardClick = {
-                    onPopularTodayClick(null)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+            when (latestMusicUiState) {
+                is Result.Error -> Unit
+                Result.Loading -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is Result.Success -> {
+                    val latestMusic = (latestMusicUiState as Result.Success).data
+                    LatestMusicCard(
+                        artist = latestMusic.artisteName,
+                        title = latestMusic.songTitle,
+                        backgroundUrl = latestMusic.profile,
+                        onCardClick = {
+                            onPopularTodayClick(null)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            }
         }
 
         item {
