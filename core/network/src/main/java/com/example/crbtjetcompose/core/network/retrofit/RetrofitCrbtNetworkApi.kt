@@ -7,15 +7,11 @@ import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 
 interface RetrofitCrbtNetworkApi {
-    @GET("songs/all")
-    suspend fun getSongs(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int
-    ): NetworkResponse<NetworkSongsResource>
+    @GET("songs")
+    suspend fun getSongs(): CrbtNetworkResponse
 
     @POST("service/subscribe")
     suspend fun subscribe(
@@ -39,6 +35,12 @@ interface RetrofitCrbtNetworkApi {
 data class NetworkResponse<T>(
     val results: List<T>,
     val networkPagination: NetworkPagination
+)
+
+
+@Serializable
+data class CrbtNetworkResponse(
+    val allSongs: List<NetworkSongsResource>
 )
 
 @Serializable

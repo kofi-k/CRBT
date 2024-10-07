@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
+import com.crbt.data.core.data.repository.NewUssdRepository
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: UssdRepository,
+    private val newUssdRepository: NewUssdRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     crbtSongsRepository: UserCrbtMusicRepository,
@@ -59,7 +61,7 @@ class HomeViewModel @Inject constructor(
             )
 
     val latestCrbtSong: StateFlow<Result<UserCRbtSongResource>> =
-        crbtSongsRepository.oberveLatestCrbtMusic()
+        crbtSongsRepository.observeLatestCrbtMusic()
             .map { it }
             .stateIn(
                 scope = viewModelScope,

@@ -9,8 +9,8 @@ import javax.inject.Inject
 class CrbtNetworkRepositoryImpl @Inject constructor(
     private val retrofitCrbtNetworkApi: RetrofitCrbtNetworkApi
 ) : CrbtNetworkRepository {
-    override suspend fun getSongs(page: Int, limit: Int): List<NetworkSongsResource> {
-        return retrofitCrbtNetworkApi.getSongs(page, limit).results
+    override suspend fun getSongs(): List<NetworkSongsResource> {
+        return retrofitCrbtNetworkApi.getSongs().allSongs
     }
 
     override suspend fun subscribe(subscriptionRequest: SubscriptionRequest) {

@@ -10,23 +10,22 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkSongsResource(
-    val id: String,
-    val subServiceId: String,
-    val albumName: String,
+    val id: Int,
+    val subServiceId: String?,
+    val albumName: String?,
     val songTitle: String,
     val artisteName: String,
     val lang: String,
-    val date: String,
+    val createdAt: String?,
     val profile: String,
-    val song: String,
+    val song: String?,
     val numberOfListeners: Int,
     val numberOfSubscribers: Int,
     val ussdCode: String,
     val subscriptionType: String,
     val price: String,
-    val category: String,
+    val category: String
 )
-
 
 /**
  *  Convert [NetworkSongsResource] to [CrbtSongResource]
@@ -35,22 +34,20 @@ data class NetworkSongsResource(
 
 fun NetworkSongsResource.asExternalModel(): CrbtSongResource {
     return CrbtSongResource(
-        id = id,
+        id = id.toString(),
         songTitle = songTitle,
         artisteName = artisteName,
-        song = song,
+        song = song ?: "",
         profile = profile,
-        subServiceId = subServiceId,
-        albumName = albumName,
+        subServiceId = subServiceId ?: "",
+        albumName = albumName ?: "",
         lang = lang,
-        date = date,
+        createdAt = createdAt ?: "",
         numberOfListeners = numberOfListeners,
         numberOfSubscribers = numberOfSubscribers,
         ussdCode = ussdCode,
         subscriptionType = subscriptionType,
         price = price,
         category = category,
-        isSubscribed = false,
-        hasGiftedSong = false,
     )
 }

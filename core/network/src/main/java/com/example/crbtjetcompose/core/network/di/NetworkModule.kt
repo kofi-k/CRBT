@@ -32,6 +32,7 @@ internal object NetworkModule {
     fun providesNetworkJson(): Json = Json {
         explicitNulls = false
         ignoreUnknownKeys = true
+        coerceInputValues = true
     }
 
     @Singleton
@@ -87,6 +88,4 @@ internal object NetworkModule {
             )
             .build()
     }
-
-
 }
