@@ -144,7 +144,6 @@ fun OnboardingScreen(
 
                         OnboardingSetupProcess.OTP_VERIFICATION -> {
                             phoneAuthViewModel.verifyCode(
-                                onOtpVerified = onOTPVerified,
                                 otpCode = viewModel.otpCode
                             )
                             when (authState) {
