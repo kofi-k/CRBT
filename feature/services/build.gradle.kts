@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.ui)
+    implementation(libs.palette.ktx)
     implementation(libs.country.code.picker)
     implementation(project(":core:domain"))
 }
