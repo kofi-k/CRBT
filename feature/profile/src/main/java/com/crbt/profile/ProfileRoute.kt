@@ -43,6 +43,7 @@ import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CustomGradientColors
+import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.example.crbtjetcompose.feature.profile.R
 
 @Composable
@@ -54,6 +55,12 @@ fun ProfileRoute(
 ) {
     val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
     val signOutState by profileViewModel.signOutState.collectAsStateWithLifecycle()
+    
+    PermissionRequestComposable(
+        onPermissionsGranted = {
+        }
+    )
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
