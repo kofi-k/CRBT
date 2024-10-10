@@ -5,7 +5,7 @@ data class CrbtSongResource(
     val id: String,
     val songTitle: String,
     val artisteName: String,
-    val song: String,
+    val tune: String,
     val profile: String,
     val subServiceId: String,
     val albumName: String,
