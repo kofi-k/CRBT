@@ -1,5 +1,6 @@
 package com.crbt.subscription
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -84,6 +86,7 @@ internal fun CrbtSubscribeScreen(
     val ussdState by viewModel.ussdState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(ussdState) {
         when (ussdState) {
@@ -130,7 +133,12 @@ internal fun CrbtSubscribeScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             onSubscribeClick = {
-                viewModel.runUssdCode(crbtSong?.ussdCode ?: "", {}, { _ -> })
+                viewModel.runUssdCode(
+                    ussdCode = crbtSong?.ussdCode ?: "",
+                    onSuccess = {},
+                    onError = { _ -> },
+                    activity = context as Activity
+                )
             },
             subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
             isSubscriptionProcessing = ussdState is UssdUiState.Loading,
