@@ -22,7 +22,9 @@ fun PermissionRequestComposable(
         Manifest.permission.CALL_PHONE,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.READ_MEDIA_AUDIO,
-        Manifest.permission.READ_CONTACTS
+        Manifest.permission.READ_CONTACTS,
+        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK
     )
 
     val permissionLauncher = rememberLauncherForActivityResult(

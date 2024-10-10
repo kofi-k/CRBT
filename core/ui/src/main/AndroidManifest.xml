@@ -8,6 +8,9 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
 
     <application>
 
@@ -21,6 +24,16 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/ussd_service" />
+        </service>
+
+        <service
+            android:name="com.crbt.data.core.data.musicService.MusicService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+
         </service>
     </application>
 
