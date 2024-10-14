@@ -1,14 +1,11 @@
 package com.crbt.ui.core.ui.musicPlayer
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -20,35 +17,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.MusicControllerUiState
+import com.crbt.data.core.data.PlayerState
+import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 
 
 @Composable
 fun MusicCard(
-    onPlay: () -> Unit,
-    onPaused: () -> Unit,
-    onSkipPreviousClick: () -> Unit,
-    onSkipNextClick: () -> Unit,
-    musicTitle: String,
-    musicArtist: String,
-    isPlaying: Boolean,
-    musicCoverUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cRbtSong: CrbtSongResource,
+    musicControllerUiState: MusicControllerUiState,
+    onPlayerEvent: (TonesPlayerEvent) -> Unit
 ) {
+
+    val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
 
     SurfaceCard(
         color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -62,105 +54,30 @@ fun MusicCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 MusicInfo(
-                    musicTitle = musicTitle,
-                    musicArtist = musicArtist,
-                    coverUrl = musicCoverUrl,
+                    musicTitle = cRbtSong.songTitle,
+                    musicArtist = cRbtSong.artisteName,
+                    coverUrl = cRbtSong.profile,
                     modifier = Modifier.weight(1f)
                 )
 
                 MusicControls(
-                    onPlay = onPlay,
-                    onPaused = onPaused,
-                    onSkipPreviousClick = onSkipPreviousClick,
-                    onSkipNextClick = onSkipNextClick,
+                    onPausePlayToggle = {
+                        onPlayerEvent(
+                            if (isPlaying) TonesPlayerEvent.PauseSong else TonesPlayerEvent.ResumeSong
+                        )
+                    },
+                    onSkipPreviousClick = {
+                        onPlayerEvent(TonesPlayerEvent.SkipToPreviousSong)
+                    },
+                    onSkipNextClick = {
+                        onPlayerEvent(TonesPlayerEvent.SkipToNextSong)
+                    },
                     isPlaying = isPlaying
                 )
             }
         },
         modifier = Modifier.fillMaxWidth()
     )
-}
-
-@Composable
-fun ProgressIndicatorBorder(progress: Float, gradientColors: List<Color>) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-            .height(IntrinsicSize.Min)  // Intrinsic size for dynamic height
-    ) {
-        val strokeWidth = 6.dp.toPx()
-        val cardWidth = size.width
-        val cardHeight = size.height
-
-        // Calculate the total perimeter of the card (border length)
-        val totalLength = (cardWidth * 2) + (cardHeight * 2)
-
-        // Calculate the progress length
-        val progressLength = totalLength * progress
-
-        // Create a linear gradient brush
-        val gradientBrush = Brush.linearGradient(
-            colors = gradientColors,
-            start = Offset(0f, 0f),
-            end = Offset(size.width, size.height)
-        )
-
-        // Draw the border based on the progress
-        val path = Path().apply {
-            moveTo(0f, 0f)
-            var drawnLength = 0f
-
-            // Top edge
-            val topEdgeLength = cardWidth
-            if (drawnLength + topEdgeLength <= progressLength) {
-                lineTo(cardWidth, 0f)
-                drawnLength += topEdgeLength
-            } else {
-                lineTo(drawnLength + (progressLength - drawnLength), 0f)
-                return@apply
-            }
-
-            // Right edge
-            val rightEdgeLength = cardHeight
-            if (drawnLength + rightEdgeLength <= progressLength) {
-                lineTo(cardWidth, cardHeight)
-                drawnLength += rightEdgeLength
-            } else {
-                lineTo(cardWidth, drawnLength + (progressLength - drawnLength))
-                return@apply
-            }
-
-            // Bottom edge
-            val bottomEdgeLength = cardWidth
-            if (drawnLength + bottomEdgeLength <= progressLength) {
-                lineTo(0f, cardHeight)
-                drawnLength += bottomEdgeLength
-            } else {
-                lineTo(cardWidth - (progressLength - drawnLength), cardHeight)
-                return@apply
-            }
-
-            // Left edge
-            val leftEdgeLength = cardHeight
-            if (drawnLength + leftEdgeLength <= progressLength) {
-                lineTo(0f, 0f)
-                drawnLength += leftEdgeLength
-            } else {
-                lineTo(0f, cardHeight - (progressLength - drawnLength))
-            }
-        }
-
-        // Draw the path with the gradient brush
-        drawPath(
-            path = path,
-            brush = gradientBrush,  // Use the gradient brush instead of a solid color
-            style = Stroke(
-                width = strokeWidth,
-                cap = StrokeCap.Round
-            )
-        )
-    }
 }
 
 
@@ -207,8 +124,7 @@ fun MusicInfo(
 
 @Composable
 fun MusicControls(
-    onPlay: () -> Unit,
-    onPaused: () -> Unit,
+    onPausePlayToggle: () -> Unit,
     onSkipPreviousClick: () -> Unit,
     onSkipNextClick: () -> Unit,
     isPlaying: Boolean,
@@ -226,7 +142,7 @@ fun MusicControls(
             Icon(imageVector = CrbtIcons.Previous, contentDescription = null)
         }
         IconButton(
-            onClick = if (isPlaying) onPaused else onPlay,
+            onClick = onPausePlayToggle,
             modifier = Modifier
                 .size(48.dp),
             colors = IconButtonDefaults.filledTonalIconButtonColors()
@@ -252,14 +168,9 @@ fun MusicControls(
 fun MusicCardPreview() {
     CrbtTheme {
         MusicCard(
-            onPlay = {},
-            onSkipPreviousClick = {},
-            onSkipNextClick = {},
-            musicTitle = "Music Title",
-            musicArtist = "Music Artist",
-            isPlaying = false,
-            musicCoverUrl = DummyTones.tones[0].profile,
-            onPaused = {}
+            musicControllerUiState = MusicControllerUiState(),
+            onPlayerEvent = {},
+            cRbtSong = DummyTones.tones[0]
         )
     }
 }

@@ -11,8 +11,10 @@ import com.crbt.domain.DestroyMediaControllerUseCase
 import com.crbt.domain.GetCurrentSongPositionUseCase
 import com.crbt.domain.SetMediaControllerCallbackUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 
 @HiltViewModel
@@ -44,7 +46,7 @@ class SharedCrbtMusicPlayerViewModel @Inject constructor(
             if (playerState == PlayerState.PLAYING) {
                 viewModelScope.launch {
                     while (true) {
-//                        delay(3.seconds)
+                        delay(2.seconds)
                         musicControllerUiState = musicControllerUiState.copy(
                             currentPosition = getCurrentMusicPositionUseCase()
                         )

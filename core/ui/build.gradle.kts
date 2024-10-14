@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.crbt.android.library)
     alias(libs.plugins.crbt.android.library.jacoco)
     alias(libs.plugins.crbt.android.library.compose)
+    alias(libs.plugins.crbt.android.hilt)
 }
 
 android {
@@ -12,6 +13,7 @@ dependencies {
     api(projects.core.data)
     api(projects.core.common)
     implementation(projects.core.analytics)
+    implementation(projects.core.domain)
 
     api(libs.androidx.metrics)
     api(projects.core.designsystem)
@@ -32,4 +34,11 @@ dependencies {
     implementation(libs.media3.session)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.palette.ktx)
+    implementation(libs.voipUssd)
+
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.ui)
+
 }

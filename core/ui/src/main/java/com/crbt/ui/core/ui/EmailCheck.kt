@@ -45,5 +45,6 @@ fun EmailCheck(
             text = stringResource(id = R.string.core_ui_email_label),
             style = MaterialTheme.typography.bodyMedium,
         )
+
     }
 }
