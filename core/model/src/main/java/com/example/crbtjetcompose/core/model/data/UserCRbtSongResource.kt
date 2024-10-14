@@ -63,3 +63,21 @@ fun List<CrbtSongResource>.mapToUserCrbtSongResource(
 fun CrbtSongResource.asUserCrbtSongResource(
     userPreferencesData: UserPreferencesData,
 ): UserCRbtSongResource = UserCRbtSongResource(userPreferencesData, this)
+
+fun UserCRbtSongResource.asCrbtSongResource(): CrbtSongResource = CrbtSongResource(
+    id = id,
+    songTitle = songTitle,
+    artisteName = artisteName,
+    tune = tune,
+    profile = profile,
+    subServiceId = subServiceId,
+    albumName = albumName,
+    lang = lang,
+    createdAt = date,
+    numberOfListeners = numberOfListeners,
+    numberOfSubscribers = numberOfSubscribers,
+    ussdCode = ussdCode,
+    subscriptionType = subscriptionType,
+    price = price,
+    category = category,
+)
