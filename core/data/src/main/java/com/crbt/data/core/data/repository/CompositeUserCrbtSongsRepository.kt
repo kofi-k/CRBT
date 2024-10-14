@@ -36,7 +36,10 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
             .map { crbtSongsFeedUiState ->
                 when (crbtSongsFeedUiState) {
                     is CrbtSongsFeedUiState.Success -> {
-                        Result.Success(crbtSongsFeedUiState.songs.maxByOrNull { it.date }!!)
+                        when (crbtSongsFeedUiState.songs.isEmpty()) {
+                            true -> Result.Error(Exception("No songs found"))
+                            false -> Result.Success(crbtSongsFeedUiState.songs.maxByOrNull { it.date }!!)
+                        }
                     }
 
                     is CrbtSongsFeedUiState.Error -> {

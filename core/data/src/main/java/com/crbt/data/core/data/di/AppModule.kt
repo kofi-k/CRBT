@@ -29,4 +29,5 @@ object AppModule {
     ): USSDController {
         return USSDController.getInstance(context)
     }
+
 }

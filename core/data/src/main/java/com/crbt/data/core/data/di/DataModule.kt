@@ -1,5 +1,7 @@
 package com.crbt.data.core.data.di
 
+import com.crbt.data.core.data.musicService.MusicController
+import com.crbt.data.core.data.musicService.MusicControllerImpl
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepositoryImpl
 import com.crbt.data.core.data.repository.CompositeUserCrbtSongsRepository
@@ -57,4 +59,10 @@ abstract class DataModule {
     abstract fun bindsUserCrbtMusicRepository(
         compositeUserCrbtSongsRepository: CompositeUserCrbtSongsRepository
     ): UserCrbtMusicRepository
+
+    @Binds
+    abstract fun bindsMusicController(
+        musicControllerImpl: MusicControllerImpl
+    ): MusicController
+
 }
