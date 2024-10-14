@@ -10,7 +10,6 @@ import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.data.core.data.model.userProfileIsComplete
-import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
-    private val phoneAuthRepository: PhoneAuthRepository
 ) : ViewModel() {
 
     private val onboardingOrder: List<OnboardingSetupProcess> = listOf(
@@ -76,9 +74,6 @@ class OnboardingViewModel @Inject constructor(
                     firstName = _onboardingSetupData.firstName,
                     lastName = _onboardingSetupData.lastName,
                     email = "",
-                )
-                crbtPreferencesRepository.setPhoneNumber(
-                    phoneNumber = phoneAuthRepository.getSignedInUser()?.phoneNumber ?: "",
                 )
                 onSaved()
             } catch (e: Exception) {
