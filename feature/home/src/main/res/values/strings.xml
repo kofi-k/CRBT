@@ -8,4 +8,5 @@
     <string name="feature_home_popular_today_title">Popular today</string>
     <string name="feature_home_account_history">Account History</string>
     <string name="feature_home_advert">ad</string>
+    <string name="feature_home_no_songs">No songs to show</string>
 </resources>

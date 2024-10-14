@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.common.core.common.result.Result
-import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
@@ -27,18 +26,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: UssdRepository,
     private val ussdRepository: UssdRepository,
-    private val crbtPreferencesRepository: CrbtPreferencesRepository,
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     private val updateBalanceUseCase: UpdateUserBalanceUseCase,
     crbtSongsRepository: UserCrbtMusicRepository,
 ) : ViewModel() {
-    val ussdState: StateFlow<UssdUiState> get() = repository.ussdState
 
     val newUssdState: StateFlow<UssdUiState>
-        get() =
-            ussdRepository.ussdState
+        get() = ussdRepository.ussdState
 
     val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
         getUserDataPreferenceUseCase()

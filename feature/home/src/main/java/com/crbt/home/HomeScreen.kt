@@ -78,6 +78,8 @@ fun HomeScreen(
     val newUssdUiState by viewModel.newUssdState.collectAsStateWithLifecycle()
     val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
     val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
+    val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
+
     val listState = rememberLazyListState()
 
     var showDialog by remember {
@@ -159,7 +161,8 @@ fun HomeScreen(
         item {
             PopularTodayTabLayout(
                 navigateToSubscriptions = onPopularTodayClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                crbSongsFeed = crbSongsFeed
             )
         }
 
