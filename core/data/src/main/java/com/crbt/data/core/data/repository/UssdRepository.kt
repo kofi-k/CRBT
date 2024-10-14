@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -45,31 +44,33 @@ class UssdRepository @Inject constructor(
             )
         }
 
-        ussdController.callUSSDOverlayInvoke(ussdCode, map, object : USSDController.CallbackInvoke {
-            override fun responseInvoke(message: String) {
-                Log.d("USSD_INVOKE", message)
+        ussdController.callUSSDOverlayInvoke(
+            ussdCode, map,
+            object : USSDController.CallbackInvoke {
+                override fun responseInvoke(message: String) {
 
-                if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
-                    onFailure("USSD Failed: $message")
-                    _ussdState.value = UssdUiState.Error("USSD Failed: $message")
-                } else {
-                    onSuccess(message)
-                    _ussdState.value = UssdUiState.Success(message)
+                    if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
+                        onFailure("USSD Failed: $message")
+                        _ussdState.value = UssdUiState.Error("USSD Failed: $message")
+                    } else {
+                        onSuccess(message)
+                        _ussdState.value = UssdUiState.Success(message)
+                    }
                 }
-            }
 
-            override fun over(message: String) {
+                override fun over(message: String) {
 
-                if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
-                    onFailure("USSD Session Ended with Error: $message")
-                    _ussdState.value = UssdUiState.Error("USSD Session Ended with Error: $message")
-                } else {
-                    onSuccess(message)
-                    _ussdState.value = UssdUiState.Success(message)
+                    if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
+                        onFailure("USSD Session Ended with Error: $message")
+                        _ussdState.value =
+                            UssdUiState.Error("USSD Session Ended with Error: $message")
+                    } else {
+                        onSuccess(message)
+                        _ussdState.value = UssdUiState.Success(message)
+                    }
                 }
-            }
-        })
-
+            },
+        )
     }
 
     private fun checkAndRequestPermissions(activity: Activity) {
