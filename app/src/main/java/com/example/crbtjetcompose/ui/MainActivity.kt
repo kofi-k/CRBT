@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.ui
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,11 +19,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.crbt.data.core.data.musicService.MusicService
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
     lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel: MainActivityViewModel by viewModels()
+    private val sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,11 +115,18 @@ class MainActivity : ComponentActivity() {
                     CrbtTheme {
                         CrbtApp(
                             appState = appState,
+                            sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel
                         )
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedCrbtMusicPlayerViewModel.destroyMediaController()
+        stopService(Intent(this, MusicService::class.java))
     }
 }
 

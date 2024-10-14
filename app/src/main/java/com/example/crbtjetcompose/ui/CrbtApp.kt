@@ -72,6 +72,7 @@ import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
 import com.crbt.subscription.navigation.TONES_ROUTE
 import com.crbt.ui.core.ui.launchCustomChromeTab
+import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -84,6 +85,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 @Composable
 fun CrbtApp(
     appState: CrbtAppState,
+    sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel
 ) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
@@ -320,6 +322,7 @@ fun CrbtApp(
                     is Result.Success -> CrbtNavHost(
                         appState = appState,
                         startDestination = startDestination,
+                        sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(padding)
