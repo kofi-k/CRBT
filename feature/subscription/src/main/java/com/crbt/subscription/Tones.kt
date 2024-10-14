@@ -2,6 +2,7 @@ package com.crbt.subscription
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -33,8 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,20 +53,21 @@ import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.crbt.data.core.data.musicService.PlayerState
-import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
+import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.MusicControllerUiState
+import com.crbt.data.core.data.PlayerState
+import com.crbt.data.core.data.TonesPlayerEvent
+import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.CustomRotatingMorphShape
 import com.crbt.ui.core.ui.EmptyContent
-import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.SearchToolbar
 import com.crbt.ui.core.ui.ToneItem
 import com.crbt.ui.core.ui.musicPlayer.MusicCard
-import com.example.crbtjetcompose.core.model.data.UserCRbtSongResource
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.feature.subscription.R
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -74,26 +75,18 @@ import com.example.crbtjetcompose.feature.subscription.R
 fun TonesScreen(
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
+    musicControllerUiState: MusicControllerUiState,
+    crbtTonesViewModel: CrbtTonesViewModel = hiltViewModel(),
 ) {
-    val crbtSongsViewModel: CrbtSongsViewModel = hiltViewModel()
+    val currentSong = musicControllerUiState.currentSong
+    val tonesUiState = crbtTonesViewModel.tonesUiState
 
-    val crbSongsFeed by crbtSongsViewModel.crbtSongsFlow.collectAsStateWithLifecycle()
-    val playingNow by crbtSongsViewModel.currentlyPlayingSong.collectAsStateWithLifecycle()
-    val playerState by crbtSongsViewModel.playerState.collectAsStateWithLifecycle()
+    val isInitialized = rememberSaveable { mutableStateOf(false) }
 
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(playerState) {
-        when (playerState) {
-            is PlayerState.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = (playerState as PlayerState.Error).message,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            else -> Unit
+    if (!isInitialized.value) {
+        LaunchedEffect(key1 = Unit) {
+            crbtTonesViewModel.onEvent(TonesPlayerEvent.FetchSong)
+            isInitialized.value = true
         }
     }
 
@@ -150,156 +143,145 @@ fun TonesScreen(
                                         contentDescription = null
                                     )
                                 }
-
                             }
 
-                            when (crbSongsFeed) {
-                                is CrbtSongsFeedUiState.Loading -> {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(bottom = 16.dp),
-                                        verticalArrangement = Arrangement.Center,
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        CircularProgressIndicator()
-                                    }
-                                }
-
-                                is CrbtSongsFeedUiState.Success -> {
-                                    val crbtSongs =
-                                        (crbSongsFeed as CrbtSongsFeedUiState.Success).songs
-                                    when (crbtSongs.size) {
-                                        0 -> {
-                                            EmptyContent(
-                                                description = stringResource(id = R.string.feature_subscription_no_songs),
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(16.dp)
-                                            )
+                            with(tonesUiState) {
+                                when {
+                                    loading == true -> {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 16.dp),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            CircularProgressIndicator()
                                         }
+                                    }
 
-                                        else ->
-                                            LazyColumn(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                contentPadding = PaddingValues(top = 8.dp)
-                                            ) {
-                                                subscriptionTonesFeed(
-                                                    onSubscriptionToneClick = onSubscriptionToneClick,
-                                                    onGiftSubscriptionClick = onGiftSubscriptionClick,
-                                                    onPlaySong = { song ->
-                                                        crbtSongsViewModel.playOrPauseSong(song)
-                                                    },
-                                                    onPaused = { crbtSongsViewModel.pauseSong() },
-                                                    crbtSongs = crbtSongs,
-                                                    isPlaying = { song ->
-                                                        crbtSongsViewModel.isSongPlaying(song)
-                                                    }
+                                    loading == false && songs != null -> {
+                                        when (songs.isEmpty()) {
+                                            true -> {
+                                                EmptyContent(
+                                                    description = stringResource(id = R.string.feature_subscription_no_songs),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(16.dp)
                                                 )
                                             }
-                                    }
-                                }
 
-                                is CrbtSongsFeedUiState.Error -> {
-                                    EmptyContent(
-                                        description = (crbSongsFeed as CrbtSongsFeedUiState.Error).errorMessage,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp)
-                                    )
+                                            else ->
+                                                LazyColumn(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    contentPadding = PaddingValues(top = 8.dp)
+                                                ) {
+                                                    subscriptionTonesFeed(
+                                                        onSubscriptionToneClick = onSubscriptionToneClick,
+                                                        onGiftSubscriptionClick = onGiftSubscriptionClick,
+                                                        onEvent = crbtTonesViewModel::onEvent,
+                                                        crbtSongs = songs,
+                                                        currentSong = tonesUiState.selectedSong,
+                                                        isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+                                                    )
+                                                }
+                                        }
+                                    }
+
+                                    errorMessage != null -> {
+                                        EmptyContent(
+                                            description = errorMessage,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            reloadContent = {
+                                                ProcessButton(
+                                                    onClick = { crbtTonesViewModel.reload() },
+                                                    isProcessing = tonesUiState.loading == true,
+                                                    text = stringResource(id = R.string.feature_subscription_reload),
+                                                    colors = ButtonDefaults.textButtonColors()
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
                     },
                     modifier = Modifier
+                        .animateContentSize()
                 )
             }
-
         }
     }
 
-
-
-    if (playingNow != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            MusicCard(
-                onPlay = {
-                    crbtSongsViewModel.playOrPauseSong(playingNow!!)
-                },
-                onPaused = {
-                    crbtSongsViewModel.pauseSong()
-                },
-                onSkipPreviousClick = {
-                    crbtSongsViewModel.previousSong()
-                },
-                onSkipNextClick = {
-                    crbtSongsViewModel.nextSong()
-                },
-                musicTitle = playingNow?.songTitle ?: "",
-                musicArtist = playingNow?.artisteName ?: "",
-                isPlaying = playerState is PlayerState.Playing,
-                musicCoverUrl = playingNow?.profile ?: "",
+    AnimatedVisibility(
+        visible = currentSong != null && musicControllerUiState.playerState != PlayerState.STOPPED,
+        modifier = Modifier
+    ) {
+        if (currentSong != null) {
+            Box(
                 modifier = Modifier
-            )
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                MusicCard(
+                    modifier = Modifier,
+                    cRbtSong = currentSong,
+                    onPlayerEvent = crbtTonesViewModel::onEvent,
+                    musicControllerUiState = musicControllerUiState,
+                )
+            }
         }
     }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        MessageSnackbar(
-            snackbarHostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-    }
-
 }
 
 
 fun LazyListScope.subscriptionTonesFeed(
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
-    onPlaySong: (UserCRbtSongResource) -> Unit,
-    onPaused: () -> Unit,
-    isPlaying: (UserCRbtSongResource) -> Boolean,
-    crbtSongs: List<UserCRbtSongResource>
+    onEvent: (TonesPlayerEvent) -> Unit,
+    crbtSongs: List<CrbtSongResource>,
+    currentSong: CrbtSongResource?,
+    isPlaying: Boolean
 ) {
 
     items(
         items = crbtSongs,
         key = { it.id }
     ) { song ->
+        val isCurrentSong = currentSong != null && currentSong == song
         SubscriptionTone(
-            title = song.songTitle,
-            subtitle = song.artisteName,
             onSubscriptionToneClick = onSubscriptionToneClick,
             onGiftSubscriptionClick = onGiftSubscriptionClick,
-            toneId = song.id,
-            imageUrl = song.profile,
             showDivider = crbtSongs.indexOf(song) != crbtSongs.size - 1,
-            onPlaySong = { onPlaySong(song) },
-            onPaused = onPaused,
-            isPlaying = isPlaying(song)
+            onPlayPauseToggle = {
+                if (isCurrentSong) {
+                    if (isPlaying) {
+                        onEvent(TonesPlayerEvent.PauseSong)
+                    } else {
+                        onEvent(TonesPlayerEvent.ResumeSong)
+                    }
+                } else {
+                    onEvent(TonesPlayerEvent.OnSongSelected(song))
+                    onEvent(TonesPlayerEvent.PlaySong)
+                }
+            },
+            isPlaying = isCurrentSong && isPlaying,
+            crbtSongResource = song,
         )
     }
 }
 
 @Composable
 fun SubscriptionTone(
+    crbtSongResource: CrbtSongResource,
     modifier: Modifier = Modifier,
-    title: String,
-    subtitle: String,
-    imageUrl: String,
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
-    toneId: String,
     showDivider: Boolean = true,
-    onPlaySong: () -> Unit,
-    onPaused: () -> Unit,
+    onPlayPauseToggle: () -> Unit,
     isPlaying: Boolean
 ) {
     val shapeA = remember {
@@ -346,18 +328,12 @@ fun SubscriptionTone(
             .then(modifier)
     ) {
         ToneItem(
-            title = title,
-            subtitle = subtitle,
+            title = crbtSongResource.songTitle,
+            subtitle = crbtSongResource.artisteName,
             trailingContent = {
                 Row {
                     IconButton(
-                        onClick = {
-                            if (isPlaying) {
-                                onPaused()
-                            } else {
-                                onPlaySong()
-                            }
-                        }
+                        onClick = onPlayPauseToggle
                     ) {
                         Icon(
                             if (isPlaying) CrbtIcons.PauseCircle else CrbtIcons.Play,
@@ -372,11 +348,11 @@ fun SubscriptionTone(
                     }
                 }
             },
-            imageUrl = imageUrl,
+            imageUrl = crbtSongResource.profile,
             colors = ListItemDefaults.colors(),
             modifier = Modifier
                 .clickable(
-                    onClick = { onSubscriptionToneClick(toneId) },
+                    onClick = { onSubscriptionToneClick(crbtSongResource.id) },
                     interactionSource = remember { MutableInteractionSource() },
                     indication = LocalIndication.current
                 ),
@@ -401,13 +377,13 @@ fun SubscriptionTone(
                         )
                     },
                     trailingContent = {
-                        IconButton(onClick = { onGiftSubscriptionClick(toneId) }) {
+                        IconButton(onClick = { onGiftSubscriptionClick(crbtSongResource.id) }) {
                             Icon(imageVector = CrbtIcons.ArrowRight, contentDescription = null)
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onGiftSubscriptionClick(toneId) }
+                        .clickable { onGiftSubscriptionClick(crbtSongResource.id) }
                 )
             }
             if (showDivider) HorizontalDivider()
@@ -421,15 +397,11 @@ fun SubscriptionTone(
 fun SubscriptionTonePreview() {
     CrbtTheme {
         SubscriptionTone(
-            title = "Title",
-            subtitle = "Subtitle",
-            imageUrl = "",
-            toneId = "",
             onSubscriptionToneClick = {},
             onGiftSubscriptionClick = {},
-            onPlaySong = {},
-            onPaused = {},
-            isPlaying = false
+            onPlayPauseToggle = {},
+            isPlaying = false,
+            crbtSongResource = DummyTones.tones[0]
         )
     }
 }
@@ -441,7 +413,8 @@ fun TonesPreview() {
     CrbtTheme {
         TonesScreen(
             onSubscriptionToneClick = {},
-            onGiftSubscriptionClick = {}
+            onGiftSubscriptionClick = {},
+            musicControllerUiState = MusicControllerUiState(),
         )
     }
 }

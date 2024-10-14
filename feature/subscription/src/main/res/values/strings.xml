@@ -25,4 +25,5 @@
     <string name="feature_subscription_subscribe_to_song_subtitle">Provide your subscription plan</string>
     <string name="feature_subscription_no_songs">No CRBT songs to browse</string>
     <string name="feature_subscription_play_error">Failed to stream CRBT song.</string>
+    <string name="feature_subscription_reload">Refrsh</string>
 </resources>
