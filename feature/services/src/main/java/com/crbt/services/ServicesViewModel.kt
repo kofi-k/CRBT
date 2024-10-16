@@ -1,5 +1,6 @@
 package com.crbt.services
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.extractBalance
 import com.crbt.domain.GetUserDataPreferenceUseCase
+import com.crbt.domain.UpdateUserBalanceUseCase
 import com.crbt.domain.UserPreferenceUiState
 import com.crbt.services.navigation.TOPUP_AMOUNT_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +31,7 @@ class ServicesViewModel @Inject constructor(
     private val repository: UssdRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
+    private val updateBalanceUseCase: UpdateUserBalanceUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -53,18 +56,24 @@ class ServicesViewModel @Inject constructor(
         ussdCode: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
-        ussdType: CrbtUssdType
+        ussdType: CrbtUssdType,
+        activity: Activity
     ) {
         viewModelScope.launch {
-            repository.runUssdCode(
+            repository.dialUssdCode(
                 ussdCode = ussdCode,
-                onSuccess = {
+                onSuccess = { message ->
                     onSuccess()
                     if (ussdType == CrbtUssdType.BALANCE_CHECK) {
-                        updateUserBalance()
+                        viewModelScope.launch {
+                            updateBalanceUseCase(message.extractBalance(message))
+                        }
                     }
                 },
-                onError
+                onFailure = {
+                    onError(it)
+                },
+                activity = activity
             )
         }
     }
@@ -75,14 +84,4 @@ class ServicesViewModel @Inject constructor(
         this.isPhoneNumberValid = isValid
     }
 
-    private fun updateUserBalance() {
-        viewModelScope.launch {
-            if (ussdState.value is UssdUiState.Success) {
-                val balance = (ussdState.value as UssdUiState.Success).response.extractBalance()
-                if (balance != null) {
-                    crbtPreferencesRepository.setUserBalance(balance)
-                }
-            }
-        }
-    }
 }

@@ -60,6 +60,7 @@ import com.crbt.designsystem.theme.LocalGradientColors
 import com.crbt.designsystem.theme.extremelyDeemphasizedAlpha
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.home.navigation.ACCOUNT_HISTORY_ROUTE
+import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
@@ -71,6 +72,7 @@ import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
 import com.crbt.subscription.navigation.TONES_ROUTE
 import com.crbt.ui.core.ui.launchCustomChromeTab
+import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -83,7 +85,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 @Composable
 fun CrbtApp(
     appState: CrbtAppState,
-    startDestination: String,
+    sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel
 ) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
@@ -123,7 +125,19 @@ fun CrbtApp(
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val isLoggedIn by appState.isLoggedIn.collectAsStateWithLifecycle()
+    val isProfileSetupComplete by appState.isProfileSetupComplete.collectAsStateWithLifecycle()
     val internetSpeed by appState.internetSpeed.collectAsStateWithLifecycle()
+    val userData by appState.userData.collectAsStateWithLifecycle()
+
+    val startDestination: String = when (isLoggedIn) {
+        true -> when (isProfileSetupComplete) {
+            true -> HOME_ROUTE
+            false -> ONBOARDING_PROFILE_ROUTE
+        }
+
+        false -> ONBOARDING_ROUTE
+    }
 
     val notConnectedMessage = stringResource(R.string.not_connected)
     LaunchedEffect(isOffline) {
@@ -135,7 +149,6 @@ fun CrbtApp(
         }
     }
 
-    val userData by appState.userData.collectAsStateWithLifecycle()
 
 
     CrbtBackground(
@@ -309,6 +322,7 @@ fun CrbtApp(
                     is Result.Success -> CrbtNavHost(
                         appState = appState,
                         startDestination = startDestination,
+                        sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(padding)

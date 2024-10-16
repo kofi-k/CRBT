@@ -54,6 +54,7 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Pin
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
@@ -119,6 +120,7 @@ object CrbtIcons {
     val Add = Icons.Rounded.Add
     val Subscribe = Icons.Rounded.NotificationAdd
     val Play = Icons.Rounded.PlayCircle
+    val PlayArrow = Icons.Rounded.PlayArrow
     val Gift = Icons.Rounded.CardGiftcard
 
     // profile icons

@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.ui
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -19,12 +19,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.crbt.data.core.data.musicService.MusicService
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
+import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.domain.UserPreferenceUiState
-import com.crbt.home.navigation.HOME_ROUTE
-import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,9 +45,13 @@ class MainActivity : ComponentActivity() {
     lateinit var crbtPreferencesRepository: CrbtPreferencesRepository
 
     @Inject
+    lateinit var loginManager: LoginManager
+
+    @Inject
     lateinit var analyticsHelper: AnalyticsHelper
 
     private val viewModel: MainActivityViewModel by viewModels()
+    private val sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,32 +109,24 @@ class MainActivity : ComponentActivity() {
                     val appState = rememberCrbtAppState(
                         networkMonitor = networkMonitor,
                         userRepository = crbtPreferencesRepository,
+                        loginManager = loginManager
                     )
 
-
                     CrbtTheme {
-                        /*
-                        * todo
-                        *  best to use signed i user from firebase auth for this
-                        * */
-                        when (uiState) {
-                            is UserPreferenceUiState.Loading -> CircularProgressIndicator()
-                            is UserPreferenceUiState.Success -> {
-                                val user = (uiState as UserPreferenceUiState.Success).userData
-                                val startDestination: String = when (user.userId.isBlank()) {
-                                    true -> ONBOARDING_ROUTE
-                                    false -> HOME_ROUTE
-                                }
-                                CrbtApp(
-                                    appState = appState,
-                                    startDestination = startDestination,
-                                )
-                            }
-                        }
+                        CrbtApp(
+                            appState = appState,
+                            sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel
+                        )
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedCrbtMusicPlayerViewModel.destroyMediaController()
+        stopService(Intent(this, MusicService::class.java))
     }
 }
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,27 +21,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.MusicControllerUiState
+import com.crbt.data.core.data.PlayerState
+import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
-import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 
 
 @Composable
 fun MusicCard(
-    onPlayPauseClick: () -> Unit,
-    onSkipPreviousClick: () -> Unit,
-    onSkipNextClick: () -> Unit,
-    musicTitle: String,
-    musicArtist: String,
-    isPlaying: Boolean,
-    musicCoverUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cRbtSong: CrbtSongResource,
+    musicControllerUiState: MusicControllerUiState,
+    onPlayerEvent: (TonesPlayerEvent) -> Unit
 ) {
 
+    val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+
     SurfaceCard(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
         content = {
             Row(
                 modifier = Modifier
@@ -51,22 +54,32 @@ fun MusicCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 MusicInfo(
-                    musicTitle = musicTitle,
-                    musicArtist = musicArtist,
-                    coverUrl = musicCoverUrl,
+                    musicTitle = cRbtSong.songTitle,
+                    musicArtist = cRbtSong.artisteName,
+                    coverUrl = cRbtSong.profile,
                     modifier = Modifier.weight(1f)
                 )
 
                 MusicControls(
-                    onPlayPauseClick = onPlayPauseClick,
-                    onSkipPreviousClick = onSkipPreviousClick,
-                    onSkipNextClick = onSkipNextClick,
+                    onPausePlayToggle = {
+                        onPlayerEvent(
+                            if (isPlaying) TonesPlayerEvent.PauseSong else TonesPlayerEvent.ResumeSong
+                        )
+                    },
+                    onSkipPreviousClick = {
+                        onPlayerEvent(TonesPlayerEvent.SkipToPreviousSong)
+                    },
+                    onSkipNextClick = {
+                        onPlayerEvent(TonesPlayerEvent.SkipToNextSong)
+                    },
                     isPlaying = isPlaying
                 )
             }
-        }
+        },
+        modifier = Modifier.fillMaxWidth()
     )
 }
+
 
 @Composable
 fun MusicInfo(
@@ -102,7 +115,6 @@ fun MusicInfo(
             Text(
                 text = musicArtist,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(slightlyDeemphasizedAlpha),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -112,7 +124,7 @@ fun MusicInfo(
 
 @Composable
 fun MusicControls(
-    onPlayPauseClick: () -> Unit,
+    onPausePlayToggle: () -> Unit,
     onSkipPreviousClick: () -> Unit,
     onSkipNextClick: () -> Unit,
     isPlaying: Boolean,
@@ -130,12 +142,13 @@ fun MusicControls(
             Icon(imageVector = CrbtIcons.Previous, contentDescription = null)
         }
         IconButton(
-            onClick = onPlayPauseClick,
+            onClick = onPausePlayToggle,
             modifier = Modifier
                 .size(48.dp),
+            colors = IconButtonDefaults.filledTonalIconButtonColors()
         ) {
             Icon(
-                imageVector = if (isPlaying) CrbtIcons.Pause else CrbtIcons.PlayOutline,
+                imageVector = if (isPlaying) CrbtIcons.Pause else CrbtIcons.PlayArrow,
                 contentDescription = null
             )
         }
@@ -155,13 +168,9 @@ fun MusicControls(
 fun MusicCardPreview() {
     CrbtTheme {
         MusicCard(
-            onPlayPauseClick = {},
-            onSkipPreviousClick = {},
-            onSkipNextClick = {},
-            musicTitle = "Music Title",
-            musicArtist = "Music Artist",
-            isPlaying = true,
-            musicCoverUrl = DummyTones.tones[0].profile
+            musicControllerUiState = MusicControllerUiState(),
+            onPlayerEvent = {},
+            cRbtSong = DummyTones.tones[0]
         )
     }
 }

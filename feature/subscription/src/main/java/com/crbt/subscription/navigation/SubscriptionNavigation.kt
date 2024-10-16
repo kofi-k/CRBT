@@ -8,6 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.subscription.CrbtSubscribeScreen
 import com.crbt.subscription.SubscriptionCheckout
 import com.crbt.subscription.SubscriptionsRoute
@@ -41,7 +42,8 @@ fun NavController.navigateToTones(toneId: String? = null, navOptions: NavOptions
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,
-    navigateToTopLevel: () -> Unit
+    navigateToTopLevel: () -> Unit,
+    musicControllerUiState: MusicControllerUiState
 ) {
     composable(route = SUBSCRIPTION_ROUTE) {
         SubscriptionsRoute(
@@ -62,7 +64,8 @@ fun NavGraphBuilder.subscriptionScreen(
             },
             onGiftSubscriptionClick = { toneId ->
                 navController.navigateToAddSubscription(toneId, true)
-            }
+            },
+            musicControllerUiState = musicControllerUiState,
         )
     }
 
@@ -86,8 +89,8 @@ fun NavGraphBuilder.subscriptionScreen(
     composable(route = SUBSCRIPTION_COMPLETE_ROUTE) {
         SubscriptionCheckout(
             onDoneClicked = {
-                navController.navigate(SUBSCRIPTION_ROUTE){
-                    popUpTo(SUBSCRIPTION_ROUTE){
+                navController.navigate(SUBSCRIPTION_ROUTE) {
+                    popUpTo(SUBSCRIPTION_ROUTE) {
                         inclusive = true
                     }
                 }

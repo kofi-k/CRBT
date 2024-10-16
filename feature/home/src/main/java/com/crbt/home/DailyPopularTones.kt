@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -43,9 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.tracing.trace
-import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
+import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.crbt.ui.core.ui.EmptyContent
 import com.example.crbtjetcompose.feature.home.R
 
 
@@ -58,11 +61,11 @@ enum class PopularTodayOptions {
 @Composable
 fun PopularTodayTabLayout(
     modifier: Modifier,
-    navigateToSubscriptions: (toneId: String?) -> Unit
+    navigateToSubscriptions: (toneId: String?) -> Unit,
+    crbSongsFeed: CrbtSongsFeedUiState
 ) = trace("PopularTodayTabLayout") {
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-
 
     Column(modifier = modifier) {
         Text(
@@ -120,25 +123,19 @@ fun PopularTodayTabLayout(
         when (PopularTodayOptions.entries[selectedTabIndex]) {
             PopularTodayOptions.Tones -> {
                 DailyPopularTones(
-                    popularTonesUiState = PopularTonesUiState.Shown(
-                        tones = DummyTones.tones
-                    ),
+                    crbtSongsFeedUiState = crbSongsFeed,
                     onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
-                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
             PopularTodayOptions.Albums -> {
                 DailyPopularTones(
-                    popularTonesUiState = PopularTonesUiState.Shown(
-                        tones = DummyTones.tones.reversed()
-                    ),
+                    crbtSongsFeedUiState = crbSongsFeed,
                     onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
-                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -148,37 +145,64 @@ fun PopularTodayTabLayout(
 
 @Composable
 fun DailyPopularTones(
-    popularTonesUiState: PopularTonesUiState.Shown,
+    crbtSongsFeedUiState: CrbtSongsFeedUiState,
     onToneSelected: (String) -> Unit,
-    modifier: Modifier
 ) = trace("DailyPopularTones") {
     val lazyGridState = rememberLazyListState()
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth(),
-    ) {
-        LazyRow(
-            state = lazyGridState,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(
-                horizontal = 16.dp,
-                vertical = 6.dp
-            ),
-            modifier = Modifier
-                .heightIn(max = max(160.dp, with(LocalDensity.current) { 160.sp.toDp() }))
-                .fillMaxWidth()
-        ) {
-            items(
-                items = popularTonesUiState.tones,
-                key = { tone -> tone.id }
-            ) { tone ->
-                MusicCard(
-                    artist = tone.artisteName,
-                    title = tone.songTitle,
-                    imageUrl = tone.profile,
-                    onCardClick = { onToneSelected(tone.id) }
-                )
+    when (crbtSongsFeedUiState) {
+        is CrbtSongsFeedUiState.Error -> Unit
+        CrbtSongsFeedUiState.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is CrbtSongsFeedUiState.Success -> {
+            when (crbtSongsFeedUiState.songs.isEmpty()) {
+                true -> {
+                    SurfaceCard(
+                        content = {
+                            EmptyContent(
+                                description = stringResource(id = R.string.feature_home_no_songs),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+
+                false -> {
+                    LazyRow(
+                        state = lazyGridState,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 16.dp,
+                            vertical = 6.dp
+                        ),
+                        modifier = Modifier
+                            .heightIn(
+                                max = max(
+                                    160.dp,
+                                    with(LocalDensity.current) { 160.sp.toDp() })
+                            )
+                            .fillMaxWidth()
+                    ) {
+                        items(
+                            items = crbtSongsFeedUiState.songs,
+                            key = { tone -> tone.id }
+                        ) { tone ->
+                            MusicCard(
+                                artist = tone.artisteName,
+                                title = tone.songTitle,
+                                imageUrl = tone.profile,
+                                onCardClick = { onToneSelected(tone.id) }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -242,11 +266,8 @@ fun MusicCard(
 @Composable
 fun PreviewDailyPopularTones() {
     DailyPopularTones(
-        popularTonesUiState = PopularTonesUiState.Shown(
-            tones = DummyTones.tones
-        ),
+        crbtSongsFeedUiState = CrbtSongsFeedUiState.Loading,
         onToneSelected = {},
-        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -266,7 +287,8 @@ fun PreviewMusicCard() {
 fun PreviewPopularTodayTabLayout() {
     PopularTodayTabLayout(
         modifier = Modifier.fillMaxWidth(),
-        navigateToSubscriptions = {}
+        navigateToSubscriptions = {},
+        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList())
     )
 }
 

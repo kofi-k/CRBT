@@ -1,5 +1,6 @@
 package com.crbt.services
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -21,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +34,7 @@ import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
+import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
@@ -51,6 +54,13 @@ fun ServicesRoute(
     }
     val viewModel: ServicesViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    PermissionRequestComposable(
+        onPermissionsGranted = {
+        }
+    )
+
     ServicesScreen(
         onPackageClick = navigateToPackages,
         onRechargeClick = {},
@@ -65,7 +75,8 @@ fun ServicesRoute(
                 onError = {
                     showDialog = true
                 },
-                ussdType = CrbtUssdType.BALANCE_CHECK
+                ussdType = CrbtUssdType.BALANCE_CHECK,
+                activity = context as Activity
             )
         },
         isCheckingBalance = ussdUiState is UssdUiState.Loading && crbtUssdType == CrbtUssdType.BALANCE_CHECK,
@@ -80,7 +91,8 @@ fun ServicesRoute(
 //                },
 //                onError = {
 //                    showDialog = true
-//                }
+//                },
+//            activity = context as Activity
 //            )
         },
         onConfirmCallMeBackClick = {
@@ -93,7 +105,8 @@ fun ServicesRoute(
                 onError = {
                     showDialog = true
                 },
-                ussdType = CrbtUssdType.CALL_ME_BACK
+                ussdType = CrbtUssdType.CALL_ME_BACK,
+                activity = context as Activity
             )
         },
         actionLoading = ussdUiState is UssdUiState.Loading,

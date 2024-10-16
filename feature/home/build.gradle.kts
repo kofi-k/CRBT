@@ -11,5 +11,7 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(libs.androidx.graphics.shapes)
+    implementation(libs.palette.ktx)
+    implementation(libs.voipUssd)
     implementation(project(":core:domain"))
 }

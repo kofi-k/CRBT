@@ -1,5 +1,6 @@
 package com.crbt.home
 
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -38,12 +39,15 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
@@ -55,7 +59,10 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
+import com.crbt.ui.core.ui.isColorDark
+import com.crbt.ui.core.ui.rememberDominantColor
 import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 import com.example.crbtjetcompose.feature.home.R
 
@@ -68,13 +75,22 @@ fun HomeScreen(
     onPopularTodayClick: (String?) -> Unit = {}
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
+    val newUssdUiState by viewModel.newUssdState.collectAsStateWithLifecycle()
     val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
+    val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
+    val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
+
     val listState = rememberLazyListState()
 
     var showDialog by remember {
         mutableStateOf(false)
     }
+    val context = LocalContext.current
+
+    PermissionRequestComposable(
+        onPermissionsGranted = {
+        }
+    )
 
 
     LazyColumn(
@@ -90,17 +106,19 @@ fun HomeScreen(
             UserBalanceCard(
                 onNavigateToTopUp = onNavigateToTopUp,
                 onRefresh = {
-                    viewModel.runUssdCode(
+                    viewModel.runNewUssdCode(
                         ussdCode = CHECK_BALANCE_USSD,
                         onSuccess = {
                             showDialog = true
                         },
                         onError = {
                             showDialog = true
-                        }
+                        },
+                        activity = context as Activity
                     )
+
                 },
-                isRefreshing = ussdUiState is UssdUiState.Loading,
+                isRefreshing = newUssdUiState is UssdUiState.Loading,
                 userPreferenceUiState = userDataUiState
             )
         }
@@ -110,23 +128,41 @@ fun HomeScreen(
         }
 
         item {
-            LatestMusicCard(
-                artist = DummyTones.tones[0].artisteName,
-                title = DummyTones.tones[0].songTitle,
-                backgroundUrl = DummyTones.tones[0].profile,
-                onCardClick = {
-                    onPopularTodayClick(null)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+            when (latestMusicUiState) {
+                is Result.Error -> Unit
+                Result.Loading -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is Result.Success -> {
+                    val latestMusic = (latestMusicUiState as Result.Success).data
+                    LatestMusicCard(
+                        artist = latestMusic.artisteName,
+                        title = latestMusic.songTitle,
+                        backgroundUrl = latestMusic.profile,
+                        onCardClick = {
+                            onPopularTodayClick(null)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            }
         }
 
         item {
             PopularTodayTabLayout(
                 navigateToSubscriptions = onPopularTodayClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                crbSongsFeed = crbSongsFeed
             )
         }
 
@@ -146,7 +182,7 @@ fun HomeScreen(
             onDismiss = {
                 showDialog = false
             },
-            ussdUiState = ussdUiState,
+            ussdUiState = newUssdUiState,
             crbtUssdType = CrbtUssdType.BALANCE_CHECK
         )
     }
@@ -240,6 +276,9 @@ fun LatestMusicCard(
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dominantColor = rememberDominantColor(backgroundUrl)
+    val textColor = if (isColorDark(dominantColor)) Color.White else Color.Black
+
     Box(
         modifier = modifier
     ) {
@@ -287,11 +326,15 @@ fun LatestMusicCard(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.displaySmall,
-                    color = Color.White
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = artist,
-                    color = Color.White
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

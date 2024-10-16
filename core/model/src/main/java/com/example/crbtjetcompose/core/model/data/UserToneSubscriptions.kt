@@ -5,7 +5,7 @@ package com.example.crbtjetcompose.core.model.data
  *  This is an anticipated model class that would be updated to match the actual user tone subscriptions model
  *  or we may use the user subscription data together with the tones to represent the user tone subscriptions
  * */
-data class UserToneSubscriptions internal  constructor(
+data class UserToneSubscriptions internal constructor(
     val toneId: String,
     val toneName: String,
     val artist: String,
@@ -14,11 +14,11 @@ data class UserToneSubscriptions internal  constructor(
     val dueDate: String,
 ) {
     // will have to replace [crbtUser] with the actual user subscription data
-    constructor(crbtSongResource: CrbtSongResource, crbtUser: CrbtUser): this(
+    constructor(crbtSongResource: CrbtSongResource, crbtUser: CrbtUser) : this(
         toneId = crbtSongResource.id,
         toneName = crbtSongResource.songTitle,
         artist = crbtSongResource.artisteName,
-        toneUrl = crbtSongResource.song,
+        toneUrl = crbtSongResource.tune,
         toneImageUrl = crbtSongResource.profile,
         dueDate = "Due in 2 days" // todo get this due date based from the user subscription data
     )

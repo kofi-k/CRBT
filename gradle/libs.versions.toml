@@ -81,6 +81,7 @@ authApiPhone = "18.1.0"
 androidxAutofill = "1.1.0"
 graphicShapes = "1.0.1"
 exoplayer = "2.19.1"
+palette = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -184,8 +185,7 @@ extension-mediasession = { module = "com.google.android.exoplayer:extension-medi
 exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer" }
 media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Common" }
 media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Common" }
-
-
+palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -203,7 +203,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomPaging" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
-
+#    implementation("com.github.romellfudi.VoIpUSSD:ussd-library:1.4.a")
+voipUssd = { group = "com.github.romellfudi.VoIpUSSD", name = "ussd-library", version = "1.4.a" }
 
 
 [plugins]
