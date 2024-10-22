@@ -1,15 +1,16 @@
 package com.example.crbtjetcompose.core.network.di
 
-import android.content.Context
 import androidx.tracing.trace
 import com.example.crbtjetcompose.core.network.BuildConfig
+import com.example.crbtjetcompose.core.network.repository.TokenProvider
+import com.example.crbtjetcompose.core.network.repository.TokenProviderImpl
 import com.example.crbtjetcompose.core.network.retrofit.RetrofitCrbtNetworkApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Call
@@ -45,13 +46,28 @@ internal object NetworkModule {
     @Singleton
     @Provides
     fun provideOkHttpClient(
-        @ApplicationContext context: Context,
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        tokenProvider: TokenProvider
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor { chain ->
+                val token = runBlocking {
+                    tokenProvider.getToken()
+                }
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+                chain.proceed(newRequest)
+            }
             .build()
     }
+
+
+    @Singleton
+    @Provides
+    fun provideTokenProvider(tokenProvider: TokenProviderImpl): TokenProvider = tokenProvider
+
 
     @Singleton
     @Provides
