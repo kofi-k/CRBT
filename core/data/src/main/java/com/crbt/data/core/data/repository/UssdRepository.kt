@@ -2,12 +2,14 @@ package com.crbt.data.core.data.repository
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,8 +34,10 @@ class UssdRepository @Inject constructor(
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
-
         checkAndRequestPermissions(activity)
+
+        checkAccessibilityPermission(activity)
+
         _ussdState.value = UssdUiState.Loading
 
         val map = HashMap<String, HashSet<String>>().apply {
@@ -48,10 +52,9 @@ class UssdRepository @Inject constructor(
             ussdCode, map,
             object : USSDController.CallbackInvoke {
                 override fun responseInvoke(message: String) {
-
                     if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
                         onFailure("USSD Failed: $message")
-                        _ussdState.value = UssdUiState.Error("USSD Failed: $message")
+                        _ussdState.value = UssdUiState.Error("USSD invoke Failed: $message")
                     } else {
                         onSuccess(message)
                         _ussdState.value = UssdUiState.Success(message)
@@ -59,19 +62,25 @@ class UssdRepository @Inject constructor(
                 }
 
                 override fun over(message: String) {
-
                     if (map["KEY_ERROR"]?.any { message.contains(it, ignoreCase = true) } == true) {
                         onFailure("USSD Session Ended with Error: $message")
                         _ussdState.value =
                             UssdUiState.Error("USSD Session Ended with Error: $message")
                     } else {
-                        onSuccess(message)
-                        _ussdState.value = UssdUiState.Success(message)
+                        val accessibilityError = "Check your accessibility | overlay permission"
+                        if (message.contains(accessibilityError, ignoreCase = true)) {
+                            onFailure(accessibilityError)
+                            _ussdState.value = UssdUiState.Error(accessibilityError)
+                        } else {
+                            onSuccess(message)
+                            _ussdState.value = UssdUiState.Success(message)
+                        }
                     }
                 }
-            },
+            }
         )
     }
+
 
     private fun checkAndRequestPermissions(activity: Activity) {
         val permissionsNeeded = arrayOf(
@@ -101,6 +110,40 @@ class UssdRepository @Inject constructor(
             activity.startActivityForResult(intent, REQUEST_CODE_OVERLAY_PERMISSION)
         }
     }
+
+    private fun isAccessibilityServiceEnabled(context: Context): Boolean {
+        val service = "${context.packageName}/com.romellfudi.ussdlibrary.USSDService"
+        val enabledServicesSetting = Settings.Secure.getString(
+            context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        val accessibilityEnabled = Settings.Secure.getInt(
+            context.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED, 0
+        )
+        val colonSplitter = TextUtils.SimpleStringSplitter(':')
+        colonSplitter.setString(enabledServicesSetting)
+
+        while (colonSplitter.hasNext()) {
+            val componentName = colonSplitter.next()
+            if (componentName.equals(service, ignoreCase = true)) {
+                return accessibilityEnabled == 1
+            }
+        }
+        return false
+    }
+
+    private fun checkAccessibilityPermission(activity: Activity) {
+        if (!isAccessibilityServiceEnabled(context)) {
+            AlertDialog.Builder(activity)
+                .setTitle("Enable Accessibility Service")
+                .setMessage("You must enable the accessibility service to allow USSD operations.")
+                .setPositiveButton("OK") { _, _ ->
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    activity.startActivity(intent)
+                }
+                .show()
+        }
+    }
+
 
     companion object {
         const val REQUEST_CODE_PERMISSIONS = 1
