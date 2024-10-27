@@ -55,7 +55,7 @@ fun ProfileRoute(
 ) {
     val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
     val signOutState by profileViewModel.signOutState.collectAsStateWithLifecycle()
-    
+
     PermissionRequestComposable(
         onPermissionsGranted = {
         }
@@ -145,7 +145,7 @@ fun ProfileHeader(
             ) {
                 DynamicAsyncImage(
                     imageUrl = userImageUrl,
-                    imageRes = com.example.crbtjetcompose.core.ui.R.drawable.avatar
+                    imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_avatar
                 )
             }
         },
