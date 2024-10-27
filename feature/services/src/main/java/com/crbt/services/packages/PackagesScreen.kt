@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -36,14 +36,12 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +51,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tracing.trace
+import com.crbt.data.core.data.repository.PackagesFeedUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
@@ -64,16 +64,21 @@ import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.services.ServiceSheetContainer
 import com.crbt.services.ServicesViewModel
+import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
-import com.example.crbtjetcompose.core.model.data.CrbtPackage
+import com.example.crbtjetcompose.core.model.data.CrbtPackageCategory
 import com.example.crbtjetcompose.core.model.data.PackageItem
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun PackagesScreen() {
-    val viewModel: ServicesViewModel = hiltViewModel()
+fun PackagesScreen(
+    viewModel: ServicesViewModel = hiltViewModel()
+) {
+
+    val packagesFeedUiState by viewModel.packagesFlow.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -83,7 +88,8 @@ fun PackagesScreen() {
             onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
             onPurchasePackage = {}, //TODO implement onPurchasePackage
             actionEnabled = viewModel.isPhoneNumberValid,
-            actionLoading = false, //TODO implement actionLoading state
+            actionLoading = false, //TODO implement actionLoading state,
+            packagesFeedUiState = packagesFeedUiState
         )
     }
 }
@@ -96,6 +102,7 @@ fun PackageContent(
     actionEnabled: Boolean,
     actionLoading: Boolean,
     onPurchasePackage: (String) -> Unit,
+    packagesFeedUiState: PackagesFeedUiState
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var expandedItemId by remember { mutableStateOf<String?>(null) }
@@ -104,46 +111,64 @@ fun PackageContent(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
-    val pagerState = rememberPagerState(pageCount = { CrbtPackage.dummyPackages.size })
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            selectedTabIndex = page
-        }
-    }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        PackageTabs(
-            modifier = Modifier.fillMaxWidth(),
-            onTabSelected = {
-                selectedTabIndex = it
-            },
-            selectedTabIndex = selectedTabIndex,
-            tabs = CrbtPackage.dummyPackages
-        )
+        when (packagesFeedUiState) {
+            is PackagesFeedUiState.Loading -> CircularProgressIndicator()
+            is PackagesFeedUiState.Success -> {
+                when (packagesFeedUiState.feed.isEmpty()) {
+                    true -> {
+                        SurfaceCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            content = {
+                                EmptyContent(
+                                    description = stringResource(id = R.string.feature_services_no_packages),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 42.dp)
+                                )
+                            }
+                        )
+                    }
 
-        TabContent(
-            packageItems = PackageItem.dummyPackages.filter {
-                it.packageId == CrbtPackage.dummyPackages[selectedTabIndex].id
-            },
-            onBuyClick = {
-                showBottomSheet = true
-                isGiftPurchase = false
-            },
-            onGiftClick = {
-                showBottomSheet = true
-                isGiftPurchase = true
-            },
-            expandedItemId = expandedItemId,
-            onExpandItem = {
-                expandedItemId = if (expandedItemId == it) null else it
-            },
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxHeight()
-        )
+                    else -> {
+                        PackageTabs(
+                            modifier = Modifier.fillMaxWidth(),
+                            onTabSelected = {
+                                selectedTabIndex = it
+                            },
+                            selectedTabIndex = selectedTabIndex,
+                            tabs = packagesFeedUiState.feed.map { it.categories }
+                        )
+
+                        TabContent(
+                            packageItems = packagesFeedUiState.feed.flatMap { it.packageItems },
+                            onBuyClick = {
+                                showBottomSheet = true
+                                isGiftPurchase = false
+                            },
+                            onGiftClick = {
+                                showBottomSheet = true
+                                isGiftPurchase = true
+                            },
+                            expandedItemId = expandedItemId,
+                            onExpandItem = {
+                                expandedItemId = if (expandedItemId == it) null else it
+                            },
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxHeight()
+                        )
+                    }
+                }
+            }
+
+            is PackagesFeedUiState.Error -> Unit
+        }
 
         AnimatedVisibility(
             visible = showBottomSheet,
@@ -182,7 +207,7 @@ fun PackageTabs(
     modifier: Modifier = Modifier,
     onTabSelected: (Int) -> Unit,
     selectedTabIndex: Int,
-    tabs: List<CrbtPackage>,
+    tabs: List<CrbtPackageCategory>,
 ) = trace("PackageTabs") {
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
@@ -223,13 +248,26 @@ fun TabContent(
             LazyColumn(
                 contentPadding = PaddingValues(vertical = 16.dp),
             ) {
-                packageItemsFeed(
-                    packageItems = packageItems,
-                    onBuyClick = onBuyClick,
-                    onGiftClick = onGiftClick,
-                    expandedItemId = expandedItemId,
-                    onExpandItem = onExpandItem
-                )
+                when (packageItems.isEmpty()) {
+                    true -> {
+                        item {
+                            EmptyContent(
+                                description = stringResource(id = R.string.feature_services_no_packages_items),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
+                        }
+                    }
+
+                    else ->
+                        packageItemsFeed(
+                            packageItems = packageItems,
+                            onBuyClick = onBuyClick,
+                            onGiftClick = onGiftClick,
+                            expandedItemId = expandedItemId,
+                            onExpandItem = onExpandItem
+                        )
+                }
             }
         })
 }
@@ -337,8 +375,8 @@ fun LazyListScope.packageItemsFeed(
             title = item.title,
             description = item.description,
             price = item.price,
-            metaData = item.metaData,
-            validity = item.validity,
+            metaData = item.packageType,
+            validity = item.itemValidity(),
             customImage = "",
             onBuyClick = onBuyClick,
             onGiftClick = onGiftClick,
