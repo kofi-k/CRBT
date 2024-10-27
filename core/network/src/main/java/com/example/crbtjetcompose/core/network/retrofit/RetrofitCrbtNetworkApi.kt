@@ -1,22 +1,36 @@
 package com.example.crbtjetcompose.core.network.retrofit
 
+import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.Login
+import com.example.crbtjetcompose.core.network.model.LoginResponse
+import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
 import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
+import com.example.crbtjetcompose.core.network.model.NetworkUserAccountInfo
 import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
+import com.example.crbtjetcompose.core.network.model.UpdateUserInfo
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 
 interface RetrofitCrbtNetworkApi {
     @GET("songs")
     suspend fun getSongs(): CrbtNetworkResponse
 
-    @POST("service/subscribe")
-    suspend fun subscribe(
-        @Body subscriptionRequest: SubscriptionRequest
-    )
+    @GET("package/all")
+    suspend fun getPackageItems(): List<NetworkPackageItem>
+
+    @GET("package/all/category")
+    suspend fun getPackageCategories(): List<CrbtNetworkPackage>
+
+
+    @POST("songs/subscribe/{songId}")
+    suspend fun subscribeToCrbt(
+        @Path("songId") songId: Int,
+    ): String
 
     @POST("service/unsubscribe")
     suspend fun unsubscribe(
@@ -26,6 +40,14 @@ interface RetrofitCrbtNetworkApi {
     @POST("auth/login")
     suspend fun login(
         @Body loginRequest: Login
+    ): LoginResponse
+
+    @GET("user/account-info")
+    suspend fun getUserAccountInfo(): NetworkUserAccountInfo
+
+    @PUT("user/update-account-info")
+    suspend fun updateUserAccountInfo(
+        @Body updateUserInfo: UpdateUserInfo
     )
 
 }
