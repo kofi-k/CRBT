@@ -6,27 +6,27 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkPackageItem(
-    val id: String,
-    val packageId: String,
-    val title: String,
+    val id: Int,
+    val packageCatId: Int,
+    val packageName: String,
     val description: String,
     val price: String,
-    val validity: String,
-    val packageImage: String,
+    val packageValidity: String,
+    val packageImg: String,
     val ussdCode: String,
-    val metaData: String,
+    val packageType: String,
 )
 
 fun NetworkPackageItem.asExternalModel(): PackageItem {
     return PackageItem(
-        id = id,
-        packageId = packageId,
-        title = title,
+        id = id.toString(),
+        packageCatId = packageCatId.toString(),
+        title = packageName,
         description = description,
         price = price,
-        validity = validity,
-        packageImage = packageImage,
+        packageValidity = packageValidity,
+        packageImg = packageImg,
         ussdCode = ussdCode,
-        metaData = metaData,
+        packageType = packageType,
     )
 }
