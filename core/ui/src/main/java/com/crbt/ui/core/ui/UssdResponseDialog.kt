@@ -1,10 +1,12 @@
 package com.crbt.ui.core.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.crbt.data.core.data.CrbtUssdType
@@ -27,8 +29,10 @@ fun UssdResponseDialog(
                 text = when (message) {
                     is UssdUiStateMessage.Error -> message.title
                     is UssdUiStateMessage.Success -> message.title
-                    UssdUiStateMessage.Untitled -> stringResource(id = desR.string.core_designsystem_untitled)
-                }
+                    is UssdUiStateMessage.Untitled -> stringResource(id = desR.string.core_designsystem_untitled)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             )
         },
         text = {
@@ -36,7 +40,7 @@ fun UssdResponseDialog(
                 text = when (message) {
                     is UssdUiStateMessage.Error -> message.message
                     is UssdUiStateMessage.Success -> message.message
-                    UssdUiStateMessage.Untitled -> stringResource(id = desR.string.core_designsystem_untitled)
+                    is UssdUiStateMessage.Untitled -> stringResource(id = desR.string.core_designsystem_untitled)
                 }
             )
         },
