@@ -25,15 +25,20 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         firstName: String,
         lastName: String,
         phoneNumber: String,
-        langPref: String
+        langPref: String,
     ) {
         crbtPreferencesDataSource.setUserInfo(
             firstName,
             lastName,
             phoneNumber,
-            langPref
+            langPref,
         )
         analyticsHelper.logUserDetails(firstName, lastName, phoneNumber, langPref)
+    }
+
+    override suspend fun updateCrbtSubscriptionId(subscriptionId: Int) {
+        crbtPreferencesDataSource.updateCrbtSubscriptionId(subscriptionId.toString())
+        analyticsHelper.logCrbtToneSubscription(subscriptionId.toString())
     }
 
     override suspend fun setPhoneNumber(phoneNumber: String) =

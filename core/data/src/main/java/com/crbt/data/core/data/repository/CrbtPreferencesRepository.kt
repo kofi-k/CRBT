@@ -18,6 +18,8 @@ interface CrbtPreferencesRepository {
         langPref: String,
     )
 
+    suspend fun updateCrbtSubscriptionId(subscriptionId: Int)
+
     suspend fun setPhoneNumber(phoneNumber: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
