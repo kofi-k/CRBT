@@ -47,7 +47,7 @@ class UserCRbtSongResource internal constructor(
         subscriptionType = crbtSongResource.subscriptionType,
         price = crbtSongResource.price,
         category = crbtSongResource.category,
-        isSubscribed = crbtSongResource.id == userPreferencesData.currentCrbtSubscriptionId,
+        isSubscribed = crbtSongResource.id == userPreferencesData.currentCrbtSubscriptionId.toString(),
         hasGiftedSong = crbtSongResource.id in userPreferencesData.giftedCrbtToneIds,
     )
 }

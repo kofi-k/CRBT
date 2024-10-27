@@ -25,7 +25,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                 email = it.userEmail,
                 currentBalance = it.userBalance,
                 interestedCrbtLanguages = it.interestedCrbtLanguages.keys,
-                currentCrbtSubscriptionId = it.currentCrbtSubscriptionId,
+                currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
                 token = it.token
             )
@@ -110,9 +110,16 @@ class CrbtPreferencesDataSource @Inject constructor(
                     userLanguageCode = languageCode
                 }
             }
-            Log.d("CrbtPreferences", "User info updated successfully")
         } catch (ioException: IOException) {
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
+    suspend fun updateCrbtSubscriptionId(subscriptionId: String) {
+        userPreferences.updateData {
+            it.copy {
+                currentCrbtSubscriptionId = subscriptionId
+            }
         }
     }
 

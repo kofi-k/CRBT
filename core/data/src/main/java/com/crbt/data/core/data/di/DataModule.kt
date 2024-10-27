@@ -7,13 +7,15 @@ import com.crbt.data.core.data.phoneAuth.PhoneAuthRepositoryImpl
 import com.crbt.data.core.data.repository.CompositeUserCrbtSongsRepository
 import com.crbt.data.core.data.repository.CrbtMusicRepository
 import com.crbt.data.core.data.repository.CrbtMusicRepositoryImpl
+import com.crbt.data.core.data.repository.CrbtPackagesRepository
+import com.crbt.data.core.data.repository.CrbtPackagesRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtPreferencesRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtUserMonitor
 import com.crbt.data.core.data.repository.LoginManager
-import com.crbt.data.core.data.repository.MusicRepository
-import com.crbt.data.core.data.repository.MusicRepositoryImpl
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
+import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
+import com.crbt.data.core.data.repository.network.CrbtNetworkRepositoryImpl
 import com.crbt.data.core.data.util.ConnectivityManagerNetworkMonitor
 import com.crbt.data.core.data.util.NetworkMonitor
 import dagger.Binds
@@ -36,6 +38,11 @@ abstract class DataModule {
     ): NetworkMonitor
 
     @Binds
+    abstract fun bindsCrbtNetworkRepository(
+        crbtNetworkRepositoryImpl: CrbtNetworkRepositoryImpl
+    ): CrbtNetworkRepository
+
+    @Binds
     abstract fun bindsPhoneAuthRepository(
         phoneAuthRepositoryImpl: PhoneAuthRepositoryImpl
     ): PhoneAuthRepository
@@ -44,11 +51,6 @@ abstract class DataModule {
     abstract fun bindsCrbtPreferencesRepository(
         crbtPreferencesRepositoryImpl: CrbtPreferencesRepositoryImpl
     ): CrbtPreferencesRepository
-
-    @Binds
-    abstract fun bindsMusicRepository(
-        musicRepositoryImpl: MusicRepositoryImpl
-    ): MusicRepository
 
     @Binds
     abstract fun bindsCrbtUserMonitor(
@@ -65,4 +67,8 @@ abstract class DataModule {
         musicControllerImpl: MusicControllerImpl
     ): MusicController
 
+    @Binds
+    abstract fun bindsCrbtPackagesRepository(
+        crbtPackageRepositoryImpl: CrbtPackagesRepositoryImpl
+    ): CrbtPackagesRepository
 }
