@@ -2,7 +2,7 @@ package com.crbt.data.core.data.repository
 
 import com.crbt.common.core.common.network.CrbtDispatchers
 import com.crbt.common.core.common.network.Dispatcher
-import com.example.crbtjetcompose.core.network.repository.CrbtNetworkRepository
+import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -52,8 +52,16 @@ class CrbtUserMonitor @Inject constructor(
             accountType = accountType,
             langPref = langPref
         )
-        crbtPreferencesRepository.setSignInToken(response.token)
-        getAccountInfo()
+        with(response) {
+            crbtPreferencesRepository.setSignInToken(token)
+            crbtPreferencesRepository.setUserInfo(
+                firstName = account.firstName ?: "",
+                lastName = account.lastName ?: "",
+                phoneNumber = phone,
+                langPref = langPref,
+            )
+            crbtPreferencesRepository.updateCrbtSubscriptionId(account.subSongId)
+        }
     }
 
 
@@ -64,7 +72,7 @@ class CrbtUserMonitor @Inject constructor(
                 firstName,
                 lastName,
                 phone,
-                langPref
+                langPref,
             )
         }
     }
