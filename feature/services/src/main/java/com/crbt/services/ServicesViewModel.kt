@@ -10,11 +10,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.CrbtUssdType
-import com.crbt.data.core.data.repository.CrbtPackageResourcesRepository
 import com.crbt.data.core.data.repository.PackagesFeedUiState
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.extractBalance
+import com.crbt.domain.GetEthioPackagesUseCase
 import com.crbt.domain.GetUserDataPreferenceUseCase
 import com.crbt.domain.UpdateUserBalanceUseCase
 import com.crbt.domain.UserPreferenceUiState
@@ -33,8 +33,8 @@ class ServicesViewModel @Inject constructor(
     private val repository: UssdRepository,
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     private val updateBalanceUseCase: UpdateUserBalanceUseCase,
-    userPackageResourcesRepository: CrbtPackageResourcesRepository,
     savedStateHandle: SavedStateHandle,
+    getEthioPackagesUseCase: GetEthioPackagesUseCase
 ) : ViewModel() {
 
     val topUpAmount: StateFlow<String?> =
@@ -54,12 +54,12 @@ class ServicesViewModel @Inject constructor(
 
 
     val packagesFlow: StateFlow<PackagesFeedUiState> =
-        userPackageResourcesRepository.observeCrbtPackageResources()
+        getEthioPackagesUseCase()
             .map {
                 when (it) {
                     is PackagesFeedUiState.Loading -> PackagesFeedUiState.Loading
                     is PackagesFeedUiState.Success -> PackagesFeedUiState.Success(it.feed)
-                    else -> PackagesFeedUiState.Success(emptyList())
+                    is PackagesFeedUiState.Error -> PackagesFeedUiState.Success(emptyList())
                 }
             }
             .stateIn(

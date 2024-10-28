@@ -1,12 +1,17 @@
 package com.crbt.services.packages
 
+import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,13 +52,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tracing.trace
+import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.repository.PackagesFeedUiState
+import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ProcessButton
@@ -66,18 +75,25 @@ import com.crbt.services.ServiceSheetContainer
 import com.crbt.services.ServicesViewModel
 import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
+import com.crbt.ui.core.ui.UssdResponseDialog
 import com.example.crbtjetcompose.core.model.data.CrbtPackageCategory
 import com.example.crbtjetcompose.core.model.data.PackageItem
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PackagesScreen(
     viewModel: ServicesViewModel = hiltViewModel()
 ) {
 
     val packagesFeedUiState by viewModel.packagesFlow.collectAsStateWithLifecycle()
+    val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -86,10 +102,32 @@ fun PackagesScreen(
         PackageContent(
             modifier = Modifier.padding(bottom = 16.dp),
             onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
-            onPurchasePackage = {}, //TODO implement onPurchasePackage
+            onPurchasePackage = { code ->
+                viewModel.runUssdCode(
+                    ussdCode = code,
+                    onSuccess = {
+                        showDialog = true
+                    },
+                    onError = {
+                        showDialog = true
+                    },
+                    ussdType = CrbtUssdType.PACKAGE_SUBSCRIBE,
+                    activity = context as Activity
+                )
+            },
             actionEnabled = viewModel.isPhoneNumberValid,
-            actionLoading = false, //TODO implement actionLoading state,
+            actionLoading = ussdUiState is UssdUiState.Loading,
             packagesFeedUiState = packagesFeedUiState
+        )
+    }
+
+    if (showDialog) {
+        UssdResponseDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            ussdUiState = ussdUiState,
+            crbtUssdType = CrbtUssdType.PACKAGE_SUBSCRIBE
         )
     }
 }
@@ -110,6 +148,7 @@ fun PackageContent(
     var isGiftPurchase by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
+    var selectedItem by remember { mutableStateOf<PackageItem?>(null) }
 
     Column(
         modifier = modifier,
@@ -142,18 +181,20 @@ fun PackageContent(
                                 selectedTabIndex = it
                             },
                             selectedTabIndex = selectedTabIndex,
-                            tabs = packagesFeedUiState.feed.map { it.categories }
+                            tabs = packagesFeedUiState.feed.map { it.category }
                         )
 
                         TabContent(
-                            packageItems = packagesFeedUiState.feed.flatMap { it.packageItems },
+                            packageItems = packagesFeedUiState.feed[selectedTabIndex].packageItems,
                             onBuyClick = {
                                 showBottomSheet = true
                                 isGiftPurchase = false
+                                selectedItem = it
                             },
                             onGiftClick = {
                                 showBottomSheet = true
                                 isGiftPurchase = true
+                                selectedItem = it
                             },
                             expandedItemId = expandedItemId,
                             onExpandItem = {
@@ -180,7 +221,7 @@ fun PackageContent(
                     showBottomSheet = false
                     scope.launch {
                         sheetState.hide()
-                        onPurchasePackage(expandedItemId!!)
+                        onPurchasePackage(selectedItem?.ussdCode ?: "")
                     }
                 },
                 onDismissClick = {
@@ -191,8 +232,8 @@ fun PackageContent(
                 },
                 isGiftPurchase = isGiftPurchase,
                 onPhoneNumberChanged = onPhoneNumberChanged,
-                price = PackageItem.dummyPackages.first().price,
-                packageName = PackageItem.dummyPackages.first().title,
+                price = selectedItem?.price ?: "",
+                packageName = selectedItem?.title ?: "",
                 sheetState = sheetState,
                 actionEnabled = if (isGiftPurchase) actionEnabled else true,
                 actionLoading = actionLoading
@@ -227,7 +268,12 @@ fun PackageTabs(
                         color = if (selectedTabIndex == index) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                     )
                     .padding(horizontal = 12.dp, vertical = 4.dp)
-                    .clickable { onTabSelected(index) }
+                    .clickable(
+                        onClick = { onTabSelected(index) },
+                        role = Role.Tab,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = LocalIndication.current,
+                    )
             )
         }
     }
@@ -237,8 +283,8 @@ fun PackageTabs(
 fun TabContent(
     modifier: Modifier = Modifier,
     packageItems: List<PackageItem>,
-    onBuyClick: (String) -> Unit,
-    onGiftClick: (String) -> Unit,
+    onBuyClick: (PackageItem) -> Unit,
+    onGiftClick: (PackageItem) -> Unit,
     expandedItemId: String?,
     onExpandItem: (String) -> Unit,
 ) {
@@ -363,8 +409,8 @@ fun ButtonActionRow(
 
 fun LazyListScope.packageItemsFeed(
     packageItems: List<PackageItem>,
-    onBuyClick: (String) -> Unit,
-    onGiftClick: (String) -> Unit,
+    onBuyClick: (PackageItem) -> Unit,
+    onGiftClick: (PackageItem) -> Unit,
     onExpandItem: (String) -> Unit,
     expandedItemId: String?,
 ) {
@@ -377,9 +423,9 @@ fun LazyListScope.packageItemsFeed(
             price = item.price,
             metaData = item.packageType,
             validity = item.itemValidity(),
-            customImage = "",
-            onBuyClick = onBuyClick,
-            onGiftClick = onGiftClick,
+            customImage = item.packageImg,
+            onBuyClick = { onBuyClick(item) },
+            onGiftClick = { onGiftClick(item) },
             expanded = { expandedItemId == item.id },
             onExpandItem = onExpandItem,
         )
@@ -400,9 +446,9 @@ fun ItemCard(
     price: String,
     metaData: String,
     validity: String,
-    customImage: String,
-    onBuyClick: (String) -> Unit,
-    onGiftClick: (String) -> Unit,
+    customImage: String?,
+    onBuyClick: () -> Unit,
+    onGiftClick: () -> Unit,
     expanded: (String) -> Boolean,
     onExpandItem: (String) -> Unit,
 ) {
@@ -416,7 +462,7 @@ fun ItemCard(
             onClick = { onExpandItem(id) },
             headlineText = title,
             leadingContent = {
-                if (customImage.isEmpty()) {
+                if (customImage.isNullOrEmpty()) {
                     Icon(
                         imageVector = CrbtIcons.Packages,
                         contentDescription = null,
@@ -426,10 +472,10 @@ fun ItemCard(
                 } else {
                     Box(
                         modifier = Modifier
-                            .size(80.dp)
+                            .size(50.dp)
                             .clip(MaterialTheme.shapes.large)
                     ) {
-                        DynamicAsyncImage(imageUrl = customImage)
+                        DynamicAsyncImage(base64ImageString = customImage)
                     }
                 }
             },
@@ -496,14 +542,14 @@ fun ItemCard(
                     .padding(bottom = 16.dp),
             ) {
                 ProcessButton(
-                    onClick = { onGiftClick(id) },
+                    onClick = onGiftClick,
                     text = stringResource(id = R.string.feature_services_gift_button),
                     colors = ButtonDefaults.filledTonalButtonColors(),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 ProcessButton(
-                    onClick = { onBuyClick(id) },
+                    onClick = onBuyClick,
                     text = stringResource(id = R.string.feature_services_buy),
                     modifier = Modifier.weight(1f)
                 )
