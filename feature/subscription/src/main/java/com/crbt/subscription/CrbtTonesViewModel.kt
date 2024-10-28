@@ -15,7 +15,6 @@ import com.crbt.domain.ResumeSongUseCase
 import com.crbt.domain.SkipToNextSongUseCase
 import com.crbt.domain.SkipToPreviousSongUseCase
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.core.model.data.asCrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -66,9 +65,9 @@ class CrbtTonesViewModel @Inject constructor(
             crbtSongsFlow.collect { feed ->
                 tonesUiState = when (feed) {
                     is CrbtSongsFeedUiState.Success -> {
-                        addMediaItemsUseCase(feed.songs.map { it.asCrbtSongResource() })
+                        addMediaItemsUseCase(feed.songs)
                         tonesUiState.copy(
-                            songs = feed.songs.map { it.asCrbtSongResource() },
+                            songs = feed.songs,
                             loading = false
                         )
                     }

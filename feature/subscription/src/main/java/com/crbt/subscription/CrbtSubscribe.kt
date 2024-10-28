@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +53,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.SubscriptionBillingType
-import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
@@ -68,6 +68,7 @@ import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -83,27 +84,23 @@ internal fun CrbtSubscribeScreen(
 
     val isGiftSub by viewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val crbtSong by viewModel.crbtSongResource.collectAsStateWithLifecycle()
-    val ussdState by viewModel.ussdState.collectAsStateWithLifecycle()
+    val subscriptionUiState by viewModel.subscriptionUiState.collectAsStateWithLifecycle()
+    val isUserOnCrbtSubscription by viewModel.isUserOnCrbtSubscription.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(ussdState) {
-        when (ussdState) {
-            is UssdUiState.Success -> {
+
+    LaunchedEffect(subscriptionUiState) {
+        when (subscriptionUiState) {
+            is SubscriptionUiState.Success -> onSubscribeClick()
+
+            is SubscriptionUiState.Error -> {
                 snackbarHostState.showSnackbar(
-                    message = (ussdState as UssdUiState.Success).response,
+                    message = (subscriptionUiState as SubscriptionUiState.Error).error,
                     duration = SnackbarDuration.Short
                 )
-                onSubscribeClick()
-            }
-
-            is UssdUiState.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = (ussdState as UssdUiState.Error).error,
-                    duration = SnackbarDuration.Short
-                )
-                onSubscribeClick()
             }
 
             else -> Unit
@@ -133,15 +130,22 @@ internal fun CrbtSubscribeScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             onSubscribeClick = {
-                viewModel.runUssdCode(
-                    ussdCode = crbtSong?.ussdCode ?: "",
-                    onSuccess = {},
-                    onError = { _ -> },
-                    activity = context as Activity
-                )
+                if (isUserOnCrbtSubscription == true) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "You are already on a CRBT subscription",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                } else {
+                    viewModel.subscribeToTone(
+                        ussdCode = crbtSong?.ussdCode ?: "",
+                        activity = context as Activity
+                    )
+                }
             },
             subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-            isSubscriptionProcessing = ussdState is UssdUiState.Loading,
+            isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
             isButtonEnabled = crbtSong != null
         )
     }
