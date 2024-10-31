@@ -80,7 +80,7 @@ import com.example.crbtjetcompose.core.ui.R as UiR
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
-    onOTPVerified: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -92,7 +92,7 @@ fun OnboardingScreen(
 
     val viewModel: OnboardingViewModel = hiltViewModel()
     val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
-    val authState by phoneAuthViewModel.authState.collectAsStateWithLifecycle()
+    val authState by phoneAuthViewModel.phoneAuthState.collectAsStateWithLifecycle()
     val screenData = viewModel.onboardingScreenData
     val onboardingSetupData = viewModel.onboardingSetupData
     val scope = rememberCoroutineScope()
@@ -144,19 +144,20 @@ fun OnboardingScreen(
 
                         OnboardingSetupProcess.OTP_VERIFICATION -> {
                             phoneAuthViewModel.verifyCode(
-                                otpCode = viewModel.otpCode
+                                otpCode = viewModel.otpCode,
+                                phone = onboardingSetupData.phoneNumber,
+                                accountType = "user",
+                                langPref = onboardingSetupData.selectedLanguage
                             )
                             when (authState) {
                                 is AuthState.Error -> {
-                                    onOTPVerified() // todo remove this line, it's for testing
-                                    viewModel.onDoneClicked()
                                     scope.launch {
                                         bottomSheetScaffoldState.bottomSheetState.hide()
                                     }
                                 }
 
                                 is AuthState.Success -> {
-                                    onOTPVerified()
+                                    navigateToHome()
                                     viewModel.onDoneClicked()
                                     scope.launch {
                                         bottomSheetScaffoldState.bottomSheetState.hide()
@@ -246,7 +247,7 @@ fun OnboardingTextContent(
                 .fillMaxHeight(0.5f)
         ) {
             Image(
-                painter = painterResource(id = UiR.drawable.ui_crbtlogo),
+                painter = painterResource(id = UiR.drawable.core_ui_crbtlogo),
                 contentDescription = "logo",
                 modifier = Modifier
                     .fillMaxWidth()

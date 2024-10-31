@@ -2,6 +2,7 @@ package com.example.crbtjetcompose.core.model.data
 
 data class UserPreferencesData(
     val userId: String,
+    val token: String,
     val isUserSignedIn: Boolean,
     val phoneNumber: String,
     val languageCode: String,
@@ -13,7 +14,7 @@ data class UserPreferencesData(
     val email: String,
     val currentBalance: Double,
     val interestedCrbtLanguages: Set<String>,
-    val currentCrbtSubscriptionId: String,
+    val currentCrbtSubscriptionId: Int,
     val giftedCrbtToneIds: Set<String>,
 )
 

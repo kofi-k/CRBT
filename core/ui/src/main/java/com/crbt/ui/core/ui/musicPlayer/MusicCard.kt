@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -17,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,13 +33,17 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.CustomGradientColors
+import com.crbt.designsystem.theme.bodyFontFamily
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.example.crbtjetcompose.core.ui.R
 
 
 @Composable
 fun MusicCard(
     modifier: Modifier = Modifier,
     cRbtSong: CrbtSongResource,
+    selectedSong: CrbtSongResource?, // todo find a solution for this quick fix ffs!!
     musicControllerUiState: MusicControllerUiState,
     onPlayerEvent: (TonesPlayerEvent) -> Unit
 ) {
@@ -66,13 +74,9 @@ fun MusicCard(
                             if (isPlaying) TonesPlayerEvent.PauseSong else TonesPlayerEvent.ResumeSong
                         )
                     },
-                    onSkipPreviousClick = {
-                        onPlayerEvent(TonesPlayerEvent.SkipToPreviousSong)
-                    },
-                    onSkipNextClick = {
-                        onPlayerEvent(TonesPlayerEvent.SkipToNextSong)
-                    },
-                    isPlaying = isPlaying
+                    isPlaying = isPlaying,
+                    price = selectedSong?.price ?: "0.00",
+                    numberOfSubscribers = selectedSong?.numberOfSubscribers ?: 0
                 )
             }
         },
@@ -125,40 +129,66 @@ fun MusicInfo(
 @Composable
 fun MusicControls(
     onPausePlayToggle: () -> Unit,
-    onSkipPreviousClick: () -> Unit,
-    onSkipNextClick: () -> Unit,
     isPlaying: Boolean,
+    price: String,
+    numberOfSubscribers: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        IconButton(
-            onClick = onSkipPreviousClick,
-            modifier = Modifier.size(48.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            horizontalAlignment = Alignment.End
         ) {
-            Icon(imageVector = CrbtIcons.Previous, contentDescription = null)
+            SurfaceCard(content = {
+                Text(
+                    text = "$price ETB",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        brush = Brush.linearGradient(CustomGradientColors),
+                        fontFamily = bodyFontFamily
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(6.dp, 2.dp)
+                )
+            })
+
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = CrbtIcons.People,
+                    contentDescription = CrbtIcons.People.name,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = pluralStringResource(
+                        id = R.plurals.core_ui_music_player_subscribers,
+                        count = numberOfSubscribers,
+                        numberOfSubscribers
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            }
         }
+
         IconButton(
             onClick = onPausePlayToggle,
-            modifier = Modifier
-                .size(48.dp),
-            colors = IconButtonDefaults.filledTonalIconButtonColors()
+            colors = IconButtonDefaults.iconButtonColors()
         ) {
             Icon(
                 imageVector = if (isPlaying) CrbtIcons.Pause else CrbtIcons.PlayArrow,
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.size(56.dp)
             )
         }
-        IconButton(
-            onClick = onSkipNextClick,
-            modifier = Modifier.size(48.dp)
-        ) {
-            Icon(imageVector = CrbtIcons.Next, contentDescription = null)
-        }
-
     }
 }
 
@@ -170,7 +200,8 @@ fun MusicCardPreview() {
         MusicCard(
             musicControllerUiState = MusicControllerUiState(),
             onPlayerEvent = {},
-            cRbtSong = DummyTones.tones[0]
+            cRbtSong = DummyTones.tones[0],
+            selectedSong = DummyTones.tones[0]
         )
     }
 }

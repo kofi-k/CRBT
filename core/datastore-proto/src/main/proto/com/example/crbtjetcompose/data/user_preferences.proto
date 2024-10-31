@@ -19,6 +19,7 @@ message UserPreferences {
   string user_currency = 16;
   string current_crbt_subscription_id = 17;
   double user_balance = 19;
+  string token = 25;
 
   repeated string deprecated_interested_crbt_languages = 21;
   repeated string deprecated_gifted_crbt_tone_ids = 22;

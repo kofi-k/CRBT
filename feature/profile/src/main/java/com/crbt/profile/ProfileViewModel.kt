@@ -6,11 +6,14 @@ import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
 import com.crbt.data.core.data.phoneAuth.SignOutState
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
+import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.example.crbtjetcompose.core.model.data.CrbtUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,7 +24,15 @@ import kotlin.time.Duration.Companion.seconds
 class ProfileViewModel @Inject constructor(
     private val phoneAuthRepository: PhoneAuthRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
+    private val loginManager: LoginManager,
 ) : ViewModel() {
+
+    private val _userInfoUiState =
+        MutableStateFlow<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
+    val userInfoUiState: StateFlow<UpdateUserInfoUiState> = _userInfoUiState.asStateFlow()
+
+    private val _signOutState = MutableStateFlow<SignOutState>(SignOutState.Idle)
+    val signOutState: StateFlow<SignOutState> = _signOutState
 
     val userResultState: StateFlow<Result<CrbtUser>> =
         crbtPreferencesRepository.userPreferencesData
@@ -44,8 +55,6 @@ class ProfileViewModel @Inject constructor(
                 initialValue = Result.Loading,
             )
 
-    private val _signOutState = MutableStateFlow<SignOutState>(SignOutState.Idle)
-    val signOutState: StateFlow<SignOutState> = _signOutState
 
     fun signOut(signedOut: () -> Unit) {
         _signOutState.value = SignOutState.Loading
@@ -71,11 +80,14 @@ class ProfileViewModel @Inject constructor(
         lastName: String,
     ) {
         viewModelScope.launch {
-            crbtPreferencesRepository.setUserInfo(
-                firstName = firstName,
-                lastName = lastName,
-                email = "", // todo add email for user
-            )
+            viewModelScope.launch {
+                loginManager.updateUserInfo(
+                    firstName = firstName,
+                    lastName = lastName
+                ).collect {
+                    _userInfoUiState.value = it
+                }
+            }
         }
     }
 

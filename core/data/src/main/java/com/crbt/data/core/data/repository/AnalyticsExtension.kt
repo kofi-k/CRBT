@@ -38,12 +38,20 @@ internal fun AnalyticsHelper.logCrbtToneUnsubscription(toneId: String) {
     )
 }
 
-internal fun AnalyticsHelper.logUserPreferedLanguage(languageCode: String) {
+internal fun AnalyticsHelper.logUserDetails(
+    firstName: String,
+    lastName: String,
+    phoneNumber: String,
+    langPref: String,
+) {
     logEvent(
         AnalyticsEvent(
-            type = "user_preferred_language",
+            type = "user_info_update",
             extras = listOf(
-                AnalyticsEvent.Param(key = "language_code", value = languageCode),
+                AnalyticsEvent.Param(key = "first_name", value = firstName),
+                AnalyticsEvent.Param(key = "last_name", value = lastName),
+                AnalyticsEvent.Param(key = "phone_number", value = phoneNumber),
+                AnalyticsEvent.Param(key = "lang_pref", value = langPref),
             ),
         ),
     )

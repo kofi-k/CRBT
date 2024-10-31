@@ -1,7 +1,7 @@
 package com.crbt.data.core.data.repository
 
 import com.crbt.common.core.common.result.Result
-import com.example.crbtjetcompose.core.model.data.UserCRbtSongResource
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.core.model.data.mapToUserCrbtSongResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -18,7 +18,7 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                 when (songs) {
                     is CrbtMusicResourceUiState.Success -> {
                         val crbtSongs = songs.songs.mapToUserCrbtSongResource(userPreferences)
-                        CrbtSongsFeedUiState.Success(crbtSongs)
+                        CrbtSongsFeedUiState.Success(songs.songs)
                     }
 
                     is CrbtMusicResourceUiState.Error -> {
@@ -31,14 +31,14 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                 }
             }
 
-    override fun observeLatestCrbtMusic(): Flow<Result<UserCRbtSongResource>> =
+    override fun observeLatestCrbtMusic(): Flow<Result<CrbtSongResource>> =
         observeAllCrbtMusic()
             .map { crbtSongsFeedUiState ->
                 when (crbtSongsFeedUiState) {
                     is CrbtSongsFeedUiState.Success -> {
                         when (crbtSongsFeedUiState.songs.isEmpty()) {
                             true -> Result.Error(Exception("No songs found"))
-                            false -> Result.Success(crbtSongsFeedUiState.songs.maxByOrNull { it.date }!!)
+                            false -> Result.Success(crbtSongsFeedUiState.songs.maxByOrNull { it.createdAt }!!)
                         }
                     }
 

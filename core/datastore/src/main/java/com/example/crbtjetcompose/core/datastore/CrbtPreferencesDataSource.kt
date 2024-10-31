@@ -25,17 +25,18 @@ class CrbtPreferencesDataSource @Inject constructor(
                 email = it.userEmail,
                 currentBalance = it.userBalance,
                 interestedCrbtLanguages = it.interestedCrbtLanguages.keys,
-                currentCrbtSubscriptionId = it.currentCrbtSubscriptionId,
+                currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
+                token = it.token
             )
         }
 
-    suspend fun setUserId(id: String) {
+    suspend fun setSignInToken(userToken: String) {
         try {
             userPreferences.updateData {
                 it.copy {
-                    userId = id
-                    isUserSignedIn = id.isNotBlank()
+                    token = userToken
+                    isUserSignedIn = userToken.isNotBlank()
                 }
             }
         } catch (ioException: IOException) {
@@ -43,13 +44,6 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setUserLanguageCode(languageCode: String) {
-        userPreferences.updateData {
-            it.copy {
-                userLanguageCode = languageCode
-            }
-        }
-    }
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String) {
         userPreferences.updateData {
@@ -100,25 +94,20 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setCurrentCrbtSubscriptionId(id: String) {
-        userPreferences.updateData {
-            it.copy {
-                currentCrbtSubscriptionId = id
-            }
-        }
-    }
 
     suspend fun setUserInfo(
         firstName: String,
         lastName: String,
-        email: String,
+        phone: String,
+        languageCode: String,
     ) {
         try {
             userPreferences.updateData {
                 it.copy {
                     userFirstName = firstName
                     userLastName = lastName
-                    userEmail = email
+                    userPhoneNumber = phone
+                    userLanguageCode = languageCode
                 }
             }
         } catch (ioException: IOException) {
@@ -126,29 +115,14 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setSubscribedCrbtToneIds(ids: Set<String>) {
-        try {
-            userPreferences.updateData {
-                it.copy {
-                    subscribedCrbtToneIds.putAll(ids.associateWith { true })
-                }
+    suspend fun updateCrbtSubscriptionId(subscriptionId: String) {
+        userPreferences.updateData {
+            it.copy {
+                currentCrbtSubscriptionId = subscriptionId
             }
-        } catch (ioException: IOException) {
-            Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
         }
     }
 
-    suspend fun setUnsubscribedCrbtToneIds(ids: String) {
-        try {
-            userPreferences.updateData {
-                it.copy {
-                    unsubscribedCrbtToneIds.put(ids, true)
-                }
-            }
-        } catch (ioException: IOException) {
-            Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
-        }
-    }
 
     suspend fun clearUserPreferences() {
         try {
@@ -169,6 +143,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                     interestedCrbtLanguages.clear()
                     currentCrbtSubscriptionId = ""
                     userBalance = 0.0
+                    token = ""
                 }
             }
         } catch (ioException: IOException) {

@@ -9,23 +9,26 @@ interface CrbtPreferencesRepository {
 
     suspend fun setFirstLaunch(isFirstLaunch: Boolean)
 
-    suspend fun setUserId(userId: String)
+    suspend fun setSignInToken(token: String)
 
-    suspend fun setUserInfo(firstName: String, lastName: String, email: String)
+    suspend fun setUserInfo(
+        firstName: String,
+        lastName: String,
+        phoneNumber: String,
+        langPref: String,
+    )
+
+    suspend fun updateCrbtSubscriptionId(subscriptionId: Int)
 
     suspend fun setPhoneNumber(phoneNumber: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
-
-    suspend fun setUserLanguageCode(languageCode: String)
 
     suspend fun setUserPaymentMethod(paymentMethod: String)
 
     suspend fun clearUserPreferences()
 
     suspend fun setUserBalance(balance: Double)
-
-    suspend fun setCurrentCrbtSubscriptionId(subscriptionId: String)
 
     suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
 

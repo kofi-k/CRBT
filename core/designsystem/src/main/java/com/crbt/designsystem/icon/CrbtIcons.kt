@@ -50,6 +50,7 @@ import androidx.compose.material.icons.rounded.Numbers
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.Payment
+import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PhotoLibrary
@@ -91,6 +92,7 @@ object CrbtIcons {
     val FilterList = Icons.Rounded.FilterList
     val Delete = Icons.Rounded.Delete
     val EditNote = Icons.Rounded.EditNote
+    val People = Icons.Rounded.People
 
     val Camera = Icons.Rounded.Camera
     val AddPhoto = Icons.Rounded.AddAPhoto

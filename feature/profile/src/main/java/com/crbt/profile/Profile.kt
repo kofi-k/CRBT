@@ -27,11 +27,14 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,6 +64,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.crbt.common.core.common.result.Result
+import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.data.core.data.util.copyImageToInternalStorage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.ThemePreviews
@@ -68,10 +72,12 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.EmailCheck
+import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
 import com.example.crbtjetcompose.core.model.data.CrbtUser
 import com.example.crbtjetcompose.feature.profile.R
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -81,6 +87,10 @@ fun Profile(
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
+    val userInfoUiState by profileViewModel.userInfoUiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
 
     when (userResult) {
         is Result.Loading -> CircularProgressIndicator()
@@ -89,15 +99,42 @@ fun Profile(
             ProfileContent(
                 modifier = modifier,
                 userData = (userResult as Result.Success<CrbtUser>).data,
-                onSaveButtonClicked = onSaveButtonClicked,
-                saveProfile = { firstName, lastName ->
+                saveProfile = { firstName, lastName, profileImage ->
                     profileViewModel.saveProfile(firstName, lastName)
+                    profileViewModel.saveProfileImage(profileImage)
+                    when (userInfoUiState) {
+                        is UpdateUserInfoUiState.Success -> {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    "Profile Updated",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                            onSaveButtonClicked()
+                        }
+
+                        is UpdateUserInfoUiState.Error -> {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+
+                        else -> {}
+                    }
                 },
-                saveProfileImage = { profileUrl ->
-                    profileViewModel.saveProfileImage(profileUrl)
-                },
+                isSaving = userInfoUiState is UpdateUserInfoUiState.Loading,
             )
         }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        MessageSnackbar(
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -105,9 +142,8 @@ fun Profile(
 fun ProfileContent(
     modifier: Modifier = Modifier,
     userData: CrbtUser,
-    onSaveButtonClicked: () -> Unit,
-    saveProfile: (firstName: String, lastName: String) -> Unit,
-    saveProfileImage: (String) -> Unit,
+    saveProfile: (firstName: String, lastName: String, profileImage: String) -> Unit,
+    isSaving: Boolean,
 ) {
     var profileImage by rememberSaveable {
         mutableStateOf(Uri.parse(userData.profileUrl))
@@ -191,21 +227,22 @@ fun ProfileContent(
 
             ProcessButton(
                 onClick = {
-                    saveProfile(firstName, lastName)
-                    if (profileImage != Uri.EMPTY) {
-                        saveProfileImage(
+                    saveProfile(
+                        firstName,
+                        lastName,
+                        if (profileImage != Uri.EMPTY)
                             copyImageToInternalStorage(
                                 context,
                                 profileImage
                             ).toString()
-                        )
-                    }
-                    onSaveButtonClicked()
+                        else ""
+                    )
                 },
                 isEnabled = isButtonEnabled,
                 modifier = modifier
                     .fillMaxWidth(),
-                text = stringResource(id = R.string.feature_profile_save_profile_button)
+                text = stringResource(id = R.string.feature_profile_save_profile_button),
+                isProcessing = isSaving
             )
         }
     }

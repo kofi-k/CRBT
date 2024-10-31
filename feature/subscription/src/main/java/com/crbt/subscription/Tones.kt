@@ -231,6 +231,7 @@ fun TonesScreen(
                     cRbtSong = currentSong,
                     onPlayerEvent = crbtTonesViewModel::onEvent,
                     musicControllerUiState = musicControllerUiState,
+                    selectedSong = tonesUiState.selectedSong
                 )
             }
         }

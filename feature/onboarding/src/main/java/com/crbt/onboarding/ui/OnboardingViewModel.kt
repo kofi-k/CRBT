@@ -10,15 +10,19 @@ import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.data.core.data.model.userProfileIsComplete
-import com.crbt.data.core.data.repository.CrbtPreferencesRepository
+import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val crbtPreferencesRepository: CrbtPreferencesRepository,
+    private val loginManager: LoginManager,
 ) : ViewModel() {
 
     private val onboardingOrder: List<OnboardingSetupProcess> = listOf(
@@ -46,7 +50,10 @@ class OnboardingViewModel @Inject constructor(
     val isNextEnabled
         get() = _isNextEnabled
 
-    var profileSaveState by mutableStateOf<ProfileSaveState>(ProfileSaveState.Idle)
+    private val _userInfoUiState =
+        MutableStateFlow<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
+    val userInfoUiState: StateFlow<UpdateUserInfoUiState> = _userInfoUiState.asStateFlow()
+
 
     fun onNextClicked() {
         if (onboardingIndex < onboardingOrder.size - 1) {
@@ -66,18 +73,13 @@ class OnboardingViewModel @Inject constructor(
         _onboardingScreenData = createOnboardingScreenData()
     }
 
-    fun saveUserProfile(onSaved: () -> Unit) {
-        profileSaveState = ProfileSaveState.Loading
+    fun updateUserProfileInfo() {
         viewModelScope.launch {
-            try {
-                crbtPreferencesRepository.setUserInfo(
-                    firstName = _onboardingSetupData.firstName,
-                    lastName = _onboardingSetupData.lastName,
-                    email = "",
-                )
-                onSaved()
-            } catch (e: Exception) {
-                profileSaveState = ProfileSaveState.Error(e.message ?: "Error")
+            loginManager.updateUserInfo(
+                firstName = _onboardingSetupData.firstName,
+                lastName = _onboardingSetupData.lastName
+            ).collect {
+                _userInfoUiState.value = it
             }
         }
     }
@@ -128,11 +130,4 @@ class OnboardingViewModel @Inject constructor(
             shouldShowDoneButton = onboardingIndex == onboardingOrder.size - 1,
         )
     }
-
-}
-
-sealed interface ProfileSaveState {
-    data object Idle : ProfileSaveState
-    data object Loading : ProfileSaveState
-    data class Error(val message: String) : ProfileSaveState
 }

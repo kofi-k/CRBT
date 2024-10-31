@@ -18,15 +18,28 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun setUserId(userId: String) =
-        crbtPreferencesDataSource.setUserId(userId)
+    override suspend fun setSignInToken(token: String) =
+        crbtPreferencesDataSource.setSignInToken(token)
 
     override suspend fun setUserInfo(
         firstName: String,
         lastName: String,
-        email: String,
-    ) =
-        crbtPreferencesDataSource.setUserInfo(firstName, lastName, email)
+        phoneNumber: String,
+        langPref: String,
+    ) {
+        crbtPreferencesDataSource.setUserInfo(
+            firstName,
+            lastName,
+            phoneNumber,
+            langPref,
+        )
+        analyticsHelper.logUserDetails(firstName, lastName, phoneNumber, langPref)
+    }
+
+    override suspend fun updateCrbtSubscriptionId(subscriptionId: Int) {
+        crbtPreferencesDataSource.updateCrbtSubscriptionId(subscriptionId.toString())
+        analyticsHelper.logCrbtToneSubscription(subscriptionId.toString())
+    }
 
     override suspend fun setPhoneNumber(phoneNumber: String) =
         crbtPreferencesDataSource.setPhoneNumber(phoneNumber)
@@ -34,10 +47,6 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setUserProfilePictureUrl(profilePictureUrl: String) =
         crbtPreferencesDataSource.setUserProfilePictureUrl(profilePictureUrl)
 
-    override suspend fun setUserLanguageCode(languageCode: String) {
-        crbtPreferencesDataSource.setUserLanguageCode(languageCode)
-        analyticsHelper.logUserPreferedLanguage(languageCode)
-    }
 
     override suspend fun setUserPaymentMethod(paymentMethod: String) {
         crbtPreferencesDataSource.setUserPaymentMethod(paymentMethod)
@@ -49,9 +58,6 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUserBalance(balance: Double) =
         crbtPreferencesDataSource.setCurrentBalance(balance)
-
-    override suspend fun setCurrentCrbtSubscriptionId(subscriptionId: String) =
-        crbtPreferencesDataSource.setCurrentCrbtSubscriptionId(subscriptionId)
 
 
     override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
