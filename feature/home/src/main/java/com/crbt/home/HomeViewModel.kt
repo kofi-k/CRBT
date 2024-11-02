@@ -3,6 +3,9 @@ package com.crbt.home
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.common.core.common.result.Result
@@ -14,7 +17,7 @@ import com.crbt.data.core.data.repository.extractBalance
 import com.crbt.domain.GetUserDataPreferenceUseCase
 import com.crbt.domain.UpdateUserBalanceUseCase
 import com.crbt.domain.UserPreferenceUiState
-import com.example.crbtjetcompose.core.model.data.UserCRbtSongResource
+import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +38,9 @@ class HomeViewModel @Inject constructor(
     val newUssdState: StateFlow<UssdUiState>
         get() = ussdRepository.ussdState
 
+    private var selectedTab by mutableStateOf(PopularTodayOptions.Tones)
+
+
     val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
         getUserDataPreferenceUseCase()
             .stateIn(
@@ -44,25 +50,24 @@ class HomeViewModel @Inject constructor(
             )
 
     val crbtSongsFlow: StateFlow<CrbtSongsFeedUiState> =
-        crbtSongsRepository.observeAllCrbtMusic()
-            .map { results ->
-                when (results) {
-                    is CrbtSongsFeedUiState.Success -> {
-                        CrbtSongsFeedUiState.Success(results.songs)
-                    }
-
-                    is CrbtSongsFeedUiState.Loading -> CrbtSongsFeedUiState.Loading
-                    else -> CrbtSongsFeedUiState.Success(emptyList())
-                }
-            }
+        crbtSongsRepository.observePopularTodayCrbtMusic()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = CrbtSongsFeedUiState.Loading
             )
 
-    val latestCrbtSong: StateFlow<Result<UserCRbtSongResource>> =
+    val latestCrbtSong: StateFlow<Result<CrbtSongResource>> =
         crbtSongsRepository.observeLatestCrbtMusic()
+            .map { it }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = Result.Loading
+            )
+
+    val currentUserCrbtSubscription: StateFlow<Result<CrbtSongResource?>> =
+        crbtSongsRepository.observeUserCrbtSubscription()
             .map { it }
             .stateIn(
                 scope = viewModelScope,
@@ -90,5 +95,9 @@ class HomeViewModel @Inject constructor(
                 onError(it)
             }
         )
+    }
+
+    fun onPopularTodayTabChange(tab: PopularTodayOptions) {
+        selectedTab = tab
     }
 }

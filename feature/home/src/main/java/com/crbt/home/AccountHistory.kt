@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.trace
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.SurfaceCard
@@ -108,7 +109,7 @@ fun Subscriptions() {
                 )
                 SubscriptionsFeed(
                     onSubscriptionClick = {},
-                    userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(DummyUser.user),
+                    userSubscriptions = emptyList(),
                 )
             }
         }

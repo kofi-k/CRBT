@@ -49,4 +49,47 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                     is CrbtSongsFeedUiState.Loading -> Result.Loading
                 }
             }
+
+    override fun observePopularTodayCrbtMusic(): Flow<CrbtSongsFeedUiState> =
+        observeAllCrbtMusic()
+            .map { crbtSongsFeedUiState ->
+                when (crbtSongsFeedUiState) {
+                    is CrbtSongsFeedUiState.Success -> {
+                        when (crbtSongsFeedUiState.songs.isEmpty()) {
+                            true -> CrbtSongsFeedUiState.Error("No songs found")
+                            false -> CrbtSongsFeedUiState.Success(crbtSongsFeedUiState.songs.sortedByDescending { it.createdAt }
+                                .take(8))
+                        }
+                    }
+
+                    is CrbtSongsFeedUiState.Error -> {
+                        CrbtSongsFeedUiState.Error(crbtSongsFeedUiState.errorMessage)
+                    }
+
+                    is CrbtSongsFeedUiState.Loading -> {
+                        CrbtSongsFeedUiState.Loading
+                    }
+                }
+            }
+
+    override fun observeUserCrbtSubscription(): Flow<Result<CrbtSongResource?>> =
+        userPreferencesRepository.userPreferencesData
+            .combine(observeAllCrbtMusic()) { userPreferences, crbtSongsFeedUiState ->
+                when (crbtSongsFeedUiState) {
+                    is CrbtSongsFeedUiState.Success -> {
+                        val userCrbtSong =
+                            crbtSongsFeedUiState.songs.find { it.id == userPreferences.currentCrbtSubscriptionId.toString() }
+                        when (userCrbtSong) {
+                            null -> Result.Error(Exception("You have no active CRBT subscription"))
+                            else -> Result.Success(userCrbtSong)
+                        }
+                    }
+
+                    is CrbtSongsFeedUiState.Error -> {
+                        Result.Error(Exception(crbtSongsFeedUiState.errorMessage))
+                    }
+
+                    is CrbtSongsFeedUiState.Loading -> Result.Loading
+                }
+            }
 }

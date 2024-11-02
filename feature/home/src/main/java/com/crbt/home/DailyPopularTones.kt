@@ -54,7 +54,7 @@ import com.example.crbtjetcompose.feature.home.R
 
 enum class PopularTodayOptions {
     Tones,
-    Albums
+    Album
 }
 
 // tab layout for popular today
@@ -62,7 +62,8 @@ enum class PopularTodayOptions {
 fun PopularTodayTabLayout(
     modifier: Modifier,
     navigateToSubscriptions: (toneId: String?) -> Unit,
-    crbSongsFeed: CrbtSongsFeedUiState
+    crbSongsFeed: CrbtSongsFeedUiState,
+    selectedTab: (tone: PopularTodayOptions) -> Unit
 ) = trace("PopularTodayTabLayout") {
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -111,6 +112,7 @@ fun PopularTodayTabLayout(
                             .clickable(
                                 onClick = {
                                     selectedTabIndex = index
+                                    selectedTab(option)
                                 },
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
@@ -127,15 +129,17 @@ fun PopularTodayTabLayout(
                     onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
+                    selectedTab = PopularTodayOptions.Tones
                 )
             }
 
-            PopularTodayOptions.Albums -> {
+            PopularTodayOptions.Album -> {
                 DailyPopularTones(
                     crbtSongsFeedUiState = crbSongsFeed,
                     onToneSelected = { toneId ->
                         navigateToSubscriptions(toneId)
                     },
+                    selectedTab = PopularTodayOptions.Album
                 )
             }
         }
@@ -147,6 +151,7 @@ fun PopularTodayTabLayout(
 fun DailyPopularTones(
     crbtSongsFeedUiState: CrbtSongsFeedUiState,
     onToneSelected: (String) -> Unit,
+    selectedTab: PopularTodayOptions = PopularTodayOptions.Tones
 ) = trace("DailyPopularTones") {
     val lazyGridState = rememberLazyListState()
 
@@ -191,7 +196,9 @@ fun DailyPopularTones(
                             .fillMaxWidth()
                     ) {
                         items(
-                            items = crbtSongsFeedUiState.songs,
+                            items = crbtSongsFeedUiState
+                                .songs
+                                .filter { it.category.contains(selectedTab.name) },
                             key = { tone -> tone.id }
                         ) { tone ->
                             MusicCard(
@@ -288,7 +295,8 @@ fun PreviewPopularTodayTabLayout() {
     PopularTodayTabLayout(
         modifier = Modifier.fillMaxWidth(),
         navigateToSubscriptions = {},
-        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList())
+        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList()),
+        selectedTab = { _ -> }
     )
 }
 

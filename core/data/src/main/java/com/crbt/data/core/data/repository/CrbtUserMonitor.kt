@@ -5,7 +5,6 @@ import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -18,29 +17,6 @@ class CrbtUserMonitor @Inject constructor(
 ) : LoginManager {
     override val isLoggedIn: Flow<Boolean>
         get() = crbtPreferencesRepository.userPreferencesData.map { it.token.isNotBlank() }
-
-    override suspend fun isDifferentUser(phoneNumber: String): Boolean {
-        return crbtPreferencesRepository.userPreferencesData
-            .map {
-                when (isCurrentPhoneNumberEmpty()) {
-                    true -> {
-                        crbtPreferencesRepository.setPhoneNumber(phoneNumber)
-                        return@map true
-                    }
-
-                    false -> {
-                        val isDifferentUser = it.phoneNumber != phoneNumber
-                        if (isDifferentUser) {
-                            crbtPreferencesRepository.clearUserPreferences()
-                            crbtPreferencesRepository.setPhoneNumber(phoneNumber)
-                        }
-                        isDifferentUser
-                    }
-                }
-            }
-            .first()
-    }
-
 
     override suspend fun login(
         phone: String,
@@ -90,11 +66,5 @@ class CrbtUserMonitor @Inject constructor(
             emit(UpdateUserInfoUiState.Error(e.message ?: "Error"))
         }
     }.flowOn(ioDispatcher)
-
-    private suspend fun isCurrentPhoneNumberEmpty(): Boolean {
-        return crbtPreferencesRepository.userPreferencesData
-            .map { it.phoneNumber.isBlank() }
-            .first()
-    }
 
 }
