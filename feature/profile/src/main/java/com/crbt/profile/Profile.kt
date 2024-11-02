@@ -31,10 +31,10 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -77,7 +77,6 @@ import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
 import com.example.crbtjetcompose.core.model.data.CrbtUser
 import com.example.crbtjetcompose.feature.profile.R
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -89,7 +88,20 @@ fun Profile(
     val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
     val userInfoUiState by profileViewModel.userInfoUiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(userInfoUiState) {
+        when (userInfoUiState) {
+            is UpdateUserInfoUiState.Success -> onSaveButtonClicked()
+            is UpdateUserInfoUiState.Error -> {
+                snackbarHostState.showSnackbar(
+                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
+                    duration = SnackbarDuration.Short
+                )
+            }
+
+            else -> Unit
+        }
+    }
 
 
     when (userResult) {
@@ -102,28 +114,6 @@ fun Profile(
                 saveProfile = { firstName, lastName, profileImage ->
                     profileViewModel.saveProfile(firstName, lastName)
                     profileViewModel.saveProfileImage(profileImage)
-                    when (userInfoUiState) {
-                        is UpdateUserInfoUiState.Success -> {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "Profile Updated",
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                            onSaveButtonClicked()
-                        }
-
-                        is UpdateUserInfoUiState.Error -> {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                        }
-
-                        else -> {}
-                    }
                 },
                 isSaving = userInfoUiState is UpdateUserInfoUiState.Loading,
             )

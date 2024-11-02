@@ -93,8 +93,6 @@ fun ProfileRoute(
         item {
             ProfileSettings(
                 onRewardPointsClicked = onRewardPointsClicked,
-                onPaymentMethodsClicked = {},
-                onCurrencyClicked = {},
                 onLanguageClicked = {},
                 onPermissionCheckChange = { _, _ -> }
             )
@@ -172,8 +170,6 @@ fun ProfileHeader(
 @Composable
 fun ProfileSettings(
     onRewardPointsClicked: () -> Unit,
-    onPaymentMethodsClicked: () -> Unit,
-    onCurrencyClicked: () -> Unit,
     onLanguageClicked: (String) -> Unit = {},
     onPermissionCheckChange: (String, Boolean) -> Unit = { _, _ -> }
 ) {
@@ -190,36 +186,6 @@ fun ProfileSettings(
                     leadingContentIcon = CrbtIcons.RewardPoints,
                     trailingContent = {
                         IconButton(onClick = onRewardPointsClicked) {
-                            Icon(
-                                imageVector = CrbtIcons.ArrowRight,
-                                contentDescription = CrbtIcons.ArrowRight.name
-                            )
-                        }
-                    }
-                )
-
-                ListCard(
-                    onClick = onPaymentMethodsClicked,
-                    headlineText = stringResource(id = R.string.feature_profile_payment_methods),
-                    subText = stringResource(id = R.string.feature_profile_payment_methods_description),
-                    leadingContentIcon = CrbtIcons.PaymentMethods,
-                    trailingContent = {
-                        IconButton(onClick = onPaymentMethodsClicked) {
-                            Icon(
-                                imageVector = CrbtIcons.ArrowRight,
-                                contentDescription = CrbtIcons.ArrowRight.name
-                            )
-                        }
-                    }
-                )
-
-                ListCard(
-                    onClick = onCurrencyClicked,
-                    headlineText = stringResource(id = R.string.feature_profile_currency),
-                    subText = stringResource(id = R.string.feature_profile_currency_description),
-                    leadingContentIcon = CrbtIcons.Dollar,
-                    trailingContent = {
-                        IconButton(onClick = onCurrencyClicked) {
                             Icon(
                                 imageVector = CrbtIcons.ArrowRight,
                                 contentDescription = CrbtIcons.ArrowRight.name

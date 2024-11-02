@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ServicesRoute(
     navigateToPackages: () -> Unit,
-    navigateTotopUp: () -> Unit,
 ) {
     var showDialog by remember {
         mutableStateOf(false)
@@ -64,7 +63,6 @@ fun ServicesRoute(
     ServicesScreen(
         onPackageClick = navigateToPackages,
         onRechargeClick = {},
-        onTopUpClick = navigateTotopUp,
         onCheckBalance = {
             crbtUssdType = CrbtUssdType.BALANCE_CHECK
             viewModel.runUssdCode(
@@ -128,7 +126,6 @@ fun ServicesRoute(
 fun ServicesScreen(
     onPackageClick: () -> Unit,
     onRechargeClick: () -> Unit,
-    onTopUpClick: () -> Unit,
     onCheckBalance: () -> Unit,
     isCheckingBalance: Boolean,
     onPhoneNumberChanged: (String, Boolean) -> Unit,
@@ -164,7 +161,6 @@ fun ServicesScreen(
                 showBottomSheet = true
                 bottomSheetType = ServicesType.CALL_ME_BACK
             },
-            onTopUpClick = onTopUpClick //TODO change to onTopUpClick
         )
     }
 
@@ -242,7 +238,6 @@ fun UpperServices(
 fun LowerServices(
     onTransferClick: () -> Unit,
     onCallBackClick: () -> Unit,
-    onTopUpClick: () -> Unit,
 ) {
     SurfaceCard(
         modifier = Modifier.fillMaxWidth(),
@@ -259,12 +254,6 @@ fun LowerServices(
                     headlineText = stringResource(id = R.string.feature_services_call_back),
                     subText = stringResource(id = R.string.feature_services_call_back_description),
                     leadingContentIcon = CrbtIcons.CallBack
-                )
-                ListCard(
-                    onClick = onTopUpClick,
-                    headlineText = stringResource(id = R.string.feature_services_topup),
-                    subText = stringResource(id = R.string.feature_services_topup_amount),
-                    leadingContentIcon = CrbtIcons.Dollar
                 )
             }
         }

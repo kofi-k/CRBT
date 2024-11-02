@@ -22,8 +22,6 @@ const val PACKAGES_ROUTE = "$SERVICES_ROUTE/packages"
 fun NavController.navigateToServices(navOptions: NavOptions) =
     navigate(SERVICES_ROUTE, navOptions)
 
-fun NavController.navigateToTopUp() =
-    navigate(TOPUP_ROUTE)
 
 fun NavController.navigateToTopUpCheckout(amount: String, navOptions: NavOptions? = null) =
     navigate("$SERVICES_ROUTE/topup_checkout?$TOPUP_AMOUNT_ARG=$amount", navOptions)
@@ -36,9 +34,6 @@ fun NavGraphBuilder.servicesScreen(
         ServicesRoute(
             navigateToPackages = {
                 navController.navigate(PACKAGES_ROUTE)
-            },
-            navigateTotopUp = {
-                navController.navigate(TOPUP_ROUTE)
             },
         )
     }

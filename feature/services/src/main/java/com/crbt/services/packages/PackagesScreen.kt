@@ -155,7 +155,14 @@ fun PackageContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         when (packagesFeedUiState) {
-            is PackagesFeedUiState.Loading -> CircularProgressIndicator()
+            is PackagesFeedUiState.Loading ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+
             is PackagesFeedUiState.Success -> {
                 when (packagesFeedUiState.feed.isEmpty()) {
                     true -> {
