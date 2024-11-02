@@ -10,6 +10,7 @@ import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
+import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SubscriptionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: UssdRepository,
+    private val ussdRepository: UssdRepository,
     crbtSongsRepository: UserCrbtMusicRepository,
     private val crbtNetworkRepository: CrbtNetworkRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
@@ -41,6 +43,8 @@ class SubscriptionViewModel @Inject constructor(
     private val _subscriptionUiState =
         MutableStateFlow<SubscriptionUiState>(SubscriptionUiState.Idle)
     var subscriptionUiState: StateFlow<SubscriptionUiState> = _subscriptionUiState.asStateFlow()
+
+    var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
 
 
     val crbtSongResource: StateFlow<CrbtSongResource?> =
@@ -77,15 +81,23 @@ class SubscriptionViewModel @Inject constructor(
                 initialValue = null
             )
 
+    val isUserRegisteredForCrbt = crbtPreferencesRepository.isUserRegisteredForCrbt
+        .mapLatest { it }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
+
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun runUssdCode(
+    fun runUssdCode(
         ussdCode: String,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit,
         activity: Activity
     ) {
-        repository.dialUssdCode(
+        ussdRepository.dialUssdCode(
             ussdCode = ussdCode,
             activity = activity,
             onSuccess = { message ->
@@ -117,6 +129,18 @@ class SubscriptionViewModel @Inject constructor(
                 val result = crbtNetworkRepository.subscribeToCrbt(selectedTone.value?.toInt() ?: 0)
                 crbtPreferencesRepository.updateCrbtSubscriptionId(selectedTone.value?.toInt() ?: 0)
                 SubscriptionUiState.Success(result)
+            } catch (e: Exception) {
+                SubscriptionUiState.Error(e.message ?: "An error occurred")
+            }
+        }
+    }
+
+    fun updateUserCrbtSubscriptionStatus() {
+        _subscriptionUiState.value = SubscriptionUiState.Loading
+        viewModelScope.launch {
+            _subscriptionUiState.value = try {
+                crbtPreferencesRepository.setUserCrbtRegistrationStatus(true)
+                SubscriptionUiState.Idle
             } catch (e: Exception) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }

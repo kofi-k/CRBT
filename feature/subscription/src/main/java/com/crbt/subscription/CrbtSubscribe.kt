@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,10 +50,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.SubscriptionBillingType
+import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
@@ -79,20 +82,24 @@ import java.util.TimeZone
 internal fun CrbtSubscribeScreen(
     onSubscribeClick: () -> Unit,
     onBackClicked: () -> Unit,
-    viewModel: SubscriptionViewModel = hiltViewModel(),
+    subscriptionViewModel: SubscriptionViewModel = hiltViewModel(),
 ) {
 
-    val isGiftSub by viewModel.isGiftSubscription.collectAsStateWithLifecycle()
-    val crbtSong by viewModel.crbtSongResource.collectAsStateWithLifecycle()
-    val subscriptionUiState by viewModel.subscriptionUiState.collectAsStateWithLifecycle()
-    val isUserOnCrbtSubscription by viewModel.isUserOnCrbtSubscription.collectAsStateWithLifecycle()
+    val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
+    val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
+    val subscriptionUiState by subscriptionViewModel.subscriptionUiState.collectAsStateWithLifecycle()
+    val isUserOnCrbtSubscription by subscriptionViewModel.isUserOnCrbtSubscription.collectAsStateWithLifecycle()
+    val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
+    val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
+
+    var showRegistrationDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
 
-    LaunchedEffect(subscriptionUiState) {
+    LaunchedEffect(subscriptionUiState, isUserRegisteredForCrbt) {
         when (subscriptionUiState) {
             is SubscriptionUiState.Success -> onSubscribeClick()
 
@@ -105,6 +112,8 @@ internal fun CrbtSubscribeScreen(
 
             else -> Unit
         }
+        showRegistrationDialog = !isUserRegisteredForCrbt && isUserOnCrbtSubscription == false
+
     }
 
 
@@ -138,7 +147,7 @@ internal fun CrbtSubscribeScreen(
                         )
                     }
                 } else {
-                    viewModel.subscribeToTone(
+                    subscriptionViewModel.subscribeToTone(
                         ussdCode = crbtSong?.ussdCode ?: "",
                         activity = context as Activity
                     )
@@ -156,6 +165,81 @@ internal fun CrbtSubscribeScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
+
+    if (showRegistrationDialog) {
+        CrbtRegistrationDialog(
+            onDismiss = {
+                subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+            },
+            onRegister = {
+                subscriptionViewModel.runUssdCode(
+                    ussdCode = "*126#",
+                    onSuccess = {
+                        subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+                    },
+                    onError = {},
+                    activity = context as Activity
+                )
+            },
+            isRegistering = ussdState is UssdUiState.Loading || (
+                    ussdState is UssdUiState.Success &&
+                            subscriptionUiState is SubscriptionUiState.Loading
+                    ),
+            isUpdatingRegisterStatus = subscriptionUiState is SubscriptionUiState.Loading &&
+                    ussdState is UssdUiState.Idle
+        )
+    }
+}
+
+@Composable
+fun CrbtRegistrationDialog(
+    onDismiss: () -> Unit,
+    onRegister: () -> Unit,
+    isRegistering: Boolean,
+    isUpdatingRegisterStatus: Boolean
+) {
+    AlertDialog(
+        title = {
+            Text(
+                text = stringResource(id = R.string.feature_subscription_new_to_crbt),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.feature_subscription_register_for_crbt_description),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        dismissButton = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End,
+            ) {
+                ProcessButton(
+                    onClick = onRegister,
+                    colors = ButtonDefaults.textButtonColors(),
+                    text = stringResource(id = R.string.feature_subscription_register_now),
+                    isProcessing = isRegistering
+                )
+
+                ProcessButton(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.textButtonColors(),
+                    text = stringResource(id = R.string.feature_subscription_already_registered),
+                    isProcessing = isUpdatingRegisterStatus
+                )
+            }
+        },
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        )
+    )
+
 }
 
 
