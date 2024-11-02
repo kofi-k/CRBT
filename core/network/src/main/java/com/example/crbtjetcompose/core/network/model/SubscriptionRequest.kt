@@ -19,3 +19,9 @@ data class SubscriptionRequest(
 data class UnSubscriptionRequest(
     val songId: String,
 )
+
+
+@Serializable
+data class SubscriptionResponse(
+    val message: String
+)

@@ -7,6 +7,7 @@ import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
 import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
 import com.example.crbtjetcompose.core.network.model.NetworkUserAccountInfo
 import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
+import com.example.crbtjetcompose.core.network.model.SubscriptionResponse
 import com.example.crbtjetcompose.core.network.model.UpdateUserInfo
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
@@ -30,7 +31,7 @@ interface RetrofitCrbtNetworkApi {
     @POST("songs/subscribe/{songId}")
     suspend fun subscribeToCrbt(
         @Path("songId") songId: Int,
-    ): String
+    ): SubscriptionResponse
 
     @POST("service/unsubscribe")
     suspend fun unsubscribe(

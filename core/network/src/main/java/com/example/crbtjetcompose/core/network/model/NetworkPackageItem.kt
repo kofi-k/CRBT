@@ -7,12 +7,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NetworkPackageItem(
     val id: Int,
-    val packageCatId: Int,
+    val packageCatId: Int?,
     val packageName: String,
-    val description: String,
+    val packageDescription: String,
     val price: String,
     val packageValidity: String,
-    val packageImg: String,
+    val packageImg: String?,
     val ussdCode: String,
     val packageType: String,
 )
@@ -20,9 +20,9 @@ data class NetworkPackageItem(
 fun NetworkPackageItem.asExternalModel(): PackageItem {
     return PackageItem(
         id = id.toString(),
-        packageCatId = packageCatId.toString(),
+        packageCatId = (packageCatId ?: 0).toString(),
         title = packageName,
-        description = description,
+        description = packageDescription,
         price = price,
         packageValidity = packageValidity,
         packageImg = packageImg,
