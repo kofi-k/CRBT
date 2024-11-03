@@ -70,7 +70,6 @@ import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
-import com.crbt.subscription.navigation.TONES_ROUTE
 import com.crbt.ui.core.ui.launchCustomChromeTab
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.R
@@ -85,7 +84,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 @Composable
 fun CrbtApp(
     appState: CrbtAppState,
-    sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel
+    sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel,
 ) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
@@ -117,7 +116,6 @@ fun CrbtApp(
             TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
             ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
-            TONES_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_tones
             ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
             PACKAGES_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_packages
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
