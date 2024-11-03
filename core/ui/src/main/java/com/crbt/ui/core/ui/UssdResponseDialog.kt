@@ -89,6 +89,7 @@ fun getUssdUiStateMessage(
                 CrbtUssdType.RECHARGE -> stringResource(id = R.string.core_ui_recharge_error)
                 CrbtUssdType.TRANSFER -> stringResource(id = R.string.core_ui_transfer_error)
                 CrbtUssdType.CRBT_SUBSCRIBE -> stringResource(id = R.string.core_ui_subscription_error)
+                CrbtUssdType.PACKAGE_SUBSCRIBE -> stringResource(id = R.string.core_ui_package_subscription_error)
             },
             message = ussdUiState.error
         )
@@ -100,6 +101,7 @@ fun getUssdUiStateMessage(
                 CrbtUssdType.RECHARGE -> stringResource(id = R.string.core_ui_recharge_success)
                 CrbtUssdType.TRANSFER -> stringResource(id = R.string.core_ui_transfer_success)
                 CrbtUssdType.CRBT_SUBSCRIBE -> stringResource(id = R.string.core_ui_subscription_success)
+                CrbtUssdType.PACKAGE_SUBSCRIBE -> stringResource(id = R.string.core_ui_package_subscription_success)
             },
             message = ussdUiState.response
         )

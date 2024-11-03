@@ -41,8 +41,7 @@ fun EmptyContent(
             text = description,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha),
-            modifier = Modifier
-                .padding(top = 16.dp),
+            modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
         reloadContent()
