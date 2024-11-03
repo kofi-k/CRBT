@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 interface LoginManager {
     val isLoggedIn: Flow<Boolean>
 
-    suspend fun isDifferentUser(phoneNumber: String): Boolean
-
     suspend fun login(
         phone: String,
         accountType: String,

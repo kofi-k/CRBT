@@ -7,7 +7,8 @@ interface CrbtPreferencesRepository {
 
     val userPreferencesData: Flow<UserPreferencesData>
 
-    suspend fun setFirstLaunch(isFirstLaunch: Boolean)
+    val isUserRegisteredForCrbt: Flow<Boolean>
+
 
     suspend fun setSignInToken(token: String)
 
@@ -20,11 +21,8 @@ interface CrbtPreferencesRepository {
 
     suspend fun updateCrbtSubscriptionId(subscriptionId: Int)
 
-    suspend fun setPhoneNumber(phoneNumber: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
-
-    suspend fun setUserPaymentMethod(paymentMethod: String)
 
     suspend fun clearUserPreferences()
 
@@ -32,5 +30,6 @@ interface CrbtPreferencesRepository {
 
     suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
 
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean)
 }
 

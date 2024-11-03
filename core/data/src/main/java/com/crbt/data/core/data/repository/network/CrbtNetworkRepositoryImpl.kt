@@ -27,7 +27,7 @@ class CrbtNetworkRepositoryImpl @Inject constructor(
     }
 
     override suspend fun subscribeToCrbt(songId: Int): String =
-        retrofitCrbtNetworkApi.subscribeToCrbt(songId)
+        retrofitCrbtNetworkApi.subscribeToCrbt(songId).message
 
 
     override suspend fun unsubscribe(subscriptionRequest: SubscriptionRequest) {

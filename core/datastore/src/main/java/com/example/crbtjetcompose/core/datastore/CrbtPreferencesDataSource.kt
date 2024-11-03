@@ -27,9 +27,12 @@ class CrbtPreferencesDataSource @Inject constructor(
                 interestedCrbtLanguages = it.interestedCrbtLanguages.keys,
                 currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
-                token = it.token
+                token = it.token,
             )
         }
+
+    val isUserRegisteredForCrbt = userPreferences.data.map { it.isUserRegisteredForCrbt }
+
 
     suspend fun setSignInToken(userToken: String) {
         try {
@@ -52,6 +55,15 @@ class CrbtPreferencesDataSource @Inject constructor(
             }
         }
     }
+
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) {
+        userPreferences.updateData {
+            it.copy {
+                isUserRegisteredForCrbt = isRegistered
+            }
+        }
+    }
+
 
     suspend fun setUserPaymentMethod(paymentMethod: String) {
         userPreferences.updateData {

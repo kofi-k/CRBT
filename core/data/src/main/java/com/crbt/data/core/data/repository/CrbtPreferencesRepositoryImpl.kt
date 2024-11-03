@@ -14,9 +14,9 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override val userPreferencesData: Flow<UserPreferencesData> =
         crbtPreferencesDataSource.userPreferencesData
 
-    override suspend fun setFirstLaunch(isFirstLaunch: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override val isUserRegisteredForCrbt: Flow<Boolean> =
+        crbtPreferencesDataSource.isUserRegisteredForCrbt
+
 
     override suspend fun setSignInToken(token: String) =
         crbtPreferencesDataSource.setSignInToken(token)
@@ -41,17 +41,9 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         analyticsHelper.logCrbtToneSubscription(subscriptionId.toString())
     }
 
-    override suspend fun setPhoneNumber(phoneNumber: String) =
-        crbtPreferencesDataSource.setPhoneNumber(phoneNumber)
-
     override suspend fun setUserProfilePictureUrl(profilePictureUrl: String) =
         crbtPreferencesDataSource.setUserProfilePictureUrl(profilePictureUrl)
 
-
-    override suspend fun setUserPaymentMethod(paymentMethod: String) {
-        crbtPreferencesDataSource.setUserPaymentMethod(paymentMethod)
-        analyticsHelper.logUserPreferedCurrency(paymentMethod)
-    }
 
     override suspend fun clearUserPreferences() =
         crbtPreferencesDataSource.clearUserPreferences()
@@ -62,5 +54,9 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
         crbtPreferencesDataSource.setUserInterestedCrbtLanguages(code, isInterested)
+
+    override suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) {
+        crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered)
+    }
 
 }
