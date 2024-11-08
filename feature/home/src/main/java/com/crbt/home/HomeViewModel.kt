@@ -3,9 +3,6 @@ package com.crbt.home
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.common.core.common.result.Result
@@ -37,8 +34,6 @@ class HomeViewModel @Inject constructor(
 
     val newUssdState: StateFlow<UssdUiState>
         get() = ussdRepository.ussdState
-
-    private var selectedTab by mutableStateOf(PopularTodayOptions.Tones)
 
 
     val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
@@ -97,7 +92,4 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onPopularTodayTabChange(tab: PopularTodayOptions) {
-        selectedTab = tab
-    }
 }

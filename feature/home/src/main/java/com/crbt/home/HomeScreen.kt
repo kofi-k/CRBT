@@ -154,7 +154,7 @@ fun HomeScreen(
                             .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
                             .clickable(
                                 onClick = {
-                                    onPopularTodayClick(null)
+                                    onPopularTodayClick(latestMusic.id)
                                 },
                                 role = Role.Button,
                                 interactionSource = remember { MutableInteractionSource() },
@@ -170,7 +170,6 @@ fun HomeScreen(
                 navigateToSubscriptions = onPopularTodayClick,
                 modifier = Modifier.fillMaxWidth(),
                 crbSongsFeed = crbSongsFeed,
-                selectedTab = viewModel::onPopularTodayTabChange
             )
         }
 

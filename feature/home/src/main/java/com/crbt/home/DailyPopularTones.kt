@@ -27,8 +27,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,10 +65,16 @@ fun PopularTodayTabLayout(
     modifier: Modifier,
     navigateToSubscriptions: (toneId: String?) -> Unit,
     crbSongsFeed: CrbtSongsFeedUiState,
-    selectedTab: (tone: PopularTodayOptions) -> Unit
 ) = trace("PopularTodayTabLayout") {
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedCrbtCategory by remember { mutableStateOf("") }
+
+    LaunchedEffect(crbSongsFeed) {
+        if (crbSongsFeed is CrbtSongsFeedUiState.Success) {
+            selectedCrbtCategory = crbSongsFeed.songs.first().category
+        }
+    }
 
     Column(modifier = modifier) {
         Text(
@@ -89,60 +97,58 @@ fun PopularTodayTabLayout(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                PopularTodayOptions.entries.forEachIndexed { index, option ->
-                    Text(
-                        text = option.name,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .background(
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .padding(
-                                horizontal = 12.dp,
-                                vertical = 4.dp
-                            )
-                            .clickable(
-                                onClick = {
-                                    selectedTabIndex = index
-                                    selectedTab(option)
-                                },
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            )
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        when (PopularTodayOptions.entries[selectedTabIndex]) {
-            PopularTodayOptions.Tones -> {
-                DailyPopularTones(
-                    crbtSongsFeedUiState = crbSongsFeed,
-                    onToneSelected = { toneId ->
-                        navigateToSubscriptions(toneId)
-                    },
-                    selectedTab = PopularTodayOptions.Tones
-                )
-            }
+                when (crbSongsFeed) {
 
-            PopularTodayOptions.Album -> {
-                DailyPopularTones(
-                    crbtSongsFeedUiState = crbSongsFeed,
-                    onToneSelected = { toneId ->
-                        navigateToSubscriptions(toneId)
-                    },
-                    selectedTab = PopularTodayOptions.Album
-                )
+                    is CrbtSongsFeedUiState.Success -> {
+                        val listOfFeedCategories = crbSongsFeed.songs.map { it.category }.distinct()
+                        listOfFeedCategories.forEachIndexed { index, category ->
+                            Text(
+                                text = category,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                    .background(
+                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                                    .border(
+                                        width = 1.dp,
+                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                                    .padding(
+                                        horizontal = 12.dp,
+                                        vertical = 4.dp
+                                    )
+                                    .clickable(
+                                        onClick = {
+                                            selectedTabIndex = index
+                                            selectedCrbtCategory = category
+                                        },
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null
+                                    )
+                            )
+                        }
+                    }
+
+                    else -> Unit
+                }
+
             }
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        DailyPopularTones(
+            crbtSongsFeedUiState = crbSongsFeed,
+            onToneSelected = { toneId ->
+                navigateToSubscriptions(toneId)
+            },
+            selectedCrbtCategory = selectedCrbtCategory
+        )
+
     }
 }
 
@@ -151,7 +157,7 @@ fun PopularTodayTabLayout(
 fun DailyPopularTones(
     crbtSongsFeedUiState: CrbtSongsFeedUiState,
     onToneSelected: (String) -> Unit,
-    selectedTab: PopularTodayOptions = PopularTodayOptions.Tones
+    selectedCrbtCategory: String = ""
 ) = trace("DailyPopularTones") {
     val lazyGridState = rememberLazyListState()
 
@@ -198,7 +204,7 @@ fun DailyPopularTones(
                         items(
                             items = crbtSongsFeedUiState
                                 .songs
-                                .filter { it.category.contains(selectedTab.name) },
+                                .filter { it.category == selectedCrbtCategory },
                             key = { tone -> tone.id }
                         ) { tone ->
                             MusicCard(
@@ -296,7 +302,6 @@ fun PreviewPopularTodayTabLayout() {
         modifier = Modifier.fillMaxWidth(),
         navigateToSubscriptions = {},
         crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList()),
-        selectedTab = { _ -> }
     )
 }
 
