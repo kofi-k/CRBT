@@ -48,6 +48,8 @@ fun DynamicAsyncImage(
 
     // Image painter depending on the source
     val painter = if (base64Bitmap != null) {
+        isLoading = false
+        isError = false
         remember(base64Bitmap) { BitmapPainter(base64Bitmap) }
     } else {
         rememberAsyncImagePainter(

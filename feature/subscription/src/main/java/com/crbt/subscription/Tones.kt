@@ -53,6 +53,7 @@ import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.data.core.data.PlayerState
@@ -81,12 +82,21 @@ fun TonesScreen(
     val currentSong = musicControllerUiState.currentSong
     val tonesUiState = crbtTonesViewModel.tonesUiState
 
+    val toneFromBackstack by crbtTonesViewModel.crbtSongResource.collectAsStateWithLifecycle()
+
     val isInitialized = rememberSaveable { mutableStateOf(false) }
 
     if (!isInitialized.value) {
         LaunchedEffect(key1 = Unit) {
             crbtTonesViewModel.onEvent(TonesPlayerEvent.FetchSong)
             isInitialized.value = true
+        }
+    }
+
+    LaunchedEffect(toneFromBackstack) {
+        if (toneFromBackstack != null) {
+            crbtTonesViewModel.onEvent(TonesPlayerEvent.OnSongSelected(toneFromBackstack!!))
+            crbtTonesViewModel.onEvent(TonesPlayerEvent.PlaySong)
         }
     }
 

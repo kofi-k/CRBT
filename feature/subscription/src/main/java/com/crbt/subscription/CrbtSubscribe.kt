@@ -173,7 +173,7 @@ internal fun CrbtSubscribeScreen(
             },
             onRegister = {
                 subscriptionViewModel.runUssdCode(
-                    ussdCode = "*126#",
+                    ussdCode = crbtSong?.registrationUssdCode ?: "",
                     onSuccess = {
                         subscriptionViewModel.updateUserCrbtSubscriptionStatus()
                     },

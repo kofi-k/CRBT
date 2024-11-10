@@ -15,7 +15,8 @@ import com.crbt.subscription.TonesScreen
 
 const val TONE_ID_ARG = "tone_id"
 const val GIFT_SUB_ARG = "gift_sub"
-const val SUBSCRIPTION_ROUTE = "subscriptions_route"
+
+const val SUBSCRIPTION_ROUTE = "subscriptions_route/$TONE_ID_ARG={$TONE_ID_ARG}"
 const val SUBSCRIPTION_COMPLETE_ROUTE = "$SUBSCRIPTION_ROUTE/subscription_complete"
 
 
@@ -31,8 +32,11 @@ fun NavController.navigateToAddSubscription(
     navigate(route, navOptions)
 }
 
-fun NavController.navigateToSubscription(navOptions: NavOptions) =
-    navigate(SUBSCRIPTION_ROUTE, navOptions)
+fun NavController.navigateToSubscription(navOptions: NavOptions, toneId: String = "") =
+    navigate(
+        "subscriptions_route/$TONE_ID_ARG=$toneId",
+        navOptions
+    )
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,6 +46,7 @@ fun NavGraphBuilder.subscriptionScreen(
 ) {
     composable(
         route = SUBSCRIPTION_ROUTE,
+        arguments = listOf(navArgument(TONE_ID_ARG) { type = NavType.StringType })
     ) {
 
         TonesScreen(
