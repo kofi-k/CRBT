@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.core.network.retrofit
 
+import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.Login
 import com.example.crbtjetcompose.core.network.model.LoginResponse
@@ -27,6 +28,8 @@ interface RetrofitCrbtNetworkApi {
     @GET("package/all/category")
     suspend fun getPackageCategories(): List<CrbtNetworkPackage>
 
+    @GET("ads/all")
+    suspend fun getAds(): List<CrbtNetworkAds>
 
     @POST("songs/subscribe/{songId}")
     suspend fun subscribeToCrbt(

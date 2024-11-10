@@ -24,7 +24,8 @@ data class NetworkSongsResource(
     val ussdCode: String,
     val subscriptionType: String,
     val price: String,
-    val category: String
+    val category: String,
+    val registrationUssdCode: String,
 )
 
 /**
@@ -49,5 +50,6 @@ fun NetworkSongsResource.asExternalModel(): CrbtSongResource {
         subscriptionType = subscriptionType,
         price = price,
         category = category,
+        registrationUssdCode = registrationUssdCode
     )
 }

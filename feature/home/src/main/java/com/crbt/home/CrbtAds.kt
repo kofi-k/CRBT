@@ -1,5 +1,7 @@
 package com.crbt.home
 
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,52 +22,82 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.crbt.data.core.data.CrbtAdvertisements
+import com.crbt.data.core.data.repository.CrbtAdsUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.theme.CustomGradientColors
+import com.crbt.ui.core.ui.launchCustomChromeTab
 import com.example.crbtjetcompose.feature.home.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CrbtAds() {
-    HorizontalUncontainedCarousel(
-        state = rememberCarouselState { CrbtAdvertisements.ads.count() },
-        modifier = Modifier
-            .width(412.dp)
-            .height(221.dp),
-        itemWidth = 186.dp,
-        itemSpacing = 8.dp,
-        contentPadding = PaddingValues(horizontal = 16.dp),
-    ) { index ->
-        val ad = CrbtAdvertisements.ads[index]
-        AdvertCard(
-            imageUrl = ad.imageUrl,
-            title = ad.title,
-            onClick = { },
-            modifier = Modifier
-                .height(205.dp)
-                .maskClip(MaterialTheme.shapes.extraLarge),
-        )
+fun CrbtAds(
+    crbtAdsUiState: CrbtAdsUiState
+) {
+    val context = LocalContext.current
+    val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
+
+    when (crbtAdsUiState) {
+        CrbtAdsUiState.Loading -> Column {
+            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        }
+
+        is CrbtAdsUiState.Success -> {
+            val crbtAds = crbtAdsUiState.data
+            HorizontalUncontainedCarousel(
+                state = rememberCarouselState { crbtAds.count() },
+                modifier = Modifier
+                    .width(412.dp)
+                    .height(221.dp),
+                itemWidth = 186.dp,
+                itemSpacing = 8.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+            ) { index ->
+                val ad = crbtAds[index]
+                AdvertCard(
+                    imageUrl = ad.image,
+                    title = ad.description,
+                    modifier = Modifier
+                        .clickable {
+                            if (ad.url.isNotBlank()) {
+                                launchCustomChromeTab(
+                                    context = context,
+                                    uri = Uri.parse(ad.url),
+                                    toolbarColor = backgroundColor
+                                )
+                            }
+                        }
+                        .height(205.dp)
+                        .maskClip(MaterialTheme.shapes.extraLarge),
+                )
+            }
+        }
+
+        else -> Unit
     }
+
 }
 
 @Composable
 fun AdvertCard(
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {},
     imageUrl: String,
     title: String,
 ) {
     Box(
         modifier = modifier
     ) {
-        DynamicAsyncImage(imageUrl = imageUrl, modifier = Modifier.fillMaxSize())
+        DynamicAsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            base64ImageString = imageUrl
+        )
 
         Column(
             modifier = Modifier

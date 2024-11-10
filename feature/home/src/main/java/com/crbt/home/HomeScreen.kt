@@ -78,6 +78,7 @@ fun HomeScreen(
     val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
     val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
     val currentUserSubscription by viewModel.currentUserCrbtSubscription.collectAsStateWithLifecycle()
+    val crbtAdsUiState by viewModel.crbtAdsUiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
 
@@ -123,7 +124,7 @@ fun HomeScreen(
         }
 
         item {
-            CrbtAds()
+            CrbtAds(crbtAdsUiState)
         }
 
         item {
