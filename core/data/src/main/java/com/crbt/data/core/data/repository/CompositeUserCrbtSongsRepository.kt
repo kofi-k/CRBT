@@ -2,7 +2,6 @@ package com.crbt.data.core.data.repository
 
 import com.crbt.common.core.common.result.Result
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.core.model.data.mapToUserCrbtSongResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -14,10 +13,9 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
 ) : UserCrbtMusicRepository {
     override fun observeAllCrbtMusic(filterInterestedLanguages: Set<String>?): Flow<CrbtSongsFeedUiState> =
         crbtMusicRepository.getCrbtMusic()
-            .combine(userPreferencesRepository.userPreferencesData) { songs, userPreferences ->
+            .combine(userPreferencesRepository.userPreferencesData) { songs, _ ->
                 when (songs) {
                     is CrbtMusicResourceUiState.Success -> {
-                        val crbtSongs = songs.songs.mapToUserCrbtSongResource(userPreferences)
                         CrbtSongsFeedUiState.Success(songs.songs)
                     }
 

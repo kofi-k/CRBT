@@ -17,4 +17,5 @@ data class CrbtSongResource(
     val subscriptionType: String,
     val price: String,
     val category: String,
+    val registrationUssdCode: String,
 )

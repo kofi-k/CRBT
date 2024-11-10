@@ -19,5 +19,6 @@ fun MediaItem.toSongResource() =
         price = "",
         category = "",
         artisteName = mediaMetadata.artist.toString(),
-        subServiceId = ""
+        subServiceId = "",
+        registrationUssdCode = ""
     )

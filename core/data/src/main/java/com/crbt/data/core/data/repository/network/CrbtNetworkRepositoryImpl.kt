@@ -1,5 +1,6 @@
 package com.crbt.data.core.data.repository.network
 
+import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.Login
 import com.example.crbtjetcompose.core.network.model.LoginResponse
@@ -16,6 +17,10 @@ class CrbtNetworkRepositoryImpl @Inject constructor(
 ) : CrbtNetworkRepository {
     override suspend fun getSongs(): List<NetworkSongsResource> {
         return retrofitCrbtNetworkApi.getSongs().allSongs
+    }
+
+    override suspend fun getAds(): List<CrbtNetworkAds> {
+        return retrofitCrbtNetworkApi.getAds()
     }
 
     override suspend fun getPackageItems(): List<NetworkPackageItem> {

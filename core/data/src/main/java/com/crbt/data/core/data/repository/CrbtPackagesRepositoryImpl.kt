@@ -8,6 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class CrbtPackagesRepositoryImpl @Inject constructor(
@@ -29,7 +32,13 @@ class CrbtPackagesRepositoryImpl @Inject constructor(
                 PackagesFeedUiState.Success(combinedPackagesAndItems)
             )
         } catch (e: Exception) {
-            emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
+            when (e) {
+                is SocketTimeoutException, is UnknownHostException,
+                is ConnectException -> emit(PackagesFeedUiState.Error("Network Error. Try again later"))
+
+                else ->
+                    emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
+            }
         }
     }
         .flowOn(ioDispatcher)
