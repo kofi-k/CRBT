@@ -118,7 +118,9 @@ fun RecentSubscription(
 
                 Result.Loading -> {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                     ) {

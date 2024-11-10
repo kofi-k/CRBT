@@ -48,8 +48,11 @@ fun CrbtNavHost(
 
             homeScreen(
                 navigateToTopUp = {},
-                onPopularTodayClick = {
-                    appState.navigateToTopLevelDestination(TopLevelDestination.SUBSCRIPTIONS)
+                onPopularTodayClick = { toneId ->
+                    appState.navigateToTopLevelDestination(
+                        TopLevelDestination.SUBSCRIPTIONS,
+                        toneId!!
+                    )
                 },
                 navigateToSubscription = {
                     appState.navigateToTopLevelDestination(TopLevelDestination.SUBSCRIPTIONS)

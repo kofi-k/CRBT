@@ -54,11 +54,6 @@ import com.crbt.ui.core.ui.EmptyContent
 import com.example.crbtjetcompose.feature.home.R
 
 
-enum class PopularTodayOptions {
-    Tones,
-    Album
-}
-
 // tab layout for popular today
 @Composable
 fun PopularTodayTabLayout(
@@ -77,30 +72,29 @@ fun PopularTodayTabLayout(
     }
 
     Column(modifier = modifier) {
-        Text(
-            text = stringResource(id = R.string.feature_home_popular_today_title),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            divider = {},
-            containerColor = Color.Transparent,
-            indicator = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                when (crbSongsFeed) {
-
-                    is CrbtSongsFeedUiState.Success -> {
-                        val listOfFeedCategories = crbSongsFeed.songs.map { it.category }.distinct()
+        when (crbSongsFeed) {
+            is CrbtSongsFeedUiState.Success -> {
+                val listOfFeedCategories = crbSongsFeed.songs.map { it.category }.distinct()
+                Text(
+                    text = stringResource(id = R.string.feature_home_popular_today_title),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    divider = {},
+                    containerColor = Color.Transparent,
+                    indicator = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
                         listOfFeedCategories.forEachIndexed { index, category ->
                             Text(
                                 text = category,
@@ -132,14 +126,13 @@ fun PopularTodayTabLayout(
                             )
                         }
                     }
-
-                    else -> Unit
                 }
 
+                Spacer(modifier = Modifier.size(16.dp))
             }
-        }
 
-        Spacer(modifier = Modifier.size(16.dp))
+            else -> Unit
+        }
 
         DailyPopularTones(
             crbtSongsFeedUiState = crbSongsFeed,

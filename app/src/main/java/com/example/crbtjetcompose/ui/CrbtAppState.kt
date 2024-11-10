@@ -131,7 +131,10 @@ class CrbtAppState(
      *
      * @param topLevelDestination: The destination the app needs to navigate to.
      */
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    fun navigateToTopLevelDestination(
+        topLevelDestination: TopLevelDestination,
+        args: String = ""
+    ) {
         trace("Navigation: ${topLevelDestination.name}") {
             val topLevelNavOptions = navOptions {
                 // Pop up to the start destination of the graph to
@@ -155,7 +158,7 @@ class CrbtAppState(
                     navController.navigateToServices(topLevelNavOptions)
 
                 TopLevelDestination.SUBSCRIPTIONS ->
-                    navController.navigateToSubscription(topLevelNavOptions)
+                    navController.navigateToSubscription(topLevelNavOptions, args)
 
                 TopLevelDestination.PROFILE ->
                     navController.navigateToProfile(topLevelNavOptions)
