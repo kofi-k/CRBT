@@ -71,7 +71,6 @@ import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -88,7 +87,6 @@ internal fun CrbtSubscribeScreen(
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
     val subscriptionUiState by subscriptionViewModel.subscriptionUiState.collectAsStateWithLifecycle()
-    val isUserOnCrbtSubscription by subscriptionViewModel.isUserOnCrbtSubscription.collectAsStateWithLifecycle()
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
     val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
 
@@ -112,7 +110,7 @@ internal fun CrbtSubscribeScreen(
 
             else -> Unit
         }
-        showRegistrationDialog = !isUserRegisteredForCrbt && isUserOnCrbtSubscription == false
+        showRegistrationDialog = !isUserRegisteredForCrbt
 
     }
 
@@ -139,19 +137,10 @@ internal fun CrbtSubscribeScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             onSubscribeClick = {
-                if (isUserOnCrbtSubscription == true) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = "You are already on a CRBT subscription",
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                } else {
-                    subscriptionViewModel.subscribeToTone(
-                        ussdCode = crbtSong?.ussdCode ?: "",
-                        activity = context as Activity
-                    )
-                }
+                subscriptionViewModel.subscribeToTone(
+                    ussdCode = crbtSong?.ussdCode ?: "",
+                    activity = context as Activity
+                )
             },
             subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
             isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
