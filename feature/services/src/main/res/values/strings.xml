@@ -34,5 +34,5 @@
     <string name="feature_services_ok">Okay</string>
     <string name="feature_services_call_back_button">Request</string>
     <string name="feature_services_no_packages">No available packages to show</string>
-    <string name="feature_services_no_packages_items">No items to show for this package</string>
+    <string name="feature_services_no_packages_items">Nothing to show for %s</string>
 </resources>

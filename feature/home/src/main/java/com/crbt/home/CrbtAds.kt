@@ -67,6 +67,8 @@ fun CrbtAds(
                         imageUrl = ad.image,
                         title = ad.description,
                         modifier = Modifier
+                            .height(205.dp)
+                            .maskClip(MaterialTheme.shapes.extraLarge)
                             .clickable {
                                 if (ad.url.isNotBlank()) {
                                     launchCustomChromeTab(
@@ -75,9 +77,7 @@ fun CrbtAds(
                                         toolbarColor = backgroundColor
                                     )
                                 }
-                            }
-                            .height(205.dp)
-                            .maskClip(MaterialTheme.shapes.extraLarge),
+                            },
                     )
                 }
             }
