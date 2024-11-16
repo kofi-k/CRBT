@@ -143,25 +143,28 @@ fun HomeScreen(
 
                 is Result.Success -> {
                     val latestMusic = (latestMusicUiState as Result.Success).data
-                    LatestMusicCard(
-                        artist = latestMusic.artisteName,
-                        title = latestMusic.songTitle,
-                        backgroundUrl = latestMusic.profile,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .defaultMinSize(minHeight = 180.dp)
-                            .padding(horizontal = 16.dp)
-                            .clip(MaterialTheme.shapes.large)
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                            .clickable(
-                                onClick = {
-                                    onPopularTodayClick(latestMusic.id)
-                                },
-                                role = Role.Button,
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = LocalIndication.current,
-                            )
-                    )
+
+                    if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
+                        LatestMusicCard(
+                            artist = latestMusic.artisteName,
+                            title = latestMusic.songTitle,
+                            backgroundUrl = latestMusic.profile,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 180.dp)
+                                .padding(horizontal = 16.dp)
+                                .clip(MaterialTheme.shapes.large)
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                                .clickable(
+                                    onClick = {
+                                        onPopularTodayClick(latestMusic.id)
+                                    },
+                                    role = Role.Button,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = LocalIndication.current,
+                                )
+                        )
+                    }
                 }
             }
         }

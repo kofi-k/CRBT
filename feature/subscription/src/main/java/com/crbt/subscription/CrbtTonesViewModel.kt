@@ -37,8 +37,10 @@ class CrbtTonesViewModel @Inject constructor(
     private val skipToNextSongUseCase: SkipToNextSongUseCase,
     private val skipToPreviousSongUseCase: SkipToPreviousSongUseCase,
     crbtSongsRepository: UserCrbtMusicRepository,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    val searchQuery = savedStateHandle.getStateFlow(key = SEARCH_QUERY, initialValue = "")
 
     val backstackCrbtMusic: StateFlow<String?> =
         savedStateHandle.getStateFlow(TONE_ID_ARG, null)
@@ -123,6 +125,20 @@ class CrbtTonesViewModel @Inject constructor(
         }
     }
 
+    fun onSearchQueryChange(query: String) {
+        savedStateHandle.set(SEARCH_QUERY, query)
+        // filter songs in tonesUiState
+        if (query.length >= SEARCH_QUERY_MIN_LENGTH) {
+            tonesUiState = tonesUiState.copy(
+                songs = tonesUiState.songs?.filter {
+                    it.songTitle.contains(query, ignoreCase = true)
+                }
+            )
+        } else {
+            reload()
+        }
+    }
+
 
     fun onEvent(event: TonesPlayerEvent) {
         when (event) {
@@ -174,3 +190,6 @@ data class TonesUiState(
     val selectedSong: CrbtSongResource? = null,
     val errorMessage: String? = null
 )
+
+private const val SEARCH_QUERY_MIN_LENGTH = 2
+private const val SEARCH_QUERY = "searchQuery"

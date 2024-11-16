@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -34,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -46,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.CornerRounding
@@ -81,6 +82,7 @@ fun TonesScreen(
 ) {
     val currentSong = musicControllerUiState.currentSong
     val tonesUiState = crbtTonesViewModel.tonesUiState
+    val searchQuery by crbtTonesViewModel.searchQuery.collectAsStateWithLifecycle()
 
     val toneFromBackstack by crbtTonesViewModel.crbtSongResource.collectAsStateWithLifecycle()
 
@@ -100,29 +102,49 @@ fun TonesScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-    ) {
-        var searchQuery by remember { mutableStateOf("") }
-
-        SearchToolbar(
-            searchQuery = searchQuery,
-            onSearchQueryChanged = {
-                searchQuery = it
-            },
-            onSearchTriggered = {
-                //TODO
-            },
-            onBackClick = { /*TODO*/ },
-            showNavigationIcon = false,
-            modifier = Modifier
-        )
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
+    Scaffold(
+        containerColor = Color.Transparent,
+        topBar = {
+            SearchToolbar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = crbtTonesViewModel::onSearchQueryChange,
+                onSearchTriggered = {
+                    //TODO
+                },
+                onBackClick = { /*TODO*/ },
+                showNavigationIcon = false,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.TopCenter
+            )
+        },
+        bottomBar = {
+            AnimatedVisibility(
+                visible = currentSong != null && musicControllerUiState.playerState != PlayerState.STOPPED,
+                modifier = Modifier
+            ) {
+                if (currentSong != null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        MusicCard(
+                            modifier = Modifier,
+                            cRbtSong = currentSong,
+                            onPlayerEvent = crbtTonesViewModel::onEvent,
+                            musicControllerUiState = musicControllerUiState,
+                            selectedSong = tonesUiState.selectedSong
+                        )
+                    }
+                }
+            }
+        },
+        content = { pd ->
+            Column(
+                modifier = Modifier
+                    .padding(pd)
+                    .padding(horizontal = 16.dp)
             ) {
                 SurfaceCard(
                     content = {
@@ -182,7 +204,8 @@ fun TonesScreen(
 
                                             else ->
                                                 LazyColumn(
-                                                    modifier = Modifier.fillMaxWidth(),
+                                                    modifier = Modifier
+                                                        .fillMaxWidth(),
                                                     contentPadding = PaddingValues(top = 8.dp)
                                                 ) {
                                                     subscriptionTonesFeed(
@@ -222,30 +245,7 @@ fun TonesScreen(
                 )
             }
         }
-    }
-
-    AnimatedVisibility(
-        visible = currentSong != null && musicControllerUiState.playerState != PlayerState.STOPPED,
-        modifier = Modifier
-    ) {
-        if (currentSong != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 8.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                MusicCard(
-                    modifier = Modifier,
-                    cRbtSong = currentSong,
-                    onPlayerEvent = crbtTonesViewModel::onEvent,
-                    musicControllerUiState = musicControllerUiState,
-                    selectedSong = tonesUiState.selectedSong
-                )
-            }
-        }
-    }
+    )
 }
 
 

@@ -51,32 +51,35 @@ fun CrbtAds(
 
         is CrbtAdsUiState.Success -> {
             val crbtAds = crbtAdsUiState.data
-            HorizontalUncontainedCarousel(
-                state = rememberCarouselState { crbtAds.count() },
-                modifier = Modifier
-                    .width(412.dp)
-                    .height(221.dp),
-                itemWidth = 186.dp,
-                itemSpacing = 8.dp,
-                contentPadding = PaddingValues(horizontal = 16.dp),
-            ) { index ->
-                val ad = crbtAds[index]
-                AdvertCard(
-                    imageUrl = ad.image,
-                    title = ad.description,
+
+            if (crbtAds.isNotEmpty()) {
+                HorizontalUncontainedCarousel(
+                    state = rememberCarouselState { crbtAds.count() },
                     modifier = Modifier
-                        .clickable {
-                            if (ad.url.isNotBlank()) {
-                                launchCustomChromeTab(
-                                    context = context,
-                                    uri = Uri.parse(ad.url),
-                                    toolbarColor = backgroundColor
-                                )
+                        .width(412.dp)
+                        .height(221.dp),
+                    itemWidth = 186.dp,
+                    itemSpacing = 8.dp,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                ) { index ->
+                    val ad = crbtAds[index]
+                    AdvertCard(
+                        imageUrl = ad.image,
+                        title = ad.description,
+                        modifier = Modifier
+                            .clickable {
+                                if (ad.url.isNotBlank()) {
+                                    launchCustomChromeTab(
+                                        context = context,
+                                        uri = Uri.parse(ad.url),
+                                        toolbarColor = backgroundColor
+                                    )
+                                }
                             }
-                        }
-                        .height(205.dp)
-                        .maskClip(MaterialTheme.shapes.extraLarge),
-                )
+                            .height(205.dp)
+                            .maskClip(MaterialTheme.shapes.extraLarge),
+                    )
+                }
             }
         }
 

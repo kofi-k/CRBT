@@ -1,6 +1,5 @@
 package com.crbt.data.core.data.repository
 
-import android.util.Log
 import com.crbt.common.core.common.network.CrbtDispatchers
 import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
@@ -39,7 +38,6 @@ class CrbtAdsRepositoryImpl @Inject constructor(
                 .sortedByDescending { it.id }
             emit(CrbtAdsUiState.Success(ads))
         } catch (e: Exception) {
-            Log.e("CrbtAdsRepositoryImpl", "getAds: $e")
             when (e) {
                 is SocketTimeoutException, is UnknownHostException,
                 is ConnectException -> emit(CrbtAdsUiState.Error("Network Error. Try again later"))
