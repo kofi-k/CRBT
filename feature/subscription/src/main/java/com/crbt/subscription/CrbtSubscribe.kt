@@ -12,15 +12,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -64,6 +70,7 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
+import com.crbt.designsystem.theme.bodyFontFamily
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
@@ -79,7 +86,7 @@ import java.util.TimeZone
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 internal fun CrbtSubscribeScreen(
-    onSubscribeClick: () -> Unit,
+    onSubscribeSuccess: () -> Unit,
     onBackClicked: () -> Unit,
     subscriptionViewModel: SubscriptionViewModel = hiltViewModel(),
 ) {
@@ -97,9 +104,9 @@ internal fun CrbtSubscribeScreen(
     val scope = rememberCoroutineScope()
 
 
-    LaunchedEffect(subscriptionUiState, isUserRegisteredForCrbt) {
+    LaunchedEffect(subscriptionUiState) {
         when (subscriptionUiState) {
-            is SubscriptionUiState.Success -> onSubscribeClick()
+            is SubscriptionUiState.Success -> onSubscribeSuccess()
 
             is SubscriptionUiState.Error -> {
                 snackbarHostState.showSnackbar(
@@ -110,8 +117,6 @@ internal fun CrbtSubscribeScreen(
 
             else -> Unit
         }
-        showRegistrationDialog = !isUserRegisteredForCrbt
-
     }
 
 
@@ -126,25 +131,34 @@ internal fun CrbtSubscribeScreen(
             songTitle = crbtSong?.songTitle ?: "",
             songProfileUrl = crbtSong?.profile ?: ""
         )
+
+        MusicInfo(
+            price = crbtSong?.price ?: "0.00",
+            numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
+            numberOfPlays = crbtSong?.numberOfListeners ?: 0,
+            billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}"
+        )
+
         SubscribeContent(
             isGiftSubscription = isGiftSub ?: false,
-            onBillingTypeSelected = {},
-            billingType = SubscriptionBillingType.Monthly,
-            onDatePicked = {},
-            date = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             onSubscribeClick = {
-                subscriptionViewModel.subscribeToTone(
-                    ussdCode = crbtSong?.ussdCode ?: "",
-                    activity = context as Activity
-                )
+                if (!isUserRegisteredForCrbt) {
+                    showRegistrationDialog = true
+                } else {
+                    subscriptionViewModel.subscribeToTone(
+                        ussdCode = crbtSong?.ussdCode ?: "",
+                        activity = context as Activity,
+                    )
+                }
             },
             subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
             isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
-            isButtonEnabled = crbtSong != null
+            isButtonEnabled = crbtSong != null,
+            onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange
         )
     }
 
@@ -242,7 +256,7 @@ fun SubscribeHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp)
+            .height(360.dp)
             .clip(
                 shape = RoundedCornerShape(
                     topStart = 0.dp,
@@ -256,6 +270,18 @@ fun SubscribeHeader(
             modifier = Modifier.fillMaxSize(),
             imageUrl = songProfileUrl,
             imageRes = R.drawable.feature_subscription_onboardingbackground
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black),
+                        startY = 0f,
+                        endY = Float.POSITIVE_INFINITY
+                    )
+                )
         )
         Column(
             modifier = Modifier
@@ -297,47 +323,121 @@ fun SubscribeHeader(
     }
 }
 
+
+@Composable
+fun MusicInfo(
+    price: String,
+    numberOfSubscribers: Int,
+    numberOfPlays: Int,
+    billingType: String
+) {
+    LazyRow(
+        state = rememberLazyListState(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            InfoButton(
+                value = (price.toDoubleOrNull() ?: 0.00).toString(),
+                title = stringResource(id = R.string.feature_subscription_price, billingType),
+                buttonColors = ButtonDefaults.buttonColors(),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+        item {
+            InfoButton(
+                value = numberOfSubscribers.toString(),
+                title = pluralStringResource(
+                    id = R.plurals.feature_subscription_subscribers_plural,
+                    count = numberOfSubscribers,
+                ),
+                buttonColors = ButtonDefaults.filledTonalButtonColors(),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+
+        item {
+            InfoButton(
+                value = numberOfPlays.toString(),
+                title = pluralStringResource(
+                    id = R.plurals.feature_subscription_plays_plural,
+                    count = numberOfPlays,
+                ),
+                buttonColors = ButtonDefaults.filledTonalButtonColors(),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+    }
+}
+
+
+@Composable
+fun InfoButton(
+    value: String,
+    title: String,
+    buttonColors: ButtonColors,
+    modifier: Modifier = Modifier
+) {
+    Button(onClick = { }, colors = buttonColors) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = bodyFontFamily
+                )
+            )
+            Text(text = title, style = MaterialTheme.typography.labelMedium)
+        }
+    }
+
+}
+
 @Composable
 fun SubscribeContent(
     modifier: Modifier = Modifier,
     isGiftSubscription: Boolean,
-    onGiftPhoneNumberChanged: (String, Boolean) -> Unit = { _, _ -> },
-    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
-    billingType: SubscriptionBillingType,
-    onDatePicked: (Long) -> Unit,
-    date: Long?,
+    onGiftPhoneNumberChanged: (String) -> Unit,
     onSubscribeClick: () -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
     isButtonEnabled: Boolean
 ) {
     val title = if (isGiftSubscription) {
-        stringResource(id = R.string.feature_subscription_gift_song_title, "")
+        stringResource(
+            id = R.string.feature_subscription_gift_song_title, ""
+        ) to stringResource(
+            id = R.string.feature_subscription_gift_song_subtitle
+        )
     } else {
-        stringResource(id = R.string.feature_subscription_subscribe_to_song_title, "")
+        stringResource(
+            id = R.string.feature_subscription_subscribe_to_song_title,
+            ""
+        ) to stringResource(
+            id = R.string.feature_subscription_subscribe_to_song_subtitle
+        )
     }
+    var isPhoneNumberValid by remember { mutableStateOf(false) }
+
     OnboardingSheetContainer(
-        title = title,
-        subtitle = stringResource(id = R.string.feature_subscription_subscribe_to_song_subtitle),
+        title = title.first,
+        subtitle = title.second,
         content = {
             if (isGiftSubscription) {
                 Spacer(modifier = Modifier.height(8.dp))
                 GiftPurchasePhoneNumber(
-                    onPhoneNumberChanged = onGiftPhoneNumberChanged,
+                    onPhoneNumberChanged = { phoneNumber, isValid ->
+                        isPhoneNumberValid = isValid
+                        onGiftPhoneNumberChanged(phoneNumber)
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            BillingType(
-                onBillingTypeSelected = onBillingTypeSelected,
-                billingType = billingType
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            SubscriptionDate(
-                onDatePicked = onDatePicked,
-                date = date
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+
             ProcessButton(
                 onClick = onSubscribeClick,
                 modifier = Modifier
@@ -378,7 +478,7 @@ fun SubscribeContent(
                         }
                     )
                 },
-                isEnabled = isButtonEnabled,
+                isEnabled = if (isGiftSubscription) isPhoneNumberValid else isButtonEnabled,
                 isProcessing = isSubscriptionProcessing
             )
         },
@@ -505,14 +605,11 @@ fun CrbtSubscribeContentPreview() {
     CrbtTheme {
         SubscribeContent(
             isGiftSubscription = false,
-            onBillingTypeSelected = {},
-            billingType = SubscriptionBillingType.Monthly,
-            onDatePicked = {},
-            date = null,
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true
+            isButtonEnabled = true,
+            onGiftPhoneNumberChanged = { _ -> }
         )
     }
 }
@@ -523,14 +620,11 @@ fun CrbtSubscribeContentPreview2() {
     CrbtTheme {
         SubscribeContent(
             isGiftSubscription = true,
-            onBillingTypeSelected = {},
-            billingType = SubscriptionBillingType.Monthly,
-            onDatePicked = {},
-            date = null,
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true
+            isButtonEnabled = true,
+            onGiftPhoneNumberChanged = { _ -> }
         )
     }
 }

@@ -22,7 +22,7 @@
     <string name="feature_subscription_gift_song_title">Gift this song %s</string>
     <string name="feature_subscription_gift_button">Gift for</string>
     <string name="feature_subscription_subscribe_button">Subscribe for</string>
-    <string name="feature_subscription_subscribe_to_song_subtitle">Provide your subscription plan</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">For your callers to enjoy this song, subscribe now!</string>
     <string name="feature_subscription_no_songs">No CRBT songs to browse</string>
     <string name="feature_subscription_play_error">Failed to stream CRBT song.</string>
     <string name="feature_subscription_reload">Refresh</string>
@@ -30,5 +30,20 @@
     <string name="feature_subscription_already_registered">Not a new user</string>
     <string name="feature_subscription_new_to_crbt">New to CRBT service?</string>
     <string name="feature_subscription_register_for_crbt_description">To to use CRBT services, users have to be first registered. Register if you are new to CRBT.</string>
+    <string name="feature_subscription_plays">plays⚡</string>
+    <string name="feature_subscription_price">price <b>%s</b></string>
+    <string name="feature_subscription_subscribers">subscribers</string>
+    <string name="feature_subscription_gift_song_subtitle">Provide the phone number to gift this song</string>
+    <!--  subscribers plurals  -->
+    <plurals name="feature_subscription_subscribers_plural">
+        <item quantity="one">subscriber</item>
+        <item quantity="other">subscribers</item>
+    </plurals>
+
+    <plurals name="feature_subscription_plays_plural">
+        <item quantity="one">play ⚡</item>
+        <item quantity="other">plays ⚡</item>
+    </plurals>
+
 
 </resources>

@@ -68,7 +68,7 @@ fun NavGraphBuilder.subscriptionScreen(
         )
     ) {
         CrbtSubscribeScreen(
-            onSubscribeClick = {
+            onSubscribeSuccess = {
                 navController.navigate(SUBSCRIPTION_COMPLETE_ROUTE)
             },
             onBackClicked = {

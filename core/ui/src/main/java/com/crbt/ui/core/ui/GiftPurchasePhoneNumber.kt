@@ -44,6 +44,7 @@ import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
 import com.example.crbtjetcompose.core.designsystem.R
+import com.rejowan.ccpc.Country
 
 @Composable
 fun GiftPurchasePhoneNumber(
@@ -53,7 +54,7 @@ fun GiftPurchasePhoneNumber(
     val phoneNumberState by remember {
         mutableStateOf(
             PhoneNumberValidationState(
-                countryCode = "" //Country.Ethiopia.countryCode,
+                countryCode = Country.Ethiopia.countryCode,
             ),
         )
     }
@@ -64,7 +65,7 @@ fun GiftPurchasePhoneNumber(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val contactUri = result.data?.data // The URI of the selected contact
+            val contactUri = result.data?.data
             if (contactUri != null) {
                 val phoneNumber = getPhoneNumberFromUri(context, contactUri)
                 if (phoneNumber != null) {

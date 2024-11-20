@@ -27,10 +27,8 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -42,7 +40,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -266,7 +263,6 @@ fun LazyListScope.subscriptionTonesFeed(
         SubscriptionTone(
             onSubscriptionToneClick = onSubscriptionToneClick,
             onGiftSubscriptionClick = onGiftSubscriptionClick,
-            showDivider = crbtSongs.indexOf(song) != crbtSongs.size - 1,
             onPlayPauseToggle = {
                 if (isCurrentSong) {
                     if (isPlaying) {
@@ -291,7 +287,6 @@ fun SubscriptionTone(
     modifier: Modifier = Modifier,
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
-    showDivider: Boolean = true,
     onPlayPauseToggle: () -> Unit,
     isPlaying: Boolean
 ) {
@@ -311,7 +306,6 @@ fun SubscriptionTone(
     val morph = remember {
         Morph(shapeA, shapeB)
     }
-    var expanded by remember { mutableStateOf(false) }
     val infiniteTransition = rememberInfiniteTransition("infinite outline movement")
     val animatedProgress = infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -342,19 +336,22 @@ fun SubscriptionTone(
             title = crbtSongResource.songTitle,
             subtitle = crbtSongResource.artisteName,
             trailingContent = {
-                Row {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    IconButton(onClick = { onGiftSubscriptionClick(crbtSongResource.id) }) {
+                        Icon(
+                            CrbtIcons.Gift,
+                            contentDescription = null,
+                        )
+                    }
+
                     IconButton(
                         onClick = onPlayPauseToggle
                     ) {
                         Icon(
                             if (isPlaying) CrbtIcons.PauseCircle else CrbtIcons.Play,
                             contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = { expanded = !expanded }) {
-                        Icon(
-                            CrbtIcons.MoreVert,
-                            contentDescription = null,
                         )
                     }
                 }
@@ -376,29 +373,6 @@ fun SubscriptionTone(
                     )
                 )
         )
-        if (expanded) {
-            Column(
-                modifier = Modifier
-                    .padding(start = 42.dp)
-            ) {
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(id = R.string.feature_subscription_subscribe_gift_title),
-                        )
-                    },
-                    trailingContent = {
-                        IconButton(onClick = { onGiftSubscriptionClick(crbtSongResource.id) }) {
-                            Icon(imageVector = CrbtIcons.ArrowRight, contentDescription = null)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onGiftSubscriptionClick(crbtSongResource.id) }
-                )
-            }
-            if (showDivider) HorizontalDivider()
-        }
     }
 }
 
