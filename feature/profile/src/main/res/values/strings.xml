@@ -21,4 +21,10 @@
     <string name="feature_profile_first_name_label">First Name</string>
     <string name="feature_profile_last_name_label">Last Name</string>
     <string name="feature_profile_email_label">Email from CRBT</string>
+    <string name="feature_profile_reward_points_sheet_action">Got it</string>
+    <string name="feature_profile_total_reward_points">Your total reward points</string>
+    <string name="feature_profile_crbt_reward_points">Your CRBT reward points</string>
+    <string name="feature_profile_crbt_reward_points_info">
+        Points are rewarded for each subscription you make on CRBT.
+        You also earn points for subscriptions you make for others. Keep subscribing to accumulate more🔥</string>
 </resources>
