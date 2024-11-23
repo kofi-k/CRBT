@@ -105,7 +105,8 @@ fun MusicInfo(
             DynamicAsyncImage(
                 imageUrl = coverUrl,
                 modifier = Modifier.fillMaxSize(),
-            )
+                imageRes = R.drawable.core_ui_paps_image,
+                )
         }
         Column {
             Text(

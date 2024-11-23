@@ -33,7 +33,7 @@ fun ToneItem(
     subtitle: String,
     trailingContent: @Composable () -> Unit,
     imageUrl: String?,
-    @DrawableRes imageRes: Int = com.example.crbtjetcompose.core.designsystem.R.drawable.core_designsystem_ic_placeholder_default,
+    @DrawableRes imageRes: Int = R.drawable.core_ui_paps_image,
     colors: ListItemColors = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
             stronglyDeemphasizedAlpha

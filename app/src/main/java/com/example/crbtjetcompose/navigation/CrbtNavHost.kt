@@ -14,6 +14,7 @@ import com.crbt.onboarding.navigation.navigateToOnboarding
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
 import com.crbt.services.navigation.servicesScreen
+import com.crbt.subscription.navigation.navigateToAddSubscription
 import com.crbt.subscription.navigation.subscriptionScreen
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.ui.CrbtAppState
@@ -49,10 +50,7 @@ fun CrbtNavHost(
             homeScreen(
                 navigateToTopUp = {},
                 onPopularTodayClick = { toneId ->
-                    appState.navigateToTopLevelDestination(
-                        TopLevelDestination.SUBSCRIPTIONS,
-                        toneId!!
-                    )
+                    navController.navigateToAddSubscription(toneId, false)
                 },
                 navigateToSubscription = {
                     appState.navigateToTopLevelDestination(TopLevelDestination.SUBSCRIPTIONS)
@@ -66,7 +64,10 @@ fun CrbtNavHost(
             )
             subscriptionScreen(
                 navController = navController,
-                musicControllerUiState = musicControllerUiState
+                musicControllerUiState = musicControllerUiState,
+                onSubscriptionSuccess = {
+                    appState.navigateToTopLevelDestination(TopLevelDestination.SUBSCRIPTIONS)
+                }
             )
             profileScreen(
                 navController = navController,

@@ -82,6 +82,7 @@ androidxAutofill = "1.1.0"
 graphicShapes = "1.0.1"
 exoplayer = "2.19.1"
 palette = "1.0.0"
+materialVersion = "1.8.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -205,6 +206,7 @@ androidx-room-paging = { group = "androidx.room", name = "room-paging", version.
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 #    implementation("com.github.romellfudi.VoIpUSSD:ussd-library:1.4.a")
 voipUssd = { group = "com.github.romellfudi.VoIpUSSD", name = "ussd-library", version = "1.4.a" }
+androidx-material = { group = "androidx.compose.material", name = "material", version.ref = "materialVersion" }
 
 
 [plugins]
