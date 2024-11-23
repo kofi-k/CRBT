@@ -60,8 +60,7 @@ import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
-import com.crbt.ui.core.ui.isColorDark
-import com.crbt.ui.core.ui.rememberDominantColor
+import com.crbt.ui.core.ui.rememberDominantColorWithReadableText
 import com.example.crbtjetcompose.feature.home.R
 
 
@@ -70,7 +69,7 @@ import com.example.crbtjetcompose.feature.home.R
 fun HomeScreen(
     navigateToSubscription: () -> Unit,
     onNavigateToTopUp: () -> Unit = {},
-    onPopularTodayClick: (String?) -> Unit = {}
+    onPopularTodayClick: (String) -> Unit = {}
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val newUssdUiState by viewModel.newUssdState.collectAsStateWithLifecycle()
@@ -286,15 +285,14 @@ fun LatestMusicCard(
     backgroundUrl: String?,
     modifier: Modifier = Modifier
 ) {
-    val dominantColor = rememberDominantColor(backgroundUrl)
-    val textColor = if (isColorDark(dominantColor)) Color.White else Color.Black
+    val (_, textColor) = rememberDominantColorWithReadableText(backgroundUrl)
 
     Box(
         modifier = modifier
     ) {
         DynamicAsyncImage(
             imageUrl = backgroundUrl,
-            imageRes = R.drawable.paps_image,
+            imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image,
             modifier = Modifier
                 .matchParentSize()
                 .clip(MaterialTheme.shapes.large)
@@ -309,7 +307,7 @@ fun LatestMusicCard(
         Text(
             text = stringResource(id = R.string.feature_home_latest_music),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
+            color = textColor,
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.TopStart)
@@ -324,14 +322,14 @@ fun LatestMusicCard(
         ) {
             Text(
                 text = artist,
-                color = Color.White,
+                color = textColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = title,
                 style = MaterialTheme.typography.displaySmall,
-                color = Color.White,
+                color = textColor,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

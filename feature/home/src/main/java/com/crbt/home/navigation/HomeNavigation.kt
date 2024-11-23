@@ -23,7 +23,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeScreen(
     navigateToTopUp: () -> Unit,
-    onPopularTodayClick: (String?) -> Unit,
+    onPopularTodayClick: (String) -> Unit,
     navigateToSubscription: () -> Unit
 ) {
     composable(route = HOME_ROUTE) {

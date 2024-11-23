@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,11 +53,10 @@ import com.crbt.ui.core.ui.EmptyContent
 import com.example.crbtjetcompose.feature.home.R
 
 
-// tab layout for popular today
 @Composable
 fun PopularTodayTabLayout(
     modifier: Modifier,
-    navigateToSubscriptions: (toneId: String?) -> Unit,
+    navigateToSubscriptions: (toneId: String) -> Unit,
     crbSongsFeed: CrbtSongsFeedUiState,
 ) = trace("PopularTodayTabLayout") {
 
@@ -83,25 +81,25 @@ fun PopularTodayTabLayout(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.size(16.dp))
-                TabRow(
+                ScrollableTabRow(
                     selectedTabIndex = selectedTabIndex,
                     divider = {},
                     containerColor = Color.Transparent,
                     indicator = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
+                    edgePadding = 16.dp,
+                    tabs = {
                         listOfFeedCategories.forEachIndexed { index, category ->
-                            Text(
-                                text = category,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                            Tab(
+                                selected = selectedTabIndex == index,
+                                onClick = {
+                                    selectedTabIndex = index
+                                    selectedCrbtCategory = category
+                                },
+                                selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                                unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier
-                                    .wrapContentSize()
+                                    .padding(horizontal = 4.dp)
+                                    .clip(MaterialTheme.shapes.medium)
                                     .background(
                                         color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
                                         shape = MaterialTheme.shapes.medium
@@ -111,22 +109,19 @@ fun PopularTodayTabLayout(
                                         color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                                         shape = MaterialTheme.shapes.medium
                                     )
-                                    .padding(
-                                        horizontal = 12.dp,
-                                        vertical = 4.dp
-                                    )
-                                    .clickable(
-                                        onClick = {
-                                            selectedTabIndex = index
-                                            selectedCrbtCategory = category
-                                        },
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication = null
-                                    )
-                            )
+                            ) {
+                                Text(
+                                    text = category,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 12.dp,
+                                            vertical = 4.dp
+                                        )
+                                )
+                            }
                         }
-                    }
-                }
+                    },
+                )
 
                 Spacer(modifier = Modifier.size(16.dp))
             }
@@ -136,9 +131,7 @@ fun PopularTodayTabLayout(
 
         DailyPopularTones(
             crbtSongsFeedUiState = crbSongsFeed,
-            onToneSelected = { toneId ->
-                navigateToSubscriptions(toneId)
-            },
+            onToneSelected = navigateToSubscriptions,
             selectedCrbtCategory = selectedCrbtCategory
         )
 
