@@ -17,6 +17,7 @@ interface CrbtPreferencesRepository {
         lastName: String,
         phoneNumber: String,
         langPref: String,
+        rewardPoints: Int
     )
 
     suspend fun updateCrbtSubscriptionId(subscriptionId: Int)

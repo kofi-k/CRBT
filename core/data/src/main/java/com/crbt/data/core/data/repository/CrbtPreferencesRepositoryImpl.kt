@@ -26,12 +26,14 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         lastName: String,
         phoneNumber: String,
         langPref: String,
+        rewardPoints: Int
     ) {
         crbtPreferencesDataSource.setUserInfo(
             firstName,
             lastName,
             phoneNumber,
             langPref,
+            rewardPoints
         )
         analyticsHelper.logUserDetails(firstName, lastName, phoneNumber, langPref)
     }

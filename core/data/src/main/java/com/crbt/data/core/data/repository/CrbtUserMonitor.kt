@@ -35,6 +35,7 @@ class CrbtUserMonitor @Inject constructor(
                 lastName = account.lastName ?: "",
                 phoneNumber = phone,
                 langPref = langPref,
+                rewardPoints = account.rewardPoints ?: 0
             )
             crbtPreferencesRepository.updateCrbtSubscriptionId(account.subSongId)
         }
@@ -49,6 +50,7 @@ class CrbtUserMonitor @Inject constructor(
                 lastName,
                 phone,
                 langPref,
+                rewardPoints ?: 0
             )
         }
     }

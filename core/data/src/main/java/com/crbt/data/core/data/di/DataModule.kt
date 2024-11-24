@@ -15,6 +15,8 @@ import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtPreferencesRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtUserMonitor
 import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.RefreshRepository
+import com.crbt.data.core.data.repository.RefreshRepositoryImpl
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepositoryImpl
@@ -78,4 +80,9 @@ abstract class DataModule {
     abstract fun bindsCrbtAdsRepository(
         crbtAdsRepositoryImpl: CrbtAdsRepositoryImpl
     ): CrbtAdsRepository
+
+    @Binds
+    abstract fun bindsRefreshRepository(
+        refreshRepository: RefreshRepositoryImpl
+    ): RefreshRepository
 }
