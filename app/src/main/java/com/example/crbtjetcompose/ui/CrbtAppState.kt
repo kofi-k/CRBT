@@ -133,7 +133,6 @@ class CrbtAppState(
      */
     fun navigateToTopLevelDestination(
         topLevelDestination: TopLevelDestination,
-        args: String = ""
     ) {
         trace("Navigation: ${topLevelDestination.name}") {
             val topLevelNavOptions = navOptions {
@@ -158,7 +157,7 @@ class CrbtAppState(
                     navController.navigateToServices(topLevelNavOptions)
 
                 TopLevelDestination.SUBSCRIPTIONS ->
-                    navController.navigateToSubscription(topLevelNavOptions, args)
+                    navController.navigateToSubscription(topLevelNavOptions)
 
                 TopLevelDestination.PROFILE ->
                     navController.navigateToProfile(topLevelNavOptions)
