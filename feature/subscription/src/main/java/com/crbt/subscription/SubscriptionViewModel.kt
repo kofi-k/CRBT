@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
+import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
@@ -40,6 +41,7 @@ class SubscriptionViewModel @Inject constructor(
     crbtSongsRepository: UserCrbtMusicRepository,
     private val crbtNetworkRepository: CrbtNetworkRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
+    private val loginManager: LoginManager
 ) : ViewModel() {
 
     private val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
@@ -141,12 +143,14 @@ class SubscriptionViewModel @Inject constructor(
             _subscriptionUiState.value = try {
                 val result = crbtNetworkRepository.subscribeToCrbt(selectedTone.value?.toInt() ?: 0)
                 crbtPreferencesRepository.updateCrbtSubscriptionId(selectedTone.value?.toInt() ?: 0)
+                loginManager.getAccountInfo()
                 SubscriptionUiState.Success(result)
             } catch (e: Exception) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
     }
+
 
     fun updateUserCrbtSubscriptionStatus() {
         _subscriptionUiState.value = SubscriptionUiState.Loading

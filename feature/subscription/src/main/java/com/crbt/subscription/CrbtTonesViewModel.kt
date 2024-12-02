@@ -15,13 +15,11 @@ import com.crbt.domain.PlaySongUseCase
 import com.crbt.domain.ResumeSongUseCase
 import com.crbt.domain.SkipToNextSongUseCase
 import com.crbt.domain.SkipToPreviousSongUseCase
-import com.crbt.subscription.navigation.TONE_ID_ARG
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,8 +40,6 @@ class CrbtTonesViewModel @Inject constructor(
 
     val searchQuery = savedStateHandle.getStateFlow(key = SEARCH_QUERY, initialValue = "")
 
-    val backstackCrbtMusic: StateFlow<String?> =
-        savedStateHandle.getStateFlow(TONE_ID_ARG, null)
 
     var tonesUiState by mutableStateOf(TonesUiState())
         private set
@@ -69,28 +65,21 @@ class CrbtTonesViewModel @Inject constructor(
                 initialValue = CrbtSongsFeedUiState.Loading
             )
 
-    val crbtSongResource: StateFlow<CrbtSongResource?> =
-        backstackCrbtMusic.flatMapLatest { toneId ->
-            if (toneId != null) {
-                crbtSongsRepository.observeAllCrbtMusic()
-                    .map { songs ->
-                        when (songs) {
-                            is CrbtSongsFeedUiState.Error -> null
-                            CrbtSongsFeedUiState.Loading -> null
-                            is CrbtSongsFeedUiState.Success ->
-                                songs.songs.find {
-                                    it.id == toneId
-                                }
-                        }
-                    }
+    val filteredSongsFlow: StateFlow<List<CrbtSongResource>> = searchQuery
+        .combine(crbtSongsRepository.observeAllCrbtMusic()) { query, results ->
+            val allSongs = (results as? CrbtSongsFeedUiState.Success)?.songs ?: emptyList()
+            if (query.length >= SEARCH_QUERY_MIN_LENGTH) {
+                allSongs.filter { it.songTitle.contains(query, ignoreCase = true) }
             } else {
-                flowOf(null)
+                allSongs
             }
-        }.stateIn(
+        }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
+            initialValue = emptyList()
         )
+
 
     private fun getCrbtSongs() {
         viewModelScope.launch {
@@ -102,16 +91,6 @@ class CrbtTonesViewModel @Inject constructor(
                             songs = feed.songs,
                             loading = false,
                         )
-//                            .apply {
-//                            clickedCrbtMusic.map { id ->
-//                                if (!id.isNullOrBlank()) {
-//                                    println("Clicked crbt music: ${clickedCrbtMusic.value}")
-//                                    tonesUiState =
-//                                        tonesUiState.copy(selectedSong = songs?.find { it.id == clickedCrbtMusic.value })
-//                                    playSong()
-//                                }
-//                            }
-//                        }
                     }
 
                     is CrbtSongsFeedUiState.Error -> tonesUiState.copy(
@@ -126,7 +105,7 @@ class CrbtTonesViewModel @Inject constructor(
     }
 
     fun onSearchQueryChange(query: String) {
-        savedStateHandle.set(SEARCH_QUERY, query)
+        savedStateHandle[SEARCH_QUERY] = query
         // filter songs in tonesUiState
         if (query.length >= SEARCH_QUERY_MIN_LENGTH) {
             tonesUiState = tonesUiState.copy(

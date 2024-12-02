@@ -80,8 +80,8 @@ fun TonesScreen(
     val currentSong = musicControllerUiState.currentSong
     val tonesUiState = crbtTonesViewModel.tonesUiState
     val searchQuery by crbtTonesViewModel.searchQuery.collectAsStateWithLifecycle()
+    val filteredSongs by crbtTonesViewModel.filteredSongsFlow.collectAsStateWithLifecycle()
 
-    val toneFromBackstack by crbtTonesViewModel.crbtSongResource.collectAsStateWithLifecycle()
 
     val isInitialized = rememberSaveable { mutableStateOf(false) }
 
@@ -92,12 +92,6 @@ fun TonesScreen(
         }
     }
 
-    LaunchedEffect(toneFromBackstack) {
-        if (toneFromBackstack != null) {
-            crbtTonesViewModel.onEvent(TonesPlayerEvent.OnSongSelected(toneFromBackstack!!))
-            crbtTonesViewModel.onEvent(TonesPlayerEvent.PlaySong)
-        }
-    }
 
     Scaffold(
         containerColor = Color.Transparent,

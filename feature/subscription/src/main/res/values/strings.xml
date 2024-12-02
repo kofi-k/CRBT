@@ -34,6 +34,7 @@
     <string name="feature_subscription_price">price <b>%s</b></string>
     <string name="feature_subscription_subscribers">subscribers</string>
     <string name="feature_subscription_gift_song_subtitle">Provide the phone number to gift this song</string>
+    <string name="feature_subscription_success">Successfully subscribed to <b>%s</b> CRBT.</string>
     <!--  subscribers plurals  -->
     <plurals name="feature_subscription_subscribers_plural">
         <item quantity="one">subscriber</item>
