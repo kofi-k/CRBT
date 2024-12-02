@@ -8,10 +8,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -53,7 +51,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -262,23 +259,30 @@ fun PackageTabs(
         containerColor = Color.Transparent
     ) {
         tabs.forEachIndexed { index, tab ->
-            Text(
-                text = tab.packageName,
-                color = MaterialTheme.colorScheme.onSurface,
+            Tab(
+                selected = selectedTabIndex == index,
+                onClick = {
+                    onTabSelected(index)
+                },
+                selectedContentColor = MaterialTheme.colorScheme.onSurface,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
-                    .wrapContentSize()
+                    .padding(horizontal = 4.dp)
                     .clip(MaterialTheme.shapes.large)
                     .background(
                         color = if (selectedTabIndex == index) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+                        shape = MaterialTheme.shapes.large
                     )
-                    .padding(horizontal = 12.dp, vertical = 4.dp)
-                    .clickable(
-                        onClick = { onTabSelected(index) },
-                        role = Role.Tab,
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = LocalIndication.current,
-                    )
-            )
+            ) {
+                Text(
+                    text = tab.packageName,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 12.dp,
+                            vertical = 4.dp
+                        )
+                )
+            }
         }
     }
 }
