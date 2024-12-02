@@ -21,6 +21,7 @@ message UserPreferences {
   double user_balance = 19;
   string token = 25;
   bool is_user_registered_for_crbt = 26;
+  int32 reward_points = 27;
 
   repeated string deprecated_interested_crbt_languages = 21;
   repeated string deprecated_gifted_crbt_tone_ids = 22;

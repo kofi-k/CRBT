@@ -25,5 +25,6 @@ data class Account(
     val phone: String,
     val langPref: String,
     val firstName: String? = null,
-    val lastName: String? = null
+    val lastName: String? = null,
+    val rewardPoints: Int? = null
 )
