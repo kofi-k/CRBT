@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.subscription.CrbtSubscribeScreen
-import com.crbt.subscription.SubscriptionCheckout
 import com.crbt.subscription.TonesScreen
 
 const val TONE_ID_ARG = "tone_id"
@@ -29,7 +28,15 @@ fun NavController.navigateToAddSubscription(
     navOptions: NavOptions? = null
 ) {
     val route = "$SUBSCRIPTION_ROUTE/add_subscription?$TONE_ID_ARG=$toneId&$GIFT_SUB_ARG=$giftSub"
-    navigate(route, navOptions)
+    navigate(route) {
+        if (currentDestination?.route != SUBSCRIPTION_ROUTE) {
+            popUpTo(graph.startDestinationId) {
+                saveState = true
+            }
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
 fun NavController.navigateToSubscription(navOptions: NavOptions, toneId: String = "") =
@@ -42,7 +49,8 @@ fun NavController.navigateToSubscription(navOptions: NavOptions, toneId: String 
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,
-    musicControllerUiState: MusicControllerUiState
+    musicControllerUiState: MusicControllerUiState,
+    onSubscriptionSuccess: () -> Unit
 ) {
     composable(
         route = SUBSCRIPTION_ROUTE,
@@ -68,24 +76,10 @@ fun NavGraphBuilder.subscriptionScreen(
         )
     ) {
         CrbtSubscribeScreen(
-            onSubscribeSuccess = {
-                navController.navigate(SUBSCRIPTION_COMPLETE_ROUTE)
-            },
+            onSubscribeSuccess = onSubscriptionSuccess,
             onBackClicked = {
                 navController.navigateUp()
             },
-        )
-    }
-
-    composable(route = SUBSCRIPTION_COMPLETE_ROUTE) {
-        SubscriptionCheckout(
-            onDoneClicked = {
-                navController.navigate(SUBSCRIPTION_ROUTE) {
-                    popUpTo(SUBSCRIPTION_ROUTE) {
-                        inclusive = true
-                    }
-                }
-            }
         )
     }
 }

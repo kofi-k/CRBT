@@ -3,12 +3,11 @@ package com.crbt.subscription
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -31,23 +31,30 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -55,34 +62,27 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
-import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.UssdUiState
-import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
-import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
-import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
-import com.crbt.ui.core.ui.ShowDatePicker
 import com.example.crbtjetcompose.feature.subscription.R
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 internal fun CrbtSubscribeScreen(
@@ -101,12 +101,13 @@ internal fun CrbtSubscribeScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(subscriptionUiState) {
         when (subscriptionUiState) {
-            is SubscriptionUiState.Success -> onSubscribeSuccess()
+            is SubscriptionUiState.Success -> {
+                showBottomSheet = true
+            }
 
             is SubscriptionUiState.Error -> {
                 snackbarHostState.showSnackbar(
@@ -192,6 +193,19 @@ internal fun CrbtSubscribeScreen(
                     ussdState is UssdUiState.Idle
         )
     }
+
+    if (showBottomSheet) {
+        SubscriptionSuccessBottomSheet(
+            navigateUp = {
+                showBottomSheet = false
+                onSubscribeSuccess()
+            },
+            successMessage = stringResource(
+                id = R.string.feature_subscription_success,
+                crbtSong?.songTitle ?: "",
+            )
+        )
+    }
 }
 
 @Composable
@@ -269,7 +283,7 @@ fun SubscribeHeader(
         DynamicAsyncImage(
             modifier = Modifier.fillMaxSize(),
             imageUrl = songProfileUrl,
-            imageRes = R.drawable.feature_subscription_onboardingbackground
+            imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image
         )
 
         Box(
@@ -488,100 +502,117 @@ fun SubscribeContent(
 
 
 @Composable
-fun BillingType(
-    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
-    billingType: SubscriptionBillingType
+fun AnimatedSuccessCheckmark(
+    modifier: Modifier = Modifier,
+    circleColor: Color = Color.Green,
+    checkmarkColor: Color = Color.White,
+    durationMillis: Int = 1000,
+    strokeWidth: Float = 8f
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf(billingType) }
+    val progress = remember { Animatable(0f) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(text = stringResource(id = R.string.feature_subscription_billing_type_label))
-        Spacer(modifier = Modifier.height(8.dp))
-        SurfaceCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(),
-            content = {
-                Column {
-                    CustomInputButton(
-                        text = stringResource(id = selected.title),
-                        onClick = { expanded = !expanded },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        leadingIcon = CrbtIcons.PaymentMethods
-                    )
-                    if (expanded) {
-                        SubscriptionBillingType.entries.forEach {
-                            ListItem(
-                                headlineContent = { Text(text = stringResource(id = it.title)) },
-                                modifier = Modifier.clickable {
-                                    selected = it
-                                    expanded = false
-                                    onBillingTypeSelected(it)
-                                },
-                            )
-                        }
-                    }
-                }
-            },
-            color = MaterialTheme.colorScheme.outlineVariant.copy(
-                stronglyDeemphasizedAlpha,
-            )
+    LaunchedEffect(Unit) {
+        progress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
         )
     }
 
+    Canvas(modifier = modifier.size(120.dp)) {
+        val canvasSize = size.minDimension
+        val radius = canvasSize / 2
+
+        drawArc(
+            color = circleColor,
+            startAngle = -90f,
+            sweepAngle = 360f * progress.value,
+            useCenter = false,
+            style = Stroke(width = strokeWidth),
+            topLeft = Offset(center.x - radius, center.y - radius),
+            size = Size(width = radius * 2, height = radius * 2)
+        )
+
+        val checkmarkPath = Path().apply {
+            moveTo(center.x - radius * 0.4f, center.y)
+            lineTo(center.x - radius * 0.1f, center.y + radius * 0.3f)
+            lineTo(center.x + radius * 0.4f, center.y - radius * 0.3f)
+        }
+
+        if (progress.value > 0.5f) {
+            val pathMeasure = PathMeasure()
+            pathMeasure.setPath(checkmarkPath, false)
+
+            val animatedPath = Path()
+            pathMeasure.getSegment(
+                0f,
+                pathMeasure.length * ((progress.value - 0.5f) * 2),
+                animatedPath,
+                true
+            )
+
+            drawPath(
+                path = animatedPath,
+                color = checkmarkColor,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            )
+        }
+    }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubscriptionDate(
-    onDatePicked: (Long) -> Unit,
-    date: Long?,
+fun SubscriptionSuccessBottomSheet(
+    sheetState: SheetState = rememberModalBottomSheetState(),
+    navigateUp: () -> Unit,
+    successMessage: String,
 ) {
-    var showDatePicker by remember { mutableStateOf(false) }
-    val dateFormat = SimpleDateFormat(simpleDateFormatPattern, Locale.getDefault())
-    var pickedDate by remember { mutableStateOf(date) }
+    ModalBottomSheet(
+        onDismissRequest = navigateUp,
+        sheetState = sheetState,
+        content = {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-    val dateString = pickedDate?.let { dateFormat.format(it) }
-        ?: stringResource(id = R.string.feature_subscription_date_placeholder)
+                AnimatedSuccessCheckmark(
+                    modifier = Modifier.padding(16.dp),
+                    circleColor = MaterialTheme.colorScheme.primary,
+                    checkmarkColor = MaterialTheme.colorScheme.primary,
+                    durationMillis = 1200
+                )
 
-    CustomInputButton(
-        text = dateString,
-        leadingIcon = CrbtIcons.Calendar,
-        onClick = { showDatePicker = true },
-        trailingIcon = {
-            Icon(
-                imageVector = CrbtIcons.ArrowRight,
-                contentDescription = CrbtIcons.ArrowRight.name,
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
+                Text(
+                    text = successMessage,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                ProcessButton(
+                    onClick = navigateUp,
+                    text = stringResource(id = R.string.feature_subscription_done),
+                    colors = ButtonDefaults.buttonColors(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+            }
+        }
     )
+}
 
-    AnimatedVisibility(
-        visible = showDatePicker,
-        enter = expandVertically(),
-        exit = shrinkOut()
-    ) {
-        ShowDatePicker(
-            title = stringResource(id = R.string.feature_subscription_date_title),
-            onDateSelected = {
-                onDatePicked(it)
-                pickedDate = it
-                showDatePicker = false
-            },
-            onDismiss = { showDatePicker = false }
-        )
-    }
+
+@Preview
+@Composable
+fun AnimatedSuccessCheckmarkPreview() {
+    AnimatedSuccessCheckmark(
+        modifier = Modifier.padding(16.dp),
+        circleColor = Color.Green,
+        checkmarkColor = Color.Green,
+        durationMillis = 1200
+    )
 }
 
 
