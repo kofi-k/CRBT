@@ -17,9 +17,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                 isUserSignedIn = it.isUserSignedIn,
                 phoneNumber = it.userPhoneNumber,
                 languageCode = it.userLanguageCode,
-                paymentMethod = it.userPaymentMethod,
                 profileUrl = it.userProfileUrl,
-                currency = it.userCurrency,
                 firstName = it.userFirstName,
                 lastName = it.userLastName,
                 email = it.userEmail,
@@ -27,9 +25,13 @@ class CrbtPreferencesDataSource @Inject constructor(
                 interestedCrbtLanguages = it.interestedCrbtLanguages.keys,
                 currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
-                token = it.token
+                token = it.token,
+                rewardPoints = it.rewardPoints
             )
         }
+
+    val isUserRegisteredForCrbt = userPreferences.data.map { it.isUserRegisteredForCrbt }
+
 
     suspend fun setSignInToken(userToken: String) {
         try {
@@ -53,22 +55,14 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setUserPaymentMethod(paymentMethod: String) {
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) {
         userPreferences.updateData {
             it.copy {
-                userPaymentMethod = paymentMethod
+                isUserRegisteredForCrbt = isRegistered
             }
         }
     }
 
-
-    suspend fun setPhoneNumber(phoneNumber: String) {
-        userPreferences.updateData {
-            it.copy {
-                userPhoneNumber = phoneNumber
-            }
-        }
-    }
 
     suspend fun setCurrentBalance(balance: Double) {
         userPreferences.updateData {
@@ -100,6 +94,7 @@ class CrbtPreferencesDataSource @Inject constructor(
         lastName: String,
         phone: String,
         languageCode: String,
+        points: Int
     ) {
         try {
             userPreferences.updateData {
@@ -108,6 +103,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                     userLastName = lastName
                     userPhoneNumber = phone
                     userLanguageCode = languageCode
+                    rewardPoints = points
                 }
             }
         } catch (ioException: IOException) {
@@ -144,6 +140,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                     currentCrbtSubscriptionId = ""
                     userBalance = 0.0
                     token = ""
+                    rewardPoints = 0
                 }
             }
         } catch (ioException: IOException) {

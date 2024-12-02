@@ -3,15 +3,17 @@ package com.crbt.home
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +27,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,36 +51,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.CrbtUssdType
-import com.crbt.data.core.data.DummyTones
-import com.crbt.data.core.data.model.DummyUser
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.DynamicAsyncImage
-import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
-import com.crbt.ui.core.ui.isColorDark
-import com.crbt.ui.core.ui.rememberDominantColor
-import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
+import com.crbt.ui.core.ui.rememberDominantColorWithReadableText
 import com.example.crbtjetcompose.feature.home.R
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
-    onSubscriptionClick: (String?) -> Unit = {},
+    navigateToSubscription: () -> Unit,
     onNavigateToTopUp: () -> Unit = {},
-    onPopularTodayClick: (String?) -> Unit = {}
+    onPopularTodayClick: (String) -> Unit = {}
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val newUssdUiState by viewModel.newUssdState.collectAsStateWithLifecycle()
     val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
     val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
     val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
+    val currentUserSubscription by viewModel.currentUserCrbtSubscription.collectAsStateWithLifecycle()
+    val crbtAdsUiState by viewModel.crbtAdsUiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
 
@@ -124,7 +123,7 @@ fun HomeScreen(
         }
 
         item {
-            CrbtAds()
+            CrbtAds(crbtAdsUiState)
         }
 
         item {
@@ -143,17 +142,28 @@ fun HomeScreen(
 
                 is Result.Success -> {
                     val latestMusic = (latestMusicUiState as Result.Success).data
-                    LatestMusicCard(
-                        artist = latestMusic.artisteName,
-                        title = latestMusic.songTitle,
-                        backgroundUrl = latestMusic.profile,
-                        onCardClick = {
-                            onPopularTodayClick(null)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
+
+                    if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
+                        LatestMusicCard(
+                            artist = latestMusic.artisteName,
+                            title = latestMusic.songTitle,
+                            backgroundUrl = latestMusic.profile,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 180.dp)
+                                .padding(horizontal = 16.dp)
+                                .clip(MaterialTheme.shapes.large)
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                                .clickable(
+                                    onClick = {
+                                        onPopularTodayClick(latestMusic.id)
+                                    },
+                                    role = Role.Button,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = LocalIndication.current,
+                                )
+                        )
+                    }
                 }
             }
         }
@@ -162,14 +172,14 @@ fun HomeScreen(
             PopularTodayTabLayout(
                 navigateToSubscriptions = onPopularTodayClick,
                 modifier = Modifier.fillMaxWidth(),
-                crbSongsFeed = crbSongsFeed
+                crbSongsFeed = crbSongsFeed,
             )
         }
 
         item {
             RecentSubscription(
-                onSubscriptionClick = onSubscriptionClick,
-                userSubscriptions = DummyTones.tones.mapToUserToneSubscriptions(DummyUser.user),
+                navigateToSubscription = navigateToSubscription,
+                userSubscriptions = currentUserSubscription,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -273,26 +283,19 @@ fun LatestMusicCard(
     artist: String,
     title: String,
     backgroundUrl: String?,
-    onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dominantColor = rememberDominantColor(backgroundUrl)
-    val textColor = if (isColorDark(dominantColor)) Color.White else Color.Black
+    val (_, textColor) = rememberDominantColorWithReadableText(backgroundUrl)
 
     Box(
         modifier = modifier
     ) {
         DynamicAsyncImage(
             imageUrl = backgroundUrl,
-            imageRes = R.drawable.paps_image,
+            imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image,
             modifier = Modifier
                 .matchParentSize()
                 .clip(MaterialTheme.shapes.large)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = MaterialTheme.shapes.large
-                )
         )
         Box(
             modifier = Modifier
@@ -300,43 +303,36 @@ fun LatestMusicCard(
                 .clip(MaterialTheme.shapes.large)
                 .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
         )
-        OutlinedCard(
-            onClick = onCardClick,
-            shape = MaterialTheme.shapes.large,
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            colors = CardDefaults.outlinedCardColors(
-                containerColor = Color.Transparent
-            ),
-            modifier = Modifier
-        ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = stringResource(id = R.string.feature_home_latest_music),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = Color.White,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = artist,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+        Text(
+            text = stringResource(id = R.string.feature_home_latest_music),
+            style = MaterialTheme.typography.bodyMedium,
+            color = textColor,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopStart)
+        )
+
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomStart),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = artist,
+                color = textColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.displaySmall,
+                color = textColor,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -350,16 +346,6 @@ fun PreviewLatestMusicCard() {
             artist = "Artist",
             title = "Title",
             backgroundUrl = "",
-            onCardClick = {}
         )
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@ThemePreviews
-@Composable
-fun PreviewHomeScreen() {
-    CrbtTheme {
-        HomeScreen()
     }
 }

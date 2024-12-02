@@ -6,4 +6,8 @@
     <string name="core_designsystem_welecome">Welcome!</string>
     <string name="core_designsystem_services_ussd">USSD</string>
     <string name="core_designsystem_what_would_you_like_to_do">What would you like to do</string>
+    <string name="register_now">Register now</string>
+    <string name="already_registered">Not a new user</string>
+    <string name="new_to_crbt">New to CRBT service?</string>
+    <string name="register_for_crbt_description">To to use CRBT services, users have to be first registered. Register if you are new to CRBT.</string>
 </resources>

@@ -11,6 +11,7 @@ data class NetworkUserAccountInfo(
     val phone: String,
     val langPref: String,
     val subSongDetails: SubSongDetails?,
+    val rewardPoints: Int?
 )
 
 @Serializable

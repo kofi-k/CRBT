@@ -6,4 +6,5 @@ enum class CrbtUssdType {
     CALL_ME_BACK,
     TRANSFER,
     CRBT_SUBSCRIBE,
+    PACKAGE_SUBSCRIBE
 }

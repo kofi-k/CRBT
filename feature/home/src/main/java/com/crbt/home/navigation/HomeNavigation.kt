@@ -1,5 +1,7 @@
 package com.crbt.home.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -18,16 +20,15 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
     navigate(HOME_ROUTE, navOptions)
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeScreen(
-    navController: NavController,
     navigateToTopUp: () -> Unit,
-    onPopularTodayClick: (String?) -> Unit
+    onPopularTodayClick: (String) -> Unit,
+    navigateToSubscription: () -> Unit
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
-            onSubscriptionClick = { subscriptionId ->
-                navController.navigate("$ACCOUNT_HISTORY_ROUTE$subscriptionId")
-            },
+            navigateToSubscription = navigateToSubscription,
             onNavigateToTopUp = navigateToTopUp,
             onPopularTodayClick = onPopularTodayClick
         )

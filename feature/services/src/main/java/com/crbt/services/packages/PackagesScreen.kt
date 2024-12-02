@@ -8,14 +8,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -38,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -54,7 +51,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -155,7 +151,14 @@ fun PackageContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         when (packagesFeedUiState) {
-            is PackagesFeedUiState.Loading -> CircularProgressIndicator()
+            is PackagesFeedUiState.Loading ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+
             is PackagesFeedUiState.Success -> {
                 when (packagesFeedUiState.feed.isEmpty()) {
                     true -> {
@@ -176,7 +179,6 @@ fun PackageContent(
 
                     else -> {
                         PackageTabs(
-                            modifier = Modifier.fillMaxWidth(),
                             onTabSelected = {
                                 selectedTabIndex = it
                             },
@@ -186,6 +188,7 @@ fun PackageContent(
 
                         TabContent(
                             packageItems = packagesFeedUiState.feed[selectedTabIndex].packageItems,
+                            packageCategory = packagesFeedUiState.feed[selectedTabIndex].category,
                             onBuyClick = {
                                 showBottomSheet = true
                                 isGiftPurchase = false
@@ -245,7 +248,6 @@ fun PackageContent(
 
 @Composable
 fun PackageTabs(
-    modifier: Modifier = Modifier,
     onTabSelected: (Int) -> Unit,
     selectedTabIndex: Int,
     tabs: List<CrbtPackageCategory>,
@@ -254,27 +256,33 @@ fun PackageTabs(
         selectedTabIndex = selectedTabIndex,
         divider = {},
         indicator = {},
-        modifier = modifier,
         containerColor = Color.Transparent
     ) {
         tabs.forEachIndexed { index, tab ->
-            Text(
-                text = tab.packageName,
-                color = MaterialTheme.colorScheme.onSurface,
+            Tab(
+                selected = selectedTabIndex == index,
+                onClick = {
+                    onTabSelected(index)
+                },
+                selectedContentColor = MaterialTheme.colorScheme.onSurface,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
-                    .wrapContentSize()
+                    .padding(horizontal = 4.dp)
                     .clip(MaterialTheme.shapes.large)
                     .background(
                         color = if (selectedTabIndex == index) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+                        shape = MaterialTheme.shapes.large
                     )
-                    .padding(horizontal = 12.dp, vertical = 4.dp)
-                    .clickable(
-                        onClick = { onTabSelected(index) },
-                        role = Role.Tab,
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = LocalIndication.current,
-                    )
-            )
+            ) {
+                Text(
+                    text = tab.packageName,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 12.dp,
+                            vertical = 4.dp
+                        )
+                )
+            }
         }
     }
 }
@@ -283,6 +291,7 @@ fun PackageTabs(
 fun TabContent(
     modifier: Modifier = Modifier,
     packageItems: List<PackageItem>,
+    packageCategory: CrbtPackageCategory,
     onBuyClick: (PackageItem) -> Unit,
     onGiftClick: (PackageItem) -> Unit,
     expandedItemId: String?,
@@ -291,16 +300,18 @@ fun TabContent(
     SurfaceCard(
         modifier = modifier,
         content = {
-            LazyColumn(
-                contentPadding = PaddingValues(vertical = 16.dp),
-            ) {
+            LazyColumn {
                 when (packageItems.isEmpty()) {
                     true -> {
                         item {
                             EmptyContent(
-                                description = stringResource(id = R.string.feature_services_no_packages_items),
+                                description = stringResource(
+                                    id = R.string.feature_services_no_packages_items,
+                                    packageCategory.packageName.lowercase()
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .padding(vertical = 42.dp, horizontal = 24.dp)
                             )
                         }
                     }

@@ -31,10 +31,10 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,7 +63,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.data.core.data.util.copyImageToInternalStorage
 import com.crbt.designsystem.components.ProcessButton
@@ -71,13 +70,14 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
 import com.example.crbtjetcompose.core.model.data.CrbtUser
+import com.example.crbtjetcompose.core.model.data.asCrbtUser
 import com.example.crbtjetcompose.feature.profile.R
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -86,44 +86,34 @@ fun Profile(
     onSaveButtonClicked: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val userResult by profileViewModel.userResultState.collectAsStateWithLifecycle()
+    val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
     val userInfoUiState by profileViewModel.userInfoUiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(userInfoUiState) {
+        when (userInfoUiState) {
+            is UpdateUserInfoUiState.Success -> onSaveButtonClicked()
+            is UpdateUserInfoUiState.Error -> {
+                snackbarHostState.showSnackbar(
+                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
+                    duration = SnackbarDuration.Short
+                )
+            }
+
+            else -> Unit
+        }
+    }
 
 
-    when (userResult) {
-        is Result.Loading -> CircularProgressIndicator()
-        is Result.Error -> Unit
-        is Result.Success -> {
+    when (userPreferenceUiState) {
+        is UserPreferenceUiState.Loading -> CircularProgressIndicator()
+        is UserPreferenceUiState.Success -> {
             ProfileContent(
                 modifier = modifier,
-                userData = (userResult as Result.Success<CrbtUser>).data,
+                userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData.asCrbtUser(),
                 saveProfile = { firstName, lastName, profileImage ->
                     profileViewModel.saveProfile(firstName, lastName)
                     profileViewModel.saveProfileImage(profileImage)
-                    when (userInfoUiState) {
-                        is UpdateUserInfoUiState.Success -> {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "Profile Updated",
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                            onSaveButtonClicked()
-                        }
-
-                        is UpdateUserInfoUiState.Error -> {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                        }
-
-                        else -> {}
-                    }
                 },
                 isSaving = userInfoUiState is UpdateUserInfoUiState.Loading,
             )

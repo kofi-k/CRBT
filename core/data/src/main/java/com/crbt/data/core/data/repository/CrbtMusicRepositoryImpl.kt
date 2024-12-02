@@ -9,6 +9,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class CrbtMusicRepositoryImpl @Inject constructor(
@@ -24,7 +27,12 @@ class CrbtMusicRepositoryImpl @Inject constructor(
                     .map(NetworkSongsResource::asExternalModel)
                 emit(CrbtMusicResourceUiState.Success(songs))
             } catch (e: Exception) {
-                emit(CrbtMusicResourceUiState.Error(e.message ?: "An error occurred"))
+                when (e) {
+                    is SocketTimeoutException, is UnknownHostException,
+                    is ConnectException -> emit(CrbtMusicResourceUiState.Error("Network Error. Try again later"))
+
+                    else -> emit(CrbtMusicResourceUiState.Error(e.message ?: "An error occurred"))
+                }
             }
         }.flowOn(ioDispatcher)
 }

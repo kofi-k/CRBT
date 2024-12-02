@@ -3,6 +3,7 @@
     <string name="feature_onboarding_page_one_title">MORE OF THE SONGS YOU LOVE</string>
     <string name="feature_onboarding_page_one_subtitle">Find and listen to great music on the go.</string>
     <string name="feature_onboarding_language_selection_title">Choose your preferred language</string>
+    <string name="feature_onboarding_select_language">Select language</string>
     <string name="feature_onboarding_language_selection_subtitle">Select your preferred language to get started</string>
     <string name="feature_onboarding_language_label">Language</string>
     <string name="feature_onboarding_welcome_title">Welcome to CRBT</string>

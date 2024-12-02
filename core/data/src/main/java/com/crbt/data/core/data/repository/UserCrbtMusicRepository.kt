@@ -10,4 +10,8 @@ interface UserCrbtMusicRepository {
     ): Flow<CrbtSongsFeedUiState>
 
     fun observeLatestCrbtMusic(): Flow<Result<CrbtSongResource>>
+
+    fun observePopularTodayCrbtMusic(): Flow<CrbtSongsFeedUiState>
+
+    fun observeUserCrbtSubscription(): Flow<Result<CrbtSongResource?>>
 }

@@ -19,6 +19,8 @@
     <string name="core_ui_ok">Okay</string>
     <string name="core_ui_dismiss">Dismiss</string>
     <string name="core_ui_no_content_text">\\\(0.0)/</string>
+    <string name="core_ui_package_subscription_error">Package purchase failed</string>
+    <string name="core_ui_package_subscription_success">Package purchase successful</string>
     <plurals name="core_ui_music_player_subscribers">
         <item quantity="one">%d sub</item>
         <item quantity="other">%d subs</item>

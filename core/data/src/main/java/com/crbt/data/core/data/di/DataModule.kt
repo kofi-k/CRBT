@@ -5,6 +5,8 @@ import com.crbt.data.core.data.musicService.MusicControllerImpl
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepositoryImpl
 import com.crbt.data.core.data.repository.CompositeUserCrbtSongsRepository
+import com.crbt.data.core.data.repository.CrbtAdsRepository
+import com.crbt.data.core.data.repository.CrbtAdsRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtMusicRepository
 import com.crbt.data.core.data.repository.CrbtMusicRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtPackagesRepository
@@ -13,6 +15,8 @@ import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtPreferencesRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtUserMonitor
 import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.RefreshRepository
+import com.crbt.data.core.data.repository.RefreshRepositoryImpl
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepositoryImpl
@@ -71,4 +75,14 @@ abstract class DataModule {
     abstract fun bindsCrbtPackagesRepository(
         crbtPackageRepositoryImpl: CrbtPackagesRepositoryImpl
     ): CrbtPackagesRepository
+
+    @Binds
+    abstract fun bindsCrbtAdsRepository(
+        crbtAdsRepositoryImpl: CrbtAdsRepositoryImpl
+    ): CrbtAdsRepository
+
+    @Binds
+    abstract fun bindsRefreshRepository(
+        refreshRepository: RefreshRepositoryImpl
+    ): RefreshRepository
 }

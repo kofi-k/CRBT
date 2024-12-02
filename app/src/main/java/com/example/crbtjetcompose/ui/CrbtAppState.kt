@@ -16,21 +16,19 @@ import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.home.navigation.navigateToHome
-import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_ROUTE
 import com.crbt.profile.navigation.navigateToProfile
 import com.crbt.profile.navigation.navigateToProfileEdit
 import com.crbt.services.navigation.SERVICES_ROUTE
 import com.crbt.services.navigation.navigateToServices
-import com.crbt.services.navigation.navigateToTopUp
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.navigateToSubscription
-import com.crbt.subscription.navigation.navigateToTones
 import com.example.crbtjetcompose.core.model.data.isProfileSetupComplete
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
@@ -79,7 +77,7 @@ class CrbtAppState(
 
     val userData = userRepository.userPreferencesData
         .onStart { Result.Loading }
-        .map { Result.Success(it) }
+        .mapLatest { Result.Success(it) }
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -103,12 +101,13 @@ class CrbtAppState(
         )
 
     val isProfileSetupComplete = userRepository.userPreferencesData
-        .map { it.isProfileSetupComplete() }
+        .mapLatest { it.isProfileSetupComplete() }
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = false,
         )
+
 
     val internetSpeed = networkMonitor.internetSpeed
         .stateIn(
@@ -116,9 +115,6 @@ class CrbtAppState(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = 0.0,
         )
-
-    val shouldShowBottomBar: Boolean
-        get() = navController.currentDestination?.route != ONBOARDING_ROUTE
 
 
     /**
@@ -135,7 +131,9 @@ class CrbtAppState(
      *
      * @param topLevelDestination: The destination the app needs to navigate to.
      */
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    fun navigateToTopLevelDestination(
+        topLevelDestination: TopLevelDestination,
+    ) {
         trace("Navigation: ${topLevelDestination.name}") {
             val topLevelNavOptions = navOptions {
                 // Pop up to the start destination of the graph to
@@ -158,8 +156,8 @@ class CrbtAppState(
                 TopLevelDestination.SERVICES ->
                     navController.navigateToServices(topLevelNavOptions)
 
-                TopLevelDestination.SUBSCRIPTIONS -> navController
-                    .navigateToSubscription(topLevelNavOptions)
+                TopLevelDestination.SUBSCRIPTIONS ->
+                    navController.navigateToSubscription(topLevelNavOptions)
 
                 TopLevelDestination.PROFILE ->
                     navController.navigateToProfile(topLevelNavOptions)
@@ -169,7 +167,5 @@ class CrbtAppState(
 
     fun navigateToProfileEdit() = navController.navigateToProfileEdit()
 
-    fun navigateToTopUp() = navController.navigateToTopUp()
-    fun navigateToTones() = navController.navigateToTones()
 
 }

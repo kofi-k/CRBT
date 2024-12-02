@@ -9,28 +9,60 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.palette.graphics.Palette
 import java.net.URL
 
 @Composable
-fun rememberDominantColor(imageUrl: String?, defaultColor: Color = Color.White): Color {
+fun rememberDominantColorWithReadableText(
+    imageUrl: String?,
+    defaultColor: Color = Color.White,
+    fallbackTextColor: Color = Color.Black
+): Pair<Color, Color> {
     var dominantColor by remember { mutableStateOf(defaultColor) }
+    var readableTextColor by remember { mutableStateOf(fallbackTextColor) }
 
     LaunchedEffect(imageUrl) {
         imageUrl?.let {
-            // Use Palette to get the dominant color
             val bitmap = loadImageBitmap(imageUrl)
             bitmap?.let {
                 val palette = Palette.from(it).generate()
                 palette?.let {
-                    dominantColor = Color(palette.getDominantColor(defaultColor.toArgb()))
+                    val dominantArgb = palette.getDominantColor(defaultColor.toArgb())
+                    dominantColor = Color(dominantArgb)
+
+                    // Calculate contrast ratio and determine the best readable color
+                    readableTextColor = getReadableTextColor(Color(dominantArgb), fallbackTextColor)
                 }
             }
         }
     }
 
-    return dominantColor
+    return dominantColor to readableTextColor
+}
+
+
+fun getReadableTextColor(
+    backgroundColor: Color,
+    fallbackTextColor: Color
+): Color {
+    val whiteContrast = calculateContrast(backgroundColor, Color.White)
+    val blackContrast = calculateContrast(backgroundColor, Color.Black)
+
+    // Return the color with the higher contrast ratio
+    return if (whiteContrast > blackContrast) Color.White else fallbackTextColor
+}
+
+fun calculateContrast(color1: Color, color2: Color): Double {
+    val luminance1 = color1.luminance()
+    val luminance2 = color2.luminance()
+
+    return if (luminance1 > luminance2) {
+        (luminance1 + 0.05) / (luminance2 + 0.05)
+    } else {
+        (luminance2 + 0.05) / (luminance1 + 0.05)
+    }
 }
 
 

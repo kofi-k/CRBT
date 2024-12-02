@@ -1,5 +1,6 @@
 package com.crbt.data.core.data.repository.network
 
+import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.LoginResponse
 import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
@@ -9,6 +10,8 @@ import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
 
 interface CrbtNetworkRepository {
     suspend fun getSongs(): List<NetworkSongsResource>
+
+    suspend fun getAds(): List<CrbtNetworkAds>
 
     suspend fun getPackageItems(): List<NetworkPackageItem>
 

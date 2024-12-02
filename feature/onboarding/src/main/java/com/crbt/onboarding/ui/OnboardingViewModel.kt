@@ -54,6 +54,9 @@ class OnboardingViewModel @Inject constructor(
         MutableStateFlow<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
     val userInfoUiState: StateFlow<UpdateUserInfoUiState> = _userInfoUiState.asStateFlow()
 
+    init {
+        _isNextEnabled = getIsNextEnabled()
+    }
 
     fun onNextClicked() {
         if (onboardingIndex < onboardingOrder.size - 1) {

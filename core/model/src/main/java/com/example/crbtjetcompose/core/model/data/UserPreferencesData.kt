@@ -7,8 +7,6 @@ data class UserPreferencesData(
     val phoneNumber: String,
     val languageCode: String,
     val profileUrl: String,
-    val paymentMethod: String,
-    val currency: String,
     val firstName: String,
     val lastName: String,
     val email: String,
@@ -16,8 +14,23 @@ data class UserPreferencesData(
     val interestedCrbtLanguages: Set<String>,
     val currentCrbtSubscriptionId: Int,
     val giftedCrbtToneIds: Set<String>,
+    val rewardPoints: Int
 )
 
 
 fun UserPreferencesData.isProfileSetupComplete(): Boolean =
     firstName.isNotBlank() && lastName.isNotBlank()
+
+fun UserPreferencesData.fullName(): String {
+    return "$firstName $lastName"
+}
+
+fun UserPreferencesData.asCrbtUser() = CrbtUser(
+    userId = userId,
+    phoneNumber = phoneNumber,
+    firstName = firstName,
+    lastName = lastName,
+    email = email,
+    accountBalance = currentBalance,
+    profileUrl = profileUrl,
+)

@@ -27,6 +27,7 @@ class UserCRbtSongResource internal constructor(
     val category: String,
     val isSubscribed: Boolean,
     val hasGiftedSong: Boolean,
+    val registrationUssdCode: String
 ) {
     constructor(
         userPreferencesData: UserPreferencesData,
@@ -49,6 +50,7 @@ class UserCRbtSongResource internal constructor(
         category = crbtSongResource.category,
         isSubscribed = crbtSongResource.id == userPreferencesData.currentCrbtSubscriptionId.toString(),
         hasGiftedSong = crbtSongResource.id in userPreferencesData.giftedCrbtToneIds,
+        registrationUssdCode = crbtSongResource.registrationUssdCode
     )
 }
 
@@ -80,4 +82,5 @@ fun UserCRbtSongResource.asCrbtSongResource(): CrbtSongResource = CrbtSongResour
     subscriptionType = subscriptionType,
     price = price,
     category = category,
+    registrationUssdCode = registrationUssdCode
 )

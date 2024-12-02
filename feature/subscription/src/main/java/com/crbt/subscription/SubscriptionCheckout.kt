@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.model.DummyUser
-import com.crbt.data.core.data.model.fullName
 import com.crbt.data.core.data.util.simpleDateFormatPattern
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
@@ -91,7 +90,7 @@ fun SubscriptionCheckout(
                             val dateString = dateFormat.format(System.currentTimeMillis())
                             InfoRow(
                                 title = stringResource(id = R.string.feature_subscription_from_text),
-                                value = DummyUser.user.fullName(),
+                                value = "",
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
                             HorizontalDivider(

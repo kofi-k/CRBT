@@ -33,7 +33,7 @@ fun ToneItem(
     subtitle: String,
     trailingContent: @Composable () -> Unit,
     imageUrl: String?,
-    @DrawableRes imageRes: Int = R.drawable.core_ui_avatar,
+    @DrawableRes imageRes: Int = R.drawable.core_ui_paps_image,
     colors: ListItemColors = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.outlineVariant.copy(
             stronglyDeemphasizedAlpha

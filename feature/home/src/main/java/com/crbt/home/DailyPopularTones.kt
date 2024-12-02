@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,17 +17,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,93 +53,88 @@ import com.crbt.ui.core.ui.EmptyContent
 import com.example.crbtjetcompose.feature.home.R
 
 
-enum class PopularTodayOptions {
-    Tones,
-    Albums
-}
-
-// tab layout for popular today
 @Composable
 fun PopularTodayTabLayout(
     modifier: Modifier,
-    navigateToSubscriptions: (toneId: String?) -> Unit,
-    crbSongsFeed: CrbtSongsFeedUiState
+    navigateToSubscriptions: (toneId: String) -> Unit,
+    crbSongsFeed: CrbtSongsFeedUiState,
 ) = trace("PopularTodayTabLayout") {
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedCrbtCategory by remember { mutableStateOf("") }
+
+    LaunchedEffect(crbSongsFeed) {
+        if (crbSongsFeed is CrbtSongsFeedUiState.Success) {
+            selectedCrbtCategory = crbSongsFeed.songs.first().category
+        }
+    }
 
     Column(modifier = modifier) {
-        Text(
-            text = stringResource(id = R.string.feature_home_popular_today_title),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            divider = {},
-            containerColor = Color.Transparent,
-            indicator = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                PopularTodayOptions.entries.forEachIndexed { index, option ->
-                    Text(
-                        text = option.name,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .background(
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .padding(
-                                horizontal = 12.dp,
-                                vertical = 4.dp
-                            )
-                            .clickable(
+        when (crbSongsFeed) {
+            is CrbtSongsFeedUiState.Success -> {
+                val listOfFeedCategories = crbSongsFeed.songs.map { it.category }.distinct()
+                Text(
+                    text = stringResource(id = R.string.feature_home_popular_today_title),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                ScrollableTabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    divider = {},
+                    containerColor = Color.Transparent,
+                    indicator = {},
+                    edgePadding = 16.dp,
+                    tabs = {
+                        listOfFeedCategories.forEachIndexed { index, category ->
+                            Tab(
+                                selected = selectedTabIndex == index,
                                 onClick = {
                                     selectedTabIndex = index
+                                    selectedCrbtCategory = category
                                 },
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            )
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        when (PopularTodayOptions.entries[selectedTabIndex]) {
-            PopularTodayOptions.Tones -> {
-                DailyPopularTones(
-                    crbtSongsFeedUiState = crbSongsFeed,
-                    onToneSelected = { toneId ->
-                        navigateToSubscriptions(toneId)
+                                selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                                unselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp)
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .background(
+                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                                    .border(
+                                        width = 1.dp,
+                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                            ) {
+                                Text(
+                                    text = category,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 12.dp,
+                                            vertical = 4.dp
+                                        )
+                                )
+                            }
+                        }
                     },
                 )
+
+                Spacer(modifier = Modifier.size(16.dp))
             }
 
-            PopularTodayOptions.Albums -> {
-                DailyPopularTones(
-                    crbtSongsFeedUiState = crbSongsFeed,
-                    onToneSelected = { toneId ->
-                        navigateToSubscriptions(toneId)
-                    },
-                )
-            }
+            else -> Unit
         }
+
+        DailyPopularTones(
+            crbtSongsFeedUiState = crbSongsFeed,
+            onToneSelected = navigateToSubscriptions,
+            selectedCrbtCategory = selectedCrbtCategory
+        )
+
     }
 }
 
@@ -147,6 +143,7 @@ fun PopularTodayTabLayout(
 fun DailyPopularTones(
     crbtSongsFeedUiState: CrbtSongsFeedUiState,
     onToneSelected: (String) -> Unit,
+    selectedCrbtCategory: String = ""
 ) = trace("DailyPopularTones") {
     val lazyGridState = rememberLazyListState()
 
@@ -191,7 +188,9 @@ fun DailyPopularTones(
                             .fillMaxWidth()
                     ) {
                         items(
-                            items = crbtSongsFeedUiState.songs,
+                            items = crbtSongsFeedUiState
+                                .songs
+                                .filter { it.category == selectedCrbtCategory },
                             key = { tone -> tone.id }
                         ) { tone ->
                             MusicCard(
@@ -288,7 +287,7 @@ fun PreviewPopularTodayTabLayout() {
     PopularTodayTabLayout(
         modifier = Modifier.fillMaxWidth(),
         navigateToSubscriptions = {},
-        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList())
+        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList()),
     )
 }
 

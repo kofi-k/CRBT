@@ -28,8 +28,8 @@ fun NavGraphBuilder.profileScreen(
             onEditProfileClick = {
                 navController.navigateToProfileEdit()
             },
-            onRewardPointsClicked = { /*TODO*/ },
-        )
+
+            )
     }
 
     composable(route = PROFILE_EDIT_ROUTE) {
