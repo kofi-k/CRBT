@@ -56,6 +56,7 @@ import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.data.core.data.PlayerState
 import com.crbt.data.core.data.TonesPlayerEvent
+import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
@@ -77,10 +78,12 @@ fun TonesScreen(
     musicControllerUiState: MusicControllerUiState,
     crbtTonesViewModel: CrbtTonesViewModel = hiltViewModel(),
 ) {
-    val currentSong = musicControllerUiState.currentSong
     val tonesUiState = crbtTonesViewModel.tonesUiState
+    val currentSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        musicControllerUiState.currentSong?.tune ?: ""
+    )
     val searchQuery by crbtTonesViewModel.searchQuery.collectAsStateWithLifecycle()
-    val filteredSongs by crbtTonesViewModel.filteredSongsFlow.collectAsStateWithLifecycle()
+    val filteredSongsUiState by crbtTonesViewModel.filteredSongsFlow.collectAsStateWithLifecycle()
 
 
     val isInitialized = rememberSaveable { mutableStateOf(false) }
@@ -98,7 +101,7 @@ fun TonesScreen(
         topBar = {
             SearchToolbar(
                 searchQuery = searchQuery,
-                onSearchQueryChanged = crbtTonesViewModel::onSearchQueryChange,
+                onSearchQueryChanged = { crbtTonesViewModel.onEvent(TonesPlayerEvent.OnSongSearch(it)) },
                 onSearchTriggered = {
                     //TODO
                 },
@@ -125,7 +128,6 @@ fun TonesScreen(
                             cRbtSong = currentSong,
                             onPlayerEvent = crbtTonesViewModel::onEvent,
                             musicControllerUiState = musicControllerUiState,
-                            selectedSong = tonesUiState.selectedSong
                         )
                     }
                 }
@@ -168,9 +170,9 @@ fun TonesScreen(
                                 }
                             }
 
-                            with(tonesUiState) {
-                                when {
-                                    loading == true -> {
+                            with(filteredSongsUiState) {
+                                when (this) {
+                                    is CrbtSongsFeedUiState.Loading -> {
                                         Column(
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -182,14 +184,38 @@ fun TonesScreen(
                                         }
                                     }
 
-                                    loading == false && songs != null -> {
+                                    is CrbtSongsFeedUiState.Success -> {
                                         when (songs.isEmpty()) {
                                             true -> {
+
+                                                val message = when (searchQuery.isNotBlank()) {
+                                                    true -> stringResource(
+                                                        id = R.string.feature_subscription_search_result_not_found,
+                                                        searchQuery
+                                                    )
+
+                                                    false -> stringResource(id = R.string.feature_subscription_no_songs)
+                                                }
+
                                                 EmptyContent(
-                                                    description = stringResource(id = R.string.feature_subscription_no_songs),
+                                                    description = message,
                                                     modifier = Modifier
                                                         .fillMaxWidth()
-                                                        .padding(16.dp)
+                                                        .padding(16.dp),
+                                                    reloadContent = {
+                                                        if (searchQuery.isBlank()) {
+                                                            ProcessButton(
+                                                                onClick = {
+                                                                    crbtTonesViewModel.onEvent(
+                                                                        TonesPlayerEvent.FetchSong
+                                                                    )
+                                                                },
+                                                                isProcessing = tonesUiState.loading == true,
+                                                                text = stringResource(id = R.string.feature_subscription_reload),
+                                                                colors = ButtonDefaults.textButtonColors()
+                                                            )
+                                                        }
+                                                    }
                                                 )
                                             }
 
@@ -204,14 +230,14 @@ fun TonesScreen(
                                                         onGiftSubscriptionClick = onGiftSubscriptionClick,
                                                         onEvent = crbtTonesViewModel::onEvent,
                                                         crbtSongs = songs,
-                                                        currentSong = tonesUiState.selectedSong,
+                                                        currentSong = currentSong,
                                                         isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
                                                     )
                                                 }
                                         }
                                     }
 
-                                    errorMessage != null -> {
+                                    is CrbtSongsFeedUiState.Error -> {
                                         EmptyContent(
                                             description = errorMessage,
                                             modifier = Modifier
@@ -219,7 +245,11 @@ fun TonesScreen(
                                                 .padding(16.dp),
                                             reloadContent = {
                                                 ProcessButton(
-                                                    onClick = { crbtTonesViewModel.reload() },
+                                                    onClick = {
+                                                        crbtTonesViewModel.onEvent(
+                                                            TonesPlayerEvent.FetchSong
+                                                        )
+                                                    },
                                                     isProcessing = tonesUiState.loading == true,
                                                     text = stringResource(id = R.string.feature_subscription_reload),
                                                     colors = ButtonDefaults.textButtonColors()
