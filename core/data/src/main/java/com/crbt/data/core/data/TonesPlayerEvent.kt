@@ -11,4 +11,5 @@ sealed class TonesPlayerEvent {
     data object SkipToNextSong : TonesPlayerEvent()
     data object SkipToPreviousSong : TonesPlayerEvent()
     data class OnSongSelected(val selectedSong: CrbtSongResource) : TonesPlayerEvent()
+    data class OnSongSearch(val query: String) : TonesPlayerEvent()
 }
