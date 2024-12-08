@@ -3,11 +3,13 @@ package com.crbt.subscription
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -68,14 +71,18 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
+import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
+import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
@@ -159,7 +166,9 @@ internal fun CrbtSubscribeScreen(
             subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
             isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
             isButtonEnabled = crbtSong != null,
-            onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange
+            onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
+            onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
+            billingType = subscriptionViewModel.crbtBillingType,
         )
     }
 
@@ -415,6 +424,8 @@ fun SubscribeContent(
     modifier: Modifier = Modifier,
     isGiftSubscription: Boolean,
     onGiftPhoneNumberChanged: (String) -> Unit,
+    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
+    billingType: SubscriptionBillingType,
     onSubscribeClick: () -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
@@ -451,6 +462,11 @@ fun SubscribeContent(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            BillingType(
+                onBillingTypeSelected = onBillingTypeSelected,
+                billingType = billingType
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             ProcessButton(
                 onClick = onSubscribeClick,
@@ -498,6 +514,59 @@ fun SubscribeContent(
         },
         modifier = modifier
     )
+}
+
+
+@Composable
+fun BillingType(
+    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
+    billingType: SubscriptionBillingType
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(billingType) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = stringResource(id = R.string.feature_subscription_billing_type_label))
+        Spacer(modifier = Modifier.height(8.dp))
+        SurfaceCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
+            content = {
+                Column {
+                    CustomInputButton(
+                        text = stringResource(id = selected.title),
+                        onClick = { expanded = !expanded },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        leadingIcon = CrbtIcons.PaymentMethods
+                    )
+                    if (expanded) {
+                        SubscriptionBillingType.entries.forEach {
+                            ListItem(
+                                headlineContent = { Text(text = stringResource(id = it.title)) },
+                                modifier = Modifier.clickable {
+                                    selected = it
+                                    expanded = false
+                                    onBillingTypeSelected(it)
+                                },
+                            )
+                        }
+                    }
+                }
+            },
+            color = MaterialTheme.colorScheme.outlineVariant.copy(
+                stronglyDeemphasizedAlpha,
+            )
+        )
+    }
+
 }
 
 
@@ -640,7 +709,9 @@ fun CrbtSubscribeContentPreview() {
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
             isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> }
+            onGiftPhoneNumberChanged = { _ -> },
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
         )
     }
 }
@@ -655,7 +726,9 @@ fun CrbtSubscribeContentPreview2() {
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
             isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> }
+            onGiftPhoneNumberChanged = { _ -> },
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
         )
     }
 }

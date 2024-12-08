@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.data.core.data.repository.LoginManager
@@ -53,6 +54,7 @@ class SubscriptionViewModel @Inject constructor(
     var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
 
     private var phoneNumber by mutableStateOf("")
+    var crbtBillingType by mutableStateOf(SubscriptionBillingType.Monthly)
 
 
     val crbtSongResource: StateFlow<CrbtSongResource?> =
@@ -137,7 +139,6 @@ class SubscriptionViewModel @Inject constructor(
         )
     }
 
-
     private fun handleUssdSuccess() {
         viewModelScope.launch {
             _subscriptionUiState.value = try {
@@ -166,6 +167,10 @@ class SubscriptionViewModel @Inject constructor(
 
     fun onPhoneNumberChange(number: String) {
         phoneNumber = number
+    }
+
+    fun onBillingTypeChange(billingType: SubscriptionBillingType) {
+        crbtBillingType = billingType
     }
 
 }
