@@ -35,4 +35,10 @@
     <string name="feature_services_call_back_button">Request</string>
     <string name="feature_services_no_packages">No available packages to show</string>
     <string name="feature_services_no_packages_items">Nothing to show for %s</string>
+    <string name="feature_services_recharge_screen_recharge_code_length">The number of digits the recharge voucher should have.</string>
+    <string name="feature_services_recharge_screen_auto_dial_title">Auto dial code</string>
+    <string name="feature_services_recharge_screen_auto_dial_description">Will require manual dialing if a valid number for the recharge voucher is found </string>
+    <string name="feature_services_recharge_screen_quick_settings_hide">Hide quick settings</string>
+    <string name="feature_services_recharge_screen_quick_settings_show">Show quick settings</string>
+    <string name="feature_services_recharge_screen_title">Recharge voucher will be displayed here.</string>
 </resources>

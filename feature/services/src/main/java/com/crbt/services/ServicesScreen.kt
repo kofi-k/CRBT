@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ServicesRoute(
     navigateToPackages: () -> Unit,
+    navigateToRecharge: () -> Unit
 ) {
     var showDialog by remember {
         mutableStateOf(false)
@@ -62,7 +63,7 @@ fun ServicesRoute(
 
     ServicesScreen(
         onPackageClick = navigateToPackages,
-        onRechargeClick = {},
+        onRechargeClick = navigateToRecharge,
         onCheckBalance = {
             crbtUssdType = CrbtUssdType.BALANCE_CHECK
             viewModel.runUssdCode(
