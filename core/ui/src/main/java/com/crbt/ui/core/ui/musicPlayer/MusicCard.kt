@@ -43,7 +43,6 @@ import com.example.crbtjetcompose.core.ui.R
 fun MusicCard(
     modifier: Modifier = Modifier,
     cRbtSong: CrbtSongResource,
-    selectedSong: CrbtSongResource?, // todo find a solution for this quick fix ffs!!
     musicControllerUiState: MusicControllerUiState,
     onPlayerEvent: (TonesPlayerEvent) -> Unit
 ) {
@@ -75,8 +74,8 @@ fun MusicCard(
                         )
                     },
                     isPlaying = isPlaying,
-                    price = selectedSong?.price ?: "0.00",
-                    numberOfSubscribers = selectedSong?.numberOfSubscribers ?: 0
+                    price = cRbtSong.price,
+                    numberOfSubscribers = cRbtSong.numberOfSubscribers
                 )
             }
         },
@@ -106,7 +105,7 @@ fun MusicInfo(
                 imageUrl = coverUrl,
                 modifier = Modifier.fillMaxSize(),
                 imageRes = R.drawable.core_ui_paps_image,
-                )
+            )
         }
         Column {
             Text(
@@ -202,7 +201,6 @@ fun MusicCardPreview() {
             musicControllerUiState = MusicControllerUiState(),
             onPlayerEvent = {},
             cRbtSong = DummyTones.tones[0],
-            selectedSong = DummyTones.tones[0]
         )
     }
 }
