@@ -183,12 +183,14 @@ internal fun CrbtSubscribeScreen(
         CrbtRegistrationDialog(
             onDismiss = {
                 subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+                showRegistrationDialog = false
             },
             onRegister = {
                 subscriptionViewModel.runUssdCode(
                     ussdCode = crbtSong?.registrationUssdCode ?: "",
                     onSuccess = {
                         subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+                        showRegistrationDialog = false
                     },
                     onError = {},
                     activity = context as Activity

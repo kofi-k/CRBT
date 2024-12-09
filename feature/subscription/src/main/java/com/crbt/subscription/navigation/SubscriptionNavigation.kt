@@ -50,7 +50,6 @@ fun NavController.navigateToSubscription(navOptions: NavOptions, toneId: String 
 fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,
     musicControllerUiState: MusicControllerUiState,
-    onSubscriptionSuccess: () -> Unit
 ) {
     composable(
         route = SUBSCRIPTION_ROUTE,
@@ -76,7 +75,9 @@ fun NavGraphBuilder.subscriptionScreen(
         )
     ) {
         CrbtSubscribeScreen(
-            onSubscribeSuccess = onSubscriptionSuccess,
+            onSubscribeSuccess = {
+                navController.navigateUp()
+            },
             onBackClicked = {
                 navController.navigateUp()
             },
