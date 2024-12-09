@@ -26,7 +26,9 @@ class CrbtPreferencesDataSource @Inject constructor(
                 currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
                 token = it.token,
-                rewardPoints = it.rewardPoints
+                rewardPoints = it.rewardPoints,
+                numberOfRechargeCodeDigits = if (it.numberOfRechargeCodeDigits == 0) 14 else it.numberOfRechargeCodeDigits,
+                autoDialRechargeCode = it.autoDialRechargeCode
             )
         }
 
@@ -43,6 +45,27 @@ class CrbtPreferencesDataSource @Inject constructor(
             }
         } catch (ioException: IOException) {
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
+
+    suspend fun setAutoDialRechargeCode(
+        autoDial: Boolean,
+    ) {
+        userPreferences.updateData {
+            it.copy {
+                autoDialRechargeCode = autoDial
+            }
+        }
+    }
+
+    suspend fun setRequiredRechargeDigits(
+        numberOfDigits: Int
+    ) {
+        userPreferences.updateData {
+            it.copy {
+                numberOfRechargeCodeDigits = numberOfDigits
+            }
         }
     }
 

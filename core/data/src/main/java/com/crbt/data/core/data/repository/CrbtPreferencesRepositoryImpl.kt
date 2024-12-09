@@ -61,4 +61,16 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered)
     }
 
+    override suspend fun setAutoDialRechargeCode(
+        autoDial: Boolean,
+    ) {
+        crbtPreferencesDataSource.setAutoDialRechargeCode(autoDial)
+    }
+
+    override suspend fun setRequiredRechargeDigits(
+        numberOfDigits: Int
+    ) {
+        crbtPreferencesDataSource.setRequiredRechargeDigits(numberOfDigits)
+    }
+
 }
