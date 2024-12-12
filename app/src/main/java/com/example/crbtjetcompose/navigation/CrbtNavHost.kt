@@ -58,16 +58,10 @@ fun CrbtNavHost(
             )
             servicesScreen(
                 navController = navController,
-                navigateToTopLevel = {
-                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
-                }
             )
             subscriptionScreen(
                 navController = navController,
                 musicControllerUiState = musicControllerUiState,
-                onSubscriptionSuccess = {
-                    appState.navigateToTopLevelDestination(TopLevelDestination.SUBSCRIPTIONS)
-                }
             )
             profileScreen(
                 navController = navController,

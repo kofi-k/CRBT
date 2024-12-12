@@ -1,6 +1,5 @@
 package com.example.crbtjetcompose.ui
 
-import PullToRefreshContent
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,6 +68,7 @@ import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
 import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
 import com.crbt.services.navigation.PACKAGES_ROUTE
+import com.crbt.services.navigation.RECHARGE_ROUTE
 import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
@@ -123,6 +122,7 @@ fun CrbtApp(
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
             ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
             PACKAGES_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_packages
+            RECHARGE_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_recharge
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
         }
     }
@@ -157,10 +157,7 @@ fun CrbtApp(
                 duration = SnackbarDuration.Short,
             )
         }
-
     }
-
-
 
     CrbtBackground(
         modifier = Modifier
@@ -328,7 +325,7 @@ fun CrbtApp(
                 }
             ) { padding ->
 
-                PullToRefreshContent(
+                /*PullToRefreshContent(
                     isRefreshing = refreshUiState is RefreshUiState.Loading,
                     onRefresh = {
                         when (destination) {
@@ -346,17 +343,17 @@ fun CrbtApp(
                         is Result.Loading -> CircularProgressIndicator()
                         is Result.Error -> Unit
                         is Result.Success -> {
-                            CrbtNavHost(
-                                appState = appState,
-                                startDestination = startDestination,
-                                sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(padding)
-                            )
                         }
                     }
-                }
+                }*/
+                CrbtNavHost(
+                    appState = appState,
+                    startDestination = startDestination,
+                    sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                )
 
             }
         }
