@@ -3,6 +3,7 @@ package com.crbt.data.core.data.repository
 import com.crbt.common.core.common.network.CrbtDispatchers
 import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
+import com.example.crbtjetcompose.core.network.di.HttpException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -65,6 +66,8 @@ class CrbtUserMonitor @Inject constructor(
             getAccountInfo()
             emit(UpdateUserInfoUiState.Success)
         } catch (e: Exception) {
+            emit(UpdateUserInfoUiState.Error(e.message ?: "Error"))
+        } catch (e: HttpException) {
             emit(UpdateUserInfoUiState.Error(e.message ?: "Error"))
         }
     }.flowOn(ioDispatcher)

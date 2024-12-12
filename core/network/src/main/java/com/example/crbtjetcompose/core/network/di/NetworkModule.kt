@@ -2,6 +2,7 @@ package com.example.crbtjetcompose.core.network.di
 
 import androidx.tracing.trace
 import com.example.crbtjetcompose.core.network.BuildConfig
+import com.example.crbtjetcompose.core.network.model.ApiErrorResponse
 import com.example.crbtjetcompose.core.network.repository.TokenProvider
 import com.example.crbtjetcompose.core.network.repository.TokenProviderImpl
 import com.example.crbtjetcompose.core.network.retrofit.RetrofitCrbtNetworkApi
@@ -18,6 +19,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.io.IOException
 import javax.inject.Singleton
 
 
@@ -52,13 +54,27 @@ internal object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor { chain ->
-                val token = runBlocking {
-                    tokenProvider.getToken()
-                }
+                val token = runBlocking { tokenProvider.getToken() }
                 val newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $token")
                     .build()
-                chain.proceed(newRequest)
+
+                val response = chain.proceed(newRequest)
+
+                if (!response.isSuccessful) {
+                    val errorBody = response.body?.string()
+                    val apiError = try {
+                        Json.decodeFromString<ApiErrorResponse>(errorBody ?: "")
+                    } catch (e: Exception) {
+                        null
+                    }
+                    val errorMessage =
+                        apiError?.error ?: "An unexpected error occurred. Code: ${response.code}"
+
+                    throw HttpException(response.code, errorMessage)
+                }
+
+                response
             }
             .build()
     }
@@ -105,3 +121,6 @@ internal object NetworkModule {
             .build()
     }
 }
+
+
+class HttpException(val statusCode: Int, message: String) : IOException(message)
