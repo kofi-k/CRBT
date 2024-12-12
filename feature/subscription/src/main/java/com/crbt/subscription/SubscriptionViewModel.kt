@@ -21,6 +21,7 @@ import com.crbt.data.core.data.util.generateGiftCrbtUssd
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.example.crbtjetcompose.core.network.di.HttpException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -147,6 +148,8 @@ class SubscriptionViewModel @Inject constructor(
                 loginManager.getAccountInfo()
                 SubscriptionUiState.Success(result)
             } catch (e: Exception) {
+                SubscriptionUiState.Error(e.message ?: "An error occurred")
+            } catch (e: HttpException) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
