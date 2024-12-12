@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.palette.ktx)
     implementation(libs.voipUssd)
+    implementation(libs.lottie.compose)
 
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
