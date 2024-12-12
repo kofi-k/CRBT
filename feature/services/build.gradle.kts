@@ -14,6 +14,8 @@ dependencies {
     implementation(libs.palette.ktx)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.mlkitTextRecognition)
+    implementation(libs.guava)
+    implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.cameraxCore)
     implementation(libs.cameraxCamera2)
     implementation(libs.cameraxLifecycle)
