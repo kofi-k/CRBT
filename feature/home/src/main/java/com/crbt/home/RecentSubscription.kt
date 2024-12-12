@@ -18,7 +18,6 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -97,15 +96,7 @@ fun RecentSubscription(
                             ?: stringResource(id = R.string.feature_home_no_subscriptions),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        reloadContent = {
-                            TextButton(
-                                onClick = navigateToSubscription,
-                                modifier = Modifier.padding(bottom = 16.dp)
-                            ) {
-                                Text(stringResource(id = R.string.feature_home_subscribe_now))
-                            }
-                        },
+                            .padding(vertical = 16.dp),
                         errorContent = {
                             Icon(
                                 imageVector = CrbtIcons.Info,

@@ -51,6 +51,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.CrbtUssdType
+import com.crbt.data.core.data.repository.CrbtAdsUiState
+import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.DynamicAsyncImage
@@ -78,6 +80,11 @@ fun HomeScreen(
     val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
     val currentUserSubscription by viewModel.currentUserCrbtSubscription.collectAsStateWithLifecycle()
     val crbtAdsUiState by viewModel.crbtAdsUiState.collectAsStateWithLifecycle()
+
+
+    val isLoading = latestMusicUiState is Result.Loading ||
+            crbSongsFeed is CrbtSongsFeedUiState.Loading ||
+            crbtAdsUiState is CrbtAdsUiState.Loading
 
     val listState = rememberLazyListState()
 
@@ -127,9 +134,8 @@ fun HomeScreen(
         }
 
         item {
-            when (latestMusicUiState) {
-                is Result.Error -> Unit
-                Result.Loading -> {
+            when (isLoading) {
+                true -> {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -140,29 +146,36 @@ fun HomeScreen(
                     }
                 }
 
-                is Result.Success -> {
-                    val latestMusic = (latestMusicUiState as Result.Success).data
+                else -> {
 
-                    if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
-                        LatestMusicCard(
-                            artist = latestMusic.artisteName,
-                            title = latestMusic.songTitle,
-                            backgroundUrl = latestMusic.profile,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .defaultMinSize(minHeight = 180.dp)
-                                .padding(horizontal = 16.dp)
-                                .clip(MaterialTheme.shapes.large)
-                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                                .clickable(
-                                    onClick = {
-                                        onPopularTodayClick(latestMusic.id)
-                                    },
-                                    role = Role.Button,
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = LocalIndication.current,
+                    when (latestMusicUiState) {
+                        is Result.Success -> {
+                            val latestMusic = (latestMusicUiState as Result.Success).data
+
+                            if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
+                                LatestMusicCard(
+                                    artist = latestMusic.artisteName,
+                                    title = latestMusic.songTitle,
+                                    backgroundUrl = latestMusic.profile,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .defaultMinSize(minHeight = 180.dp)
+                                        .padding(horizontal = 16.dp)
+                                        .clip(MaterialTheme.shapes.large)
+                                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                                        .clickable(
+                                            onClick = {
+                                                onPopularTodayClick(latestMusic.id)
+                                            },
+                                            role = Role.Button,
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = LocalIndication.current,
+                                        )
                                 )
-                        )
+                            }
+                        }
+
+                        else -> Unit
                     }
                 }
             }

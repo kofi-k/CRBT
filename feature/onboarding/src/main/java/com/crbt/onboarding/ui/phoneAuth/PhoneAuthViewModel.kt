@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
 import com.crbt.data.core.data.repository.LoginManager
+import com.example.crbtjetcompose.core.network.di.HttpException
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.PhoneAuthCredential
@@ -79,6 +80,8 @@ class PhoneAuthViewModel @Inject constructor(
                     accountType,
                     langPref
                 ) // todo remove this line, it's for testing
+                AuthState.Error(e.message)
+            } catch (e: HttpException) {
                 AuthState.Error(e.message)
             }
         }
