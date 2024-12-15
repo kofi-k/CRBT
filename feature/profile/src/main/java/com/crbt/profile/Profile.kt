@@ -111,11 +111,9 @@ fun Profile(
             ProfileContent(
                 modifier = modifier,
                 userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData.asCrbtUser(),
-                saveProfile = { firstName, lastName, profileImage ->
-                    profileViewModel.saveProfile(firstName, lastName)
-                    profileViewModel.saveProfileImage(profileImage)
-                },
+                saveProfile = profileViewModel::saveProfile,
                 isSaving = userInfoUiState is UpdateUserInfoUiState.Loading,
+                saveProfileImage = profileViewModel::saveProfileImage,
             )
         }
     }
@@ -132,7 +130,8 @@ fun Profile(
 fun ProfileContent(
     modifier: Modifier = Modifier,
     userData: CrbtUser,
-    saveProfile: (firstName: String, lastName: String, profileImage: String) -> Unit,
+    saveProfile: (firstName: String, lastName: String) -> Unit,
+    saveProfileImage: (String) -> Unit,
     isSaving: Boolean,
 ) {
     var profileImage by rememberSaveable {
@@ -144,6 +143,12 @@ fun ProfileContent(
         onResult = { uri ->
             if (uri != null) {
                 profileImage = uri
+                saveProfileImage(
+                    copyImageToInternalStorage(
+                        context,
+                        uri
+                    ).toString()
+                )
             }
         },
     )
@@ -188,6 +193,7 @@ fun ProfileContent(
                 },
                 onRemoveImage = {
                     profileImage = it
+                    saveProfileImage("")
                 },
                 modifier = Modifier,
             )
@@ -219,13 +225,7 @@ fun ProfileContent(
                 onClick = {
                     saveProfile(
                         firstName,
-                        lastName,
-                        if (profileImage != Uri.EMPTY)
-                            copyImageToInternalStorage(
-                                context,
-                                profileImage
-                            ).toString()
-                        else ""
+                        lastName
                     )
                 },
                 isEnabled = isButtonEnabled,

@@ -3,6 +3,7 @@ package com.crbt.profile
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.crbt.data.core.data.model.DummyUser.user
 import com.crbt.data.core.data.phoneAuth.SignOutState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ListCard
@@ -115,8 +115,8 @@ fun ProfileScreen(
                     ProfileHeader(
                         onEditProfileClick = onEditProfileClick,
                         userName = userData.fullName(),
-                        phoneNumber = user.phoneNumber,
-                        userImageUrl = user.profileUrl
+                        phoneNumber = userData.phoneNumber,
+                        userImageUrl = userData.profileUrl
                     )
                 }
 
@@ -173,6 +173,11 @@ fun ProfileHeader(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
+                    .border(
+                        width = 2.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
             ) {
                 DynamicAsyncImage(
                     imageUrl = userImageUrl,
