@@ -113,7 +113,9 @@ fun PackagesScreen(
             },
             actionEnabled = viewModel.isPhoneNumberValid,
             actionLoading = ussdUiState is UssdUiState.Loading,
-            packagesFeedUiState = packagesFeedUiState
+            packagesFeedUiState = packagesFeedUiState,
+            onReload = viewModel::reloadPackages,
+            isReloading = packagesFeedUiState is PackagesFeedUiState.Loading
         )
     }
 
@@ -136,7 +138,9 @@ fun PackageContent(
     actionEnabled: Boolean,
     actionLoading: Boolean,
     onPurchasePackage: (String) -> Unit,
-    packagesFeedUiState: PackagesFeedUiState
+    packagesFeedUiState: PackagesFeedUiState,
+    onReload: () -> Unit,
+    isReloading: Boolean
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var expandedItemId by remember { mutableStateOf<String?>(null) }
@@ -211,7 +215,22 @@ fun PackageContent(
                 }
             }
 
-            is PackagesFeedUiState.Error -> Unit
+            is PackagesFeedUiState.Error -> {
+                EmptyContent(
+                    description = packagesFeedUiState.message,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 42.dp, horizontal = 24.dp),
+                    reloadContent = {
+                        ProcessButton(
+                            onClick = onReload,
+                            isProcessing = isReloading,
+                            text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                            colors = ButtonDefaults.textButtonColors()
+                        )
+                    }
+                )
+            }
         }
 
         AnimatedVisibility(
