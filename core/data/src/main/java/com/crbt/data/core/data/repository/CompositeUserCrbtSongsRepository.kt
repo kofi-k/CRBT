@@ -29,7 +29,7 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                 }
             }
 
-    override fun observeLatestCrbtMusic(): Flow<Result<CrbtSongResource>> =
+    private fun observeLatestCrbtMusic(): Flow<Result<CrbtSongResource>> =
         observeAllCrbtMusic()
             .map { crbtSongsFeedUiState ->
                 when (crbtSongsFeedUiState) {
@@ -40,15 +40,11 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                         }
                     }
 
-                    is CrbtSongsFeedUiState.Error -> {
-                        Result.Error(Exception(crbtSongsFeedUiState.errorMessage))
-                    }
-
-                    is CrbtSongsFeedUiState.Loading -> Result.Loading
+                    else -> Result.Loading
                 }
             }
 
-    override fun observePopularTodayCrbtMusic(): Flow<CrbtSongsFeedUiState> =
+    private fun observePopularTodayCrbtMusic(): Flow<CrbtSongsFeedUiState> =
         observeAllCrbtMusic()
             .map { crbtSongsFeedUiState ->
                 when (crbtSongsFeedUiState) {
@@ -60,17 +56,11 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                         }
                     }
 
-                    is CrbtSongsFeedUiState.Error -> {
-                        CrbtSongsFeedUiState.Error(crbtSongsFeedUiState.errorMessage)
-                    }
-
-                    is CrbtSongsFeedUiState.Loading -> {
-                        CrbtSongsFeedUiState.Loading
-                    }
+                    else -> crbtSongsFeedUiState
                 }
             }
 
-    override fun observeUserCrbtSubscription(): Flow<Result<CrbtSongResource?>> =
+    private fun observeUserCrbtSubscription(): Flow<Result<CrbtSongResource?>> =
         userPreferencesRepository.userPreferencesData
             .combine(observeAllCrbtMusic()) { userPreferences, crbtSongsFeedUiState ->
                 when (crbtSongsFeedUiState) {
@@ -83,11 +73,44 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                         }
                     }
 
-                    is CrbtSongsFeedUiState.Error -> {
-                        Result.Error(Exception(crbtSongsFeedUiState.errorMessage))
-                    }
-
-                    is CrbtSongsFeedUiState.Loading -> Result.Loading
+                    else -> Result.Loading
                 }
             }
+
+    override fun observeHomeResource(): Flow<HomeSongResourceState> =
+        combine(
+            observePopularTodayCrbtMusic(),
+            observeLatestCrbtMusic(),
+            observeUserCrbtSubscription()
+        ) { popularTodaySongs, latestSong, currentUserCrbtSubscription ->
+            when {
+                popularTodaySongs is CrbtSongsFeedUiState.Success &&
+                        latestSong is Result.Success &&
+                        currentUserCrbtSubscription is Result.Success -> {
+                    HomeSongResourceState.Success(
+                        HomeSongResource(
+                            popularTodaySongs.songs,
+                            latestSong.data,
+                            currentUserCrbtSubscription.data
+                        )
+                    )
+                }
+
+                popularTodaySongs is CrbtSongsFeedUiState.Error -> {
+                    HomeSongResourceState.Error(popularTodaySongs.errorMessage)
+                }
+
+                latestSong is Result.Error -> {
+                    HomeSongResourceState.Error(latestSong.exception.message ?: "An error occurred")
+                }
+
+                currentUserCrbtSubscription is Result.Error -> {
+                    HomeSongResourceState.Error(
+                        currentUserCrbtSubscription.exception.message ?: "An error occurred"
+                    )
+                }
+
+                else -> HomeSongResourceState.Loading
+            }
+        }
 }

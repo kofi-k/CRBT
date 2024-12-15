@@ -49,17 +49,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.CrbtUssdType
-import com.crbt.data.core.data.repository.CrbtAdsUiState
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
+import com.crbt.data.core.data.repository.HomeSongResourceState
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
 import com.crbt.designsystem.components.DynamicAsyncImage
+import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
 import com.crbt.ui.core.ui.rememberDominantColorWithReadableText
@@ -74,17 +75,11 @@ fun HomeScreen(
     onPopularTodayClick: (String) -> Unit = {}
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val newUssdUiState by viewModel.newUssdState.collectAsStateWithLifecycle()
+    val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
     val userDataUiState by viewModel.userPreferenceUiState.collectAsStateWithLifecycle()
-    val latestMusicUiState by viewModel.latestCrbtSong.collectAsStateWithLifecycle()
-    val crbSongsFeed by viewModel.crbtSongsFlow.collectAsStateWithLifecycle()
-    val currentUserSubscription by viewModel.currentUserCrbtSubscription.collectAsStateWithLifecycle()
+    val songResUiState by viewModel.songResourceUiState.collectAsStateWithLifecycle()
     val crbtAdsUiState by viewModel.crbtAdsUiState.collectAsStateWithLifecycle()
 
-
-    val isLoading = latestMusicUiState is Result.Loading ||
-            crbSongsFeed is CrbtSongsFeedUiState.Loading ||
-            crbtAdsUiState is CrbtAdsUiState.Loading
 
     val listState = rememberLazyListState()
 
@@ -105,7 +100,8 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         state = listState,
         contentPadding = PaddingValues(
-            vertical = 24.dp
+            vertical = 24.dp,
+            horizontal = 0.dp
         )
     ) {
         item {
@@ -124,7 +120,7 @@ fun HomeScreen(
                     )
 
                 },
-                isRefreshing = newUssdUiState is UssdUiState.Loading,
+                isRefreshing = ussdUiState is UssdUiState.Loading,
                 userPreferenceUiState = userDataUiState
             )
         }
@@ -133,9 +129,9 @@ fun HomeScreen(
             CrbtAds(crbtAdsUiState)
         }
 
-        item {
-            when (isLoading) {
-                true -> {
+        when (songResUiState) {
+            is HomeSongResourceState.Loading -> {
+                item {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -145,59 +141,74 @@ fun HomeScreen(
                         CircularProgressIndicator()
                     }
                 }
+            }
 
-                else -> {
+            is HomeSongResourceState.Success -> {
+                val songResource = (songResUiState as HomeSongResourceState.Success).resource
+                val latestMusic = songResource.latestSong
 
-                    when (latestMusicUiState) {
-                        is Result.Success -> {
-                            val latestMusic = (latestMusicUiState as Result.Success).data
-
-                            if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
-                                LatestMusicCard(
-                                    artist = latestMusic.artisteName,
-                                    title = latestMusic.songTitle,
-                                    backgroundUrl = latestMusic.profile,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .defaultMinSize(minHeight = 180.dp)
-                                        .padding(horizontal = 16.dp)
-                                        .clip(MaterialTheme.shapes.large)
-                                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                                        .clickable(
-                                            onClick = {
-                                                onPopularTodayClick(latestMusic.id)
-                                            },
-                                            role = Role.Button,
-                                            interactionSource = remember { MutableInteractionSource() },
-                                            indication = LocalIndication.current,
-                                        )
+                item {
+                    if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
+                        LatestMusicCard(
+                            artist = latestMusic.artisteName,
+                            title = latestMusic.songTitle,
+                            backgroundUrl = latestMusic.profile,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 180.dp)
+                                .padding(horizontal = 16.dp)
+                                .clip(MaterialTheme.shapes.large)
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                                .clickable(
+                                    onClick = {
+                                        onPopularTodayClick(latestMusic.id)
+                                    },
+                                    role = Role.Button,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = LocalIndication.current,
                                 )
-                            }
-                        }
-
-                        else -> Unit
+                        )
                     }
+                }
+
+                item {
+                    PopularTodayTabLayout(
+                        navigateToSubscriptions = onPopularTodayClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        crbSongsFeed = CrbtSongsFeedUiState.Success(songResource.popularTodaySongs),
+                    )
+                }
+
+                item {
+                    RecentSubscription(
+                        navigateToSubscription = navigateToSubscription,
+                        userSubscriptions = songResource.currentUserCrbtSubscription,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            }
+
+            is HomeSongResourceState.Error -> {
+                item {
+                    EmptyContent(
+                        description = (songResUiState as HomeSongResourceState.Error).message,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 42.dp, horizontal = 24.dp),
+                        reloadContent = {
+                            ProcessButton(
+                                onClick = viewModel::reloadHome,
+                                text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                                colors = ButtonDefaults.textButtonColors()
+                            )
+                        }
+                    )
                 }
             }
         }
 
-        item {
-            PopularTodayTabLayout(
-                navigateToSubscriptions = onPopularTodayClick,
-                modifier = Modifier.fillMaxWidth(),
-                crbSongsFeed = crbSongsFeed,
-            )
-        }
-
-        item {
-            RecentSubscription(
-                navigateToSubscription = navigateToSubscription,
-                userSubscriptions = currentUserSubscription,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
     }
 
     if (showDialog) {
@@ -205,7 +216,7 @@ fun HomeScreen(
             onDismiss = {
                 showDialog = false
             },
-            ussdUiState = newUssdUiState,
+            ussdUiState = ussdUiState,
             crbtUssdType = CrbtUssdType.BALANCE_CHECK
         )
     }

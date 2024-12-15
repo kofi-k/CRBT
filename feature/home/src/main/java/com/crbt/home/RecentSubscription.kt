@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
-import com.crbt.common.core.common.result.Result
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
@@ -41,7 +39,7 @@ import com.example.crbtjetcompose.feature.home.R
 fun RecentSubscription(
     modifier: Modifier = Modifier,
     navigateToSubscription: () -> Unit,
-    userSubscriptions: Result<CrbtSongResource?>,
+    userSubscriptions: CrbtSongResource?,
 ) {
 
     Column(
@@ -73,27 +71,24 @@ fun RecentSubscription(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
         ) {
-            when (userSubscriptions) {
-                is Result.Success -> {
-                    userSubscriptions.data?.let {
-                        SubscriptionsFeed(
-                            userSubscriptions = listOf(it),
-                            onSubscriptionClick = {},
-                            modifier = Modifier
-                                .heightIn(
-                                    max = max(
-                                        200.dp,
-                                        with(LocalDensity.current) { 200.sp.toDp() })
-                                )
-                                .fillMaxWidth(),
-                        )
-                    }
+            when (userSubscriptions != null) {
+                true -> {
+                    SubscriptionsFeed(
+                        userSubscriptions = listOf(userSubscriptions),
+                        onSubscriptionClick = {},
+                        modifier = Modifier
+                            .heightIn(
+                                max = max(
+                                    200.dp,
+                                    with(LocalDensity.current) { 200.sp.toDp() })
+                            )
+                            .fillMaxWidth(),
+                    )
                 }
 
-                is Result.Error -> {
+                else -> {
                     EmptyContent(
-                        description = userSubscriptions.exception.message
-                            ?: stringResource(id = R.string.feature_home_no_subscriptions),
+                        description = stringResource(id = R.string.feature_home_no_subscriptions),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp),
@@ -107,17 +102,6 @@ fun RecentSubscription(
                     )
                 }
 
-                Result.Loading -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
             }
         }
     }
@@ -187,7 +171,7 @@ fun SubscriptionTrailingContent(
 fun PreviewRecentSubscription() {
     CrbtTheme {
         RecentSubscription(
-            userSubscriptions = Result.Error(Exception("No songs found")),
+            userSubscriptions = null,
             navigateToSubscription = {}
         )
     }

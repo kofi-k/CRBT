@@ -40,6 +40,7 @@ class CrbtPackagesRepositoryImpl @Inject constructor(
                     emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
             }
         }
+
     }
         .flowOn(ioDispatcher)
 }
