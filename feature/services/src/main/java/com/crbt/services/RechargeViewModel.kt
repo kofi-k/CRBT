@@ -104,25 +104,23 @@ class RechargeViewModel @Inject constructor(
         uri: Uri,
         context: Context,
         requiredDigits: Int
-    ): String? =
-        suspendCoroutine { continuation ->
-            val image = InputImage.fromFilePath(context, uri)
-            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    ): String? = suspendCoroutine { continuation ->
+        val image = InputImage.fromFilePath(context, uri)
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-            recognizer.process(image)
-                .addOnSuccessListener { result ->
-                    val regex = "\\d{$requiredDigits}".toRegex()
-                    val matchedCode = result.textBlocks
-                        .flatMap { it.lines }
-                        .firstNotNullOfOrNull { line -> regex.find(line.text)?.value }
-                    continuation.resume(matchedCode)
-                }
-                .addOnFailureListener { exception ->
-                    continuation.resumeWithException(exception)
-                }
-        }
-
-
+        recognizer.process(image)
+            .addOnSuccessListener { result ->
+                val regex = "\\d{$requiredDigits}".toRegex()
+                val matchedCode = result.textBlocks
+                    .flatMap { it.lines }
+                    .map { line -> line.text.replace("\\s".toRegex(), "") }
+                    .firstNotNullOfOrNull { lineWithoutSpaces -> regex.find(lineWithoutSpaces)?.value }
+                continuation.resume(matchedCode)
+            }
+            .addOnFailureListener { exception ->
+                continuation.resumeWithException(exception)
+            }
+    }
 }
 
 sealed class VoucherCodeUiState {
