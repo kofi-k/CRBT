@@ -282,7 +282,10 @@ fun PreviewPopularTodayTabLayout() {
     PopularTodayTabLayout(
         modifier = Modifier.fillMaxWidth(),
         navigateToSubscriptions = {},
-        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList()),
+        crbSongsFeed = CrbtSongsFeedUiState.Success(
+            songs = emptyList(),
+            currentUserCrbtSubscriptionSong = null
+        ),
     )
 }
 

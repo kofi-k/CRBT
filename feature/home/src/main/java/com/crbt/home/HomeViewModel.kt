@@ -6,9 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.repository.CrbtAdsUiState
-import com.crbt.data.core.data.repository.HomeSongResource
-import com.crbt.data.core.data.repository.HomeSongResourceState
-import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.extractBalance
@@ -17,7 +14,6 @@ import com.crbt.domain.GetCrbtAdsUseCase
 import com.crbt.domain.GetUserDataPreferenceUseCase
 import com.crbt.domain.UpdateUserBalanceUseCase
 import com.crbt.domain.UserPreferenceUiState
-import com.example.crbtjetcompose.core.model.data.CrbtAdResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,8 +29,7 @@ class HomeViewModel @Inject constructor(
     private val ussdRepository: UssdRepository,
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     private val updateBalanceUseCase: UpdateUserBalanceUseCase,
-    crbtSongsRepository: UserCrbtMusicRepository,
-    getCrbtAdsUseCase: GetCrbtAdsUseCase
+    getCrbtAdsUseCase: GetCrbtAdsUseCase,
 ) : ViewModel() {
 
     val ussdState: StateFlow<UssdUiState>
@@ -52,17 +47,6 @@ class HomeViewModel @Inject constructor(
                 initialValue = UserPreferenceUiState.Loading,
                 started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
             )
-
-    val songResourceUiState: StateFlow<HomeSongResourceState> =
-        reloadTrigger.flatMapLatest {
-            crbtSongsRepository.observeHomeResource()
-        }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
-                initialValue = HomeSongResourceState.Loading
-            )
-
 
     val crbtAdsUiState: StateFlow<CrbtAdsUiState> =
         reloadTrigger.flatMapLatest {
@@ -100,14 +84,4 @@ class HomeViewModel @Inject constructor(
     fun reloadHome() {
         reloadTrigger.value += 1
     }
-}
-
-sealed class HomeUiState {
-    data object Loading : HomeUiState()
-    data class Success(
-        val homeResource: HomeSongResource,
-        val crbtAds: List<CrbtAdResource>
-    ) : HomeUiState()
-
-    data class Error(val message: String) : HomeUiState()
 }
