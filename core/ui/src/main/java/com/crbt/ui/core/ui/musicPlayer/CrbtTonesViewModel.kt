@@ -1,10 +1,11 @@
-package com.crbt.subscription
+package com.crbt.ui.core.ui.musicPlayer
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
+import com.crbt.data.core.data.repository.HomeSongResource
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.domain.AddCrbtSongsUseCase
 import com.crbt.domain.PauseSongUseCase
@@ -42,6 +43,10 @@ class CrbtTonesViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(TonesUiState())
     var uiState: StateFlow<TonesUiState> = _uiState.asStateFlow()
+
+    init {
+        fetchSongs()
+    }
 
 
     fun onEvent(event: TonesPlayerEvent) {
@@ -87,26 +92,35 @@ class CrbtTonesViewModel @Inject constructor(
     private fun fetchSongs() {
         viewModelScope.launch {
             crbtSongsRepository.observeAllCrbtMusic().collect { feed ->
-                _uiState.update {
+                _uiState.update { it ->
                     when (feed) {
                         is CrbtSongsFeedUiState.Success -> {
-                            addMediaItemsUseCase(feed.songs)
+                            val songsByDate =
+                                feed.songs.sortedByDescending { songs -> songs.createdAt }
+                            addMediaItemsUseCase(songsByDate)
                             it.copy(
-                                songs = feed.songs,
+                                songs = songsByDate,
                                 loading = false,
+                                homeResource = HomeSongResource(
+                                    popularTodaySongs = songsByDate.take(8),
+                                    latestSong = songsByDate.first(),
+                                    currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong
+                                )
                             )
                         }
 
                         is CrbtSongsFeedUiState.Error ->
                             it.copy(
                                 errorMessage = feed.errorMessage,
-                                loading = false
+                                loading = false,
+                                homeResource = null,
                             )
 
                         is CrbtSongsFeedUiState.Loading ->
                             it.copy(
                                 loading = true,
-                                errorMessage = null
+                                errorMessage = null,
+                                homeResource = null,
                             )
                     }
                 }
@@ -145,7 +159,8 @@ data class TonesUiState(
     val selectedSong: CrbtSongResource? = null,
     val searchQuery: String? = null,
     val searchResults: List<CrbtSongResource> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val homeResource: HomeSongResource? = null,
 )
 
 fun List<CrbtSongResource>.findCurrentMusicControllerSong(

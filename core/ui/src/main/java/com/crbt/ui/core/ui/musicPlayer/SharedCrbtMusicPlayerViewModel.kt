@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 class SharedCrbtMusicPlayerViewModel @Inject constructor(
     private val setMediaControllerCallbackUseCase: SetMediaControllerCallbackUseCase,
     private val getCurrentMusicPositionUseCase: GetCurrentSongPositionUseCase,
-    private val destroyMediaControllerUseCase: DestroyMediaControllerUseCase
+    private val destroyMediaControllerUseCase: DestroyMediaControllerUseCase,
 ) : ViewModel() {
 
     var musicControllerUiState by mutableStateOf(MusicControllerUiState())
@@ -56,7 +56,6 @@ class SharedCrbtMusicPlayerViewModel @Inject constructor(
         }
     }
 
-    fun destroyMediaController() {
-        destroyMediaControllerUseCase()
-    }
+    fun destroyMediaController() = destroyMediaControllerUseCase()
+
 }
