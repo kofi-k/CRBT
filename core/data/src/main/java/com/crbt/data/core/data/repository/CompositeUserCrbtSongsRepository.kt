@@ -13,10 +13,15 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
 ) : UserCrbtMusicRepository {
     override fun observeAllCrbtMusic(filterInterestedLanguages: Set<String>?): Flow<CrbtSongsFeedUiState> =
         crbtMusicRepository.getCrbtMusic()
-            .combine(userPreferencesRepository.userPreferencesData) { songs, _ ->
+            .combine(userPreferencesRepository.userPreferencesData) { songs, userPreferenceData ->
                 when (songs) {
                     is CrbtMusicResourceUiState.Success -> {
-                        CrbtSongsFeedUiState.Success(songs.songs)
+                        CrbtSongsFeedUiState.Success(
+                            songs = songs.songs,
+                            currentUserCrbtSubscriptionSong = songs.songs.find {
+                                it.id == userPreferenceData.currentCrbtSubscriptionId.toString()
+                            }
+                        )
                     }
 
                     is CrbtMusicResourceUiState.Error -> {
@@ -51,8 +56,11 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                     is CrbtSongsFeedUiState.Success -> {
                         when (crbtSongsFeedUiState.songs.isEmpty()) {
                             true -> CrbtSongsFeedUiState.Error("No songs found")
-                            false -> CrbtSongsFeedUiState.Success(crbtSongsFeedUiState.songs.sortedByDescending { it.createdAt }
-                                .take(8))
+                            false -> CrbtSongsFeedUiState.Success(
+                                crbtSongsFeedUiState.songs.sortedByDescending { it.createdAt }
+                                    .take(8),
+                                currentUserCrbtSubscriptionSong = crbtSongsFeedUiState.currentUserCrbtSubscriptionSong
+                            )
                         }
                     }
 
