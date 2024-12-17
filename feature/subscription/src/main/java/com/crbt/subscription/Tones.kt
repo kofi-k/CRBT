@@ -2,7 +2,6 @@ package com.crbt.subscription
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,7 +13,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -35,11 +33,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,7 +60,8 @@ import com.crbt.ui.core.ui.CustomRotatingMorphShape
 import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.SearchToolbar
 import com.crbt.ui.core.ui.ToneItem
-import com.crbt.ui.core.ui.musicPlayer.MusicCard
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
+import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.feature.subscription.R
 
@@ -75,22 +71,13 @@ fun TonesScreen(
     onSubscriptionToneClick: (toneId: String) -> Unit,
     onGiftSubscriptionClick: (toneId: String) -> Unit,
     musicControllerUiState: MusicControllerUiState,
-    crbtTonesViewModel: CrbtTonesViewModel = hiltViewModel(),
+    crbtTonesViewModel: CrbtTonesViewModel,
 ) {
     val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
     val currentSong = tonesUiState.songs?.findCurrentMusicControllerSong(
         musicControllerUiState.currentSong?.tune ?: ""
     )
     val searchQuery by crbtTonesViewModel.searchQuery.collectAsStateWithLifecycle()
-
-    val isInitialized = rememberSaveable { mutableStateOf(false) }
-
-    if (!isInitialized.value) {
-        LaunchedEffect(key1 = Unit) {
-            crbtTonesViewModel.onEvent(TonesPlayerEvent.FetchSong)
-            isInitialized.value = true
-        }
-    }
 
 
     Scaffold(
@@ -106,29 +93,6 @@ fun TonesScreen(
                 showNavigationIcon = false,
                 modifier = Modifier
             )
-        },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = currentSong != null && musicControllerUiState.playerState != PlayerState.STOPPED,
-                modifier = Modifier
-            ) {
-                if (currentSong != null) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        MusicCard(
-                            modifier = Modifier,
-                            cRbtSong = currentSong,
-                            onPlayerEvent = crbtTonesViewModel::onEvent,
-                            musicControllerUiState = musicControllerUiState,
-                        )
-                    }
-                }
-            }
         },
         content = { pd ->
             Column(
@@ -166,11 +130,31 @@ fun TonesScreen(
                                     )
                                 }
                             }
-
                             with(tonesUiState) {
-                                when (this.loading == true && songs.isNullOrEmpty()) {
+                                when (errorMessage != null) {
                                     true -> {
-                                        Column(
+                                        EmptyContent(
+                                            description = errorMessage!!,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            reloadContent = {
+                                                ProcessButton(
+                                                    onClick = {
+                                                        crbtTonesViewModel.onEvent(
+                                                            TonesPlayerEvent.FetchSong
+                                                        )
+                                                    },
+                                                    isProcessing = tonesUiState.loading == true,
+                                                    text = stringResource(id = R.string.feature_subscription_reload),
+                                                    colors = ButtonDefaults.textButtonColors()
+                                                )
+                                            }
+                                        )
+                                    }
+
+                                    else -> when (tonesUiState.loading) {
+                                        true -> Column(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(bottom = 16.dp),
@@ -179,65 +163,62 @@ fun TonesScreen(
                                         ) {
                                             CircularProgressIndicator()
                                         }
-                                    }
 
-                                    else -> {
-                                        when (songs.isNullOrEmpty()) {
+                                        else -> when (tonesUiState.songs.isNullOrEmpty()) {
                                             true -> {
-                                                val message = when (searchQuery.isNotBlank()) {
-                                                    true -> stringResource(
-                                                        id = R.string.feature_subscription_search_result_not_found,
-                                                        searchQuery
-                                                    )
-
-                                                    false ->
-                                                        when (this.errorMessage != null) {
-                                                            true -> errorMessage
-                                                            else ->
-                                                                stringResource(id = R.string.feature_subscription_no_songs)
-                                                        }
-                                                }
                                                 EmptyContent(
-                                                    description = message,
+                                                    description = stringResource(id = R.string.feature_subscription_no_songs),
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .padding(16.dp),
                                                     reloadContent = {
-                                                        if (searchQuery.isBlank()) {
-                                                            ProcessButton(
-                                                                onClick = {
-                                                                    crbtTonesViewModel.onEvent(
-                                                                        TonesPlayerEvent.FetchSong
-                                                                    )
-                                                                },
-                                                                isProcessing = tonesUiState.loading == true,
-                                                                text = stringResource(id = R.string.feature_subscription_reload),
-                                                                colors = ButtonDefaults.textButtonColors()
-                                                            )
-                                                        }
+                                                        ProcessButton(
+                                                            onClick = {
+                                                                crbtTonesViewModel.onEvent(
+                                                                    TonesPlayerEvent.FetchSong
+                                                                )
+                                                            },
+                                                            isProcessing = tonesUiState.loading == true,
+                                                            text = stringResource(id = R.string.feature_subscription_reload),
+                                                            colors = ButtonDefaults.textButtonColors()
+                                                        )
                                                     }
                                                 )
                                             }
 
-                                            else ->
-                                                LazyColumn(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth(),
-                                                    contentPadding = PaddingValues(top = 8.dp)
-                                                ) {
-                                                    subscriptionTonesFeed(
-                                                        onSubscriptionToneClick = onSubscriptionToneClick,
-                                                        onGiftSubscriptionClick = onGiftSubscriptionClick,
-                                                        onEvent = crbtTonesViewModel::onEvent,
-                                                        crbtSongs = if (searchQuery.isEmpty()) songs else searchResults,
-                                                        currentSong = currentSong,
-                                                        isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+                                            else -> {
+                                                val songs =
+                                                    if (searchQuery.isNotBlank()) tonesUiState.searchResults else tonesUiState.songs
+                                                when (songs.isNullOrEmpty()) {
+                                                    true -> EmptyContent(
+                                                        description = stringResource(
+                                                            id = R.string.feature_subscription_search_result_not_found,
+                                                            searchQuery
+                                                        ),
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(16.dp),
                                                     )
+
+                                                    else ->
+                                                        LazyColumn(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth(),
+                                                            contentPadding = PaddingValues(top = 8.dp)
+                                                        ) {
+                                                            subscriptionTonesFeed(
+                                                                onSubscriptionToneClick = onSubscriptionToneClick,
+                                                                onGiftSubscriptionClick = onGiftSubscriptionClick,
+                                                                onEvent = crbtTonesViewModel::onEvent,
+                                                                crbtSongs = songs,
+                                                                currentSong = currentSong,
+                                                                isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
+                                                            )
+                                                        }
                                                 }
+                                            }
                                         }
-
                                     }
-
                                 }
                             }
                         }
@@ -400,11 +381,13 @@ fun SubscriptionTonePreview() {
 @ThemePreviews
 @Composable
 fun TonesPreview() {
+    val crbtTonesViewModel: CrbtTonesViewModel = hiltViewModel()
     CrbtTheme {
         TonesScreen(
             onSubscriptionToneClick = {},
             onGiftSubscriptionClick = {},
             musicControllerUiState = MusicControllerUiState(),
+            crbtTonesViewModel = crbtTonesViewModel
         )
     }
 }

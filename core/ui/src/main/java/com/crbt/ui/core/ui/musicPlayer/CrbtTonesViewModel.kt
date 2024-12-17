@@ -44,10 +44,6 @@ class CrbtTonesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TonesUiState())
     var uiState: StateFlow<TonesUiState> = _uiState.asStateFlow()
 
-    init {
-        fetchSongs()
-    }
-
 
     fun onEvent(event: TonesPlayerEvent) {
         when (event) {

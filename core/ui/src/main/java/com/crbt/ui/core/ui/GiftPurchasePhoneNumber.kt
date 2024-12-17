@@ -71,6 +71,8 @@ fun GiftPurchasePhoneNumber(
                 if (phoneNumber != null) {
                     phoneNumberState.text = phoneNumber
                     onPhoneNumberChanged(phoneNumber, phoneNumberState.isValid)
+//                    val allContacts = getAllContacts(context)
+//                    println("All contacts: $allContacts")
                 }
             }
         }
