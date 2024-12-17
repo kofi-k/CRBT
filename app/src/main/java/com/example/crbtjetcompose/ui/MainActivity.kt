@@ -25,6 +25,7 @@ import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
@@ -52,6 +53,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
     private val sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel by viewModels()
+    private val crbtTonesViewModel: CrbtTonesViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,7 +117,8 @@ class MainActivity : ComponentActivity() {
                     CrbtTheme {
                         CrbtApp(
                             appState = appState,
-                            sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel
+                            sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
+                            crbtTonesViewModel = crbtTonesViewModel
                         )
                     }
                 }

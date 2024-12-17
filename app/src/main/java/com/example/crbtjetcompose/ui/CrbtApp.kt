@@ -7,6 +7,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.crbt.common.core.common.result.Result
+import com.crbt.data.core.data.PlayerState
 import com.crbt.data.core.data.repository.RefreshUiState
 import com.crbt.data.core.data.util.INTERNET_SPEED_CHECK_URL
 import com.crbt.designsystem.components.CrbtNavigationBar
@@ -73,8 +75,13 @@ import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
 import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
+import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
+import com.crbt.subscription.navigation.navigateToAddSubscription
 import com.crbt.ui.core.ui.launchCustomChromeTab
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
+import com.crbt.ui.core.ui.musicPlayer.MusicCard
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
+import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
 import com.example.crbtjetcompose.R
 import com.example.crbtjetcompose.navigation.CrbtNavHost
 import com.example.crbtjetcompose.navigation.TopLevelDestination
@@ -88,7 +95,8 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 fun CrbtApp(
     appState: CrbtAppState,
     sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel,
-    mainActivityViewModel: MainActivityViewModel = hiltViewModel()
+    mainActivityViewModel: MainActivityViewModel = hiltViewModel(),
+    crbtTonesViewModel: CrbtTonesViewModel,
 ) {
     val destination = appState.currentTopLevelDestination
     val currentRoute = appState.currentDestination?.route
@@ -134,6 +142,13 @@ fun CrbtApp(
     val userData by appState.userData.collectAsStateWithLifecycle()
     val refreshUiState by mainActivityViewModel.refreshUiState.collectAsStateWithLifecycle()
 
+
+    val musicControllerUiState = sharedCrbtMusicPlayerViewModel.musicControllerUiState
+    val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
+    val currentSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        musicControllerUiState.currentSong?.tune ?: ""
+    )
+
     val startDestination: String = when (isLoggedIn) {
         true -> when (isProfileSetupComplete) {
             true -> HOME_ROUTE
@@ -174,21 +189,51 @@ fun CrbtApp(
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 bottomBar = {
-                    if (showBottomBar) {
-                        CrbtBottomBar(
-                            destinations = appState.topLevelDestinations,
-                            onNavigateToDestination = appState::navigateToTopLevelDestination,
-                            currentDestination = appState.currentDestination,
-                            modifier =
-                            Modifier
-                                .testTag("CrbtBottomBar")
-                                .clip(
-                                    RoundedCornerShape(
-                                        topStart = 24.dp,
-                                        topEnd = 24.dp
+                    Column {
+                        val showMusicPlayer =
+                            musicControllerUiState.playerState != PlayerState.STOPPED
+                                    &&
+                                    currentRoute in listOf(
+                                HOME_ROUTE,
+                                SUBSCRIPTION_ROUTE,
+                            )
+
+                        if (showMusicPlayer && currentSong != null) {
+                            MusicCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                cRbtSong = currentSong,
+                                onPlayerEvent = crbtTonesViewModel::onEvent,
+                                musicControllerUiState = musicControllerUiState,
+                                onNavigateToSubscription = { toneId ->
+                                    if (currentRoute != ADD_SUBSCRIPTION_ROUTE) {
+                                        appState.navController.navigateToAddSubscription(
+                                            toneId,
+                                            false
+                                        )
+                                    }
+                                }
+                            )
+                            Spacer(modifier = Modifier.size(16.dp))
+                        }
+
+                        if (showBottomBar) {
+                            CrbtBottomBar(
+                                destinations = appState.topLevelDestinations,
+                                onNavigateToDestination = appState::navigateToTopLevelDestination,
+                                currentDestination = appState.currentDestination,
+                                modifier =
+                                Modifier
+                                    .testTag("CrbtBottomBar")
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = 24.dp,
+                                            topEnd = 24.dp
+                                        )
                                     )
-                                )
-                        )
+                            )
+                        }
                     }
                 },
                 topBar = {
@@ -324,37 +369,15 @@ fun CrbtApp(
                     }
                 }
             ) { padding ->
-
-                /*PullToRefreshContent(
-                    isRefreshing = refreshUiState is RefreshUiState.Loading,
-                    onRefresh = {
-                        when (destination) {
-                            TopLevelDestination.HOME -> mainActivityViewModel.refreshHome()
-                            TopLevelDestination.SUBSCRIPTIONS -> mainActivityViewModel.refreshSongs()
-                            TopLevelDestination.PROFILE -> mainActivityViewModel.refreshUserInfo()
-                            else -> when (currentRoute) {
-                                PACKAGES_ROUTE -> mainActivityViewModel.refreshPackages()
-                                else -> Unit
-                            }
-                        }
-                    }) {
-
-                    when (userData) {
-                        is Result.Loading -> CircularProgressIndicator()
-                        is Result.Error -> Unit
-                        is Result.Success -> {
-                        }
-                    }
-                }*/
                 CrbtNavHost(
                     appState = appState,
                     startDestination = startDestination,
-                    sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
+                    musicControllerUiState = musicControllerUiState,
+                    crbtTonesViewModel = crbtTonesViewModel,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
                 )
-
             }
         }
     }
