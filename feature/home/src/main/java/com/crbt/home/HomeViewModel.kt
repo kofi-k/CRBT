@@ -39,9 +39,7 @@ class HomeViewModel @Inject constructor(
 
 
     val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
-        reloadTrigger.flatMapLatest {
-            getUserDataPreferenceUseCase()
-        }
+        getUserDataPreferenceUseCase()
             .stateIn(
                 scope = viewModelScope,
                 initialValue = UserPreferenceUiState.Loading,
