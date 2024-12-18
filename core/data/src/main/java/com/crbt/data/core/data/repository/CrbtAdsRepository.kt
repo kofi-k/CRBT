@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -37,13 +38,15 @@ class CrbtAdsRepositoryImpl @Inject constructor(
                 .map(CrbtNetworkAds::asExternalModel)
                 .sortedByDescending { it.id }
             emit(CrbtAdsUiState.Success(ads))
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             when (e) {
-                is SocketTimeoutException, is UnknownHostException,
-                is ConnectException -> emit(CrbtAdsUiState.Error("Network Error. Try again later"))
-
+                is ConnectException -> emit(CrbtAdsUiState.Error("Oops! your internet connection seem to be off."))
+                is SocketTimeoutException -> emit(CrbtAdsUiState.Error("Hmm, connection timed out"))
+                is UnknownHostException -> emit(CrbtAdsUiState.Error("A network error occurred. Please check your connection and try again."))
                 else -> emit(CrbtAdsUiState.Error(e.message ?: "An error occurred"))
             }
+        } catch (e: Exception) {
+            emit(CrbtAdsUiState.Error(e.message ?: "An error occurred"))
         }
     }.flowOn(ioDispatcher)
 

@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -31,16 +32,16 @@ class CrbtPackagesRepositoryImpl @Inject constructor(
             emit(
                 PackagesFeedUiState.Success(combinedPackagesAndItems)
             )
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             when (e) {
-                is SocketTimeoutException, is UnknownHostException,
-                is ConnectException -> emit(PackagesFeedUiState.Error("Network Error. Try again later"))
-
-                else ->
-                    emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
+                is ConnectException -> emit(PackagesFeedUiState.Error("Oops! your internet connection seem to be off."))
+                is SocketTimeoutException -> emit(PackagesFeedUiState.Error("Hmm, connection timed out"))
+                is UnknownHostException -> emit(PackagesFeedUiState.Error("A network error occurred. Please check your connection and try again."))
+                else -> emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
             }
+        } catch (e: Exception) {
+            emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
         }
-
     }
         .flowOn(ioDispatcher)
 }

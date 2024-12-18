@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class CrbtUserMonitor @Inject constructor(
@@ -65,6 +69,13 @@ class CrbtUserMonitor @Inject constructor(
             crbtNetworkRepository.updateUserAccountInfo(firstName, lastName)
             getAccountInfo()
             emit(UpdateUserInfoUiState.Success)
+        } catch (e: IOException) {
+            when (e) {
+                is ConnectException -> emit(UpdateUserInfoUiState.Error("Oops! your internet connection seem to be off."))
+                is SocketTimeoutException -> emit(UpdateUserInfoUiState.Error("Hmm, connection timed out"))
+                is UnknownHostException -> emit(UpdateUserInfoUiState.Error("A network error occurred. Please check your connection and try again."))
+                else -> emit(UpdateUserInfoUiState.Error(e.message ?: "An error occurred"))
+            }
         } catch (e: Exception) {
             emit(UpdateUserInfoUiState.Error(e.message ?: "Error"))
         } catch (e: HttpException) {
