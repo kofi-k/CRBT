@@ -29,6 +29,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -127,50 +128,62 @@ internal fun CrbtSubscribeScreen(
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        SubscribeHeader(
-            onBackClicked = onBackClicked,
-            artisteName = crbtSong?.artisteName ?: "",
-            songTitle = crbtSong?.songTitle ?: "",
-            songProfileUrl = crbtSong?.profile ?: ""
-        )
-
-        MusicInfo(
-            price = crbtSong?.price ?: "0.00",
-            numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
-            numberOfPlays = crbtSong?.numberOfListeners ?: 0,
-            billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}"
-        )
-
-        SubscribeContent(
-            isGiftSubscription = isGiftSub ?: false,
+    when (crbtSong == null) {
+        true -> Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            onSubscribeClick = {
-                if (!isUserRegisteredForCrbt) {
-                    showRegistrationDialog = true
-                } else {
-                    subscriptionViewModel.subscribeToTone(
-                        ussdCode = crbtSong?.ussdCode ?: "",
-                        activity = context as Activity,
-                    )
-                }
-            },
-            subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-            isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
-            isButtonEnabled = crbtSong != null,
-            onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
-            onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
-            billingType = subscriptionViewModel.crbtBillingType,
-        )
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                SubscribeHeader(
+                    onBackClicked = onBackClicked,
+                    artisteName = crbtSong?.artisteName ?: "",
+                    songTitle = crbtSong?.songTitle ?: "",
+                    songProfileUrl = crbtSong?.profile ?: ""
+                )
+
+                MusicInfo(
+                    price = crbtSong?.price ?: "0.00",
+                    numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
+                    numberOfPlays = crbtSong?.numberOfListeners ?: 0,
+                    billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}"
+                )
+
+                SubscribeContent(
+                    isGiftSubscription = isGiftSub ?: false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState()),
+                    onSubscribeClick = {
+                        if (!isUserRegisteredForCrbt) {
+                            showRegistrationDialog = true
+                        } else {
+                            subscriptionViewModel.subscribeToTone(
+                                ussdCode = crbtSong?.ussdCode ?: "",
+                                activity = context as Activity,
+                            )
+                        }
+                    },
+                    subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
+                    isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
+                    isButtonEnabled = true,
+                    onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
+                    onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
+                    billingType = subscriptionViewModel.crbtBillingType,
+                )
+            }
+        }
     }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         MessageSnackbar(
