@@ -88,13 +88,13 @@ class CrbtTonesViewModel @Inject constructor(
     private fun fetchSongs() {
         viewModelScope.launch {
             crbtSongsRepository.observeAllCrbtMusic().collect { feed ->
-                _uiState.update { it ->
+                _uiState.update { state ->
                     when (feed) {
                         is CrbtSongsFeedUiState.Success -> {
                             val songsByDate =
                                 feed.songs.sortedByDescending { songs -> songs.createdAt }
                             addMediaItemsUseCase(songsByDate)
-                            it.copy(
+                            state.copy(
                                 songs = songsByDate,
                                 loading = false,
                                 homeResource = HomeSongResource(
@@ -106,14 +106,14 @@ class CrbtTonesViewModel @Inject constructor(
                         }
 
                         is CrbtSongsFeedUiState.Error ->
-                            it.copy(
+                            state.copy(
                                 errorMessage = feed.errorMessage,
                                 loading = false,
                                 homeResource = null,
                             )
 
                         is CrbtSongsFeedUiState.Loading ->
-                            it.copy(
+                            state.copy(
                                 loading = true,
                                 errorMessage = null,
                                 homeResource = null,
@@ -162,3 +162,13 @@ data class TonesUiState(
 fun List<CrbtSongResource>.findCurrentMusicControllerSong(
     tune: String
 ) = find { it.tune == tune } ?: firstOrNull()
+
+
+fun CrbtSongResource.isSongCurrentlyPlaying(
+    song: CrbtSongResource?
+): Boolean =
+    id == song?.id &&
+            tune == song.tune &&
+            artisteName == song.artisteName &&
+            albumName == song.albumName &&
+            songTitle == song.songTitle

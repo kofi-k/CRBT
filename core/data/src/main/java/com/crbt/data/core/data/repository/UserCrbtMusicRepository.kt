@@ -10,6 +10,8 @@ interface UserCrbtMusicRepository {
 
 
     fun observeHomeResource(): Flow<HomeSongResourceState>
+
+    fun songByToneId(toneId: String): Flow<CrbtSongResource?>
 }
 
 sealed class HomeSongResourceState {

@@ -24,13 +24,60 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                         )
                     }
 
-                    is CrbtMusicResourceUiState.Error -> {
-                        CrbtSongsFeedUiState.Error(songs.message)
-                    }
+                    is CrbtMusicResourceUiState.Error -> CrbtSongsFeedUiState.Error(songs.message)
 
-                    is CrbtMusicResourceUiState.Loading -> {
-                        CrbtSongsFeedUiState.Loading
-                    }
+                    is CrbtMusicResourceUiState.Loading -> CrbtSongsFeedUiState.Loading
+
+                }
+            }
+
+    override fun observeHomeResource(): Flow<HomeSongResourceState> =
+        combine(
+            observePopularTodayCrbtMusic(),
+            observeLatestCrbtMusic(),
+            observeUserCrbtSubscription()
+        ) { popularTodaySongs, latestSong, currentUserCrbtSubscription ->
+            when {
+                popularTodaySongs is CrbtSongsFeedUiState.Success &&
+                        latestSong is Result.Success &&
+                        currentUserCrbtSubscription is Result.Success -> {
+                    HomeSongResourceState.Success(
+                        HomeSongResource(
+                            popularTodaySongs.songs,
+                            latestSong.data,
+                            currentUserCrbtSubscription.data
+                        )
+                    )
+                }
+
+                popularTodaySongs is CrbtSongsFeedUiState.Error -> {
+                    HomeSongResourceState.Error(popularTodaySongs.errorMessage)
+                }
+
+                latestSong is Result.Error -> {
+                    HomeSongResourceState.Error(latestSong.exception.message ?: "An error occurred")
+                }
+
+                currentUserCrbtSubscription is Result.Error -> {
+                    HomeSongResourceState.Error(
+                        currentUserCrbtSubscription.exception.message ?: "An error occurred"
+                    )
+                }
+
+                else -> HomeSongResourceState.Loading
+            }
+        }
+
+    override fun songByToneId(toneId: String): Flow<CrbtSongResource?> =
+        observeAllCrbtMusic()
+            .map { crbtSongsFeedUiState ->
+                when (crbtSongsFeedUiState) {
+                    is CrbtSongsFeedUiState.Success ->
+                        crbtSongsFeedUiState.songs.find {
+                            it.id == toneId
+                        }
+
+                    else -> null
                 }
             }
 
@@ -85,40 +132,4 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                 }
             }
 
-    override fun observeHomeResource(): Flow<HomeSongResourceState> =
-        combine(
-            observePopularTodayCrbtMusic(),
-            observeLatestCrbtMusic(),
-            observeUserCrbtSubscription()
-        ) { popularTodaySongs, latestSong, currentUserCrbtSubscription ->
-            when {
-                popularTodaySongs is CrbtSongsFeedUiState.Success &&
-                        latestSong is Result.Success &&
-                        currentUserCrbtSubscription is Result.Success -> {
-                    HomeSongResourceState.Success(
-                        HomeSongResource(
-                            popularTodaySongs.songs,
-                            latestSong.data,
-                            currentUserCrbtSubscription.data
-                        )
-                    )
-                }
-
-                popularTodaySongs is CrbtSongsFeedUiState.Error -> {
-                    HomeSongResourceState.Error(popularTodaySongs.errorMessage)
-                }
-
-                latestSong is Result.Error -> {
-                    HomeSongResourceState.Error(latestSong.exception.message ?: "An error occurred")
-                }
-
-                currentUserCrbtSubscription is Result.Error -> {
-                    HomeSongResourceState.Error(
-                        currentUserCrbtSubscription.exception.message ?: "An error occurred"
-                    )
-                }
-
-                else -> HomeSongResourceState.Loading
-            }
-        }
 }

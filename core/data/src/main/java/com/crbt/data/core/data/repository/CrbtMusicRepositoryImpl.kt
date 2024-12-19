@@ -30,7 +30,7 @@ class CrbtMusicRepositoryImpl @Inject constructor(
             } catch (e: IOException) {
                 when (e) {
                     is ConnectException -> emit(CrbtMusicResourceUiState.Error("Oops! your internet connection seem to be off."))
-                    is SocketTimeoutException -> emit(CrbtMusicResourceUiState.Error("Hmm, connection timed."))
+                    is SocketTimeoutException -> emit(CrbtMusicResourceUiState.Error("Hmm, connection timed out."))
                     is UnknownHostException -> emit(CrbtMusicResourceUiState.Error("A network error occurred. Please check your connection and try again."))
                     else -> emit(CrbtMusicResourceUiState.Error(e.message ?: "An error occurred"))
                 }
