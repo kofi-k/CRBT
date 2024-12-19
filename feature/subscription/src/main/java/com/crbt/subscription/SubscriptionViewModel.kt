@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
 import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UssdRepository
@@ -29,10 +28,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 
@@ -60,21 +62,7 @@ class SubscriptionViewModel @Inject constructor(
 
     val crbtSongResource: StateFlow<CrbtSongResource?> =
         selectedTone.flatMapLatest { toneId ->
-            if (toneId != null) {
-                crbtSongsRepository.observeAllCrbtMusic()
-                    .map { songs ->
-                        when (songs) {
-                            is CrbtSongsFeedUiState.Error -> null
-                            CrbtSongsFeedUiState.Loading -> null
-                            is CrbtSongsFeedUiState.Success ->
-                                songs.songs.find {
-                                    it.id == toneId
-                                }
-                        }
-                    }
-            } else {
-                flowOf(null)
-            }
+            toneId?.let { crbtSongsRepository.songByToneId(it) } ?: flowOf(null)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -147,9 +135,16 @@ class SubscriptionViewModel @Inject constructor(
                 crbtPreferencesRepository.updateCrbtSubscriptionId(selectedTone.value?.toInt() ?: 0)
                 loginManager.getAccountInfo()
                 SubscriptionUiState.Success(result)
-            } catch (e: Exception) {
-                SubscriptionUiState.Error(e.message ?: "An error occurred")
+            } catch (e: IOException) {
+                when (e) {
+                    is ConnectException -> SubscriptionUiState.Error("Oops! your internet connection seem to be off.")
+                    is SocketTimeoutException -> SubscriptionUiState.Error("Hmm, connection timed out.")
+                    is UnknownHostException -> SubscriptionUiState.Error("A network error occurred. Please check your connection and try again.")
+                    else -> SubscriptionUiState.Error(e.message ?: "An error occurred")
+                }
             } catch (e: HttpException) {
+                SubscriptionUiState.Error(e.message ?: "An error occurred")
+            } catch (e: Exception) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }

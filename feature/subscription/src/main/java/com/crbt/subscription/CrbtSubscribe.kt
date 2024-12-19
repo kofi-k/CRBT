@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -51,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -72,7 +75,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.MusicControllerUiState
+import com.crbt.data.core.data.PlayerState
 import com.crbt.data.core.data.SubscriptionBillingType
+import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
@@ -87,6 +93,9 @@ import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
+import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
+import com.crbt.ui.core.ui.musicPlayer.isSongCurrentlyPlaying
 import com.example.crbtjetcompose.feature.subscription.R
 
 
@@ -97,6 +106,8 @@ internal fun CrbtSubscribeScreen(
     onSubscribeSuccess: () -> Unit,
     onBackClicked: () -> Unit,
     subscriptionViewModel: SubscriptionViewModel = hiltViewModel(),
+    musicControllerUiState: MusicControllerUiState,
+    crbtTonesViewModel: CrbtTonesViewModel,
 ) {
 
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
@@ -104,6 +115,16 @@ internal fun CrbtSubscribeScreen(
     val subscriptionUiState by subscriptionViewModel.subscriptionUiState.collectAsStateWithLifecycle()
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
     val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
+
+    val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
+    val currentPlayingSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        musicControllerUiState.currentSong?.tune ?: ""
+    )
+
+    val isCurrentlyPlayingSong = currentPlayingSong?.isSongCurrentlyPlaying(crbtSong) == true
+    val isPlaying =
+        isCurrentlyPlayingSong && musicControllerUiState.playerState == PlayerState.PLAYING
+
 
     var showRegistrationDialog by remember { mutableStateOf(false) }
 
@@ -138,48 +159,134 @@ internal fun CrbtSubscribeScreen(
         }
 
         else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                SubscribeHeader(
-                    onBackClicked = onBackClicked,
-                    artisteName = crbtSong?.artisteName ?: "",
-                    songTitle = crbtSong?.songTitle ?: "",
-                    songProfileUrl = crbtSong?.profile ?: ""
-                )
 
-                MusicInfo(
-                    price = crbtSong?.price ?: "0.00",
-                    numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
-                    numberOfPlays = crbtSong?.numberOfListeners ?: 0,
-                    billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}"
-                )
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
 
-                SubscribeContent(
-                    isGiftSubscription = isGiftSub ?: false,
+                    SubscribeHeader(
+                        onBackClicked = onBackClicked,
+                        artisteName = crbtSong?.artisteName ?: "",
+                        songTitle = crbtSong?.songTitle ?: "",
+                        songProfileUrl = crbtSong?.profile ?: "",
+                    )
+
+                    MusicInfo(
+                        price = crbtSong?.price ?: "0.00",
+                        numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
+                        numberOfPlays = crbtSong?.numberOfListeners ?: 0,
+                        billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}",
+                        modifier = Modifier
+                    )
+
+                    SubscribeContent(
+                        isGiftSubscription = isGiftSub ?: false,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        onSubscribeClick = {
+                            if (!isUserRegisteredForCrbt) {
+                                showRegistrationDialog = true
+                            } else {
+                                subscriptionViewModel.subscribeToTone(
+                                    ussdCode = crbtSong?.ussdCode ?: "",
+                                    activity = context as Activity,
+                                )
+                            }
+                        },
+                        subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
+                        isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
+                        isButtonEnabled = true,
+                        onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
+                        onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
+                        billingType = subscriptionViewModel.crbtBillingType,
+                    )
+                }
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState()),
-                    onSubscribeClick = {
-                        if (!isUserRegisteredForCrbt) {
-                            showRegistrationDialog = true
-                        } else {
-                            subscriptionViewModel.subscribeToTone(
-                                ussdCode = crbtSong?.ussdCode ?: "",
-                                activity = context as Activity,
+                        .height(360.dp)
+                ) {
+                    val totalDuration = musicControllerUiState.totalDuration
+                    val currentPosition = musicControllerUiState.currentPosition
+
+                    val progress =
+                        remember(totalDuration, currentPosition) {
+                            if (totalDuration > 0) currentPosition.toFloat() / totalDuration else 0f
+                        }
+
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .align(Alignment.BottomEnd)
+                            .offset(x = -(15).dp, y = (32).dp)
+                            .drawBehind {
+                                val strokeWidthPx = 6.dp.toPx()
+                                val radius = (size.minDimension - strokeWidthPx) / 2
+
+                                drawCircle(
+                                    color = Color.Transparent,
+                                    radius = radius,
+                                    style = Stroke(width = strokeWidthPx)
+                                )
+
+                                if (isCurrentlyPlayingSong) {
+                                    drawArc(
+                                        color = Color.White,
+                                        startAngle = -90f,
+                                        sweepAngle = 360f * progress,
+                                        useCenter = false,
+                                        style = Stroke(width = strokeWidthPx),
+                                        size = Size(
+                                            size.width - strokeWidthPx,
+                                            size.height - strokeWidthPx
+                                        ),
+                                        topLeft = Offset(strokeWidthPx / 2, strokeWidthPx / 2)
+                                    )
+                                }
+                            }
+                    ) {
+                        IconButton(
+                            onClick = {
+                                if (isCurrentlyPlayingSong) {
+                                    if (isPlaying) {
+                                        crbtTonesViewModel.onEvent(TonesPlayerEvent.PauseSong)
+                                    } else {
+                                        crbtTonesViewModel.onEvent(TonesPlayerEvent.ResumeSong)
+                                    }
+                                } else {
+                                    crbtTonesViewModel.onEvent(
+                                        TonesPlayerEvent.OnSongSelected(
+                                            selectedSong = tonesUiState.songs?.find { it.id == crbtSong?.id }!!
+                                        )
+                                    )
+                                    crbtTonesViewModel.onEvent(TonesPlayerEvent.PlaySong)
+                                }
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.Transparent
+                            ),
+                            modifier = Modifier
+                                .matchParentSize()
+                                .padding(2.dp)
+                                .background(
+                                    brush = Brush.linearGradient(CustomGradientColors),
+                                    shape = CircleShape
+                                )
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) CrbtIcons.Pause else CrbtIcons.PlayArrow,
+                                contentDescription = null,
+                                modifier = Modifier.size(56.dp),
+                                tint = Color.White
                             )
                         }
-                    },
-                    subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-                    isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
-                    isButtonEnabled = true,
-                    onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
-                    onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
-                    billingType = subscriptionViewModel.crbtBillingType,
-                )
+                    }
+                }
             }
         }
     }
@@ -367,12 +474,14 @@ fun MusicInfo(
     price: String,
     numberOfSubscribers: Int,
     numberOfPlays: Int,
-    billingType: String
+    billingType: String,
+    modifier: Modifier
 ) {
     LazyRow(
         state = rememberLazyListState(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
         item {
             InfoButton(
@@ -709,7 +818,7 @@ fun CrbtSubscribeHeaderPreview() {
             onBackClicked = {},
             artisteName = song.artisteName,
             songTitle = song.songTitle,
-            songProfileUrl = song.profile
+            songProfileUrl = song.profile,
         )
     }
 }

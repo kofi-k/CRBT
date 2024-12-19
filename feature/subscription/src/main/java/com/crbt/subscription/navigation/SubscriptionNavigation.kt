@@ -84,6 +84,8 @@ fun NavGraphBuilder.subscriptionScreen(
             onBackClicked = {
                 navController.navigateUp()
             },
+            crbtTonesViewModel = crbtTonesViewModel,
+            musicControllerUiState = musicControllerUiState,
         )
     }
 }
