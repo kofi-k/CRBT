@@ -24,10 +24,10 @@ import com.example.crbtjetcompose.feature.profile.R
 @Composable
 fun LanguageSettings(
     onLanguageCheckChange: (String) -> Unit,
+    selectedLanguage: String
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
-    var selectedLanguage by remember { mutableStateOf(CRBTSettingsData.languages.first().code) }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -54,7 +54,6 @@ fun LanguageSettings(
                     ListCard(
                         onClick = {
                             onLanguageCheckChange(language.code)
-                            selectedLanguage = language.code
                         },
                         headlineText = stringResource(id = language.name),
                         leadingContentIcon = CrbtIcons.Language,
@@ -64,7 +63,6 @@ fun LanguageSettings(
                                 selected = selectedLanguage == language.code,
                                 onClick = {
                                     onLanguageCheckChange(language.code)
-                                    selectedLanguage = language.code
                                     expanded = false
                                 }
                             )
