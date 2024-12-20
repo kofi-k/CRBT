@@ -97,8 +97,7 @@ fun PackagesScreen(
         Spacer(modifier = Modifier.height(16.dp))
         PackageContent(
             modifier = Modifier.padding(bottom = 16.dp),
-            onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
-            onPurchasePackage = { code ->
+            onPurchasePackage = { code, phoneNumber, isGiftPurchase ->
                 viewModel.runUssdCode(
                     ussdCode = code,
                     onSuccess = {
@@ -111,7 +110,6 @@ fun PackagesScreen(
                     activity = context as Activity
                 )
             },
-            actionEnabled = viewModel.isPhoneNumberValid,
             actionLoading = ussdUiState is UssdUiState.Loading,
             packagesFeedUiState = packagesFeedUiState,
             onReload = viewModel::reloadPackages,
@@ -134,10 +132,8 @@ fun PackagesScreen(
 @Composable
 fun PackageContent(
     modifier: Modifier = Modifier,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    actionEnabled: Boolean,
     actionLoading: Boolean,
-    onPurchasePackage: (String) -> Unit,
+    onPurchasePackage: (code: String, phoneNumber: String, isGiftPurchase: Boolean) -> Unit,
     packagesFeedUiState: PackagesFeedUiState,
     onReload: () -> Unit,
     isReloading: Boolean
@@ -149,6 +145,11 @@ fun PackageContent(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var selectedItem by remember { mutableStateOf<PackageItem?>(null) }
+    var userPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
+    }
 
     Column(
         modifier = modifier,
@@ -243,7 +244,11 @@ fun PackageContent(
                     showBottomSheet = false
                     scope.launch {
                         sheetState.hide()
-                        onPurchasePackage(selectedItem?.ussdCode ?: "")
+                        onPurchasePackage(
+                            selectedItem?.ussdCode ?: "",
+                            userPhoneNumber.first,
+                            isGiftPurchase
+                        )
                     }
                 },
                 onDismissClick = {
@@ -253,11 +258,13 @@ fun PackageContent(
                     }
                 },
                 isGiftPurchase = isGiftPurchase,
-                onPhoneNumberChanged = onPhoneNumberChanged,
+                onPhoneNumberChanged = { phoneNumber, isValid ->
+                    userPhoneNumber = phoneNumber to isValid
+                },
                 price = selectedItem?.price ?: "",
                 packageName = selectedItem?.title ?: "",
                 sheetState = sheetState,
-                actionEnabled = if (isGiftPurchase) actionEnabled else true,
+                actionEnabled = if (isGiftPurchase) userPhoneNumber.second else true,
                 actionLoading = actionLoading
             )
         }

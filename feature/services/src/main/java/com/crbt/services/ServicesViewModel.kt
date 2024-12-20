@@ -3,9 +3,6 @@ package com.crbt.services
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -53,9 +50,6 @@ class ServicesViewModel @Inject constructor(
                 started = SharingStarted.Eagerly,
             )
 
-    var phoneNumber by mutableStateOf("")
-    var isPhoneNumberValid by mutableStateOf(false)
-
 
     val packagesFlow: StateFlow<PackagesFeedUiState> =
         reloadTrigger.flatMapLatest {
@@ -95,11 +89,6 @@ class ServicesViewModel @Inject constructor(
         }
     }
 
-
-    fun onPhoneNumberChanged(phoneNumber: String, isValid: Boolean) {
-        this.phoneNumber = phoneNumber
-        this.isPhoneNumberValid = isValid
-    }
 
     fun reloadPackages() {
         reloadTrigger.value += 1
