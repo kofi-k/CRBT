@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +18,6 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -32,9 +34,9 @@ class RechargeViewModel @Inject constructor(
     getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
 ) : ViewModel() {
-    private val _voucherCodeState: MutableStateFlow<VoucherCodeUiState> =
-        MutableStateFlow(VoucherCodeUiState.Idle)
-    val voucherCodeState: StateFlow<VoucherCodeUiState> = _voucherCodeState
+
+    var voucherCodeState by mutableStateOf<VoucherCodeUiState>(VoucherCodeUiState.Idle)
+        private set
 
     val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
         getUserDataPreferenceUseCase()
@@ -57,27 +59,38 @@ class RechargeViewModel @Inject constructor(
         }
     }
 
-    fun processImageUri(uri: Uri, context: Context) {
-        _voucherCodeState.value = VoucherCodeUiState.Loading
+    fun processImageUri(
+        uri: Uri, context: Context,
+        onSuccess: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        voucherCodeState = VoucherCodeUiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val requiredDigits = crbtPreferencesRepository.userPreferencesData.first()
                     .numberOfRechargeCodeDigits
 
                 val code = extractVoucherCodeFromImage(uri, context, requiredDigits)
-                _voucherCodeState.value = if (code != null) {
+                voucherCodeState = if (code != null) {
+                    onSuccess(code)
                     VoucherCodeUiState.Success(code)
                 } else {
+                    onError("No valid voucher code found")
                     VoucherCodeUiState.Error("No valid voucher code found")
                 }
             } catch (e: Exception) {
-                _voucherCodeState.value = VoucherCodeUiState.Error(e.message ?: "Unknown error")
+                voucherCodeState = VoucherCodeUiState.Error(e.message ?: "Unknown error")
             }
         }
     }
 
-    fun captureImage(context: Context, imageCapture: ImageCapture) {
-        _voucherCodeState.value = VoucherCodeUiState.Loading
+    fun captureImage(
+        context: Context,
+        imageCapture: ImageCapture,
+        onSuccess: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        voucherCodeState = VoucherCodeUiState.Loading
         val outputOptions = ImageCapture.OutputFileOptions.Builder(
             context.cacheDir.resolve("captured_image.jpg")
         ).build()
@@ -88,12 +101,12 @@ class RechargeViewModel @Inject constructor(
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     outputFileResults.savedUri?.let { uri ->
-                        processImageUri(uri, context)
+                        processImageUri(uri, context, onSuccess, onError)
                     }
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    _voucherCodeState.value =
+                    voucherCodeState =
                         VoucherCodeUiState.Error(exception.message ?: "Failed to capture image")
                 }
             }

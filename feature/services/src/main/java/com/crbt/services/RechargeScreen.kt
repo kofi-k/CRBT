@@ -45,7 +45,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -89,53 +88,11 @@ fun RechargeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val userPreferenceUiState by rechargeViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
-    val voucherCodeState by rechargeViewModel.voucherCodeState.collectAsStateWithLifecycle()
+    val voucherCodeState = rechargeViewModel.voucherCodeState
     var showDialog by remember {
         mutableStateOf(false)
     }
     val context = LocalContext.current
-    val pickPhoto = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                rechargeViewModel.processImageUri(uri, context)
-            }
-        },
-    )
-    val imageCapture = remember { ImageCapture.Builder().build() }
-
-    LaunchedEffect(voucherCodeState) {
-        when (val state = voucherCodeState) {
-            is VoucherCodeUiState.Success -> {
-                val userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData
-                if (userData.autoDialRechargeCode) {
-                    servicesViewModel.runUssdCode(
-                        ussdCode = state.voucherCode.voucherToUssdCode(),
-                        onSuccess = {
-                            showDialog = true
-                        },
-                        onError = {
-                            showDialog = true
-                        },
-                        activity = context as Activity,
-                        ussdType = CrbtUssdType.RECHARGE
-                    )
-                }
-            }
-
-            is VoucherCodeUiState.Error -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = state.message,
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
-
-            else -> {}
-        }
-
-    }
 
     when (userPreferenceUiState) {
         UserPreferenceUiState.Loading -> {
@@ -150,15 +107,75 @@ fun RechargeScreen(
 
         is UserPreferenceUiState.Success -> {
             val userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData
+            val pickPhoto = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.PickVisualMedia(),
+                onResult = { uri ->
+                    if (uri != null) {
+                        rechargeViewModel.processImageUri(
+                            uri, context,
+                            onSuccess = { code ->
+                                if (userData.autoDialRechargeCode) {
+                                    servicesViewModel.runUssdCode(
+                                        ussdCode = code.voucherToUssdCode(),
+                                        onSuccess = {
+                                            showDialog = true
+                                        },
+                                        onError = {
+                                            showDialog = true
+                                        },
+                                        activity = context as Activity,
+                                        ussdType = CrbtUssdType.RECHARGE
+                                    )
+                                }
+                            },
+                            onError = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = it,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
+                        )
+                    }
+                },
+            )
+            val imageCapture = remember { ImageCapture.Builder().build() }
             RechargeContent(
                 onCaptureClick = {
-                    rechargeViewModel.captureImage(context, imageCapture)
+                    rechargeViewModel.captureImage(
+                        context,
+                        imageCapture,
+                        onSuccess = { code ->
+                            if (userData.autoDialRechargeCode) {
+                                servicesViewModel.runUssdCode(
+                                    ussdCode = code.voucherToUssdCode(),
+                                    onSuccess = {
+                                        showDialog = true
+                                    },
+                                    onError = {
+                                        showDialog = true
+                                    },
+                                    activity = context as Activity,
+                                    ussdType = CrbtUssdType.RECHARGE
+                                )
+                            }
+                        },
+                        onError = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = it,
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    )
                 },
                 onDialClick = {
-                    when (val state = voucherCodeState) {
+                    when (voucherCodeState) {
                         is VoucherCodeUiState.Success -> {
                             servicesViewModel.runUssdCode(
-                                ussdCode = state.voucherCode.voucherToUssdCode(),
+                                ussdCode = voucherCodeState.voucherCode.voucherToUssdCode(),
                                 onSuccess = {
                                     showDialog = true
                                 },
@@ -173,7 +190,7 @@ fun RechargeScreen(
                         is VoucherCodeUiState.Error -> {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    message = state.message,
+                                    message = voucherCodeState.message,
                                     duration = SnackbarDuration.Short
                                 )
                             }
