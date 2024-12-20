@@ -81,7 +81,8 @@ fun ProfileRoute(
             profileViewModel.signOut(onLogout)
         },
         signOutState = signOutState,
-        userPreferenceUiState = userPreferenceUiState
+        userPreferenceUiState = userPreferenceUiState,
+        onLanguageCheckChange = profileViewModel::saveLanguageCode,
     )
 }
 
@@ -91,6 +92,7 @@ fun ProfileScreen(
     onLogout: () -> Unit = {},
     signOutState: SignOutState,
     userPreferenceUiState: UserPreferenceUiState,
+    onLanguageCheckChange: (String) -> Unit = {},
 ) {
     when (userPreferenceUiState) {
         is UserPreferenceUiState.Loading -> {
@@ -122,7 +124,8 @@ fun ProfileScreen(
 
                 item {
                     ProfileSettings(
-                        onLanguageClicked = {},
+                        onLanguageCheckChange = onLanguageCheckChange,
+                        userLangPref = userData.languageCode,
                         onPermissionCheckChange = { _, _ -> },
                         rewardPoints = userData.rewardPoints.toString()
                     )
@@ -180,7 +183,7 @@ fun ProfileHeader(
                     )
             ) {
                 DynamicAsyncImage(
-                    imageUrl = userImageUrl,
+                    base64ImageString = userImageUrl,
                     imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_avatar
                 )
             }
@@ -208,7 +211,8 @@ fun ProfileHeader(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileSettings(
-    onLanguageClicked: (String) -> Unit = {},
+    onLanguageCheckChange: (String) -> Unit,
+    userLangPref: String,
     onPermissionCheckChange: (String, Boolean) -> Unit = { _, _ -> },
     rewardPoints: String
 ) {
@@ -240,7 +244,8 @@ fun ProfileSettings(
                 )
 
                 LanguageSettings(
-                    onLanguageCheckChange = onLanguageClicked
+                    onLanguageCheckChange = onLanguageCheckChange,
+                    selectedLanguage = userLangPref
                 )
 
                 PermissionSettings(

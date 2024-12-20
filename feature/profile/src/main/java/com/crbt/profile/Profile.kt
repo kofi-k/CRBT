@@ -1,6 +1,5 @@
 package com.crbt.profile
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,10 +30,10 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,7 +45,6 @@ import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asComposePath
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
@@ -61,10 +59,9 @@ import androidx.graphics.shapes.rectangle
 import androidx.graphics.shapes.toPath
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.crbt.data.core.data.repository.UpdateUserInfoUiState
-import com.crbt.data.core.data.util.copyImageToInternalStorage
+import com.crbt.data.core.data.util.convertImageToBase64
+import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
@@ -75,9 +72,11 @@ import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
+import com.crbt.ui.core.ui.validationStates.isValidEmail
 import com.example.crbtjetcompose.core.model.data.CrbtUser
 import com.example.crbtjetcompose.core.model.data.asCrbtUser
 import com.example.crbtjetcompose.feature.profile.R
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -87,22 +86,9 @@ fun Profile(
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
-    val userInfoUiState by profileViewModel.userInfoUiState.collectAsStateWithLifecycle()
+    val userInfoUiState = profileViewModel.userInfoUiState
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(userInfoUiState) {
-        when (userInfoUiState) {
-            is UpdateUserInfoUiState.Success -> onSaveButtonClicked()
-            is UpdateUserInfoUiState.Error -> {
-                snackbarHostState.showSnackbar(
-                    (userInfoUiState as UpdateUserInfoUiState.Error).message,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            else -> Unit
-        }
-    }
+    val scope = rememberCoroutineScope()
 
 
     when (userPreferenceUiState) {
@@ -111,9 +97,26 @@ fun Profile(
             ProfileContent(
                 modifier = modifier,
                 userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData.asCrbtUser(),
-                saveProfile = profileViewModel::saveProfile,
+                saveProfile = { firstName, lastName, email, profile ->
+                    profileViewModel.saveProfile(
+                        firstName = firstName,
+                        lastName = lastName,
+                        email = email,
+                        profile = profile,
+                        onSuccessfulUpdate = {
+                            onSaveButtonClicked()
+                        },
+                        onFailedUpdate = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    it,
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    )
+                },
                 isSaving = userInfoUiState is UpdateUserInfoUiState.Loading,
-                saveProfileImage = profileViewModel::saveProfileImage,
             )
         }
     }
@@ -130,25 +133,18 @@ fun Profile(
 fun ProfileContent(
     modifier: Modifier = Modifier,
     userData: CrbtUser,
-    saveProfile: (firstName: String, lastName: String) -> Unit,
-    saveProfileImage: (String) -> Unit,
+    saveProfile: (firstName: String, lastName: String, email: String, profile: String) -> Unit,
     isSaving: Boolean,
 ) {
     var profileImage by rememberSaveable {
-        mutableStateOf(Uri.parse(userData.profileUrl))
+        mutableStateOf(userData.profileUrl)
     }
     val context = LocalContext.current
     val pickPhoto = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             if (uri != null) {
-                profileImage = uri
-                saveProfileImage(
-                    copyImageToInternalStorage(
-                        context,
-                        uri
-                    ).toString()
-                )
+                profileImage = convertImageToBase64(context, uri) ?: ""
             }
         },
     )
@@ -157,6 +153,13 @@ fun ProfileContent(
     }
     var lastName by rememberSaveable {
         mutableStateOf(userData.lastName)
+    }
+
+    var userEmailAddress by rememberSaveable {
+        mutableStateOf(userData.email)
+    }
+    var checked by remember {
+        mutableStateOf(userData.email.isNotBlank())
     }
     var isButtonEnabled by rememberSaveable {
         mutableStateOf(firstName.isNotBlank() && lastName.isNotBlank())
@@ -192,8 +195,7 @@ fun ProfileContent(
                     )
                 },
                 onRemoveImage = {
-                    profileImage = it
-                    saveProfileImage("")
+                    profileImage = ""
                 },
                 modifier = Modifier,
             )
@@ -215,7 +217,17 @@ fun ProfileContent(
                 content = {
                     EmailCheck(
                         modifier = modifier,
-                        onEmailCheckChanged = { /*todo handle with vm*/ },
+                        onEmailCheckChanged = {
+                            checked = it
+                            if (!checked) {
+                                userEmailAddress = ""
+                            }
+                        },
+                        checked = checked,
+                        userEmailAddress = userEmailAddress,
+                        onEmailChanged = { email, isValid ->
+                            userEmailAddress = email
+                        }
                     )
                 }
             )
@@ -225,10 +237,16 @@ fun ProfileContent(
                 onClick = {
                     saveProfile(
                         firstName,
-                        lastName
+                        lastName,
+                        userEmailAddress,
+                        profileImage
                     )
                 },
-                isEnabled = isButtonEnabled,
+                isEnabled = if (checked) {
+                    userEmailAddress.isValidEmail() && isButtonEnabled
+                } else {
+                    isButtonEnabled
+                },
                 modifier = modifier
                     .fillMaxWidth(),
                 text = stringResource(id = R.string.feature_profile_save_profile_button),
@@ -240,9 +258,9 @@ fun ProfileContent(
 
 @Composable
 fun UserProfileImage(
-    profileImage: Uri,
+    profileImage: String,
     onPickImage: () -> Unit,
-    onRemoveImage: (Uri) -> Unit,
+    onRemoveImage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -260,7 +278,7 @@ fun UserProfileImage(
     }
 
     val animatePickedProfileImageState = animateFloatAsState(
-        targetValue = if (profileImage != Uri.EMPTY) 1f else 0f,
+        targetValue = if (profileImage.isNotBlank()) 1f else 0f,
         animationSpec = tween(
             durationMillis = 300,
             easing = LinearEasing,
@@ -268,7 +286,7 @@ fun UserProfileImage(
         label = "animatePickedProfileImageState",
     )
 
-    val imageModifier = if (profileImage != Uri.EMPTY) {
+    val imageModifier = if (profileImage.isNotBlank()) {
         Modifier
             .fillMaxWidth()
             .size(260.dp)
@@ -287,23 +305,18 @@ fun UserProfileImage(
                 .then(imageModifier)
                 .clip(MorphPolygonShape(morph, animatePickedProfileImageState.value))
                 .background(
-                    color = if (profileImage == Uri.EMPTY)
+                    color = if (profileImage.isBlank())
                         MaterialTheme.colorScheme.surface
                     else Color.Transparent
                 )
                 .clickable(onClick = onPickImage)
                 .then(modifier),
         ) {
-            if (profileImage != Uri.EMPTY) {
-                AsyncImage(
-                    contentScale = ContentScale.Crop,
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(profileImage)
-                        .crossfade(true)
-                        .build(),
+            if (profileImage.isNotBlank()) {
+                DynamicAsyncImage(
+                    base64ImageString = profileImage,
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentDescription = "image",
                 )
             } else {
                 Icon(
@@ -317,8 +330,8 @@ fun UserProfileImage(
             }
         }
 
-        val icon = if (profileImage != Uri.EMPTY) CrbtIcons.Delete else CrbtIcons.AddPhoto
-        val colors = if (profileImage != Uri.EMPTY) {
+        val icon = if (profileImage.isNotBlank()) CrbtIcons.Delete else CrbtIcons.AddPhoto
+        val colors = if (profileImage.isNotBlank()) {
             IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -327,7 +340,7 @@ fun UserProfileImage(
             IconButtonDefaults.filledIconButtonColors()
         }
         val animteXOffset by animateDpAsState(
-            targetValue = if (profileImage == Uri.EMPTY) 0.dp else (-18).dp,
+            targetValue = if (profileImage.isBlank()) 0.dp else (-18).dp,
             animationSpec = tween(
                 durationMillis = 300,
                 easing = LinearEasing,
@@ -344,8 +357,8 @@ fun UserProfileImage(
         ) {
             FilledIconButton(
                 onClick = {
-                    if (profileImage != Uri.EMPTY) {
-                        onRemoveImage(Uri.EMPTY)
+                    if (profileImage.isNotBlank()) {
+                        onRemoveImage()
                     } else {
                         onPickImage()
                     }
