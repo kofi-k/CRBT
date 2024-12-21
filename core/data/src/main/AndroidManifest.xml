@@ -24,14 +24,5 @@
                 android:resource="@xml/core_data_ussd_service" />
         </service>
 
-        <service
-            android:name="com.crbt.data.core.data.musicService.MusicService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback">
-            <intent-filter>
-                <action android:name="androidx.media3.session.MediaSessionService" />
-            </intent-filter>
-
-        </service>
     </application>
 </manifest>
