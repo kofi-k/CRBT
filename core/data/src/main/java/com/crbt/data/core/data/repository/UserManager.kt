@@ -2,7 +2,7 @@ package com.crbt.data.core.data.repository
 
 import kotlinx.coroutines.flow.Flow
 
-interface LoginManager {
+interface UserManager {
     val isLoggedIn: Flow<Boolean>
 
     suspend fun login(
@@ -16,7 +16,8 @@ interface LoginManager {
     suspend fun updateUserInfo(
         firstName: String,
         lastName: String,
-    ): Flow<UpdateUserInfoUiState>
+        profile: String?,
+    ): UpdateUserInfoUiState
 }
 
 
