@@ -67,10 +67,16 @@ class UssdRepository @Inject constructor(
                         _ussdState.value =
                             UssdUiState.Error("USSD Session Ended with Error: $message")
                     } else {
-                        val accessibilityError = "Check your accessibility | overlay permission"
-                        if (message.contains(accessibilityError, ignoreCase = true)) {
-                            onFailure(accessibilityError)
-                            _ussdState.value = UssdUiState.Error(accessibilityError)
+                        if (
+                            listOfPossibleErrors.any { error ->
+                                message.contains(
+                                    error,
+                                    ignoreCase = true
+                                )
+                            }
+                        ) {
+                            onFailure(message)
+                            _ussdState.value = UssdUiState.Error(message)
                         } else {
                             onSuccess(message)
                             _ussdState.value = UssdUiState.Success(message)
@@ -148,5 +154,9 @@ class UssdRepository @Inject constructor(
     companion object {
         const val REQUEST_CODE_PERMISSIONS = 1
         const val REQUEST_CODE_OVERLAY_PERMISSION = 2
+        val listOfPossibleErrors = listOf(
+            "The code is not recognized, please check and try again, OK",
+            "Check your accessibility | overlay permission"
+        )
     }
 }
