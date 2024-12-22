@@ -39,8 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -166,16 +164,17 @@ fun HomeScreen(
                         }
 
                         else -> when (loading) {
-                            true -> item {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    CircularProgressIndicator()
-                                }
+                            true -> Unit
+                            /*item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator()
                             }
+                        }*/
 
                             else -> when (
                                 !songs.isNullOrEmpty() && homeResource != null
@@ -277,7 +276,10 @@ fun HomeScreen(
                 }
             }
         },
-        onRefresh = viewModel::reloadHome,
+        onRefresh = {
+            viewModel.reloadHome()
+            crbtTonesViewModel.onEvent(TonesPlayerEvent.FetchSong)
+        },
         isRefreshing = crbtAdsUiState is CrbtAdsUiState.Loading || tonesUiState.loading == true
     )
 
@@ -307,15 +309,10 @@ internal fun UserBalanceCard(
         ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .drawWithCache {
-                val brush = Brush.linearGradient(CustomGradientColors)
-                onDrawBehind {
-                    drawRoundRect(
-                        brush,
-                        cornerRadius = CornerRadius(24.dp.toPx())
-                    )
-                }
-            }
+            .background(
+                brush = Brush.linearGradient(CustomGradientColors),
+                shape = MaterialTheme.shapes.large,
+            )
     ) {
         Row(
             modifier = Modifier

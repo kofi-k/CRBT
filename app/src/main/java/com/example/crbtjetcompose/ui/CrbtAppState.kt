@@ -12,7 +12,7 @@ import androidx.navigation.navOptions
 import androidx.tracing.trace
 import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.home.navigation.navigateToHome
@@ -38,7 +38,7 @@ fun rememberCrbtAppState(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     networkMonitor: NetworkMonitor,
     userRepository: CrbtPreferencesRepository,
-    loginManager: LoginManager
+    userManager: UserManager
 ): CrbtAppState {
     return remember(
         navController,
@@ -48,7 +48,7 @@ fun rememberCrbtAppState(
             networkMonitor = networkMonitor,
             coroutineScope = coroutineScope,
             userRepository = userRepository,
-            loginManager = loginManager
+            userManager = userManager
         )
     }
 }
@@ -58,7 +58,7 @@ fun rememberCrbtAppState(
 class CrbtAppState(
     val navController: NavHostController,
     networkMonitor: NetworkMonitor,
-    loginManager: LoginManager,
+    userManager: UserManager,
     coroutineScope: CoroutineScope,
     userRepository: CrbtPreferencesRepository
 ) {
@@ -93,7 +93,7 @@ class CrbtAppState(
             initialValue = false,
         )
 
-    val isLoggedIn = loginManager.isLoggedIn
+    val isLoggedIn = userManager.isLoggedIn
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),

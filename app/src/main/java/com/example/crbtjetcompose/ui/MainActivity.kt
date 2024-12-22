@@ -21,7 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.crbt.data.core.data.musicService.MusicService
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.domain.UserPreferenceUiState
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
     lateinit var crbtPreferencesRepository: CrbtPreferencesRepository
 
     @Inject
-    lateinit var loginManager: LoginManager
+    lateinit var userManager: UserManager
 
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
                     val appState = rememberCrbtAppState(
                         networkMonitor = networkMonitor,
                         userRepository = crbtPreferencesRepository,
-                        loginManager = loginManager
+                        userManager = userManager
                     )
 
                     CrbtTheme {

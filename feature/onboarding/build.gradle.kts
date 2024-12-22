@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.country.code.picker)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.firebase.auth.ktx)
+    implementation(project(":core:domain"))
 }
