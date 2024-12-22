@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.crbt.data.core.data.repository.LoginManager
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
+import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
@@ -22,10 +22,8 @@ import com.crbt.subscription.navigation.TONE_ID_ARG
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.core.network.di.HttpException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
@@ -45,18 +43,17 @@ class SubscriptionViewModel @Inject constructor(
     crbtSongsRepository: UserCrbtMusicRepository,
     private val crbtNetworkRepository: CrbtNetworkRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
-    private val loginManager: LoginManager
+    private val userManager: UserManager
 ) : ViewModel() {
 
     private val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
     val isGiftSubscription: StateFlow<Boolean?> = savedStateHandle.getStateFlow(GIFT_SUB_ARG, null)
-    private val _subscriptionUiState =
-        MutableStateFlow<SubscriptionUiState>(SubscriptionUiState.Idle)
-    var subscriptionUiState: StateFlow<SubscriptionUiState> = _subscriptionUiState.asStateFlow()
+
+    var subscriptionUiState by mutableStateOf<SubscriptionUiState>(SubscriptionUiState.Idle)
+        private set
 
     var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
 
-    private var phoneNumber by mutableStateOf("")
     var crbtBillingType by mutableStateOf(SubscriptionBillingType.Monthly)
 
 
@@ -101,16 +98,19 @@ class SubscriptionViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun subscribeToTone(
         ussdCode: String, activity: Activity,
+        onSuccess: (String) -> Unit,
+        onError: (String) -> Unit,
+        phoneNumber: String
     ) {
-        _subscriptionUiState.value = SubscriptionUiState.Loading
-
+        subscriptionUiState = SubscriptionUiState.Loading
         val subscriptionCode = when (isGiftSubscription.value == true) {
             true -> try {
                 val giftUssd = generateGiftCrbtUssd(ussdCode, phoneNumber)
                 giftUssd
             } catch (e: IllegalArgumentException) {
-                _subscriptionUiState.value =
+                subscriptionUiState =
                     SubscriptionUiState.Error(e.message ?: "An error occurred")
+                onError(e.message ?: "An error occurred")
                 return
             }
 
@@ -121,21 +121,32 @@ class SubscriptionViewModel @Inject constructor(
         runUssdCode(
             ussdCode = subscriptionCode,
             activity = activity,
-            onSuccess = { handleUssdSuccess() },
+            onSuccess = {
+                handleUssdSuccess(
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
+            },
             onError = { errorMessage ->
-                _subscriptionUiState.value = SubscriptionUiState.Error(errorMessage)
+                onError(errorMessage)
+                subscriptionUiState = SubscriptionUiState.Error(errorMessage)
             }
         )
     }
 
-    private fun handleUssdSuccess() {
+    private fun handleUssdSuccess(
+        onSuccess: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            _subscriptionUiState.value = try {
+            subscriptionUiState = try {
                 val result = crbtNetworkRepository.subscribeToCrbt(selectedTone.value?.toInt() ?: 0)
                 crbtPreferencesRepository.updateCrbtSubscriptionId(selectedTone.value?.toInt() ?: 0)
-                loginManager.getAccountInfo()
+                userManager.getAccountInfo()
+                onSuccess(result)
                 SubscriptionUiState.Success(result)
             } catch (e: IOException) {
+                onError("A network error occurred. Try again later.")
                 when (e) {
                     is ConnectException -> SubscriptionUiState.Error("Oops! your internet connection seem to be off.")
                     is SocketTimeoutException -> SubscriptionUiState.Error("Hmm, connection timed out.")
@@ -143,8 +154,10 @@ class SubscriptionViewModel @Inject constructor(
                     else -> SubscriptionUiState.Error(e.message ?: "An error occurred")
                 }
             } catch (e: HttpException) {
+                onError(e.message ?: "An error occurred")
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             } catch (e: Exception) {
+                onError(e.message ?: "An error occurred")
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
@@ -152,19 +165,15 @@ class SubscriptionViewModel @Inject constructor(
 
 
     fun updateUserCrbtSubscriptionStatus() {
-        _subscriptionUiState.value = SubscriptionUiState.Loading
+        subscriptionUiState = SubscriptionUiState.Loading
         viewModelScope.launch {
-            _subscriptionUiState.value = try {
+            subscriptionUiState = try {
                 crbtPreferencesRepository.setUserCrbtRegistrationStatus(true)
-                SubscriptionUiState.Idle
+                SubscriptionUiState.Success("")
             } catch (e: Exception) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
-    }
-
-    fun onPhoneNumberChange(number: String) {
-        phoneNumber = number
     }
 
     fun onBillingTypeChange(billingType: SubscriptionBillingType) {

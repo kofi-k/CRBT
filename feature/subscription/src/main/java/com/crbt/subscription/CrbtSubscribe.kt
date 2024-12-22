@@ -1,6 +1,7 @@
 package com.crbt.subscription
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
@@ -49,6 +50,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,6 +99,7 @@ import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
 import com.crbt.ui.core.ui.musicPlayer.isSongCurrentlyPlaying
 import com.example.crbtjetcompose.feature.subscription.R
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +115,7 @@ internal fun CrbtSubscribeScreen(
 
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
-    val subscriptionUiState by subscriptionViewModel.subscriptionUiState.collectAsStateWithLifecycle()
+    val subscriptionUiState = subscriptionViewModel.subscriptionUiState
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
     val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
 
@@ -131,23 +134,8 @@ internal fun CrbtSubscribeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var showBottomSheet by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(subscriptionUiState) {
-        when (subscriptionUiState) {
-            is SubscriptionUiState.Success -> {
-                showBottomSheet = true
-            }
-
-            is SubscriptionUiState.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = (subscriptionUiState as SubscriptionUiState.Error).error,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            else -> Unit
-        }
-    }
 
     when (crbtSong == null) {
         true -> Box(
@@ -188,22 +176,33 @@ internal fun CrbtSubscribeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
                             .verticalScroll(rememberScrollState()),
-                        onSubscribeClick = {
+                        onSubscribeClick = { giftPhoneNumber ->
                             if (!isUserRegisteredForCrbt) {
                                 showRegistrationDialog = true
                             } else {
                                 subscriptionViewModel.subscribeToTone(
                                     ussdCode = crbtSong?.ussdCode ?: "",
                                     activity = context as Activity,
+                                    onSuccess = {
+                                        showBottomSheet = true
+                                    },
+                                    onError = { errorMessage ->
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = errorMessage,
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        }
+                                    },
+                                    phoneNumber = giftPhoneNumber
                                 )
                             }
                         },
                         subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-                        isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
-                        isButtonEnabled = true,
-                        onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange,
+                        isSubscriptionProcessing = subscriptionUiState is SubscriptionUiState.Loading,
                         onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
                         billingType = subscriptionViewModel.crbtBillingType,
+                        context = context
                     )
                 }
                 Box(
@@ -547,13 +546,12 @@ fun InfoButton(
 fun SubscribeContent(
     modifier: Modifier = Modifier,
     isGiftSubscription: Boolean,
-    onGiftPhoneNumberChanged: (String) -> Unit,
     onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
     billingType: SubscriptionBillingType,
-    onSubscribeClick: () -> Unit,
+    onSubscribeClick: (phoneNumber: String) -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
-    isButtonEnabled: Boolean
+    context: Context
 ) {
     val title = if (isGiftSubscription) {
         stringResource(
@@ -569,7 +567,12 @@ fun SubscribeContent(
             id = R.string.feature_subscription_subscribe_to_song_subtitle
         )
     }
-    var isPhoneNumberValid by remember { mutableStateOf(false) }
+
+    var giftPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
+    }
 
     OnboardingSheetContainer(
         title = title.first,
@@ -579,10 +582,10 @@ fun SubscribeContent(
                 Spacer(modifier = Modifier.height(8.dp))
                 GiftPurchasePhoneNumber(
                     onPhoneNumberChanged = { phoneNumber, isValid ->
-                        isPhoneNumberValid = isValid
-                        onGiftPhoneNumberChanged(phoneNumber)
+                        giftPhoneNumber = phoneNumber to isValid
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    context = context
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -593,7 +596,7 @@ fun SubscribeContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             ProcessButton(
-                onClick = onSubscribeClick,
+                onClick = { onSubscribeClick(giftPhoneNumber.first) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -627,12 +630,11 @@ fun SubscribeContent(
                                         subscriptionPrice
                                     )
                                 )
-
                             }
                         }
                     )
                 },
-                isEnabled = if (isGiftSubscription) isPhoneNumberValid else isButtonEnabled,
+                isEnabled = if (isGiftSubscription) giftPhoneNumber.second else true,
                 isProcessing = isSubscriptionProcessing
             )
         },
@@ -832,10 +834,9 @@ fun CrbtSubscribeContentPreview() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> },
             onBillingTypeSelected = {},
             billingType = SubscriptionBillingType.Monthly,
+            context = LocalContext.current
         )
     }
 }
@@ -849,10 +850,9 @@ fun CrbtSubscribeContentPreview2() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> },
             onBillingTypeSelected = {},
             billingType = SubscriptionBillingType.Monthly,
+            context = LocalContext.current
         )
     }
 }
