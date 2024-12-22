@@ -11,7 +11,7 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class RefreshRepositoryImpl @Inject constructor(
-    private val loginManager: LoginManager,
+    private val userManager: UserManager,
     private val crbtMusicRepository: CrbtMusicRepository,
     private val crbtAdsRepository: CrbtAdsRepository,
     private val crbtPackagesRepository: CrbtPackagesRepository,
@@ -20,7 +20,7 @@ class RefreshRepositoryImpl @Inject constructor(
     override suspend fun refreshUserInfo(): Flow<RefreshUiState> = flow {
         emit(RefreshUiState.Loading)
         try {
-            loginManager.getAccountInfo()
+            userManager.getAccountInfo()
             emit(RefreshUiState.Success)
         } catch (e: IOException) {
             when (e) {

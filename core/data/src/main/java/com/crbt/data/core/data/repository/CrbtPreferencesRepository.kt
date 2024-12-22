@@ -20,8 +20,13 @@ interface CrbtPreferencesRepository {
         rewardPoints: Int
     )
 
+    suspend fun updateUserPreferences(userPreferencesData: UserPreferencesData)
+
+    suspend fun setUserLanguageCode(languageCode: String)
+
     suspend fun updateCrbtSubscriptionId(subscriptionId: Int)
 
+    suspend fun updateUserLocation(location: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
 

@@ -17,6 +17,7 @@ data class UserPreferencesData(
     val rewardPoints: Int,
     val autoDialRechargeCode: Boolean,
     val numberOfRechargeCodeDigits: Int,
+    val userLocation: String,
 )
 
 

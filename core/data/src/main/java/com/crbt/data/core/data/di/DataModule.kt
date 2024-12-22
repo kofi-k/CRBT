@@ -13,11 +13,11 @@ import com.crbt.data.core.data.repository.CrbtPackagesRepository
 import com.crbt.data.core.data.repository.CrbtPackagesRepositoryImpl
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtPreferencesRepositoryImpl
-import com.crbt.data.core.data.repository.CrbtUserMonitor
-import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.CrbtUserManager
 import com.crbt.data.core.data.repository.RefreshRepository
 import com.crbt.data.core.data.repository.RefreshRepositoryImpl
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
+import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepositoryImpl
 import com.crbt.data.core.data.util.ConnectivityManagerNetworkMonitor
@@ -58,8 +58,8 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindsCrbtUserMonitor(
-        crbtUserMonitor: CrbtUserMonitor
-    ): LoginManager
+        crbtUserManager: CrbtUserManager
+    ): UserManager
 
     @Binds
     abstract fun bindsUserCrbtMusicRepository(

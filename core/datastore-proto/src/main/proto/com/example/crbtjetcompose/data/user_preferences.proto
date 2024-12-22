@@ -24,6 +24,7 @@ message UserPreferences {
   int32 reward_points = 27;
   bool auto_dial_recharge_code = 28;
   int32 number_of_recharge_code_digits = 14;
+  string user_location = 30;
 
   repeated string deprecated_interested_crbt_languages = 21;
   repeated string deprecated_gifted_crbt_tone_ids = 22;
