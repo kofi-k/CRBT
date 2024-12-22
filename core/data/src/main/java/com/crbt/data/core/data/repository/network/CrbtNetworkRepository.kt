@@ -1,12 +1,13 @@
 package com.crbt.data.core.data.repository.network
 
+import com.example.crbtjetcompose.core.network.model.AccountUpdatedResponse
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.LoginResponse
 import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
 import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
-import com.example.crbtjetcompose.core.network.model.NetworkUserAccountInfo
 import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
+import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
 
 interface CrbtNetworkRepository {
     suspend fun getSongs(): List<NetworkSongsResource>
@@ -31,11 +32,14 @@ interface CrbtNetworkRepository {
         langPref: String
     ): LoginResponse
 
-    suspend fun getUserAccountInfo(): NetworkUserAccountInfo
+    suspend fun getUserAccountInfo(): UserAccountDetailsNetworkModel
 
     suspend fun updateUserAccountInfo(
         firstName: String,
         lastName: String,
-    )
+        profile: String?,
+    ): AccountUpdatedResponse
+
+    suspend fun uploadUserContacts(contacts: List<String>)
 }
 

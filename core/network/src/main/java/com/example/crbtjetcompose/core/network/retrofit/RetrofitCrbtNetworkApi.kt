@@ -1,15 +1,16 @@
 package com.example.crbtjetcompose.core.network.retrofit
 
+import com.example.crbtjetcompose.core.network.model.AccountUpdatedResponse
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
 import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
 import com.example.crbtjetcompose.core.network.model.Login
 import com.example.crbtjetcompose.core.network.model.LoginResponse
 import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
 import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
-import com.example.crbtjetcompose.core.network.model.NetworkUserAccountInfo
 import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
 import com.example.crbtjetcompose.core.network.model.SubscriptionResponse
 import com.example.crbtjetcompose.core.network.model.UpdateUserInfo
+import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -47,13 +48,17 @@ interface RetrofitCrbtNetworkApi {
     ): LoginResponse
 
     @GET("user/account-info")
-    suspend fun getUserAccountInfo(): NetworkUserAccountInfo
+    suspend fun getUserAccountInfo(): UserAccountDetailsNetworkModel
 
     @PUT("user/update-account-info")
     suspend fun updateUserAccountInfo(
         @Body updateUserInfo: UpdateUserInfo
-    )
+    ): AccountUpdatedResponse
 
+    @POST("user/user-contacts")
+    suspend fun uploadUserContacts(
+        @Body contacts: List<String>
+    )
 }
 
 
