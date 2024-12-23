@@ -9,18 +9,7 @@ interface UserCrbtMusicRepository {
     ): Flow<CrbtSongsFeedUiState>
 
 
-    fun observeHomeResource(): Flow<HomeSongResourceState>
-
     fun songByToneId(toneId: String): Flow<CrbtSongResource?>
-}
-
-sealed class HomeSongResourceState {
-    data object Loading : HomeSongResourceState()
-    data class Success(
-        val resource: HomeSongResource
-    ) : HomeSongResourceState()
-
-    data class Error(val message: String) : HomeSongResourceState()
 }
 
 
