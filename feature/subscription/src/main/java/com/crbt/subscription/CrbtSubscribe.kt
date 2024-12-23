@@ -97,7 +97,6 @@ import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
-import com.crbt.ui.core.ui.musicPlayer.isSongCurrentlyPlaying
 import com.example.crbtjetcompose.feature.subscription.R
 import kotlinx.coroutines.launch
 
@@ -124,7 +123,10 @@ internal fun CrbtSubscribeScreen(
         musicControllerUiState.currentSong?.tune ?: ""
     )
 
-    val isCurrentlyPlayingSong = currentPlayingSong?.isSongCurrentlyPlaying(crbtSong) == true
+    val isCurrentlyPlayingSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        crbtSong?.tune ?: ""
+    ) == currentPlayingSong
+
     val isPlaying =
         isCurrentlyPlayingSong && musicControllerUiState.playerState == PlayerState.PLAYING
 
@@ -146,8 +148,7 @@ internal fun CrbtSubscribeScreen(
             CircularProgressIndicator()
         }
 
-        else -> {
-
+        else ->
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
@@ -287,7 +288,6 @@ internal fun CrbtSubscribeScreen(
                     }
                 }
             }
-        }
     }
 
 

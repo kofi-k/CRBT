@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -67,13 +66,13 @@ class SubscriptionViewModel @Inject constructor(
         )
 
 
-    val isUserRegisteredForCrbt = crbtPreferencesRepository.isUserRegisteredForCrbt
-        .mapLatest { it }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
-        )
+    val isUserRegisteredForCrbt =
+        crbtPreferencesRepository.isUserRegisteredForCrbt
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false,
+            )
 
 
     @RequiresApi(Build.VERSION_CODES.O)
