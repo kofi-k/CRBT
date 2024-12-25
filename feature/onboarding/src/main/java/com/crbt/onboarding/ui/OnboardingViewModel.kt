@@ -10,19 +10,19 @@ import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.data.core.data.model.userProfileIsComplete
-import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UpdateUserInfoUiState
+import com.crbt.data.core.data.repository.UserManager
 import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val loginManager: LoginManager,
+    private val userManager: UserManager,
+    private val crbtPreferencesRepository: CrbtPreferencesRepository,
 ) : ViewModel() {
 
     private val onboardingOrder: List<OnboardingSetupProcess> = listOf(
@@ -50,9 +50,9 @@ class OnboardingViewModel @Inject constructor(
     val isNextEnabled
         get() = _isNextEnabled
 
-    private val _userInfoUiState =
-        MutableStateFlow<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
-    val userInfoUiState: StateFlow<UpdateUserInfoUiState> = _userInfoUiState.asStateFlow()
+    var userInfoUiState by mutableStateOf<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
+        private set
+
 
     init {
         _isNextEnabled = getIsNextEnabled()
@@ -76,14 +76,43 @@ class OnboardingViewModel @Inject constructor(
         _onboardingScreenData = createOnboardingScreenData()
     }
 
-    fun updateUserProfileInfo() {
+    fun updateUserProfileInfo(
+        onSuccessfulUpdate: () -> Unit,
+        onFailedUpdate: (message: String) -> Unit,
+        email: String
+    ) {
+        userInfoUiState = UpdateUserInfoUiState.Loading
         viewModelScope.launch {
-            loginManager.updateUserInfo(
+            when (val state = userManager.updateUserInfo(
                 firstName = _onboardingSetupData.firstName,
-                lastName = _onboardingSetupData.lastName
-            ).collect {
-                _userInfoUiState.value = it
+                lastName = _onboardingSetupData.lastName,
+                profile = ""
+            )) {
+                is UpdateUserInfoUiState.Success -> {
+                    saveUserEmail(email)
+                    onSuccessfulUpdate()
+                    userInfoUiState = state
+                }
+
+                is UpdateUserInfoUiState.Error -> {
+                    onFailedUpdate(state.message)
+                    userInfoUiState = state
+                }
+
+                else -> {
+                    userInfoUiState = state
+                }
             }
+        }
+    }
+
+    private fun saveUserEmail(email: String) {
+        viewModelScope.launch {
+            crbtPreferencesRepository.updateUserPreferences(
+                crbtPreferencesRepository.userPreferencesData.first().copy(
+                    email = email
+                )
+            )
         }
     }
 

@@ -26,11 +26,35 @@ class CrbtPreferencesDataSource @Inject constructor(
                 currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
                 giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
                 token = it.token,
-                rewardPoints = it.rewardPoints
+                rewardPoints = it.rewardPoints,
+                numberOfRechargeCodeDigits = if (it.numberOfRechargeCodeDigits == 0) 14 else it.numberOfRechargeCodeDigits,
+                autoDialRechargeCode = it.autoDialRechargeCode,
+                userLocation = it.userLocation
             )
         }
 
     val isUserRegisteredForCrbt = userPreferences.data.map { it.isUserRegisteredForCrbt }
+
+    suspend fun updateUserPreferences(
+        userPreferencesData: UserPreferencesData
+    ) {
+        userPreferences.updateData {
+            it.copy {
+                userId = userPreferencesData.userId
+                userPhoneNumber = userPreferencesData.phoneNumber
+                userLanguageCode = userPreferencesData.languageCode
+                userProfileUrl = userPreferencesData.profileUrl
+                userFirstName = userPreferencesData.firstName
+                userLastName = userPreferencesData.lastName
+                userEmail = userPreferencesData.email
+                userBalance = userPreferencesData.currentBalance
+                rewardPoints = userPreferencesData.rewardPoints
+                userLocation = userPreferencesData.userLocation
+                currentCrbtSubscriptionId = userPreferencesData.currentCrbtSubscriptionId.toString()
+
+            }
+        }
+    }
 
 
     suspend fun setSignInToken(userToken: String) {
@@ -43,6 +67,27 @@ class CrbtPreferencesDataSource @Inject constructor(
             }
         } catch (ioException: IOException) {
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
+
+    suspend fun setAutoDialRechargeCode(
+        autoDial: Boolean,
+    ) {
+        userPreferences.updateData {
+            it.copy {
+                autoDialRechargeCode = autoDial
+            }
+        }
+    }
+
+    suspend fun setRequiredRechargeDigits(
+        numberOfDigits: Int
+    ) {
+        userPreferences.updateData {
+            it.copy {
+                numberOfRechargeCodeDigits = numberOfDigits
+            }
         }
     }
 
@@ -108,14 +153,6 @@ class CrbtPreferencesDataSource @Inject constructor(
             }
         } catch (ioException: IOException) {
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
-        }
-    }
-
-    suspend fun updateCrbtSubscriptionId(subscriptionId: String) {
-        userPreferences.updateData {
-            it.copy {
-                currentCrbtSubscriptionId = subscriptionId
-            }
         }
     }
 

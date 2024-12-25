@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.crbt.services.RechargeScreen
 import com.crbt.services.ServicesRoute
 import com.crbt.services.TopUpCheckoutScreen
 import com.crbt.services.TopupScreen
@@ -18,6 +19,7 @@ const val TOPUP_CHECKOUT_ROUTE =
     "$SERVICES_ROUTE/topup_checkout?$TOPUP_AMOUNT_ARG={$TOPUP_AMOUNT_ARG}"
 
 const val PACKAGES_ROUTE = "$SERVICES_ROUTE/packages"
+const val RECHARGE_ROUTE = "$SERVICES_ROUTE/recharge"
 
 fun NavController.navigateToServices(navOptions: NavOptions) =
     navigate(SERVICES_ROUTE, navOptions)
@@ -28,13 +30,15 @@ fun NavController.navigateToTopUpCheckout(amount: String, navOptions: NavOptions
 
 fun NavGraphBuilder.servicesScreen(
     navController: NavController,
-    navigateToTopLevel: () -> Unit
 ) {
     composable(route = SERVICES_ROUTE) {
         ServicesRoute(
             navigateToPackages = {
                 navController.navigate(PACKAGES_ROUTE)
             },
+            navigateToRecharge = {
+                navController.navigate(RECHARGE_ROUTE)
+            }
         )
     }
 
@@ -65,5 +69,9 @@ fun NavGraphBuilder.servicesScreen(
 
     composable(route = PACKAGES_ROUTE) {
         PackagesScreen()
+    }
+
+    composable(route = RECHARGE_ROUTE) {
+        RechargeScreen(navigateUp = {})
     }
 }

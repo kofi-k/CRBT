@@ -1,6 +1,5 @@
 package com.crbt.data.core.data.repository
 
-import com.crbt.common.core.common.result.Result
 import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import kotlinx.coroutines.flow.Flow
 
@@ -9,9 +8,13 @@ interface UserCrbtMusicRepository {
         filterInterestedLanguages: Set<String>? = null,
     ): Flow<CrbtSongsFeedUiState>
 
-    fun observeLatestCrbtMusic(): Flow<Result<CrbtSongResource>>
 
-    fun observePopularTodayCrbtMusic(): Flow<CrbtSongsFeedUiState>
-
-    fun observeUserCrbtSubscription(): Flow<Result<CrbtSongResource?>>
+    fun songByToneId(toneId: String): Flow<CrbtSongResource?>
 }
+
+
+data class HomeSongResource(
+    val popularTodaySongs: List<CrbtSongResource>,
+    val latestSong: CrbtSongResource,
+    val currentUserCrbtSubscription: CrbtSongResource?
+)

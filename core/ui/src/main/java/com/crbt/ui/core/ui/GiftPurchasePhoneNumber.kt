@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -44,22 +45,19 @@ import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
 import com.example.crbtjetcompose.core.designsystem.R
-import com.rejowan.ccpc.Country
 
 @Composable
 fun GiftPurchasePhoneNumber(
     onPhoneNumberChanged: (String, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    context: Context = LocalContext.current
 ) {
     val phoneNumberState by remember {
         mutableStateOf(
-            PhoneNumberValidationState(
-                countryCode = Country.Ethiopia.countryCode,
-            ),
+            PhoneNumberValidationState(),
         )
     }
     val focusManager = LocalFocusManager.current
-    val context = LocalContext.current
 
     val contactPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -71,6 +69,8 @@ fun GiftPurchasePhoneNumber(
                 if (phoneNumber != null) {
                     phoneNumberState.text = phoneNumber
                     onPhoneNumberChanged(phoneNumber, phoneNumberState.isValid)
+                    phoneNumberState.onFocusChange(true)
+                    phoneNumberState.enableShowErrors()
                 }
             }
         }
@@ -132,7 +132,14 @@ fun GiftPurchasePhoneNumber(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .onFocusChanged { focusState ->
+                    phoneNumberState.onFocusChange(focusState.isFocused)
+                    if (!focusState.isFocused) {
+                        phoneNumberState.enableShowErrors()
+                    }
+                },
         )
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(

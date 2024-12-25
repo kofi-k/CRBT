@@ -14,7 +14,10 @@ data class UserPreferencesData(
     val interestedCrbtLanguages: Set<String>,
     val currentCrbtSubscriptionId: Int,
     val giftedCrbtToneIds: Set<String>,
-    val rewardPoints: Int
+    val rewardPoints: Int,
+    val autoDialRechargeCode: Boolean,
+    val numberOfRechargeCodeDigits: Int,
+    val userLocation: String,
 )
 
 

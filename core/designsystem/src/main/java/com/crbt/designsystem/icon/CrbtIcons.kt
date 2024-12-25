@@ -59,6 +59,7 @@ import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Sms
 import androidx.compose.material.icons.rounded.Subscriptions
@@ -114,6 +115,7 @@ object CrbtIcons {
     val Money = Icons.Rounded.AttachMoney
     val Share = Icons.Rounded.Share
     val Phone = Icons.Rounded.Phone
+    val Settings = Icons.Rounded.Settings
 
 
     // subscription icons

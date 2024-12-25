@@ -1,5 +1,6 @@
 package com.crbt.ui.core.ui.musicPlayer
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,9 +44,9 @@ import com.example.crbtjetcompose.core.ui.R
 fun MusicCard(
     modifier: Modifier = Modifier,
     cRbtSong: CrbtSongResource,
-    selectedSong: CrbtSongResource?, // todo find a solution for this quick fix ffs!!
     musicControllerUiState: MusicControllerUiState,
-    onPlayerEvent: (TonesPlayerEvent) -> Unit
+    onPlayerEvent: (TonesPlayerEvent) -> Unit,
+    onNavigateToSubscription: (toneId: String) -> Unit
 ) {
 
     val isPlaying = musicControllerUiState.playerState == PlayerState.PLAYING
@@ -55,9 +56,7 @@ fun MusicCard(
         content = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .then(modifier),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -65,7 +64,14 @@ fun MusicCard(
                     musicTitle = cRbtSong.songTitle,
                     musicArtist = cRbtSong.artisteName,
                     coverUrl = cRbtSong.profile,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable(
+                            onClick = {
+                                onNavigateToSubscription(cRbtSong.id)
+                            }
+                        )
+                        .padding(16.dp)
                 )
 
                 MusicControls(
@@ -75,12 +81,14 @@ fun MusicCard(
                         )
                     },
                     isPlaying = isPlaying,
-                    price = selectedSong?.price ?: "0.00",
-                    numberOfSubscribers = selectedSong?.numberOfSubscribers ?: 0
+                    price = cRbtSong.price,
+                    numberOfSubscribers = cRbtSong.numberOfSubscribers,
+                    modifier = Modifier
+                        .padding(16.dp)
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     )
 }
 
@@ -106,7 +114,7 @@ fun MusicInfo(
                 imageUrl = coverUrl,
                 modifier = Modifier.fillMaxSize(),
                 imageRes = R.drawable.core_ui_paps_image,
-                )
+            )
         }
         Column {
             Text(
@@ -202,7 +210,7 @@ fun MusicCardPreview() {
             musicControllerUiState = MusicControllerUiState(),
             onPlayerEvent = {},
             cRbtSong = DummyTones.tones[0],
-            selectedSong = DummyTones.tones[0]
+            onNavigateToSubscription = {}
         )
     }
 }

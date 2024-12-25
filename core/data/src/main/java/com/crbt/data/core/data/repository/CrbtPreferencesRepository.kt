@@ -20,8 +20,13 @@ interface CrbtPreferencesRepository {
         rewardPoints: Int
     )
 
+    suspend fun updateUserPreferences(userPreferencesData: UserPreferencesData)
+
+    suspend fun setUserLanguageCode(languageCode: String)
+
     suspend fun updateCrbtSubscriptionId(subscriptionId: Int)
 
+    suspend fun updateUserLocation(location: String)
 
     suspend fun setUserProfilePictureUrl(profilePictureUrl: String)
 
@@ -32,5 +37,13 @@ interface CrbtPreferencesRepository {
     suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
 
     suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean)
+
+    suspend fun setAutoDialRechargeCode(
+        autoDial: Boolean,
+    )
+
+    suspend fun setRequiredRechargeDigits(
+        numberOfDigits: Int
+    )
 }
 

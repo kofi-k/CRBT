@@ -5,7 +5,8 @@ import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.phoneAuth.PhoneAuthRepository
-import com.crbt.data.core.data.repository.LoginManager
+import com.crbt.data.core.data.repository.UserManager
+import com.example.crbtjetcompose.core.network.di.HttpException
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.PhoneAuthCredential
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PhoneAuthViewModel @Inject constructor(
     private val repository: PhoneAuthRepository,
-    private val loginManager: LoginManager,
+    private val userManager: UserManager,
 ) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -70,15 +71,17 @@ class PhoneAuthViewModel @Inject constructor(
             _authState.value = try {
                 val result = repository.verifyCode(_verificationId.value ?: "", otpCode).await()
                 val tokenUid = result.user?.uid
-                loginManager.login(phone, accountType, langPref)
+                userManager.login(phone, accountType, langPref)
                 AuthState.Success(result)
             } catch (e: Exception) {
                 _authState.value = AuthState.Loading
-                loginManager.login(
+                userManager.login(
                     phone,
                     accountType,
                     langPref
                 ) // todo remove this line, it's for testing
+                AuthState.Error(e.message)
+            } catch (e: HttpException) {
                 AuthState.Error(e.message)
             }
         }

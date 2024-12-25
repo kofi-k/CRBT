@@ -97,8 +97,7 @@ fun PackagesScreen(
         Spacer(modifier = Modifier.height(16.dp))
         PackageContent(
             modifier = Modifier.padding(bottom = 16.dp),
-            onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
-            onPurchasePackage = { code ->
+            onPurchasePackage = { code, phoneNumber, isGiftPurchase ->
                 viewModel.runUssdCode(
                     ussdCode = code,
                     onSuccess = {
@@ -111,9 +110,10 @@ fun PackagesScreen(
                     activity = context as Activity
                 )
             },
-            actionEnabled = viewModel.isPhoneNumberValid,
             actionLoading = ussdUiState is UssdUiState.Loading,
-            packagesFeedUiState = packagesFeedUiState
+            packagesFeedUiState = packagesFeedUiState,
+            onReload = viewModel::reloadPackages,
+            isReloading = packagesFeedUiState is PackagesFeedUiState.Loading
         )
     }
 
@@ -132,11 +132,11 @@ fun PackagesScreen(
 @Composable
 fun PackageContent(
     modifier: Modifier = Modifier,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    actionEnabled: Boolean,
     actionLoading: Boolean,
-    onPurchasePackage: (String) -> Unit,
-    packagesFeedUiState: PackagesFeedUiState
+    onPurchasePackage: (code: String, phoneNumber: String, isGiftPurchase: Boolean) -> Unit,
+    packagesFeedUiState: PackagesFeedUiState,
+    onReload: () -> Unit,
+    isReloading: Boolean
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var expandedItemId by remember { mutableStateOf<String?>(null) }
@@ -145,6 +145,11 @@ fun PackageContent(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var selectedItem by remember { mutableStateOf<PackageItem?>(null) }
+    var userPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
+    }
 
     Column(
         modifier = modifier,
@@ -211,7 +216,22 @@ fun PackageContent(
                 }
             }
 
-            is PackagesFeedUiState.Error -> Unit
+            is PackagesFeedUiState.Error -> {
+                EmptyContent(
+                    description = packagesFeedUiState.message,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 42.dp, horizontal = 24.dp),
+                    reloadContent = {
+                        ProcessButton(
+                            onClick = onReload,
+                            isProcessing = isReloading,
+                            text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                            colors = ButtonDefaults.textButtonColors()
+                        )
+                    }
+                )
+            }
         }
 
         AnimatedVisibility(
@@ -224,7 +244,11 @@ fun PackageContent(
                     showBottomSheet = false
                     scope.launch {
                         sheetState.hide()
-                        onPurchasePackage(selectedItem?.ussdCode ?: "")
+                        onPurchasePackage(
+                            selectedItem?.ussdCode ?: "",
+                            userPhoneNumber.first,
+                            isGiftPurchase
+                        )
                     }
                 },
                 onDismissClick = {
@@ -234,11 +258,13 @@ fun PackageContent(
                     }
                 },
                 isGiftPurchase = isGiftPurchase,
-                onPhoneNumberChanged = onPhoneNumberChanged,
+                onPhoneNumberChanged = { phoneNumber, isValid ->
+                    userPhoneNumber = phoneNumber to isValid
+                },
                 price = selectedItem?.price ?: "",
                 packageName = selectedItem?.title ?: "",
                 sheetState = sheetState,
-                actionEnabled = if (isGiftPurchase) actionEnabled else true,
+                actionEnabled = if (isGiftPurchase) userPhoneNumber.second else true,
                 actionLoading = actionLoading
             )
         }

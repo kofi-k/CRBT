@@ -30,5 +30,6 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(project(":core:datastore"))
+    implementation(libs.play.services.basement)
 
 }

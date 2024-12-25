@@ -25,5 +25,3 @@ fun CrbtNetworkAds.asExternalModel(): CrbtAdResource {
         expiryDate = expiryDate
     )
 }
-
-

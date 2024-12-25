@@ -13,21 +13,24 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
+import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UsernameDetails
+import com.crbt.ui.core.ui.validationStates.isValidEmail
 import com.example.crbtjetcompose.feature.onboarding.R
 import kotlinx.coroutines.launch
 
@@ -37,9 +40,19 @@ fun Profile(
     onOnboardingComplete: () -> Unit,
     onboardingViewModel: OnboardingViewModel = hiltViewModel(),
 ) {
-    val updateUserInfoUiState by onboardingViewModel.userInfoUiState.collectAsStateWithLifecycle()
+    val updateUserInfoUiState = onboardingViewModel.userInfoUiState
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var checked by remember {
+        mutableStateOf(false)
+    }
+    var userEmail by remember {
+        mutableStateOf("")
+    }
+
+    PermissionRequestComposable(
+        onPermissionsGranted = {}
+    )
 
     Column(
         modifier = modifier
@@ -65,42 +78,46 @@ fun Profile(
             content = {
                 EmailCheck(
                     modifier = modifier,
-                    onEmailCheckChanged = { /*todo handle with vm*/ },
+                    onEmailCheckChanged = {
+                        checked = it
+                        if (!checked) {
+                            userEmail = ""
+                        }
+                    },
+                    checked = checked,
+                    onEmailChanged = { email, _ ->
+                        userEmail = email
+                    },
+                    userEmailAddress = userEmail
                 )
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        val successMessage = stringResource(id = R.string.feature_onboarding_profile_setup_success)
         ProcessButton(
             onClick = {
-                onboardingViewModel.updateUserProfileInfo()
-                when (updateUserInfoUiState) {
-                    is UpdateUserInfoUiState.Success -> {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                successMessage,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
+                onboardingViewModel.updateUserProfileInfo(
+                    onSuccessfulUpdate = {
                         onOnboardingComplete()
-                    }
-
-                    is UpdateUserInfoUiState.Error -> {
+                    },
+                    onFailedUpdate = {
                         scope.launch {
                             snackbarHostState.showSnackbar(
-                                (updateUserInfoUiState as UpdateUserInfoUiState.Error).message,
+                                it,
                                 duration = SnackbarDuration.Short
                             )
                         }
-                    }
-
-                    else -> Unit
-                }
+                    },
+                    email = userEmail
+                )
             },
             modifier = modifier
                 .fillMaxWidth(),
-            isEnabled = onboardingViewModel.isNextEnabled,
+            isEnabled = if (checked) {
+                onboardingViewModel.isNextEnabled && userEmail.isValidEmail()
+            } else {
+                onboardingViewModel.isNextEnabled
+            },
             isProcessing = updateUserInfoUiState is UpdateUserInfoUiState.Loading
         )
     }

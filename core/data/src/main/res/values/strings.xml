@@ -20,4 +20,5 @@
     <string name="core_data_chapa">Chapa</string>
     <string name="core_data_santim_pay">Santim pay</string>
     <string name="core_data_telebir">Telebir</string>
+    <string name="core_data_ethio_currency">Birr</string>
 </resources>

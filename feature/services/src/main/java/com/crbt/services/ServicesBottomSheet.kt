@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -21,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.components.CustomInputField
 import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.TextFieldType
-import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.services.packages.ButtonActionRow
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
@@ -46,14 +46,11 @@ enum class ServicesType {
 @Composable
 fun ServicesBottomSheet(
     servicesType: ServicesType,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    onAmountChange: (String) -> Unit,
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onConfirmTransferClick: () -> Unit,
-    onConfirmCallMeBackClick: () -> Unit,
+    onConfirmCallMeBack: (String) -> Unit,
+    onConfirmTransfer: (String, Double) -> Unit,
     actionLoading: Boolean,
-    actionEnabled: Boolean
 ) {
     val title = when (servicesType) {
         ServicesType.CALL_ME_BACK ->
@@ -69,12 +66,9 @@ fun ServicesBottomSheet(
         content = {
             ServicesSheetContent(
                 servicesType = servicesType,
-                onPhoneNumberChanged = onPhoneNumberChanged,
-                onAmountChange = onAmountChange,
-                onConfirmCallMeBack = onConfirmCallMeBackClick,
-                onConfirmTransfer = onConfirmTransferClick,
+                onConfirmCallMeBack = onConfirmCallMeBack,
+                onConfirmTransfer = onConfirmTransfer,
                 actionLoading = actionLoading,
-                actionEnabled = actionEnabled,
                 onDismiss = onDismiss
             )
         },
@@ -87,44 +81,27 @@ fun ServicesBottomSheet(
 @Composable
 fun ServicesSheetContent(
     servicesType: ServicesType,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    onAmountChange: (String) -> Unit,
-    onConfirmCallMeBack: () -> Unit,
-    onConfirmTransfer: () -> Unit,
+    onConfirmCallMeBack: (String) -> Unit,
+    onConfirmTransfer: (String, Double) -> Unit,
     onDismiss: () -> Unit,
     actionLoading: Boolean,
-    actionEnabled: Boolean
 ) {
-    val actionText = when (servicesType) {
-        ServicesType.CALL_ME_BACK ->
-            stringResource(id = R.string.feature_services_call_back_button)
-
-        ServicesType.TRANSFER ->
-            stringResource(id = R.string.feature_services_transfer)
-    }
     when (servicesType) {
         ServicesType.CALL_ME_BACK -> {
             CallMeBackContent(
-                onPhoneNumberChanged = onPhoneNumberChanged,
                 modifier = Modifier,
                 onConfirmCallMeBack = onConfirmCallMeBack,
                 onDismiss = onDismiss,
-                actionText = actionText,
                 actionLoading = actionLoading,
-                actionEnabled = actionEnabled
             )
         }
 
         ServicesType.TRANSFER -> {
             TransferContent(
-                onPhoneNumberChanged = onPhoneNumberChanged,
-                onAmountChange = onAmountChange,
                 modifier = Modifier,
                 onConfirmTransfer = onConfirmTransfer,
                 onDismiss = onDismiss,
-                actionText = actionText,
                 actionLoading = actionLoading,
-                actionEnabled = actionEnabled
             )
         }
     }
@@ -134,27 +111,31 @@ fun ServicesSheetContent(
 @Composable
 fun CallMeBackContent(
     modifier: Modifier = Modifier,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    onConfirmCallMeBack: () -> Unit,
+    onConfirmCallMeBack: (String) -> Unit,
     onDismiss: () -> Unit,
-    actionText: String,
     actionLoading: Boolean,
-    actionEnabled: Boolean
 ) {
+    var userPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
+    }
     Column(
         modifier = modifier
     ) {
         GiftPurchasePhoneNumber(
-            onPhoneNumberChanged = onPhoneNumberChanged,
+            onPhoneNumberChanged = { phoneNumber, isValid ->
+                userPhoneNumber = phoneNumber to isValid
+            },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         ButtonActionRow(
-            onConfirmClick = onConfirmCallMeBack,
+            onConfirmClick = { onConfirmCallMeBack(userPhoneNumber.first) },
             onDismissClick = onDismiss,
-            actionText = actionText,
+            actionText = stringResource(id = R.string.feature_services_call_back_button),
             actionLoading = actionLoading,
-            actionEnabled = actionEnabled,
+            actionEnabled = userPhoneNumber.second,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -162,54 +143,50 @@ fun CallMeBackContent(
 
 @Composable
 fun TransferContent(
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    onAmountChange: (String) -> Unit,
     modifier: Modifier,
-    onConfirmTransfer: () -> Unit,
+    onConfirmTransfer: (String, Double) -> Unit,
     onDismiss: () -> Unit,
-    actionText: String,
     actionLoading: Boolean,
-    actionEnabled: Boolean
 ) {
     val focusManager = LocalFocusManager.current
     val amountState by remember {
         mutableStateOf(AmountValidationState())
+    }
+    var userPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
     }
 
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         GiftPurchasePhoneNumber(
-            onPhoneNumberChanged = onPhoneNumberChanged,
+            onPhoneNumberChanged = { phoneNumber, isValid ->
+                userPhoneNumber = phoneNumber to isValid
+            },
             modifier = Modifier.fillMaxWidth()
         )
         CustomInputField(
             onValueChange = {
                 amountState.text = it
-                onAmountChange(it)
             },
             value = amountState.text,
             inputType = InputType.MONEY,
             textFieldType = TextFieldType.OUTLINED,
             label = stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_amount_placeholder),
             leadingIcon = {
-                Icon(
-                    imageVector = CrbtIcons.Money,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Text(text = stringResource(id = com.example.crbtjetcompose.core.data.R.string.core_data_ethio_currency))
             },
             colors = OutlinedTextFieldDefaults.colors(),
             onClear = {
                 amountState.text = ""
-                onAmountChange("")
             },
             showsErrors = amountState.showErrors(),
             errorText = amountState.getError() ?: "",
             keyboardActions = KeyboardActions(
                 onDone = {
                     amountState.enableShowErrors()
-                    onAmountChange(amountState.text)
                     focusManager.clearFocus()
                 }
             ),
@@ -217,15 +194,27 @@ fun TransferContent(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    amountState.onFocusChange(focusState.isFocused)
+                    if (!focusState.isFocused) {
+                        amountState.enableShowErrors()
+                    }
+                },
         )
         Spacer(modifier = Modifier.height(16.dp))
         ButtonActionRow(
-            onConfirmClick = onConfirmTransfer,
+            onConfirmClick = {
+                onConfirmTransfer(
+                    userPhoneNumber.first,
+                    amountState.text.toDoubleOrNull() ?: 0.0
+                )
+            },
             onDismissClick = onDismiss,
-            actionText = actionText,
+            actionText = stringResource(id = R.string.feature_services_transfer),
             actionLoading = actionLoading,
-            actionEnabled = actionEnabled,
+            actionEnabled = amountState.isValid && userPhoneNumber.second,
             modifier = Modifier.fillMaxWidth()
         )
     }

@@ -1,13 +1,16 @@
 package com.crbt.subscription
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,21 +19,25 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -43,10 +50,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -68,18 +77,28 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.DummyTones
+import com.crbt.data.core.data.MusicControllerUiState
+import com.crbt.data.core.data.PlayerState
+import com.crbt.data.core.data.SubscriptionBillingType
+import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
+import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
+import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
+import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
+import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
 import com.example.crbtjetcompose.feature.subscription.R
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,79 +108,188 @@ internal fun CrbtSubscribeScreen(
     onSubscribeSuccess: () -> Unit,
     onBackClicked: () -> Unit,
     subscriptionViewModel: SubscriptionViewModel = hiltViewModel(),
+    musicControllerUiState: MusicControllerUiState,
+    crbtTonesViewModel: CrbtTonesViewModel,
 ) {
 
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
-    val subscriptionUiState by subscriptionViewModel.subscriptionUiState.collectAsStateWithLifecycle()
+    val subscriptionUiState = subscriptionViewModel.subscriptionUiState
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
     val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
+
+    val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
+    val currentPlayingSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        musicControllerUiState.currentSong?.tune ?: ""
+    )
+
+    val isCurrentlyPlayingSong = tonesUiState.songs?.findCurrentMusicControllerSong(
+        crbtSong?.tune ?: ""
+    ) == currentPlayingSong
+
+    val isPlaying =
+        isCurrentlyPlayingSong && musicControllerUiState.playerState == PlayerState.PLAYING
+
 
     var showRegistrationDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var showBottomSheet by remember { mutableStateOf(false) }
-
-    LaunchedEffect(subscriptionUiState) {
-        when (subscriptionUiState) {
-            is SubscriptionUiState.Success -> {
-                showBottomSheet = true
-            }
-
-            is SubscriptionUiState.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = (subscriptionUiState as SubscriptionUiState.Error).error,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            else -> Unit
-        }
-    }
+    val scope = rememberCoroutineScope()
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        SubscribeHeader(
-            onBackClicked = onBackClicked,
-            artisteName = crbtSong?.artisteName ?: "",
-            songTitle = crbtSong?.songTitle ?: "",
-            songProfileUrl = crbtSong?.profile ?: ""
-        )
-
-        MusicInfo(
-            price = crbtSong?.price ?: "0.00",
-            numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
-            numberOfPlays = crbtSong?.numberOfListeners ?: 0,
-            billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}"
-        )
-
-        SubscribeContent(
-            isGiftSubscription = isGiftSub ?: false,
+    when (crbtSong == null) {
+        true -> Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            onSubscribeClick = {
-                if (!isUserRegisteredForCrbt) {
-                    showRegistrationDialog = true
-                } else {
-                    subscriptionViewModel.subscribeToTone(
-                        ussdCode = crbtSong?.ussdCode ?: "",
-                        activity = context as Activity,
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+
+        else ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    SubscribeHeader(
+                        onBackClicked = onBackClicked,
+                        artisteName = crbtSong?.artisteName ?: "",
+                        songTitle = crbtSong?.songTitle ?: "",
+                        songProfileUrl = crbtSong?.profile ?: "",
+                    )
+
+                    MusicInfo(
+                        price = crbtSong?.price ?: "0.00",
+                        numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
+                        numberOfPlays = crbtSong?.numberOfListeners ?: 0,
+                        billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}",
+                        modifier = Modifier
+                    )
+
+                    SubscribeContent(
+                        isGiftSubscription = isGiftSub ?: false,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        onSubscribeClick = { giftPhoneNumber ->
+                            if (!isUserRegisteredForCrbt) {
+                                showRegistrationDialog = true
+                            } else {
+                                subscriptionViewModel.subscribeToTone(
+                                    ussdCode = crbtSong?.ussdCode ?: "",
+                                    activity = context as Activity,
+                                    onSuccess = {
+                                        showBottomSheet = true
+                                    },
+                                    onError = { errorMessage ->
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(
+                                                message = errorMessage,
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        }
+                                    },
+                                    phoneNumber = giftPhoneNumber
+                                )
+                            }
+                        },
+                        subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
+                        isSubscriptionProcessing = subscriptionUiState is SubscriptionUiState.Loading,
+                        onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
+                        billingType = subscriptionViewModel.crbtBillingType,
+                        context = context
                     )
                 }
-            },
-            subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-            isSubscriptionProcessing = subscriptionUiState == SubscriptionUiState.Loading,
-            isButtonEnabled = crbtSong != null,
-            onGiftPhoneNumberChanged = subscriptionViewModel::onPhoneNumberChange
-        )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(360.dp)
+                ) {
+                    val totalDuration = musicControllerUiState.totalDuration
+                    val currentPosition = musicControllerUiState.currentPosition
+
+                    val progress =
+                        remember(totalDuration, currentPosition) {
+                            if (totalDuration > 0) currentPosition.toFloat() / totalDuration else 0f
+                        }
+
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .align(Alignment.BottomEnd)
+                            .offset(x = -(15).dp, y = (32).dp)
+                            .drawBehind {
+                                val strokeWidthPx = 6.dp.toPx()
+                                val radius = (size.minDimension - strokeWidthPx) / 2
+
+                                drawCircle(
+                                    color = Color.Transparent,
+                                    radius = radius,
+                                    style = Stroke(width = strokeWidthPx)
+                                )
+
+                                if (isCurrentlyPlayingSong) {
+                                    drawArc(
+                                        color = Color.White,
+                                        startAngle = -90f,
+                                        sweepAngle = 360f * progress,
+                                        useCenter = false,
+                                        style = Stroke(width = strokeWidthPx),
+                                        size = Size(
+                                            size.width - strokeWidthPx,
+                                            size.height - strokeWidthPx
+                                        ),
+                                        topLeft = Offset(strokeWidthPx / 2, strokeWidthPx / 2)
+                                    )
+                                }
+                            }
+                    ) {
+                        IconButton(
+                            onClick = {
+                                if (isCurrentlyPlayingSong) {
+                                    if (isPlaying) {
+                                        crbtTonesViewModel.onEvent(TonesPlayerEvent.PauseSong)
+                                    } else {
+                                        crbtTonesViewModel.onEvent(TonesPlayerEvent.ResumeSong)
+                                    }
+                                } else {
+                                    crbtTonesViewModel.onEvent(
+                                        TonesPlayerEvent.OnSongSelected(
+                                            selectedSong = tonesUiState.songs?.find { it.id == crbtSong?.id }!!
+                                        )
+                                    )
+                                    crbtTonesViewModel.onEvent(TonesPlayerEvent.PlaySong)
+                                }
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.Transparent
+                            ),
+                            modifier = Modifier
+                                .matchParentSize()
+                                .padding(2.dp)
+                                .background(
+                                    brush = Brush.linearGradient(CustomGradientColors),
+                                    shape = CircleShape
+                                )
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) CrbtIcons.Pause else CrbtIcons.PlayArrow,
+                                contentDescription = null,
+                                modifier = Modifier.size(56.dp),
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
+            }
     }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         MessageSnackbar(
@@ -174,12 +302,14 @@ internal fun CrbtSubscribeScreen(
         CrbtRegistrationDialog(
             onDismiss = {
                 subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+                showRegistrationDialog = false
             },
             onRegister = {
                 subscriptionViewModel.runUssdCode(
                     ussdCode = crbtSong?.registrationUssdCode ?: "",
                     onSuccess = {
                         subscriptionViewModel.updateUserCrbtSubscriptionStatus()
+                        showRegistrationDialog = false
                     },
                     onError = {},
                     activity = context as Activity
@@ -343,12 +473,14 @@ fun MusicInfo(
     price: String,
     numberOfSubscribers: Int,
     numberOfPlays: Int,
-    billingType: String
+    billingType: String,
+    modifier: Modifier
 ) {
     LazyRow(
         state = rememberLazyListState(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
         item {
             InfoButton(
@@ -414,11 +546,12 @@ fun InfoButton(
 fun SubscribeContent(
     modifier: Modifier = Modifier,
     isGiftSubscription: Boolean,
-    onGiftPhoneNumberChanged: (String) -> Unit,
-    onSubscribeClick: () -> Unit,
+    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
+    billingType: SubscriptionBillingType,
+    onSubscribeClick: (phoneNumber: String) -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
-    isButtonEnabled: Boolean
+    context: Context
 ) {
     val title = if (isGiftSubscription) {
         stringResource(
@@ -434,7 +567,12 @@ fun SubscribeContent(
             id = R.string.feature_subscription_subscribe_to_song_subtitle
         )
     }
-    var isPhoneNumberValid by remember { mutableStateOf(false) }
+
+    var giftPhoneNumber by remember {
+        mutableStateOf(
+            "" to false
+        )
+    }
 
     OnboardingSheetContainer(
         title = title.first,
@@ -444,16 +582,21 @@ fun SubscribeContent(
                 Spacer(modifier = Modifier.height(8.dp))
                 GiftPurchasePhoneNumber(
                     onPhoneNumberChanged = { phoneNumber, isValid ->
-                        isPhoneNumberValid = isValid
-                        onGiftPhoneNumberChanged(phoneNumber)
+                        giftPhoneNumber = phoneNumber to isValid
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    context = context
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            BillingType(
+                onBillingTypeSelected = onBillingTypeSelected,
+                billingType = billingType
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             ProcessButton(
-                onClick = onSubscribeClick,
+                onClick = { onSubscribeClick(giftPhoneNumber.first) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -487,17 +630,69 @@ fun SubscribeContent(
                                         subscriptionPrice
                                     )
                                 )
-
                             }
                         }
                     )
                 },
-                isEnabled = if (isGiftSubscription) isPhoneNumberValid else isButtonEnabled,
+                isEnabled = if (isGiftSubscription) giftPhoneNumber.second else true,
                 isProcessing = isSubscriptionProcessing
             )
         },
         modifier = modifier
     )
+}
+
+
+@Composable
+fun BillingType(
+    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
+    billingType: SubscriptionBillingType
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(billingType) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = stringResource(id = R.string.feature_subscription_billing_type_label))
+        Spacer(modifier = Modifier.height(8.dp))
+        SurfaceCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
+            content = {
+                Column {
+                    CustomInputButton(
+                        text = stringResource(id = selected.title),
+                        onClick = { expanded = !expanded },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        leadingIcon = CrbtIcons.PaymentMethods
+                    )
+                    if (expanded) {
+                        SubscriptionBillingType.entries.forEach {
+                            ListItem(
+                                headlineContent = { Text(text = stringResource(id = it.title)) },
+                                modifier = Modifier.clickable {
+                                    selected = it
+                                    expanded = false
+                                    onBillingTypeSelected(it)
+                                },
+                            )
+                        }
+                    }
+                }
+            },
+            color = MaterialTheme.colorScheme.outlineVariant.copy(
+                stronglyDeemphasizedAlpha,
+            )
+        )
+    }
+
 }
 
 
@@ -625,7 +820,7 @@ fun CrbtSubscribeHeaderPreview() {
             onBackClicked = {},
             artisteName = song.artisteName,
             songTitle = song.songTitle,
-            songProfileUrl = song.profile
+            songProfileUrl = song.profile,
         )
     }
 }
@@ -639,8 +834,9 @@ fun CrbtSubscribeContentPreview() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> }
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
+            context = LocalContext.current
         )
     }
 }
@@ -654,8 +850,9 @@ fun CrbtSubscribeContentPreview2() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            isButtonEnabled = true,
-            onGiftPhoneNumberChanged = { _ -> }
+            onBillingTypeSelected = {},
+            billingType = SubscriptionBillingType.Monthly,
+            context = LocalContext.current
         )
     }
 }

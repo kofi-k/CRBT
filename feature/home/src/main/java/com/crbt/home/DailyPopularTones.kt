@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -148,11 +147,7 @@ fun DailyPopularTones(
     val lazyGridState = rememberLazyListState()
 
     when (crbtSongsFeedUiState) {
-        is CrbtSongsFeedUiState.Error -> Unit
-        CrbtSongsFeedUiState.Loading -> {
-            CircularProgressIndicator()
-        }
-
+        is CrbtSongsFeedUiState.Error, CrbtSongsFeedUiState.Loading -> Unit
         is CrbtSongsFeedUiState.Success -> {
             when (crbtSongsFeedUiState.songs.isEmpty()) {
                 true -> {
@@ -235,7 +230,7 @@ fun MusicCard(
             DynamicAsyncImage(
                 imageUrl = imageUrl,
                 modifier = Modifier.fillMaxSize(),
-                imageRes = com.example.crbtjetcompose.core.designsystem.R.drawable.core_designsystem_ic_placeholder_default
+                imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image
             )
         }
         Spacer(modifier = Modifier.size(2.dp))
@@ -287,7 +282,10 @@ fun PreviewPopularTodayTabLayout() {
     PopularTodayTabLayout(
         modifier = Modifier.fillMaxWidth(),
         navigateToSubscriptions = {},
-        crbSongsFeed = CrbtSongsFeedUiState.Success(songs = emptyList()),
+        crbSongsFeed = CrbtSongsFeedUiState.Success(
+            songs = emptyList(),
+            currentUserCrbtSubscriptionSong = null
+        ),
     )
 }
 

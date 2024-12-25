@@ -31,6 +31,7 @@ import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.util.CALL_ME_BACK_USSD
 import com.crbt.data.core.data.util.CHECK_BALANCE_USSD
+import com.crbt.data.core.data.util.TRANSFER_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
@@ -44,6 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ServicesRoute(
     navigateToPackages: () -> Unit,
+    navigateToRecharge: () -> Unit
 ) {
     var showDialog by remember {
         mutableStateOf(false)
@@ -62,7 +64,7 @@ fun ServicesRoute(
 
     ServicesScreen(
         onPackageClick = navigateToPackages,
-        onRechargeClick = {},
+        onRechargeClick = navigateToRecharge,
         onCheckBalance = {
             crbtUssdType = CrbtUssdType.BALANCE_CHECK
             viewModel.runUssdCode(
@@ -78,25 +80,24 @@ fun ServicesRoute(
             )
         },
         isCheckingBalance = ussdUiState is UssdUiState.Loading && crbtUssdType == CrbtUssdType.BALANCE_CHECK,
-        onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
-        onAmountChange = {},
-        onConfirmTransferClick = {
+        onConfirmTransfer = { phoneNumber, amount ->
             crbtUssdType = CrbtUssdType.TRANSFER
-//            viewModel.runUssdCode(
-//                ussdCode = "$CHECK_BALANCE_USSD${viewModel.phoneNumber}#",
-//                onSuccess = {
-//                    showDialog = true
-//                },
-//                onError = {
-//                    showDialog = true
-//                },
-//            activity = context as Activity
-//            )
+            viewModel.runUssdCode(
+                ussdCode = "$TRANSFER_USSD$amount*$phoneNumber#",
+                onSuccess = {
+                    showDialog = true
+                },
+                onError = {
+                    showDialog = true
+                },
+                activity = context as Activity,
+                ussdType = CrbtUssdType.TRANSFER
+            )
         },
-        onConfirmCallMeBackClick = {
+        onConfirmCallMeBack = { phoneNumber ->
             crbtUssdType = CrbtUssdType.CALL_ME_BACK
             viewModel.runUssdCode(
-                ussdCode = "$CALL_ME_BACK_USSD${viewModel.phoneNumber}#",
+                ussdCode = "$CALL_ME_BACK_USSD$phoneNumber#",
                 onSuccess = {
                     showDialog = true
                 },
@@ -108,7 +109,6 @@ fun ServicesRoute(
             )
         },
         actionLoading = ussdUiState is UssdUiState.Loading,
-        actionEnabled = viewModel.isPhoneNumberValid || (ussdUiState !is UssdUiState.Loading),
     )
     if (showDialog) {
         UssdResponseDialog(
@@ -128,12 +128,9 @@ fun ServicesScreen(
     onRechargeClick: () -> Unit,
     onCheckBalance: () -> Unit,
     isCheckingBalance: Boolean,
-    onPhoneNumberChanged: (String, Boolean) -> Unit,
-    onAmountChange: (String) -> Unit,
-    onConfirmTransferClick: () -> Unit,
-    onConfirmCallMeBackClick: () -> Unit,
+    onConfirmCallMeBack: (String) -> Unit,
+    onConfirmTransfer: (String, Double) -> Unit,
     actionLoading: Boolean,
-    actionEnabled: Boolean
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -175,8 +172,6 @@ fun ServicesScreen(
         ) {
             ServicesBottomSheet(
                 servicesType = bottomSheetType,
-                onPhoneNumberChanged = onPhoneNumberChanged,
-                onAmountChange = onAmountChange,
                 sheetState = sheetState,
                 onDismiss = {
                     showBottomSheet = false
@@ -184,10 +179,9 @@ fun ServicesScreen(
                         sheetState.hide()
                     }
                 },
-                onConfirmTransferClick = onConfirmTransferClick,
-                onConfirmCallMeBackClick = onConfirmCallMeBackClick,
+                onConfirmCallMeBack = onConfirmCallMeBack,
+                onConfirmTransfer = onConfirmTransfer,
                 actionLoading = actionLoading,
-                actionEnabled = actionEnabled
             )
         }
     }

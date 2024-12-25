@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.crbt.home.AccountHistory
 import com.crbt.home.HomeScreen
+import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 
 const val SUBSCRIPTION_ID = "subscription_id"
 const val HOME_ROUTE = "home_route"
@@ -23,14 +24,14 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeScreen(
     navigateToTopUp: () -> Unit,
-    onPopularTodayClick: (String) -> Unit,
-    navigateToSubscription: () -> Unit
+    navigateToSubscription: () -> Unit,
+    crbtTonesViewModel: CrbtTonesViewModel,
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
             navigateToSubscription = navigateToSubscription,
             onNavigateToTopUp = navigateToTopUp,
-            onPopularTodayClick = onPopularTodayClick
+            crbtTonesViewModel = crbtTonesViewModel
         )
     }
     composable(

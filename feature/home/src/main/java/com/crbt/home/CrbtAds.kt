@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,10 +44,6 @@ fun CrbtAds(
     val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
 
     when (crbtAdsUiState) {
-        CrbtAdsUiState.Loading -> Column {
-            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-        }
-
         is CrbtAdsUiState.Success -> {
             val crbtAds = crbtAdsUiState.data
 
@@ -82,6 +77,15 @@ fun CrbtAds(
                 }
             }
         }
+
+//        is CrbtAdsUiState.Loading -> Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 16.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            CircularProgressIndicator()
+//        }
 
         else -> Unit
     }
