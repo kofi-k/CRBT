@@ -11,6 +11,7 @@ import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
 import com.example.crbtjetcompose.core.network.model.SubscriptionResponse
 import com.example.crbtjetcompose.core.network.model.UpdateUserInfo
 import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
+import com.example.crbtjetcompose.core.network.model.UserContacts
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -57,7 +58,7 @@ interface RetrofitCrbtNetworkApi {
 
     @POST("user/user-contacts")
     suspend fun uploadUserContacts(
-        @Body contacts: List<String>
+        @Body contacts: UserContacts
     )
 }
 
