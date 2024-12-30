@@ -86,10 +86,10 @@ class OnboardingViewModel @Inject constructor(
             when (val state = userManager.updateUserInfo(
                 firstName = _onboardingSetupData.firstName,
                 lastName = _onboardingSetupData.lastName,
-                profile = ""
+                profile = "",
+                email = email
             )) {
                 is UpdateUserInfoUiState.Success -> {
-                    saveUserEmail(email)
                     onSuccessfulUpdate()
                     userInfoUiState = state
                 }
@@ -106,15 +106,6 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun saveUserEmail(email: String) {
-        viewModelScope.launch {
-            crbtPreferencesRepository.updateUserPreferences(
-                crbtPreferencesRepository.userPreferencesData.first().copy(
-                    email = email
-                )
-            )
-        }
-    }
 
     fun onLanguageSelected(languageId: String = CRBTSettingsData.languages.first { it.code == "en" }.code) {
         _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = languageId)

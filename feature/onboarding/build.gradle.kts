@@ -11,8 +11,9 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.ui)
+    implementation(projects.core.domain)
     implementation(libs.country.code.picker)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.firebase.auth.ktx)
-    implementation(project(":core:domain"))
+    implementation(libs.mockito.core)
 }

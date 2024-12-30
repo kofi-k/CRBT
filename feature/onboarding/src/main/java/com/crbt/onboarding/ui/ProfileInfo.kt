@@ -28,7 +28,6 @@ import com.crbt.designsystem.components.ProcessButton
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
-import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UsernameDetails
 import com.crbt.ui.core.ui.validationStates.isValidEmail
 import com.example.crbtjetcompose.feature.onboarding.R
@@ -49,10 +48,6 @@ fun Profile(
     var userEmail by remember {
         mutableStateOf("")
     }
-
-    PermissionRequestComposable(
-        onPermissionsGranted = {}
-    )
 
     Column(
         modifier = modifier
