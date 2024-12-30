@@ -3,6 +3,7 @@ package com.example.crbtjetcompose.core.datastore
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -155,6 +156,17 @@ class CrbtPreferencesDataSource @Inject constructor(
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
         }
     }
+
+    suspend fun saveUserContacts(contacts: String) {
+        userPreferences.updateData {
+            it.copy {
+                userContacts = contacts
+            }
+        }
+    }
+
+    suspend fun getUserContacts(): String =
+        userPreferences.data.map { it.userContacts }.first()
 
 
     suspend fun clearUserPreferences() {
