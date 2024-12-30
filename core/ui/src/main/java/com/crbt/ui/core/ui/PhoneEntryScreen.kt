@@ -50,6 +50,7 @@ import com.example.crbtjetcompose.core.ui.R as CoreUiR
 @Composable
 fun PhoneEntryScreen(
     onPhoneNumberChanged: (String, Boolean) -> Unit,
+    enabled: Boolean,
 ) {
 
     val countryCode by remember {
@@ -77,6 +78,7 @@ fun PhoneEntryScreen(
         },
         onDone = { phoneNumberState.enableShowErrors() },
         showsErrors = phoneNumberState.showErrors(),
+        enabled = enabled
     )
     Spacer(modifier = Modifier.height(14.dp))
 }
@@ -90,6 +92,7 @@ fun PhoneNumberInput(
     onDone: () -> Unit = {},
     focusManager: FocusManager = LocalFocusManager.current,
     hasError: Boolean = false,
+    enabled: Boolean,
 ) {
     var hasFocus by remember {
         mutableStateOf(false)
@@ -110,6 +113,7 @@ fun PhoneNumberInput(
         BasicTextField(
             value = phoneNumber,
             onValueChange = onPhoneNumberChanged,
+            enabled = enabled,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Done,
@@ -158,6 +162,7 @@ fun PhoneNumberInput(
         ) {
             IconButton(
                 onClick = onClear,
+                enabled = enabled,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Cancel,
@@ -179,6 +184,7 @@ fun PhoneEntryTextField(
     onDone: () -> Unit = {},
     showsErrors: Boolean = false,
     focusManager: FocusManager = LocalFocusManager.current,
+    enabled: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -219,6 +225,7 @@ fun PhoneEntryTextField(
                         shape = MaterialTheme.shapes.medium,
                     ),
                 focusManager = focusManager,
+                enabled = enabled
             )
         }
         AnimatedVisibility(
@@ -288,6 +295,7 @@ fun PhoneEntryTextFieldPreview() {
             onClear = {},
             onDone = {},
             showsErrors = false,
+            enabled = true
         )
     }
 }
@@ -298,6 +306,7 @@ fun PhoneEntryScreenPreview() {
     CrbtTheme {
         PhoneEntryScreen(
             onPhoneNumberChanged = { _, _ -> },
+            enabled = true
         )
     }
 }

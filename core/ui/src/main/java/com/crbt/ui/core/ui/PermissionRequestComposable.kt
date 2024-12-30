@@ -19,7 +19,9 @@ fun PermissionRequestComposable(
         Manifest.permission.READ_MEDIA_AUDIO,
         Manifest.permission.READ_CONTACTS,
         Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK
+        Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
     val permissionLauncher = rememberLauncherForActivityResult(
