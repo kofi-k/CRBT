@@ -77,12 +77,12 @@ class ProfileViewModel @Inject constructor(
             when (val state = userManager.updateUserInfo(
                 firstName = firstName,
                 lastName = lastName,
+                email = email,
                 profile = profile.ifBlank { null }
             )) {
                 is UpdateUserInfoUiState.Success -> {
                     crbtPreferencesRepository.updateUserPreferences(
                         crbtPreferencesRepository.userPreferencesData.first().copy(
-                            email = email,
                             profileUrl = profile
                         )
                     )

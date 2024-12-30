@@ -58,7 +58,6 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
 import com.crbt.domain.UserPreferenceUiState
-import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.example.crbtjetcompose.core.model.data.fullName
 import com.example.crbtjetcompose.feature.profile.R
 
@@ -71,10 +70,7 @@ fun ProfileRoute(
     val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
     val signOutState by profileViewModel.signOutState.collectAsStateWithLifecycle()
 
-    PermissionRequestComposable(
-        onPermissionsGranted = {
-        }
-    )
+
     ProfileScreen(
         onEditProfileClick = onEditProfileClick,
         onLogout = {

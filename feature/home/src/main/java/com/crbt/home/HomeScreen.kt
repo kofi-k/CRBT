@@ -63,7 +63,6 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.EmptyContent
-import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.rememberDominantColorWithReadableText
@@ -98,9 +97,6 @@ fun HomeScreen(
         }
     }
 
-    PermissionRequestComposable(
-        onPermissionsGranted = {}
-    )
 
 
     PullToRefreshContent(
