@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_subscription_title">Subscription</string>
     <string name="feature_subscription_tones">Tones</string>
     <string name="feature_subscription_albums">Albums</string>
     <string name="feature_subscription_subscribe_gift_title">Subscribe Gift</string>
@@ -47,6 +48,5 @@
         <item quantity="one">play ⚡</item>
         <item quantity="other">plays ⚡</item>
     </plurals>
-
 
 </resources>

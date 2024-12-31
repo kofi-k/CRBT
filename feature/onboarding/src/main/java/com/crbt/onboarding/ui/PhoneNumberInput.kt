@@ -20,15 +20,19 @@ import com.example.crbtjetcompose.feature.onboarding.R
 fun PhoneNumberInput(
     modifier: Modifier = Modifier,
     onPhoneNumberChanged: (String, Boolean) -> Unit,
+    enabled: Boolean,
 ) {
     OnboardingSheetContainer(
         modifier = modifier,
         title = stringResource(id = R.string.feature_onboarding_welcome_title),
         subtitle = stringResource(id = R.string.feature_onboarding_phone_number_entry_message),
         content = {
-            PhoneEntryScreen { phoneNumber, isValid ->
-                onPhoneNumberChanged(phoneNumber, isValid)
-            }
+            PhoneEntryScreen(
+                enabled = enabled,
+                onPhoneNumberChanged = { phoneNumber, isValid ->
+                    onPhoneNumberChanged(phoneNumber, isValid)
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -45,6 +49,10 @@ fun PhoneNumberInput(
 @Composable
 fun PhoneNumberInputPreview() {
     CrbtTheme {
-        PhoneNumberInput { _, _ -> }
+        PhoneNumberInput(
+            Modifier,
+            { _, _ -> },
+            true,
+        )
     }
 }

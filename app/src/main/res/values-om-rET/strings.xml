@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CRBT</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="internet_speed">%.2f KB/s</string>
+    <string name="not_connected">⚠️ Hin quunnamne.</string>
+    <string name="core_designsystem_welecome">Baga nagaan dhuftan!</string>
+    <string name="core_designsystem_services_ussd">USSD</string>
+    <string name="core_designsystem_what_would_you_like_to_do">Maal gochuu barbaadda</string>
+    <string name="register_now">Amma galmaa\'i</string>
+    <string name="already_registered">Fayyadamaa haaraa miti</string>
+    <string name="new_to_crbt">Tajaajila CRBT haaraa?</string>
+    <string name="register_for_crbt_description">Tajaajila CRBT fayyadamuuf, fayyadamtonni dursa galmaa\'uu qabu. Yoo CRBT'f haaraa taatan galmaa'aa.</string>
+</resources>

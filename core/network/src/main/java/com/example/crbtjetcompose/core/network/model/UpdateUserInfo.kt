@@ -9,6 +9,7 @@ data class UpdateUserInfo(
     val langPref: String,
     val profile: String?,
     val location: String,
+    val email: String?,
 )
 
 

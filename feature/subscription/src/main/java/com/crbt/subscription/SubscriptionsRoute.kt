@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.SearchToolbar
 import com.example.crbtjetcompose.feature.subscription.R
 
@@ -32,11 +31,6 @@ fun SubscriptionsRoute(
     onTonesClick: () -> Unit,
     onAlbumClick: () -> Unit,
 ) {
-
-    PermissionRequestComposable(
-        onPermissionsGranted = {
-        }
-    )
 
     Column(
         modifier = Modifier.fillMaxWidth(),

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_title">الرئيسية</string>
+    <string name="feature_home_balance">%s بر</string>
+    <string name="feature_home_balance_subtitle">الرصيد التقديري</string>
+    <string name="feature_home_latest_music">أحدث الموسيقى</string>
+    <string name="feature_home_recent_subscription_title">الاشتراك الأخير</string>
+    <string name="feature_home_recent_subscription_rate_Description">شهرياً</string>
+    <string name="feature_home_popular_today_title">الشائع اليوم</string>
+    <string name="feature_home_account_history">سجل الحساب</string>
+    <string name="feature_home_advert">إعلان</string>
+    <string name="feature_home_no_songs">همم، لا يوجد شيء لعرضه هنا</string>
+    <string name="feature_home_no_subscriptions">ليس لديك اشتراك CRBT نشط</string>
+    <string name="feature_home_subscribe_now">اشترك الآن</string>
+</resources>

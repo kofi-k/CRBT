@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_services_title">አገልግሎቶች</string>
+    <string name="feature_services_check_balance">ቀሪ ሂሳብ ይመልከቱ</string>
+    <string name="feature_services_check_description">አጭር መግለጫ ይመልከቱ</string>
+    <string name="feature_services_packages">ፓኬጆች</string>
+    <string name="feature_services_packages_description">የፓኬጆች አጭር መግለጫ</string>
+    <string name="feature_services_recharge">ሪቻርጅ</string>
+    <string name="feature_services_recharge_description">የሪቻርጅ አጭር መግለጫ</string>
+    <string name="feature_services_transfer">ማስተላለፍ</string>
+    <string name="feature_services_transfer_description">የማስተላለፍ አጭር መግለጫ</string>
+    <string name="feature_services_call_back">መልሰህ ደውልልኝ</string>
+    <string name="feature_services_call_back_description">መልሰህ ደውልልኝ አጭር መግለጫ</string>
+    <string name="feature_services_buy">ግዛ</string>
+    <string name="feature_services_buy_description">የግዢ አጭር መግለጫ</string>
+    <string name="feature_services_search_title">ፈልግ</string>
+    <string name="feature_services_balance">ቀሪ ሂሳብ</string>
+    <string name="feature_services_etb">ብር %s</string>
+    <string name="feature_services_recharge_amount_title">መጠን ያስገቡ</string>
+    <string name="feature_services_recharge_amount_subtitle">ምን ያህል መሙላት ይፈልጋሉ?</string>
+    <string name="feature_services_mode_of_payment_title">የክፍያ መንገድ</string>
+    <string name="feature_services_payment_option">የክፍያ አማራጮች</string>
+    <string name="feature_services_topup">ሂሳብ ሙላ</string>
+    <string name="feature_services_confirm">አረጋግጥ</string>
+    <string name="feature_services_amount_topup">የሂሳብ መሙያ መጠን</string>
+    <string name="feature_services_account_balance">የአካውንት ቀሪ ሂሳብ</string>
+    <string name="feature_services_topup_amount">የሚሞላ መጠን</string>
+    <string name="feature_services_date">ቀን</string>
+    <string name="feature_services_gift_button">ስጦታ</string>
+    <string name="feature_services_cancel">ሰርዝ</string>
+    <string name="feature_services_purchase_confirmation">%s በ %s ብር ለመግዛት ይቀጥሉ</string>
+    <string name="feature_services_gift_purchase_contact_info">የተቀባይን ቁጥር ያስገቡ</string>
+    <string name="feature_services_error_check_balance">ቀሪ ሂሳብ በማየት ላይ ስህተት ተፈጥሯል</string>
+    <string name="feature_services_balance_check">የአሁኑ ቀሪ ሂሳብዎ</string>
+    <string name="feature_services_ok">እሺ</string>
+    <string name="feature_services_call_back_button">ጠይቅ</string>
+    <string name="feature_services_no_packages">ምንም ፓኬጆች የሉም</string>
+    <string name="feature_services_no_packages_items">ለ %s ምንም ለማሳየት የለም</string>
+    <string name="feature_services_recharge_screen_recharge_code_length">የሪቻርጅ ካርዱ ሊኖረው የሚገባው የቁጥር ብዛት</string>
+    <string name="feature_services_recharge_screen_auto_dial_title">ራስ-ሰር ቁጥር መደወያ</string>
+    <string name="feature_services_recharge_screen_auto_dial_description">ትክክለኛ የሪቻርጅ ካርድ ቁጥር ከተገኘ በእጅ መደወል ያስፈልጋል</string>
+    <string name="feature_services_recharge_screen_quick_settings_hide">ፈጣን ቅንብሮችን ደብቅ</string>
+    <string name="feature_services_recharge_screen_quick_settings_show">ፈጣን ቅንብሮችን አሳይ</string>
+    <string name="feature_services_recharge_screen_title">የሪቻርጅ ካርድ እዚህ ይታያል</string>
+</resources>

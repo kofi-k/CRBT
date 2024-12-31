@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_home_title">Home</string>
+    <string name="feature_home_balance">ETB %s</string>
+    <string name="feature_home_balance_subtitle">Est. Balance</string>
+    <string name="feature_home_latest_music">Latest Music On The Block</string>
+    <string name="feature_home_recent_subscription_title">Recent Subscription</string>
+    <string name="feature_home_recent_subscription_rate_Description">Per month</string>
+    <string name="feature_home_popular_today_title">Popular today</string>
+    <string name="feature_home_account_history">Account History</string>
+    <string name="feature_home_advert">ad</string>
+    <string name="feature_home_no_songs">Hmm, nothing to show here.</string>
+    <string name="feature_home_no_subscriptions">You have no active CRBT subscription</string>
+    <string name="feature_home_subscribe_now">Subscribe Now</string>
 </resources>

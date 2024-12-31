@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_designsystem_untitled">ርዕስ የሌለው</string>
+    <string name="core_designsystem_phone_number_placeholder">ስልክ ቁጥር</string>
+    <string name="core_designsystem_process_button_default_text">ተጠናቋል</string>
+    <string name="core_designsystem_amount_placeholder">መጠን</string>
+</resources>

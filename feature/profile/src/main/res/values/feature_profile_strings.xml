@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_profile_title">Profile</string>
+    <string name="feature_profile_logout">Logout</string>
+    <string name="feature_profile_logging_out">Logging out…</string>
+    <string name="feature_profile_reward_points">Reward points</string>
+    <string name="feature_profile_reward_points_description">Redeem your reward points</string>
+    <string name="feature_profile_placeholder_subtext">Short description</string>
+    <string name="feature_profile_payment_methods">Payment Methods</string>
+    <string name="feature_profile_payment_methods_description">Add or remove payment methods</string>
+    <string name="feature_profile_currency">Currency</string>
+    <string name="feature_profile_currency_description">Choose your currency</string>
+    <string name="feature_profile_language">Language</string>
+    <string name="feature_profile_language_description">Choose your language</string>
+    <string name="feature_profile_permissions">Permissions</string>
+    <string name="feature_profile_permissions_description">Manage app permissions</string>
+    <string name="feature_profile_payments">Payments</string>
+    <string name="feature_profile_setup_title">User profile info</string>
+    <string name="feature_profile_save_profile_button">Save Profile</string>
+    <string name="feature_profile_updates_title">Updates and Recommendations</string>
+    <string name="feature_profile_updates_subtitle">Stay in touch with the best playlist updates</string>
+    <string name="feature_profile_first_name_label">First Name</string>
+    <string name="feature_profile_last_name_label">Last Name</string>
+    <string name="feature_profile_email_label">Email from CRBT</string>
+    <string name="feature_profile_reward_points_sheet_action">Got it</string>
+    <string name="feature_profile_total_reward_points">Your total reward points</string>
+    <string name="feature_profile_crbt_reward_points">Your CRBT reward points</string>
+    <string name="feature_profile_crbt_reward_points_info">
+        Points are rewarded for each subscription you make on CRBT.
+        You also earn points for subscriptions you make for others. Keep subscribing to accumulate more🔥</string>
+
 </resources>

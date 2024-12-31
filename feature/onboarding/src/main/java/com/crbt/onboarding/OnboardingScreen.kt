@@ -42,8 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -59,7 +57,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.crbt.data.core.data.OnboardingSetupProcess
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
@@ -72,6 +69,7 @@ import com.crbt.onboarding.ui.OnboardingViewModel
 import com.crbt.onboarding.ui.PhoneNumberInput
 import com.crbt.onboarding.ui.phoneAuth.AuthState
 import com.crbt.onboarding.ui.phoneAuth.PhoneAuthViewModel
+import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.example.crbtjetcompose.feature.onboarding.R
 import kotlinx.coroutines.launch
 import com.example.crbtjetcompose.core.ui.R as UiR
@@ -92,7 +90,7 @@ fun OnboardingScreen(
 
     val viewModel: OnboardingViewModel = hiltViewModel()
     val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
-    val authState by phoneAuthViewModel.phoneAuthState.collectAsStateWithLifecycle()
+    val authState = phoneAuthViewModel.authState
     val screenData = viewModel.onboardingScreenData
     val onboardingSetupData = viewModel.onboardingSetupData
     val scope = rememberCoroutineScope()
@@ -102,24 +100,9 @@ fun OnboardingScreen(
         viewModel.onPreviousClicked()
     }
 
-    val codeSentMessage = stringResource(id = R.string.feature_onboarding_otp_sent)
-    LaunchedEffect(authState) {
-
-        val message = when (authState) {
-            is AuthState.Error -> (authState as AuthState.Error).message
-            is AuthState.CodeSent -> codeSentMessage
-            else -> null
-        }
-
-        if ((authState is AuthState.Error || authState is AuthState.CodeSent)
-            && message != null
-        ) {
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }
+    PermissionRequestComposable(
+        onPermissionsGranted = {}
+    )
 
 
     BottomSheetScaffold(
@@ -134,8 +117,22 @@ fun OnboardingScreen(
 
                         OnboardingSetupProcess.PHONE_NUMBER_ENTRY -> {
                             phoneAuthViewModel.sendVerificationCode(
-                                onOtpSent = {
+                                onOtpSent = { message ->
                                     viewModel.onNextClicked()
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = message,
+                                            duration = SnackbarDuration.Short,
+                                        )
+                                    }
+                                },
+                                onFailed = { message ->
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = message,
+                                            duration = SnackbarDuration.Short,
+                                        )
+                                    }
                                 },
                                 phoneNumber = onboardingSetupData.phoneNumber,
                                 activity = context as Activity
@@ -147,25 +144,23 @@ fun OnboardingScreen(
                                 otpCode = viewModel.otpCode,
                                 phone = onboardingSetupData.phoneNumber,
                                 accountType = "user",
-                                langPref = onboardingSetupData.selectedLanguage
-                            )
-                            when (authState) {
-                                is AuthState.Error -> {
+                                langPref = onboardingSetupData.selectedLanguage,
+                                onFailed = { message ->
                                     scope.launch {
-                                        bottomSheetScaffoldState.bottomSheetState.hide()
+                                        snackbarHostState.showSnackbar(
+                                            message = message,
+                                            duration = SnackbarDuration.Short,
+                                        )
                                     }
-                                }
-
-                                is AuthState.Success -> {
+                                },
+                                onVerified = {
                                     navigateToHome()
                                     viewModel.onDoneClicked()
                                     scope.launch {
                                         bottomSheetScaffoldState.bottomSheetState.hide()
                                     }
                                 }
-
-                                else -> {}
-                            }
+                            )
                         }
 
                         else -> {
@@ -184,7 +179,8 @@ fun OnboardingScreen(
                     ),
                 buttonLoading = authState is AuthState.Loading,
                 onOtpModified = viewModel::onOtpCodeChanged,
-                otpValue = viewModel.otpCode
+                otpValue = viewModel.otpCode,
+                phoneFieldEnabled = authState !is AuthState.Loading
             )
         },
         modifier = Modifier
@@ -321,6 +317,7 @@ internal fun CrbtOnboardingBottomSheet(
     otpValue: String,
     modifier: Modifier = Modifier,
     buttonLoading: Boolean,
+    phoneFieldEnabled: Boolean,
 ) {
     val buttonText = when (screenData.onboardingSetupProcess) {
         OnboardingSetupProcess.OTP_VERIFICATION -> {
@@ -367,7 +364,8 @@ internal fun CrbtOnboardingBottomSheet(
 
                     OnboardingSetupProcess.PHONE_NUMBER_ENTRY -> {
                         PhoneNumberInput(
-                            onPhoneNumberChanged = onPhoneNumberEntered
+                            onPhoneNumberChanged = onPhoneNumberEntered,
+                            enabled = phoneFieldEnabled
                         )
                     }
 

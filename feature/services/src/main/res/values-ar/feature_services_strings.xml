@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_services_title">الخدمات</string>
+    <string name="feature_services_check_balance">فحص الرصيد</string>
+    <string name="feature_services_check_description">وصف مختصر للفحص</string>
+    <string name="feature_services_packages">الباقات</string>
+    <string name="feature_services_packages_description">وصف مختصر للباقات</string>
+    <string name="feature_services_recharge">شحن الرصيد</string>
+    <string name="feature_services_recharge_description">وصف مختصر للشحن</string>
+    <string name="feature_services_transfer">تحويل</string>
+    <string name="feature_services_transfer_description">وصف مختصر للتحويل</string>
+    <string name="feature_services_call_back">اتصل بي</string>
+    <string name="feature_services_call_back_description">وصف مختصر لخدمة اتصل بي</string>
+    <string name="feature_services_buy">شراء</string>
+    <string name="feature_services_buy_description">وصف مختصر للشراء</string>
+    <string name="feature_services_search_title">بحث</string>
+    <string name="feature_services_balance">الرصيد</string>
+    <string name="feature_services_etb">%s بر</string>
+    <string name="feature_services_recharge_amount_title">تحديد المبلغ</string>
+    <string name="feature_services_recharge_amount_subtitle">كم تريد أن تشحن؟</string>
+    <string name="feature_services_mode_of_payment_title">طريقة الدفع</string>
+    <string name="feature_services_payment_option">خيارات الدفع</string>
+    <string name="feature_services_topup">شحن</string>
+    <string name="feature_services_confirm">تأكيد</string>
+    <string name="feature_services_amount_topup">مبلغ الشحن</string>
+    <string name="feature_services_account_balance">رصيد الحساب</string>
+    <string name="feature_services_topup_amount">مبلغ الشحن</string>
+    <string name="feature_services_date">التاريخ</string>
+    <string name="feature_services_gift_button">إهداء</string>
+    <string name="feature_services_cancel">إلغاء</string>
+    <string name="feature_services_purchase_confirmation">المتابعة لشراء %s بسعر %s بر</string>
+    <string name="feature_services_gift_purchase_contact_info">أدخل رقم المستلم</string>
+    <string name="feature_services_error_check_balance">خطأ في فحص الرصيد</string>
+    <string name="feature_services_balance_check">رصيدك الحالي</string>
+    <string name="feature_services_ok">حسناً</string>
+    <string name="feature_services_call_back_button">طلب</string>
+    <string name="feature_services_no_packages">لا توجد باقات متاحة للعرض</string>
+    <string name="feature_services_no_packages_items">لا يوجد شيء لعرضه لـ %s</string>
+    <string name="feature_services_recharge_screen_recharge_code_length">عدد أرقام بطاقة الشحن المطلوبة</string>
+    <string name="feature_services_recharge_screen_auto_dial_title">طلب تلقائي للبطاقة</string>
+    <string name="feature_services_recharge_screen_auto_dial_description">سيتطلب الطلب اليدوي إذا تم العثور على رقم صالح لبطاقة الشحن</string>
+    <string name="feature_services_recharge_screen_quick_settings_hide">إخفاء الإعدادات السريعة</string>
+    <string name="feature_services_recharge_screen_quick_settings_show">إظهار الإعدادات السريعة</string>
+    <string name="feature_services_recharge_screen_title">سيتم عرض بطاقة الشحن هنا</string>
+</resources>

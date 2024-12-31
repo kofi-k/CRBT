@@ -15,6 +15,7 @@ data class UserAccountDetailsNetworkModel(
     val location: String? = null,
     val profile: String? = null,
     val subSongDetails: SubSongDetails?,
+    val email: String? = null
 )
 
 

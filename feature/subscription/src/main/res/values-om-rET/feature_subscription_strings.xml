@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_subscription_title">Sababii</string>
+    <string name="feature_subscription_tones">Sagalee</string>
+    <string name="feature_subscription_albums">Albaamii</string>
+    <string name="feature_subscription_subscribe_gift_title">Sababii Kennaa</string>
+    <string name="feature_subscription_laguage_change_title">Afaan</string>
+    <string name="feature_subscription_date_placeholder">Guyyaa filadhu</string>
+    <string name="feature_subscription_date_title">Guyyaa sababii</string>
+    <string name="feature_subscription_button_text">Sababii dabaluu</string>
+    <string name="feature_subscription_billing_type_label">Kaffaltii</string>
+    <string name="feature_subscription_name_label">Maqaa sababii</string>
+    <string name="feature_subscription_price_label">Gatii</string>
+    <string name="feature_subscription_share_receipt">Rasidii qooduu</string>
+    <string name="feature_subscription_done">Xumurameera</string>
+    <string name="feature_subscription_etb">ETB %s</string>
+    <string name="feature_subscription_from_text">Irraa</string>
+    <string name="feature_subscription_transaction_id">Lakkoofsa Raawwii</string>
+    <string name="feature_subscription_date">Guyyaa</string>
+    <string name="feature_subscription_add_subscription_title">Sababii dabaluu</string>
+    <string name="feature_subscription_gift_subscription_title">Sababii Kennaa</string>
+    <string name="feature_subscription_subscribe_to_song_title">Faarfannaa kanaaf sababii %s</string>
+    <string name="feature_subscription_gift_song_title">Faarfannaa kana kennaa %s</string>
+    <string name="feature_subscription_gift_button">Kennaa</string>
+    <string name="feature_subscription_subscribe_button">Sababadhuu</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">Bilbiltoota keessaniif faarfannaa kana akka gammadan, amma sababaa!</string>
+    <string name="feature_subscription_no_songs">Faarfannaa CRBT hin jiru</string>
+    <string name="feature_subscription_search_result_not_found">Dhiifama, barbaacha keessaniif \"%1$s\" homaa hin argamne</string>
+    <string name="feature_subscription_play_error">Faarfannaa CRBT dhageeffachuun hin danda\'amne</string>
+    <string name="feature_subscription_reload">Haaromsi</string>
+    <string name="feature_subscription_register_now">Amma galmaa\'i</string>
+    <string name="feature_subscription_already_registered">Fayyadamaa haaraa miti</string>
+    <string name="feature_subscription_new_to_crbt">Tajaajila CRBT haaraa?</string>
+    <string name="feature_subscription_register_for_crbt_description">Tajaajila CRBT fayyadamuuf, fayyadamtonni dursa galmaa\'uu qabu. Yoo CRBT'f haaraa taatan galmaa'aa.</string>
+    <string name="feature_subscription_plays">taphachuu⚡</string>
+    <string name="feature_subscription_price">
+        gatii
+        <b>%s</b>
+    </string>
+    <string name="feature_subscription_subscribers">sababa\'oota</string>
+    <string name="feature_subscription_gift_song_subtitle">Faarfannaa kana kennuuf lakkoofsa bilbilaa kenni</string>
+    <string name="feature_subscription_success">
+        Milkaa\'inaan gara CRBT
+        <b>%s</b>
+        sababatameera
+    </string>
+    <!--   subscribers plurals   -->
+    <plurals name="feature_subscription_subscribers_plural">
+        <item quantity="one">sababa\'aa</item>
+        <item quantity="other">sababa\'oota</item>
+    </plurals>
+    <plurals name="feature_subscription_plays_plural">
+        <item quantity="one">taphachuu ⚡</item>
+        <item quantity="other">taphachuuwwan ⚡</item>
+    </plurals>
+</resources>

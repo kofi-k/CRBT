@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_subscription_title">ሰብስክሪፕሽን</string>
+    <string name="feature_subscription_tones">ድምፆች</string>
+    <string name="feature_subscription_albums">አልበሞች</string>
+    <string name="feature_subscription_subscribe_gift_title">ስጦታ ሰብስክራይብ</string>
+    <string name="feature_subscription_laguage_change_title">ቋንቋ</string>
+    <string name="feature_subscription_date_placeholder">ቀን ይምረጡ</string>
+    <string name="feature_subscription_date_title">የሰብስክሪፕሽን ቀን</string>
+    <string name="feature_subscription_button_text">ሰብስክሪፕሽን ጨምር</string>
+    <string name="feature_subscription_billing_type_label">ክፍያ</string>
+    <string name="feature_subscription_name_label">የሰብስክሪፕሽን ስም</string>
+    <string name="feature_subscription_price_label">ዋጋ</string>
+    <string name="feature_subscription_share_receipt">ደረሰኝ አጋራ</string>
+    <string name="feature_subscription_done">ተጠናቋል</string>
+    <string name="feature_subscription_etb">ብር %s</string>
+    <string name="feature_subscription_from_text">ከ</string>
+    <string name="feature_subscription_transaction_id">የግብይት ቁጥር</string>
+    <string name="feature_subscription_date">ቀን</string>
+    <string name="feature_subscription_add_subscription_title">ሰብስክሪፕሽን ጨምር</string>
+    <string name="feature_subscription_gift_subscription_title">የስጦታ ሰብስክሪፕሽን</string>
+    <string name="feature_subscription_subscribe_to_song_title">ይህን ዘፈን ሰብስክራይብ ያድርጉ %s</string>
+    <string name="feature_subscription_gift_song_title">ይህን ዘፈን እንደ ስጦታ ይስጡ %s</string>
+    <string name="feature_subscription_gift_button">ለ</string>
+    <string name="feature_subscription_subscribe_button">ለ</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">ደዋዮችዎ ይህን ዘፈን እንዲደሰቱበት፣ አሁን ሰብስክራይብ ያድርጉ!</string>
+    <string name="feature_subscription_no_songs">ምንም የCRBT ዘፈኖች የሉም</string>
+    <string name="feature_subscription_search_result_not_found">ይቅርታ፣ ለፍለጋዎ \"%1$s\" ምንም አልተገኘም</string>
+    <string name="feature_subscription_play_error">የCRBT ዘፈን ማጫወት አልተሳካም</string>
+    <string name="feature_subscription_reload">አድስ</string>
+    <string name="feature_subscription_register_now">አሁን ይመዝገቡ</string>
+    <string name="feature_subscription_already_registered">አዲስ ተጠቃሚ አይደለሁም</string>
+    <string name="feature_subscription_new_to_crbt">በCRBT አዲስ ነዎት?</string>
+    <string name="feature_subscription_register_for_crbt_description">የCRBT አገልግሎቶችን ለመጠቀም፣ ተጠቃሚዎች መጀመሪያ መመዝገብ አለባቸው። በCRBT አዲስ ከሆኑ ይመዝገቡ።</string>
+    <string name="feature_subscription_plays">ጨዋታዎች⚡</string>
+    <string name="feature_subscription_price">
+ዋጋ
+<b>%s</b>
+</string>
+    <string name="feature_subscription_subscribers">ተመዝጋቢዎች</string>
+    <string name="feature_subscription_gift_song_subtitle">ይህን ዘፈን ለመስጠት ስልክ ቁጥር ያስገቡ</string>
+    <string name="feature_subscription_success">
+በተሳካ ሁኔታ ተመዝግበዋል
+<b>%s</b>
+CRBT
+</string>
+    <!--   subscribers plurals   -->
+    <plurals name="feature_subscription_subscribers_plural">
+        <item quantity="one">%d ተመዝጋቢ</item>
+        <item quantity="other">%d ተመዝጋቢዎች</item>
+    </plurals>
+    <plurals name="feature_subscription_plays_plural">
+        <item quantity="one">%d ጨዋታ ⚡</item>
+        <item quantity="other">%d ጨዋታዎች ⚡</item>
+    </plurals>
+</resources>

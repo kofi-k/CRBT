@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="core_designsystem_untitled">Untitled</string>
+    <string name="core_designsystem_phone_number_placeholder">phone number</string>
+    <string name="core_designsystem_process_button_default_text">Done</string>
+    <string name="core_designsystem_amount_placeholder">Amount</string>
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_subscription_title">الاشتراك</string>
+    <string name="feature_subscription_tones">النغمات</string>
+    <string name="feature_subscription_albums">الألبومات</string>
+    <string name="feature_subscription_subscribe_gift_title">إهداء اشتراك</string>
+    <string name="feature_subscription_laguage_change_title">اللغة</string>
+    <string name="feature_subscription_date_placeholder">اختر التاريخ</string>
+    <string name="feature_subscription_date_title">تاريخ الاشتراك</string>
+    <string name="feature_subscription_button_text">إضافة اشتراك</string>
+    <string name="feature_subscription_billing_type_label">الفواتير</string>
+    <string name="feature_subscription_name_label">اسم الاشتراك</string>
+    <string name="feature_subscription_price_label">السعر</string>
+    <string name="feature_subscription_share_receipt">مشاركة الإيصال</string>
+    <string name="feature_subscription_done">تم</string>
+    <string name="feature_subscription_etb">%s بر</string>
+    <string name="feature_subscription_from_text">من</string>
+    <string name="feature_subscription_transaction_id">رقم المعاملة</string>
+    <string name="feature_subscription_date">التاريخ</string>
+    <string name="feature_subscription_add_subscription_title">إضافة اشتراك</string>
+    <string name="feature_subscription_gift_subscription_title">إهداء اشتراك</string>
+    <string name="feature_subscription_subscribe_to_song_title">اشترك في هذه الأغنية %s</string>
+    <string name="feature_subscription_gift_song_title">أهدِ هذه الأغنية %s</string>
+    <string name="feature_subscription_gift_button">إهداء لـ</string>
+    <string name="feature_subscription_subscribe_button">اشتراك لـ</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">ليستمتع المتصلون بهذه الأغنية، اشترك الآن!</string>
+    <string name="feature_subscription_no_songs">لا توجد أغاني CRBT للتصفح</string>
+    <string name="feature_subscription_search_result_not_found">عذراً، لم نجد شيئاً لبحثك \"%1$s\"</string>
+    <string name="feature_subscription_play_error">فشل في تشغيل أغنية CRBT</string>
+    <string name="feature_subscription_reload">تحديث</string>
+    <string name="feature_subscription_register_now">سجل الآن</string>
+    <string name="feature_subscription_already_registered">لست مستخدماً جديداً</string>
+    <string name="feature_subscription_new_to_crbt">جديد في خدمة CRBT؟</string>
+    <string name="feature_subscription_register_for_crbt_description">لاستخدام خدمات CRBT، يجب على المستخدمين التسجيل أولاً. سجل إذا كنت جديداً في CRBT.</string>
+    <string name="feature_subscription_plays">تشغيل⚡</string>
+    <string name="feature_subscription_price">
+السعر
+<b>%s</b>
+</string>
+    <string name="feature_subscription_subscribers">المشتركون</string>
+    <string name="feature_subscription_gift_song_subtitle">أدخل رقم الهاتف لإهداء هذه الأغنية</string>
+    <string name="feature_subscription_success">
+تم الاشتراك بنجاح في
+<b>%s</b>
+CRBT
+</string>
+    <!--   subscribers plurals   -->
+    <plurals name="feature_subscription_subscribers_plural">
+        <item quantity="zero">%d مشترك</item>
+        <item quantity="one">%d مشترك</item>
+        <item quantity="two">%d مشتركان</item>
+        <item quantity="few">%d مشتركين</item>
+        <item quantity="many">%d مشترك</item>
+        <item quantity="other">%d مشتركين</item>
+    </plurals>
+    <plurals name="feature_subscription_plays_plural">
+        <item quantity="zero">%d تشغيل ⚡</item>
+        <item quantity="one">%d تشغيل ⚡</item>
+        <item quantity="two">%d تشغيلان ⚡</item>
+        <item quantity="few">%d تشغيلات ⚡</item>
+        <item quantity="many">%d تشغيل ⚡</item>
+        <item quantity="other">%d تشغيلات ⚡</item>
+    </plurals>
+</resources>

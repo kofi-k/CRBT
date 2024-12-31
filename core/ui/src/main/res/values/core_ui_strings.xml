@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="core_ui_phone_number_error">Invalid phone number</string>
-    <string name="core_ui_phone_number_placeholder">Enter your phone number</string>
-    <string name="core_ui_otp_subtitle">Enter the 6-digit code sent to %s</string>
-    <string name="core_ui_have_not_received_otp">I haven\'t received a code %s</string>
-    <string name="core_ui_request_new_code">Request a new code</string>
-    <string name="core_ui_otp_resend_timer">Available again in %s</string>
+    <string name="core_ui_phone_number_error">ልክ ያልሆነ ስልክ ቁጥር</string>
+    <string name="core_ui_phone_number_placeholder">ስልክ ቁጥርዎን ያስገቡ</string>
+    <string name="core_ui_otp_subtitle">ወደ %s የተላከውን 6-አሃዝ ኮድ ያስገቡ</string>
+    <string name="core_ui_have_not_received_otp">ኮድ አልደረሰኝም %s</string>
+    <string name="core_ui_request_new_code">አዲስ ኮድ ይጠይቁ</string>
+    <string name="core_ui_otp_resend_timer">በ %s ውስጥ እንደገና ይገኛል</string>
+    <string name="core_ui_need_help">እርዳታ ይፈልጋሉ?</string>
+    <string name="core_ui_untitled">ርዕስ የሌለው</string>
+    <string name="core_ui_search">ፈልግ</string>
+    <string name="core_ui_first_name_label">የመጀመሪያ ስም</string>
+    <string name="core_ui_last_name_label">የአባት ስም</string>
+    <string name="core_ui_email_title">ከCRBT ኢሜይል</string>
+    <string name="core_ui_email_label">ኢሜይል</string>
+    <string name="core_ui_error_check_balance">ቀሪ ሂሳብ በማየት ላይ ስህተት ተፈጥሯል</string>
+    <string name="core_ui_balance_check">የአሁኑ ቀሪ ሂሳብዎ</string>
+    <string name="core_ui_recharge_error">የሪቻርጅ ስህተት</string>
+    <string name="core_ui_recharge_success">ሪቻርጅ ተሳክቷል</string>
+    <string name="core_ui_call_me_back_error">መልሰህ ደውልልኝ መጠየቅ አልተሳካም</string>
+    <string name="core_ui_call_me_back_success">መልሰህ ደውልልኝ ጥያቄ ተሳክቷል</string>
+    <string name="core_ui_transfer_error">ማስተላለፍ አልተሳካም</string>
+    <string name="core_ui_transfer_success">ማስተላለፍ ተሳክቷል</string>
+    <string name="core_ui_subscription_error">ሰብስክሪፕሽን አልተሳካም</string>
+    <string name="core_ui_subscription_success">
+ወደ
+<b>CRBT!</b>ተመዝግበዋል
+</string>
+    <string name="core_ui_ok">እሺ</string>
+    <string name="core_ui_dismiss">ዝጋ</string>
+    <string name="core_ui_no_content_text">\\\(0.0)/</string>
+    <string name="core_ui_package_subscription_error">ፓኬጅ መግዛት አልተሳካም</string>
+    <string name="core_ui_package_subscription_success">ፓኬጅ መግዛት ተሳክቷል</string>
+    <string name="core_ui_reload_button">አድስ</string>
+    <plurals name="core_ui_music_player_subscribers">
+        <item quantity="one">%d ደንበኛ</item>
+        <item quantity="other">%d ደንበኞች</item>
+    </plurals>
 </resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_page_one_title">ካብቶም እትፈትዎም ደርፍታት ዝበለፀ</string>
+    <string name="feature_onboarding_page_one_subtitle">ዝበለፀ ሙዚቃ ርኸብን ስማዕን</string>
+    <string name="feature_onboarding_language_selection_title">ዝመረፅካዮ ቋንቋ ምረፅ</string>
+    <string name="feature_onboarding_select_language">ቋንቋ ምረፅ</string>
+    <string name="feature_onboarding_language_selection_subtitle">ንምጅማር ዝመረፅካዮ ቋንቋ ምረፅ</string>
+    <string name="feature_onboarding_language_label">ቋንቋ</string>
+    <string name="feature_onboarding_welcome_title">እንቋዕ ብደሓን መፃእኹም ናብ CRBT</string>
+    <string name="feature_onboarding_phone_number_entry_message">ቁፅሪ ሞባይልካ ሒሳብካ ንምርግጋፅን ውሑስ ንምግባርን ይሕግዝ</string>
+    <string name="feature_onboarding_next_button">ቀፅል</string>
+    <string name="feature_onboarding_privacy_policy_message">
+ብምምዝጋብካ ነዚ ተቐቢልካ ኣለኻ
+<b>ውዕል ኣጠቓቕማ</b>
+ከምኡውን
+<b>ፖሊሲ ምስጢራውነት</b>
+</string>
+    <string name="feature_onboarding_authentication_title">ኮድ ሰዲድናልካ ኣለና</string>
+    <string name="feature_onboarding_authentication_subtitle">
+ንምቕፃል፣ ናብ
+<b>%s</b>
+ዝተላእከ ኮድ ኣእቱ
+</string>
+    <string name="feature_onboarding_authentication_resend_code">ሓድሽ ኮድ ሕተት</string>
+    <string name="feature_onboarding_resend_code_availability">ድሕሪ %s ዳግም ይርከብ</string>
+    <string name="feature_onboarding_authentication_help">ሓገዝ የድልየካ?</string>
+    <string name="feature_onboarding_updates_title">ምዕባለታትን ለበዋታትን</string>
+    <string name="feature_onboarding_updates_subtitle">ምስ ዝበለፀ ዝርዝር መደባት ምዕባለ ተራኸብ</string>
+    <string name="feature_onboarding_email_label">ኢመይል ካብ CRBT</string>
+    <string name="feature_onboarding_verify_button">ኣረጋግፅ</string>
+    <string name="feature_onboarding_whats_trending">እንታይ ከምዘሎ ርአ</string>
+    <string name="feature_onboarding_trending_subtitle">ለበዋታት፣ \nፍሉያትን ካልእን</string>
+    <string name="feature_onboarding_explore_button">ሕጂ ዳህስስ</string>
+    <string name="feature_onboarding_profile_setup_title">ሓበሬታ መግለፂ ተጠቃሚ</string>
+    <string name="feature_onboarding_trending">ተፈታዊ</string>
+    <string name="feature_onboarding_otp_sent">OTP ኮድ ናብ ዝሃብካዮ ቁፅሪ ተላኢኹ</string>
+    <string name="feature_onboarding_profile_setup_success">ሓበሬታ መግለፂ ብዓወት ተመሓይሹ</string>
+</resources>

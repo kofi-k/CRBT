@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_profile_title">الملف الشخصي</string>
+    <string name="feature_profile_logout">تسجيل الخروج</string>
+    <string name="feature_profile_logging_out">جاري تسجيل الخروج…</string>
+    <string name="feature_profile_reward_points">نقاط المكافآت</string>
+    <string name="feature_profile_reward_points_description">استبدل نقاط مكافآتك</string>
+    <string name="feature_profile_placeholder_subtext">وصف مختصر</string>
+    <string name="feature_profile_payment_methods">طرق الدفع</string>
+    <string name="feature_profile_payment_methods_description">إضافة أو إزالة طرق الدفع</string>
+    <string name="feature_profile_currency">العملة</string>
+    <string name="feature_profile_currency_description">اختر عملتك</string>
+    <string name="feature_profile_language">اللغة</string>
+    <string name="feature_profile_language_description">اختر لغتك</string>
+    <string name="feature_profile_permissions">الأذونات</string>
+    <string name="feature_profile_permissions_description">إدارة أذونات التطبيق</string>
+    <string name="feature_profile_payments">المدفوعات</string>
+    <string name="feature_profile_setup_title">معلومات الملف الشخصي</string>
+    <string name="feature_profile_save_profile_button">حفظ الملف الشخصي</string>
+    <string name="feature_profile_updates_title">التحديثات والتوصيات</string>
+    <string name="feature_profile_updates_subtitle">ابق على اتصال مع أفضل تحديثات قوائم التشغيل</string>
+    <string name="feature_profile_first_name_label">الاسم الأول</string>
+    <string name="feature_profile_last_name_label">الاسم الأخير</string>
+    <string name="feature_profile_email_label">البريد الإلكتروني من CRBT</string>
+    <string name="feature_profile_reward_points_sheet_action">فهمت</string>
+    <string name="feature_profile_total_reward_points">مجموع نقاط مكافآتك</string>
+    <string name="feature_profile_crbt_reward_points">نقاط مكافآت CRBT الخاصة بك</string>
+    <string name="feature_profile_crbt_reward_points_info">تُمنح النقاط لكل اشتراك تقوم به في CRBT. كما تكسب نقاطًا للاشتراكات التي تقوم بها للآخرين. واصل الاشتراك لتجميع المزيد🔥</string>
+</resources>

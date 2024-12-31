@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_profile_title">መገለጫ</string>
+    <string name="feature_profile_logout">ውጣ</string>
+    <string name="feature_profile_logging_out">በመውጣት ላይ…</string>
+    <string name="feature_profile_reward_points">የሽልማት ነጥቦች</string>
+    <string name="feature_profile_reward_points_description">የሽልማት ነጥቦችዎን ይውሰዱ</string>
+    <string name="feature_profile_placeholder_subtext">አጭር መግለጫ</string>
+    <string name="feature_profile_payment_methods">የክፍያ መንገዶች</string>
+    <string name="feature_profile_payment_methods_description">የክፍያ መንገዶችን ጨምር ወይም አስወግድ</string>
+    <string name="feature_profile_currency">ገንዘብ</string>
+    <string name="feature_profile_currency_description">ገንዘብዎን ይምረጡ</string>
+    <string name="feature_profile_language">ቋንቋ</string>
+    <string name="feature_profile_language_description">ቋንቋዎን ይምረጡ</string>
+    <string name="feature_profile_permissions">ፈቃዶች</string>
+    <string name="feature_profile_permissions_description">የመተግበሪያ ፈቃዶችን ያስተዳድሩ</string>
+    <string name="feature_profile_payments">ክፍያዎች</string>
+    <string name="feature_profile_setup_title">የተጠቃሚ መገለጫ መረጃ</string>
+    <string name="feature_profile_save_profile_button">መገለጫ አስቀምጥ</string>
+    <string name="feature_profile_updates_title">ዝማኔዎች እና አስተያየቶች</string>
+    <string name="feature_profile_updates_subtitle">ከምርጥ የዝርዝር ዝማኔዎች ጋር ይገናኙ</string>
+    <string name="feature_profile_first_name_label">የመጀመሪያ ስም</string>
+    <string name="feature_profile_last_name_label">የአባት ስም</string>
+    <string name="feature_profile_email_label">ከCRBT ኢሜይል</string>
+    <string name="feature_profile_reward_points_sheet_action">ገብቶኛል</string>
+    <string name="feature_profile_total_reward_points">ጠቅላላ የሽልማት ነጥቦችዎ</string>
+    <string name="feature_profile_crbt_reward_points">የCRBT ሽልማት ነጥቦችዎ</string>
+    <string name="feature_profile_crbt_reward_points_info">ነጥቦች የሚሰጡት በCRBT ላይ ለሚያደርጉት እያንዳንዱ ሰብስክሪፕሽን ነው። ለሌሎች ለሚያደርጉት ሰብስክሪፕሽንም ነጥቦችን ያገኛሉ። ተጨማሪ ነጥቦችን ለማግኘት መመዝገብዎን ይቀጥሉ🔥</string>
+</resources>

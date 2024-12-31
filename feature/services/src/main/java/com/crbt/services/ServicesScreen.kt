@@ -35,7 +35,6 @@ import com.crbt.data.core.data.util.TRANSFER_USSD
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
-import com.crbt.ui.core.ui.PermissionRequestComposable
 import com.crbt.ui.core.ui.UssdResponseDialog
 import com.example.crbtjetcompose.feature.services.R
 import kotlinx.coroutines.launch
@@ -57,10 +56,6 @@ fun ServicesRoute(
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    PermissionRequestComposable(
-        onPermissionsGranted = {
-        }
-    )
 
     ServicesScreen(
         onPackageClick = navigateToPackages,
