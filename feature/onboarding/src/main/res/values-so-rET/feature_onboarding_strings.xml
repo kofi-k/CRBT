@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_page_one_title">WAX BADAN OO HEESAHA AAD JECESHAHAY</string>
+    <string name="feature_onboarding_page_one_subtitle">Hel oo dhagayso muusik wanaagsan meel kasta.</string>
+    <string name="feature_onboarding_language_selection_title">Dooro luqaddaada aad door biddo</string>
+    <string name="feature_onboarding_select_language">Dooro luqadda</string>
+    <string name="feature_onboarding_language_selection_subtitle">Dooro luqaddaada aad door biddo si aad u bilowdo</string>
+    <string name="feature_onboarding_language_label">Luqadda</string>
+    <string name="feature_onboarding_welcome_title">Ku soo dhowow CRBT</string>
+    <string name="feature_onboarding_phone_number_entry_message">Lambarka mobilkaaga wuxuu kaa caawiyaa xaqiijinta xisaabtaada iyo ilaalinta amniga xisaabtaada</string>
+    <string name="feature_onboarding_next_button">Xiga</string>
+    <string name="feature_onboarding_privacy_policy_message">
+Isdiiwaangelinta waxaad aqbashay
+<b>Shuruudaha Isticmaalka</b>
+iyo
+<b>Siyaasadda Asturnaanta</b>
+</string>
+    <string name="feature_onboarding_authentication_title">Waxaan kuu soo dirnay kood</string>
+    <string name="feature_onboarding_authentication_subtitle">
+Si aad u sii waddo, geli koodka xaqiijinta ee loo soo diray
+<b>%s</b>
+</string>
+    <string name="feature_onboarding_authentication_resend_code">Codso kood cusub</string>
+    <string name="feature_onboarding_resend_code_availability">Dib ayaa loo heli karaa %s</string>
+    <string name="feature_onboarding_authentication_help">Caawimaad ma u baahan tahay?</string>
+    <string name="feature_onboarding_updates_title">Cusboonaysiinta iyo Tallooyinka</string>
+    <string name="feature_onboarding_updates_subtitle">La soco cusboonaysiinta ugu fiican ee liiska ciyaaraha</string>
+    <string name="feature_onboarding_email_label">Iimaylka CRBT</string>
+    <string name="feature_onboarding_verify_button">Xaqiiji</string>
+    <string name="feature_onboarding_whats_trending">Arag waxa</string>
+    <string name="feature_onboarding_trending_subtitle">Tallooyinka, \nMuuqaalka iyo wax badan.</string>
+    <string name="feature_onboarding_explore_button">Hadda baadh</string>
+    <string name="feature_onboarding_profile_setup_title">Macluumaadka isticmaalaha</string>
+    <string name="feature_onboarding_trending">caanka ah</string>
+    <string name="feature_onboarding_otp_sent">Koodka OTP waxaa loo diray lambarkaaga la bixiyay</string>
+    <string name="feature_onboarding_profile_setup_success">Macluumaadka si guul leh ayaa loo cusboonaysiiyay</string>
+</resources>

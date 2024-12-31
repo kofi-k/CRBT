@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_page_one_title">FAARFANNAA ATI JAALLATTU CAALU</string>
+    <string name="feature_onboarding_page_one_subtitle">Muuziqaa gaarii barbaadi fi dhaggeeffadhu.</string>
+    <string name="feature_onboarding_language_selection_title">Afaan barbaaddu filadhu</string>
+    <string name="feature_onboarding_select_language">Afaan filadhu</string>
+    <string name="feature_onboarding_language_selection_subtitle">Jalqabuuf afaan barbaaddu filadhu</string>
+    <string name="feature_onboarding_language_label">Afaan</string>
+    <string name="feature_onboarding_welcome_title">CRBT\'tti Baga nagaan dhuftan</string>
+    <string name="feature_onboarding_phone_number_entry_message">Lakkoofsi bilbilaa keessan herrega keessan mirkaneessuu fi nagaan eeguu gargaara</string>
+    <string name="feature_onboarding_next_button">Itti aanaa</string>
+    <string name="feature_onboarding_privacy_policy_message">
+        Galmaa\'uun keessan
+        <b>Waliigaltee Fayyadamaa</b>
+        fi
+        <b>Imaammata Dhuunfaa</b>
+        fudhachuu keessan mirkaneessa
+    </string>
+    <string name="feature_onboarding_authentication_title">Koodii isiniif ergineerra</string>
+    <string name="feature_onboarding_authentication_subtitle">
+        Itti fufuuf, koodii mirkaneessaa gara
+        <b>%s</b>
+        ergame galchaa
+    </string>
+    <string name="feature_onboarding_authentication_resend_code">Koodii haaraa gaafadhu</string>
+    <string name="feature_onboarding_resend_code_availability">Ammas ni argama %s booda</string>
+    <string name="feature_onboarding_authentication_help">Gargaarsa barbaadduu?</string>
+    <string name="feature_onboarding_updates_title">Haaromsa fi Gorsa</string>
+    <string name="feature_onboarding_updates_subtitle">Haaromsa playlist gaarii waliin walqunnamtii qabi</string>
+    <string name="feature_onboarding_email_label">Imeelii CRBT irraa</string>
+    <string name="feature_onboarding_verify_button">Mirkaneessi</string>
+    <string name="feature_onboarding_whats_trending">Maal akka</string>
+    <string name="feature_onboarding_trending_subtitle">Gorsa, \nFilannoo fi Kkf.</string>
+    <string name="feature_onboarding_explore_button">Amma sakatta\'i</string>
+    <string name="feature_onboarding_profile_setup_title">Odeeffannoo profaayilii fayyadamaa</string>
+    <string name="feature_onboarding_trending">beekamaa ta\'e</string>
+    <string name="feature_onboarding_otp_sent">Koodiin OTP lakkoofsa keessaniif ergameera</string>
+    <string name="feature_onboarding_profile_setup_success">Odeeffannoon profaayilii milkaa\'inaan haaromfame</string>
+</resources>

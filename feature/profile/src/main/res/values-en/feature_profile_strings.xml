@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_profile_title">Profile</string>
     <string name="feature_profile_logout">Logout</string>
     <string name="feature_profile_logging_out">Logging out…</string>
     <string name="feature_profile_reward_points">Reward points</string>

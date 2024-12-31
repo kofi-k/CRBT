@@ -1,4 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_services_title">Services</string>
+    <string name="feature_services_check_balance">Check balance</string>
+    <string name="feature_services_check_description">Check short description</string>
+    <string name="feature_services_packages">Packages</string>
+    <string name="feature_services_packages_description">Packages short description</string>
+    <string name="feature_services_recharge">Recharge</string>
+    <string name="feature_services_recharge_description">Recharge short description</string>
+    <string name="feature_services_transfer">Transfer</string>
+    <string name="feature_services_transfer_description">Transfer short description</string>
+    <string name="feature_services_call_back">Call me back</string>
+    <string name="feature_services_call_back_description">Call me back short description</string>
+    <string name="feature_services_buy">Buy</string>
+    <string name="feature_services_buy_description">Buy short description</string>
+    <string name="feature_services_search_title">Search</string>
+    <string name="feature_services_balance">Balance</string>
+    <string name="feature_services_etb">ETB %s</string>
+    <string name="feature_services_recharge_amount_title">Set amount</string>
+    <string name="feature_services_recharge_amount_subtitle">How much would you like to top up?</string>
+    <string name="feature_services_mode_of_payment_title">"Mode of payment "</string>
+    <string name="feature_services_payment_option">Payment options</string>
+    <string name="feature_services_topup">Top up</string>
+    <string name="feature_services_confirm">Confirm</string>
+    <string name="feature_services_amount_topup">"Amount Top up "</string>
+    <string name="feature_services_account_balance">Account Balance</string>
+    <string name="feature_services_topup_amount">Top Up Amount</string>
+    <string name="feature_services_date">Date</string>
+    <string name="feature_services_gift_button">Gift</string>
+    <string name="feature_services_cancel">Cancel</string>
+    <string name="feature_services_purchase_confirmation">Proceed to purchase %s at %s ETB</string>
+    <string name="feature_services_gift_purchase_contact_info">Enter number of recipient</string>
+    <string name="feature_services_error_check_balance">Error checking balance</string>
+    <string name="feature_services_balance_check">Your current balance</string>
+    <string name="feature_services_ok">Okay</string>
+    <string name="feature_services_call_back_button">Request</string>
+    <string name="feature_services_no_packages">No available packages to show</string>
+    <string name="feature_services_no_packages_items">Nothing to show for %s</string>
+    <string name="feature_services_recharge_screen_recharge_code_length">The number of digits the recharge voucher should have.</string>
+    <string name="feature_services_recharge_screen_auto_dial_title">Auto dial voucher</string>
+    <string name="feature_services_recharge_screen_auto_dial_description">Will require manual dialing if a valid number for the recharge voucher is found </string>
+    <string name="feature_services_recharge_screen_quick_settings_hide">Hide quick settings</string>
+    <string name="feature_services_recharge_screen_quick_settings_show">Show quick settings</string>
+    <string name="feature_services_recharge_screen_title">Recharge voucher will be displayed here.</string>
 </resources>

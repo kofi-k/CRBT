@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_title">መነሻ</string>
+    <string name="feature_home_balance">ብር %s</string>
+    <string name="feature_home_balance_subtitle">የተገመተ ቀሪ ሂሳብ</string>
+    <string name="feature_home_latest_music">አዲስ የወጡ ዘፈኖች</string>
+    <string name="feature_home_recent_subscription_title">የቅርብ ጊዜ ሰብስክሪፕሽን</string>
+    <string name="feature_home_recent_subscription_rate_Description">በወር</string>
+    <string name="feature_home_popular_today_title">ዛሬ የተወደዱ</string>
+    <string name="feature_home_account_history">የአካውንት ታሪክ</string>
+    <string name="feature_home_advert">ማስታወቂያ</string>
+    <string name="feature_home_no_songs">ህም፣ ለማሳየት ምንም የለም</string>
+    <string name="feature_home_no_subscriptions">ምንም ንቁ የCRBT ሰብስክሪፕሽን የለዎትም</string>
+    <string name="feature_home_subscribe_now">አሁን ሰብስክራይብ ያድርጉ</string>
+</resources>

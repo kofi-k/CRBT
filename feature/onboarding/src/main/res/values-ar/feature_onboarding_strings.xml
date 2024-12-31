@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_page_one_title">المزيد من الأغاني التي تحبها</string>
+    <string name="feature_onboarding_page_one_subtitle">اكتشف واستمع إلى موسيقى رائعة أثناء التنقل</string>
+    <string name="feature_onboarding_language_selection_title">اختر لغتك المفضلة</string>
+    <string name="feature_onboarding_select_language">اختر اللغة</string>
+    <string name="feature_onboarding_language_selection_subtitle">اختر لغتك المفضلة للبدء</string>
+    <string name="feature_onboarding_language_label">اللغة</string>
+    <string name="feature_onboarding_welcome_title">مرحباً بك في CRBT</string>
+    <string name="feature_onboarding_phone_number_entry_message">رقم هاتفك المحمول يساعد في التحقق من حسابك والحفاظ على أمانه</string>
+    <string name="feature_onboarding_next_button">التالي</string>
+    <string name="feature_onboarding_privacy_policy_message">
+بالتسجيل، أنت توافق على
+<b>شروط الاستخدام</b>
+و
+<b>سياسة الخصوصية</b>
+</string>
+    <string name="feature_onboarding_authentication_title">لقد أرسلنا لك رمزاً</string>
+    <string name="feature_onboarding_authentication_subtitle">
+للمتابعة، أدخل رمز التحقق المرسل إلى
+<b>%s</b>
+</string>
+    <string name="feature_onboarding_authentication_resend_code">طلب رمز جديد</string>
+    <string name="feature_onboarding_resend_code_availability">متاح مرة أخرى في %s</string>
+    <string name="feature_onboarding_authentication_help">تحتاج مساعدة؟</string>
+    <string name="feature_onboarding_updates_title">التحديثات والتوصيات</string>
+    <string name="feature_onboarding_updates_subtitle">ابق على اتصال مع أفضل تحديثات قوائم التشغيل</string>
+    <string name="feature_onboarding_email_label">البريد الإلكتروني من CRBT</string>
+    <string name="feature_onboarding_verify_button">تحقق</string>
+    <string name="feature_onboarding_whats_trending">اكتشف ما هو</string>
+    <string name="feature_onboarding_trending_subtitle">التوصيات، \nالمميزات والمزيد</string>
+    <string name="feature_onboarding_explore_button">استكشف الآن</string>
+    <string name="feature_onboarding_profile_setup_title">معلومات الملف الشخصي</string>
+    <string name="feature_onboarding_trending">رائج</string>
+    <string name="feature_onboarding_otp_sent">تم إرسال رمز OTP إلى رقمك المقدم</string>
+    <string name="feature_onboarding_profile_setup_success">تم تحديث معلومات الملف الشخصي بنجاح</string>
+</resources>

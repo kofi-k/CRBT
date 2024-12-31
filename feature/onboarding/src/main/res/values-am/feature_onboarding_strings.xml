@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_page_one_title">ከሚወዷቸው ዘፈኖች የበለጠ</string>
+    <string name="feature_onboarding_page_one_subtitle">ጥሩ ሙዚቃ ያግኙ እና በጉዞ ላይ ያዳምጡ</string>
+    <string name="feature_onboarding_language_selection_title">የሚፈልጉትን ቋንቋ ይምረጡ</string>
+    <string name="feature_onboarding_select_language">ቋንቋ ይምረጡ</string>
+    <string name="feature_onboarding_language_selection_subtitle">ለመጀመር የሚፈልጉትን ቋንቋ ይምረጡ</string>
+    <string name="feature_onboarding_language_label">ቋንቋ</string>
+    <string name="feature_onboarding_welcome_title">እንኳን ወደ CRBT በደህና መጡ</string>
+    <string name="feature_onboarding_phone_number_entry_message">የሞባይል ቁጥርዎ አካውንትዎን ለማረጋገጥ እና ደህንነቱን ለመጠበቅ ይረዳል</string>
+    <string name="feature_onboarding_next_button">ቀጣይ</string>
+    <string name="feature_onboarding_privacy_policy_message">በመመዝገብዎ የእኛን<b>የአጠቃቀም ውሎች</b>እና<b>የግላዊነት ፖሊሲ</b>ተቀብለዋል</string>
+    <string name="feature_onboarding_authentication_title">ኮድ ልከንልዎታል</string>
+    <string name="feature_onboarding_authentication_subtitle">ለመቀጠል፣ ወደ<b>%s</b>የተላከውን የማረጋገጫ ኮድ ያስገቡ</string>
+    <string name="feature_onboarding_authentication_resend_code">አዲስ ኮድ ይጠይቁ</string>
+    <string name="feature_onboarding_resend_code_availability">በ %s ውስጥ እንደገና ይገኛል</string>
+    <string name="feature_onboarding_authentication_help">እርዳታ ይፈልጋሉ?</string>
+    <string name="feature_onboarding_updates_title">ዝማኔዎች እና አስተያየቶች</string>
+    <string name="feature_onboarding_updates_subtitle">ከምርጥ የዝርዝር ዝማኔዎች ጋር ይገናኙ</string>
+    <string name="feature_onboarding_email_label">ከCRBT ኢሜይል</string>
+    <string name="feature_onboarding_verify_button">አረጋግጥ</string>
+    <string name="feature_onboarding_whats_trending">ምን እየተወደደ እንደሆነ ይመልከቱ</string>
+    <string name="feature_onboarding_trending_subtitle">የሚመከሩ፣ \nየተለዩ እና ሌሎችም</string>
+    <string name="feature_onboarding_explore_button">አሁን ያስሱ</string>
+    <string name="feature_onboarding_profile_setup_title">የተጠቃሚ መገለጫ መረጃ</string>
+    <string name="feature_onboarding_trending">እየተወደደ ያለ</string>
+    <string name="feature_onboarding_otp_sent">የOTP ኮድ ወደ ሰጡት ቁጥር ተልኳል</string>
+    <string name="feature_onboarding_profile_setup_success">የመገለጫ መረጃ በተሳካ ሁኔታ ተዘምኗል</string>
+</resources>

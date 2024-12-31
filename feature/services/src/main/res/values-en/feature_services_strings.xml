@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_services_title">Services</string>
     <string name="feature_services_check_balance">Check balance</string>
     <string name="feature_services_check_description">Check short description</string>
     <string name="feature_services_packages">Packages</string>
