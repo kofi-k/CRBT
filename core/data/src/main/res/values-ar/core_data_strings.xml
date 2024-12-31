@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_data_amharic">الأمهرية</string>
+    <string name="core_data_oromiffa">الأورومية</string>
+    <string name="core_data_tigrigna">التيغرينية</string>
+    <string name="core_data_somalia">الصومالية</string>
+    <string name="core_data_arabic">العربية</string>
+    <string name="core_data_english">الإنجليزية</string>
+    <string name="core_data_monthly_bill_title">شهري</string>
+    <string name="core_data_bi_weekly_bill_title">نصف شهري</string>
+    <string name="core_data_weekly_bill_title">أسبوعي</string>
+    <string name="core_data_camera">الكاميرا</string>
+    <string name="core_data_photos">الصور</string>
+    <string name="core_data_microphone">الميكروفون</string>
+    <string name="core_data_storage">التخزين</string>
+    <string name="core_data_contacts">جهات الاتصال</string>
+    <string name="core_data_location">الموقع</string>
+    <string name="core_data_sms">الرسائل القصيرة</string>
+    <string name="core_data_ussd">USSD</string>
+    <string name="core_data_chapa">تشابا</string>
+    <string name="core_data_santim_pay">سانتيم باي</string>
+    <string name="core_data_telebir">تيليبر</string>
+    <string name="core_data_ethio_currency">بر</string>
+</resources>
