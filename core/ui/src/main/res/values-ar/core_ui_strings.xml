@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_ui_phone_number_error">رقم هاتف غير صالح</string>
+    <string name="core_ui_phone_number_placeholder">أدخل رقم هاتفك</string>
+    <string name="core_ui_otp_subtitle">أدخل الرمز المكون من 6 أرقام المرسل إلى %s</string>
+    <string name="core_ui_have_not_received_otp">لم أستلم الرمز %s</string>
+    <string name="core_ui_request_new_code">طلب رمز جديد</string>
+    <string name="core_ui_otp_resend_timer">متاح مرة أخرى في %s</string>
+    <string name="core_ui_need_help">تحتاج مساعدة؟</string>
+    <string name="core_ui_untitled">بدون عنوان</string>
+    <string name="core_ui_search">بحث</string>
+    <string name="core_ui_first_name_label">الاسم الأول</string>
+    <string name="core_ui_last_name_label">الاسم الأخير</string>
+    <string name="core_ui_email_title">البريد الإلكتروني من CRBT</string>
+    <string name="core_ui_email_label">البريد الإلكتروني</string>
+    <string name="core_ui_error_check_balance">خطأ في فحص الرصيد</string>
+    <string name="core_ui_balance_check">رصيدك الحالي</string>
+    <string name="core_ui_recharge_error">خطأ في الشحن</string>
+    <string name="core_ui_recharge_success">تم الشحن بنجاح</string>
+    <string name="core_ui_call_me_back_error">خطأ في طلب معاودة الاتصال</string>
+    <string name="core_ui_call_me_back_success">تم طلب معاودة الاتصال بنجاح</string>
+    <string name="core_ui_transfer_error">فشل التحويل</string>
+    <string name="core_ui_transfer_success">تم التحويل بنجاح</string>
+    <string name="core_ui_subscription_error">فشل الاشتراك</string>
+    <string name="core_ui_subscription_success">
+تم الاشتراك في
+<b>CRBT!</b>
+</string>
+    <string name="core_ui_ok">حسناً</string>
+    <string name="core_ui_dismiss">تجاهل</string>
+    <string name="core_ui_no_content_text">\\\(0.0)/</string>
+    <string name="core_ui_package_subscription_error">فشل شراء الباقة</string>
+    <string name="core_ui_package_subscription_success">تم شراء الباقة بنجاح</string>
+    <string name="core_ui_reload_button">تحديث</string>
+    <plurals name="core_ui_music_player_subscribers">
+        <item quantity="zero">%d مشترك</item>
+        <item quantity="one">%d مشترك</item>
+        <item quantity="two">%d مشتركان</item>
+        <item quantity="few">%d مشتركين</item>
+        <item quantity="many">%d مشترك</item>
+        <item quantity="other">%d مشترك</item>
+    </plurals>
+</resources>

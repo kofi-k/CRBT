@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_ui_phone_number_error">Lakkoofsi bilbilaa sirrii miti</string>
+    <string name="core_ui_phone_number_placeholder">Lakkoofsa bilbilaa galchi</string>
+    <string name="core_ui_otp_subtitle">Koodii digittii-6 gara %s ergame galchi</string>
+    <string name="core_ui_have_not_received_otp">Koodii hin arganne %s</string>
+    <string name="core_ui_request_new_code">Koodii haaraa gaafadhu</string>
+    <string name="core_ui_otp_resend_timer">Ammas ni argama %s booda</string>
+    <string name="core_ui_need_help">Gargaarsa barbaaddaa?</string>
+    <string name="core_ui_untitled">Mata-duree hin qabu</string>
+    <string name="core_ui_search">Barbaadi</string>
+    <string name="core_ui_first_name_label">Maqaa duraa</string>
+    <string name="core_ui_last_name_label">Maqaa abbaa</string>
+    <string name="core_ui_email_title">Imeelii CRBT irraa</string>
+    <string name="core_ui_email_label">Imeelii</string>
+    <string name="core_ui_error_check_balance">Dogoggora baajata ilaaluu</string>
+    <string name="core_ui_balance_check">Baajatni kee ammaa</string>
+    <string name="core_ui_recharge_error">Dogoggora guutuu</string>
+    <string name="core_ui_recharge_success">Guutuun milkaa\'e</string>
+    <string name="core_ui_call_me_back_error">Dogoggora na bilbili gaafachuu</string>
+    <string name="core_ui_call_me_back_success">Gaaffiin na bilbili milkaa\'e</string>
+    <string name="core_ui_transfer_error">Dabarsaan hin milkoofne</string>
+    <string name="core_ui_transfer_success">Dabarsaan milkaa\'e</string>
+    <string name="core_ui_subscription_error">Sababiin hin milkoofne</string>
+    <string name="core_ui_subscription_success">
+        Gara
+        <b>CRBT!</b>sababatameera
+    </string>
+    <string name="core_ui_ok">Tole</string>
+    <string name="core_ui_dismiss">Dhiisi</string>
+    <string name="core_ui_no_content_text">\\\(0.0)/</string>
+    <string name="core_ui_package_subscription_error">Bitaan paakeejii hin milkoofne</string>
+    <string name="core_ui_package_subscription_success">Bitaan paakeejii milkaa\'e</string>
+    <string name="core_ui_reload_button">Haaromsi</string>
+
+    <plurals name="core_ui_music_player_subscribers">
+        <item quantity="one">%d sab</item>
+        <item quantity="other">%d sab</item>
+    </plurals>
+</resources>
