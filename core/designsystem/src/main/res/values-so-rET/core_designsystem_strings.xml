@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_designsystem_untitled">Cinwaan la\'aan</string>
+    <string name="core_designsystem_phone_number_placeholder">lambarka taleefanka</string>
+    <string name="core_designsystem_process_button_default_text">Dhameys</string>
+    <string name="core_designsystem_amount_placeholder">Lacagta</string>
+</resources>

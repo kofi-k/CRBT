@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_designsystem_untitled">Mata-duree hin qabu</string>
+    <string name="core_designsystem_phone_number_placeholder">lakkoofsa bilbilaa</string>
+    <string name="core_designsystem_process_button_default_text">Xumurameera</string>
+    <string name="core_designsystem_amount_placeholder">Hanga</string>
+</resources>

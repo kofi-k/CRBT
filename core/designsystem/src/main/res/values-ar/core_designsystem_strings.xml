@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_designsystem_untitled">بدون عنوان</string>
+    <string name="core_designsystem_phone_number_placeholder">رقم الهاتف</string>
+    <string name="core_designsystem_process_button_default_text">تم</string>
+    <string name="core_designsystem_amount_placeholder">المبلغ</string>
+</resources>

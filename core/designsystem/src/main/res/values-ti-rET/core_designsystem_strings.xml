@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_designsystem_untitled">ርእሲ ዘይብሉ</string>
+    <string name="core_designsystem_phone_number_placeholder">ቁፅሪ ስልኪ</string>
+    <string name="core_designsystem_process_button_default_text">ተፈፂሙ</string>
+    <string name="core_designsystem_amount_placeholder">መጠን</string>
+</resources>
