@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CRBT</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="internet_speed">%.2f KB/s</string>
+    <string name="not_connected">⚠️ Ma ku xirna.</string>
+    <string name="core_designsystem_welecome">Ku soo dhowow!</string>
+    <string name="core_designsystem_services_ussd">USSD</string>
+    <string name="core_designsystem_what_would_you_like_to_do">Maxaad rabta inaad samayso</string>
+    <string name="register_now">Hadda isdiiwaangeli</string>
+    <string name="already_registered">Isticmaale cusub maahan</string>
+    <string name="new_to_crbt">Cusub ma tahay adeega CRBT?</string>
+    <string name="register_for_crbt_description">Si aad u isticmaasho adeegyada CRBT, isticmaalayaasha waa inay marka hore is diiwaangeliyaan. Isdiiwaangeli haddii aad cusub tahay CRBT.</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CRBT</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="internet_speed">%.2f KB/s</string>
+    <string name="not_connected">⚠️ ተራኺብካ የለኻን</string>
+    <string name="core_designsystem_welecome">እንቋዕ ብደሓን መፃእኹም!</string>
+    <string name="core_designsystem_services_ussd">USSD</string>
+    <string name="core_designsystem_what_would_you_like_to_do">እንታይ ክትገብር ትደሊ</string>
+    <string name="register_now">ሕጂ ተመዝገብ</string>
+    <string name="already_registered">ሓድሽ ተጠቃሚ ኣይኮንኩን</string>
+    <string name="new_to_crbt">ሓድሽ ናብ CRBT ኣገልግሎት?</string>
+    <string name="register_for_crbt_description">CRBT ኣገልግሎት ንምጥቃም፣ ተጠቀምቲ ቅድሚ ኹሉ ክምዝገቡ ኣለዎም። ሓድሽ እንተኾንካ ተመዝገብ።</string>
+</resources>
