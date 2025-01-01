@@ -28,10 +28,10 @@
     <string name="feature_subscription_search_result_not_found">Dhiifama, barbaacha keessaniif \"%1$s\" homaa hin argamne</string>
     <string name="feature_subscription_play_error">Faarfannaa CRBT dhageeffachuun hin danda\'amne</string>
     <string name="feature_subscription_reload">Haaromsi</string>
-    <string name="feature_subscription_register_now">Amma galmaa\'i</string>
+    <string name="feature_subscription_register">Amma galmaa\'i</string>
     <string name="feature_subscription_already_registered">Fayyadamaa haaraa miti</string>
     <string name="feature_subscription_new_to_crbt">Tajaajila CRBT haaraa?</string>
-    <string name="feature_subscription_register_for_crbt_description">Tajaajila CRBT fayyadamuuf, fayyadamtonni dursa galmaa\'uu qabu. Yoo CRBT'f haaraa taatan galmaa'aa.</string>
+    <string name="feature_subscription_register_for_crbt_description">Tajaajila CRBT fayyadamuuf, fayyadamtonni dursa galmaa\'uu qabu. Yoo CRBT\'f haaraa taatan galmaa\'aa.</string>
     <string name="feature_subscription_plays">taphachuu⚡</string>
     <string name="feature_subscription_price">
         gatii

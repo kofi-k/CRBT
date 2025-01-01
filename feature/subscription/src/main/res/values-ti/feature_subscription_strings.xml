@@ -28,7 +28,7 @@
     <string name="feature_subscription_search_result_not_found">ይቕሬታ፣ ንዝደለኻዮ \"%1$s\" ዝኾነ ነገር ኣይተረኽበን</string>
     <string name="feature_subscription_play_error">CRBT ደርፊ ምጥዋይ ኣይተዓወተን</string>
     <string name="feature_subscription_reload">ኣሐድስ</string>
-    <string name="feature_subscription_register_now">ሕጂ ተመዝገብ</string>
+    <string name="feature_subscription_register">ሕጂ ተመዝገብ</string>
     <string name="feature_subscription_already_registered">ሓድሽ ተጠቃሚ ኣይኮንኩን</string>
     <string name="feature_subscription_new_to_crbt">ሓድሽ ናብ CRBT ኣገልግሎት?</string>
     <string name="feature_subscription_register_for_crbt_description">CRBT ኣገልግሎት ንምጥቃም፣ ተጠቀምቲ ቅድሚ ኹሉ ክምዝገቡ ኣለዎም። ሓድሽ እንተኾንካ ተመዝገብ።</string>

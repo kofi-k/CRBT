@@ -29,7 +29,7 @@
 
     <string name="feature_subscription_play_error">Failed to stream CRBT song.</string>
     <string name="feature_subscription_reload">Refresh</string>
-    <string name="feature_subscription_register_now">Register now</string>
+    <string name="feature_subscription_register">Register now</string>
     <string name="feature_subscription_already_registered">Not a new user</string>
     <string name="feature_subscription_new_to_crbt">New to CRBT service?</string>
     <string name="feature_subscription_register_for_crbt_description">To to use CRBT services, users have to be first registered. Register if you are new to CRBT.</string>

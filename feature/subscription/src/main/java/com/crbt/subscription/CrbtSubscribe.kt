@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,12 +35,14 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -48,6 +51,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -76,12 +80,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.data.core.data.CrbtRegistrationPackage
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.data.core.data.PlayerState
 import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.data.core.data.repository.UssdUiState
+import com.crbt.data.core.data.util.CRBT_REGISTER_USSD
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.components.SurfaceCard
@@ -304,9 +310,9 @@ internal fun CrbtSubscribeScreen(
                 subscriptionViewModel.updateUserCrbtSubscriptionStatus()
                 showRegistrationDialog = false
             },
-            onRegister = {
+            onRegister = { packageId ->
                 subscriptionViewModel.runUssdCode(
-                    ussdCode = crbtSong?.registrationUssdCode ?: "",
+                    ussdCode = "$CRBT_REGISTER_USSD$packageId#",
                     onSuccess = {
                         subscriptionViewModel.updateUserCrbtSubscriptionStatus()
                         showRegistrationDialog = false
@@ -341,23 +347,48 @@ internal fun CrbtSubscribeScreen(
 @Composable
 fun CrbtRegistrationDialog(
     onDismiss: () -> Unit,
-    onRegister: () -> Unit,
+    onRegister: (Int) -> Unit,
     isRegistering: Boolean,
-    isUpdatingRegisterStatus: Boolean
+    isUpdatingRegisterStatus: Boolean,
 ) {
+    var selectedPackage by remember { mutableIntStateOf(0) }
+
     AlertDialog(
         title = {
-            Text(
-                text = stringResource(id = R.string.feature_subscription_new_to_crbt),
-                style = MaterialTheme.typography.headlineMedium
-            )
+            Text(text = stringResource(id = R.string.feature_subscription_register_for_crbt))
         },
         text = {
-            Text(
-                text = stringResource(id = R.string.feature_subscription_register_for_crbt_description),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Start,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column {
+                HorizontalDivider()
+                CrbtRegistrationPackage.packages.forEach { registrationPackage ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedPackage = registrationPackage.id
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedPackage == registrationPackage.id,
+                            onClick = {
+                                selectedPackage = registrationPackage.id
+                            },
+                        )
+                        val duration = stringResource(id = registrationPackage.duration)
+                        Text(
+                            text = stringResource(
+                                id = com.example.crbtjetcompose.core.data.R.string.core_data_registration_package,
+                                registrationPackage.price,
+                                duration
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+                HorizontalDivider()
+            }
         },
         onDismissRequest = onDismiss,
         confirmButton = {},
@@ -367,18 +398,18 @@ fun CrbtRegistrationDialog(
                 horizontalAlignment = Alignment.End,
             ) {
                 ProcessButton(
-                    onClick = onRegister,
+                    onClick = { onRegister(selectedPackage) },
                     colors = ButtonDefaults.textButtonColors(),
-                    text = stringResource(id = R.string.feature_subscription_register_now),
+                    text = stringResource(id = R.string.feature_subscription_register),
                     isProcessing = isRegistering
                 )
 
-                ProcessButton(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.textButtonColors(),
-                    text = stringResource(id = R.string.feature_subscription_already_registered),
-                    isProcessing = isUpdatingRegisterStatus
-                )
+//                ProcessButton(
+//                    onClick = onDismiss,
+//                    colors = ButtonDefaults.textButtonColors(),
+//                    text = stringResource(id = R.string.feature_subscription_already_registered),
+//                    isProcessing = isUpdatingRegisterStatus
+//                )
             }
         },
         properties = DialogProperties(
