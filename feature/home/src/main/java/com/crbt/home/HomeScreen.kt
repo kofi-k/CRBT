@@ -4,17 +4,13 @@ import PullToRefreshContent
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,7 +39,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,6 +70,9 @@ fun HomeScreen(
     navigateToSubscription: () -> Unit,
     onNavigateToTopUp: () -> Unit = {},
     crbtTonesViewModel: CrbtTonesViewModel,
+    navigateToPackages: () -> Unit,
+    navigateToRecharge: () -> Unit,
+    navigateToServices: () -> Unit
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
@@ -136,6 +134,14 @@ fun HomeScreen(
                     CrbtAds(crbtAdsUiState)
                 }
 
+                item {
+                    QuickAccess(
+                        navigateToPackages = navigateToPackages,
+                        navigateToRecharge = navigateToRecharge,
+                        navigateToServices = navigateToServices
+                    )
+                }
+
                 with(tonesUiState) {
                     when (errorMessage != null) {
                         true -> item {
@@ -161,17 +167,6 @@ fun HomeScreen(
 
                         else -> when (loading) {
                             true -> Unit
-                            /*item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }*/
-
                             else -> when (
                                 !songs.isNullOrEmpty() && homeResource != null
                             ) {
@@ -179,7 +174,7 @@ fun HomeScreen(
                                     val songResource = homeResource!!.popularTodaySongs
                                     val latestMusic = homeResource!!.latestSong
 
-                                    item {
+                                    /*item {
                                         if (latestMusic.id.toIntOrNull() != null && latestMusic.profile.isNotBlank()) {
                                             LatestMusicCard(
                                                 artist = latestMusic.artisteName,
@@ -212,7 +207,7 @@ fun HomeScreen(
                                                     )
                                             )
                                         }
-                                    }
+                                    }*/
 
                                     item {
                                         PopularTodayTabLayout(
