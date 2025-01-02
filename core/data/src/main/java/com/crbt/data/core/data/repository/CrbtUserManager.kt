@@ -1,11 +1,9 @@
 package com.crbt.data.core.data.repository
 
-import com.crbt.common.core.common.network.CrbtDispatchers
-import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
+import com.example.crbtjetcompose.core.model.data.fullName
 import com.example.crbtjetcompose.core.network.di.HttpException
 import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -17,9 +15,8 @@ import javax.inject.Inject
 
 class CrbtUserManager @Inject constructor(
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
-    @Dispatcher(CrbtDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val crbtNetworkRepository: CrbtNetworkRepository,
-    private val userContactsRepo: UserContactsRepo
+    private val userMetaInfoCollectionRepo: UserMetaInfoCollectionRepo
 ) : UserManager {
     override val isLoggedIn: Flow<Boolean>
         get() = crbtPreferencesRepository.userPreferencesData.map { it.token.isNotBlank() }
@@ -28,16 +25,20 @@ class CrbtUserManager @Inject constructor(
         phone: String,
         accountType: String,
         langPref: String
-    ) {
+    ): String {
         val response = crbtNetworkRepository.login(
             phone = phone,
             accountType = accountType,
             langPref = langPref
         )
         with(response) {
+            if (account.firstName.isNullOrBlank() && account.lastName.isNullOrBlank()) {
+                crbtPreferencesRepository.clearUserPreferences()
+            }
             crbtPreferencesRepository.setSignInToken(token)
             updateUserPreference(account)
         }
+        return userPreferenceData().fullName()
     }
 
 
@@ -50,14 +51,17 @@ class CrbtUserManager @Inject constructor(
         firstName: String,
         lastName: String,
         profile: String?,
+        email: String?
     ): UpdateUserInfoUiState =
         try {
             val response = crbtNetworkRepository.updateUserAccountInfo(
-                firstName,
-                lastName,
-                profile
+                firstName = firstName,
+                lastName = lastName,
+                profile = profile,
+                email = email,
+                location = userMetaInfoCollectionRepo.getLastKnownLocation()
             )
-//            userContactsRepo.uploadUserContacts()
+            userMetaInfoCollectionRepo.uploadUserContacts()
             updateUserPreference(response.updatedAccount.copy(profile = profile ?: ""))
             UpdateUserInfoUiState.Success
         } catch (e: IOException) {
@@ -82,7 +86,8 @@ class CrbtUserManager @Inject constructor(
             rewardPoints = data.rewardPoints ?: 0,
             profileUrl = data.profile ?: "",
             userLocation = data.location ?: "",
-            currentCrbtSubscriptionId = data.subSongId
+            currentCrbtSubscriptionId = data.subSongId,
+            email = data.email ?: ""
         )
         crbtPreferencesRepository.updateUserPreferences(userPreferencesData)
 
