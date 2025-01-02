@@ -45,5 +45,10 @@ interface CrbtPreferencesRepository {
     suspend fun setRequiredRechargeDigits(
         numberOfDigits: Int
     )
+
+    suspend fun saveUserContacts(contacts: List<String>)
+
+    suspend fun getUserContacts(): String
+
 }
 
