@@ -38,6 +38,8 @@ interface CrbtNetworkRepository {
         firstName: String,
         lastName: String,
         profile: String?,
+        email: String?,
+        location: String
     ): AccountUpdatedResponse
 
     suspend fun uploadUserContacts(contacts: List<String>)
