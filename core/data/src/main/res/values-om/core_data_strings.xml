@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="core_data_amharic">Amaariffaa</string>
-    <string name="core_data_oromiffa">Afaan Oromoo</string>
-    <string name="core_data_tigrigna">Afaan Tigiree</string>
-    <string name="core_data_somalia">Afaan Somaalee</string>
-    <string name="core_data_arabic">Afaan Arabaa</string>
-    <string name="core_data_english">Afaan Ingilizii</string>
     <string name="core_data_monthly_bill_title">Ji\'aan</string>
     <string name="core_data_bi_weekly_bill_title">Torban-lamaan</string>
     <string name="core_data_weekly_bill_title">Torbee</string>
@@ -21,4 +15,8 @@
     <string name="core_data_santim_pay">Santim pay</string>
     <string name="core_data_telebir">Telebirr</string>
     <string name="core_data_ethio_currency">Qarshii</string>
+    <string name="core_data_registration_package">Birr %s for %s</string>
+    <string name="core_data_monthly">Monthly</string>
+    <string name="core_data_bi_weekly">Two Weeks</string>
+    <string name="core_data_weekly">One Week</string>
 </resources>
