@@ -18,11 +18,9 @@ data class UserPreferencesData(
     val autoDialRechargeCode: Boolean,
     val numberOfRechargeCodeDigits: Int,
     val userLocation: String,
+    val userCrbtRegistrationPackage: String,
 )
 
-
-fun UserPreferencesData.isProfileSetupComplete(): Boolean =
-    firstName.isNotBlank() && lastName.isNotBlank()
 
 fun UserPreferencesData.fullName(): String {
     return "$firstName $lastName"
