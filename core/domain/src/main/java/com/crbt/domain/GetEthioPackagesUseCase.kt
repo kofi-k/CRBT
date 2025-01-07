@@ -7,4 +7,6 @@ class GetEthioPackagesUseCase @Inject constructor(
     private val crbtPackagesRepository: CrbtPackagesRepository,
 ) {
     operator fun invoke() = crbtPackagesRepository.getEthioPackages()
+
+    fun getUserRegistrationPackages() = crbtPackagesRepository.getCRBTRegistrationPackages()
 }
