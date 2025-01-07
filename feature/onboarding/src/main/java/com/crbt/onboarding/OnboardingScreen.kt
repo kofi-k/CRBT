@@ -79,6 +79,7 @@ import com.example.crbtjetcompose.core.ui.R as UiR
 @Composable
 fun OnboardingScreen(
     navigateToHome: () -> Unit,
+    navigateToProfileSetup: () -> Unit
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -153,8 +154,12 @@ fun OnboardingScreen(
                                         )
                                     }
                                 },
-                                onVerified = {
-                                    navigateToHome()
+                                onVerified = { userName ->
+                                    if (userName.isNotBlank()) {
+                                        navigateToHome()
+                                    } else {
+                                        navigateToProfileSetup()
+                                    }
                                     viewModel.onDoneClicked()
                                     scope.launch {
                                         bottomSheetScaffoldState.bottomSheetState.hide()
@@ -170,7 +175,12 @@ fun OnboardingScreen(
                 },
                 isNextEnabled = viewModel.isNextEnabled,
                 onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
-                onLanguageSelected = viewModel::onLanguageSelected,
+                onLanguageSelected = { code ->
+                    viewModel.onLanguageSelected(code)
+//                    AppCompatDelegate.setApplicationLocales(
+//                        LocaleListCompat.forLanguageTags(code)
+//                    )
+                },
                 modifier = Modifier
                     .windowInsetsPadding(
                         WindowInsets.safeDrawing.only(

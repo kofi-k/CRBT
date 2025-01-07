@@ -16,4 +16,5 @@ dependencies {
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.mockito.core)
+    implementation(libs.androidx.appcompat)
 }

@@ -76,7 +76,7 @@ class PhoneAuthViewModel @Inject constructor(
         accountType: String,
         langPref: String,
         onFailed: (String) -> Unit,
-        onVerified: () -> Unit,
+        onVerified: (String) -> Unit,
     ) {
         authState = AuthState.Loading
         viewModelScope.launch {
@@ -84,8 +84,8 @@ class PhoneAuthViewModel @Inject constructor(
 //                val result = repository.verifyCode(_verificationId.value ?: "", otpCode).await()
 //                val fakeAuthResult = mock(AuthResult::class.java)
 //                val tokenUid = result.user?.uid
-                userManager.login(phone, accountType, langPref)
-                onVerified()
+                val userName = userManager.login(phone, accountType, langPref)
+                onVerified(userName)
 //                AuthState.Success(fakeAuthResult)
             } catch (e: IOException) {
                 onFailed("A network error occurred. Please check your connection and try again.")
