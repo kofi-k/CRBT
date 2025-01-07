@@ -3,9 +3,7 @@
     <string name="feature_services_title">Adeegyada</string>
     <string name="feature_services_check_balance">Hubi Haraaga</string>
     <string name="feature_services_check_description">Hubi sharaxaada gaaban</string>
-    <string name="feature_services_packages">Xirmooyinka</string>
     <string name="feature_services_packages_description">Sharaxaada gaaban ee xirmooyinka</string>
-    <string name="feature_services_recharge">Dib u buuxi</string>
     <string name="feature_services_recharge_description">Sharaxaada gaaban ee dib u buuxinta</string>
     <string name="feature_services_transfer">U wareeji</string>
     <string name="feature_services_transfer_description">Sharaxaada gaaban ee wareejinta</string>

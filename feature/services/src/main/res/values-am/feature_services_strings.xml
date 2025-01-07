@@ -3,9 +3,7 @@
     <string name="feature_services_title">አገልግሎቶች</string>
     <string name="feature_services_check_balance">ቀሪ ሂሳብ ይመልከቱ</string>
     <string name="feature_services_check_description">አጭር መግለጫ ይመልከቱ</string>
-    <string name="feature_services_packages">ፓኬጆች</string>
     <string name="feature_services_packages_description">የፓኬጆች አጭር መግለጫ</string>
-    <string name="feature_services_recharge">ሪቻርጅ</string>
     <string name="feature_services_recharge_description">የሪቻርጅ አጭር መግለጫ</string>
     <string name="feature_services_transfer">ማስተላለፍ</string>
     <string name="feature_services_transfer_description">የማስተላለፍ አጭር መግለጫ</string>

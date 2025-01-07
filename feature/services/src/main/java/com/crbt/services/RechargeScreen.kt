@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -260,7 +259,7 @@ fun CameraPreview(
             try {
                 val cameraProvider = cameraProviderFuture.get()
                 val preview = androidx.camera.core.Preview.Builder().build().apply {
-                    setSurfaceProvider(previewView.surfaceProvider)
+                    surfaceProvider = previewView.surfaceProvider
                 }
 
                 cameraProvider.unbindAll()
@@ -315,7 +314,7 @@ fun RechargeContent(
         ) {
             CameraPreview(
                 modifier = Modifier
-                    .wrapContentHeight()
+                    .height(360.dp)
                     .clipToBounds(),
                 imageCapture = imageCapture
             )

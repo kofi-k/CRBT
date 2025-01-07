@@ -28,7 +28,7 @@
     <string name="feature_services_date">Guyyaa</string>
     <string name="feature_services_gift_button">Kennaa</string>
     <string name="feature_services_cancel">Haqi</string>
-    <string name="feature_services_purchase_confirmation">%s gatii %s ETB\'n bituuf itti fufi</string>
+    <string name="feature_services_purchase_confirmation">%1$s gatii %2$s ETB\'n bituuf itti fufi</string>
     <string name="feature_services_gift_purchase_contact_info">Lakkoofsa fudhataa galchi</string>
     <string name="feature_services_error_check_balance">Dogoggora baajata ilaaluu</string>
     <string name="feature_services_balance_check">Baajatni kee ammaa</string>

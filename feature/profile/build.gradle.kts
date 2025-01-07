@@ -14,4 +14,5 @@ dependencies {
     implementation(projects.core.ui)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.coil.kt.compose)
+    implementation(libs.androidx.appcompat)
 }
