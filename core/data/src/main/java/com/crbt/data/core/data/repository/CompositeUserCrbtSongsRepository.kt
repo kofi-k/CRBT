@@ -17,7 +17,12 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                     is CrbtMusicResourceUiState.Success -> {
                         CrbtSongsFeedUiState.Success(
                             songs = songs.songs
-                                .sortedByDescending { song -> song.createdAt },
+                                .sortedByDescending { song -> song.createdAt }
+                                .map {
+                                    it.copy(
+                                        subscriptionType = userPreferenceData.userCrbtRegistrationPackage
+                                    )
+                                },
                             currentUserCrbtSubscriptionSong = songs.songs.find {
                                 it.id == userPreferenceData.currentCrbtSubscriptionId.toString()
                             }
