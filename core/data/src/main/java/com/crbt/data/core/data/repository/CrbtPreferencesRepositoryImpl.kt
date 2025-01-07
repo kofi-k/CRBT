@@ -80,8 +80,11 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
         crbtPreferencesDataSource.setUserInterestedCrbtLanguages(code, isInterested)
 
-    override suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) =
-        crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered)
+    override suspend fun setUserCrbtRegistrationStatus(
+        isRegistered: Boolean,
+        packageDuration: String
+    ) =
+        crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered, packageDuration)
 
 
     override suspend fun setAutoDialRechargeCode(

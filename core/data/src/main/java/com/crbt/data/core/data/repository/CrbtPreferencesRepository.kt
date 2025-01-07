@@ -36,7 +36,7 @@ interface CrbtPreferencesRepository {
 
     suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
 
-    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean)
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean, packageDuration: String)
 
     suspend fun setAutoDialRechargeCode(
         autoDial: Boolean,
