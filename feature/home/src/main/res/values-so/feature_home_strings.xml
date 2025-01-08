@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">Hmm, wax lagu muujiyo ma jiraan halkan.</string>
     <string name="feature_home_no_subscriptions">Ma lihid rukumo CRBT oo firfircoon</string>
     <string name="feature_home_subscribe_now">Hadda Iska Diiwaangeli</string>
+    <string name="feature_home_quick_services">Xidhiidhka Gaarka ah</string>
+    <string name="feature_home_view_all">Eeg Dhammaan</string>
 </resources>

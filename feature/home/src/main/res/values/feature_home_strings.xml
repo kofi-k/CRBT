@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">Hmm, nothing to show here.</string>
     <string name="feature_home_no_subscriptions">You have no active CRBT subscription</string>
     <string name="feature_home_subscribe_now">Subscribe Now</string>
+    <string name="feature_home_quick_services">Quick services</string>
+    <string name="feature_home_view_all">View all</string>
 </resources>

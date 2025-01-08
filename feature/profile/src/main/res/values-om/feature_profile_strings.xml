@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_profile_title">Profaayilii</string>
-    <string name="feature_profile_logout">Ba'i</string>
-    <string name="feature_profile_logging_out">Ba'aa jira…</string>
+    <string name="feature_profile_logout">Ba\'i</string>
+    <string name="feature_profile_logging_out">Ba\'aa jira…</string>
     <string name="feature_profile_reward_points">Qabxii badhaasa</string>
     <string name="feature_profile_reward_points_description">Qabxii badhaasa kee fudhadhu</string>
     <string name="feature_profile_placeholder_subtext">Ibsa gabaabaa</string>
@@ -13,10 +13,10 @@
     <string name="feature_profile_language">Afaan</string>
     <string name="feature_profile_language_description">Afaan kee filadhu</string>
     <string name="feature_profile_permissions">Hayyama</string>
-    <string name="feature_profile_permissions_description">Hayyama appii too'adhu</string>
+    <string name="feature_profile_permissions_description">Hayyama appii too\'adhu</string>
     <string name="feature_profile_payments">Kaffaltii</string>
     <string name="feature_profile_setup_title">Odeeffannoo profaayilii fayyadamaa</string>
-    <string name="feature_profile_save_profile_button">Profaayilii Ol kaa'i</string>
+    <string name="feature_profile_save_profile_button">Profaayilii Ol kaa\'i</string>
     <string name="feature_profile_updates_title">Haaromsa fi Gorsa</string>
     <string name="feature_profile_updates_subtitle">Haaromsa playlist gaarii waliin walqunnamtii qabi</string>
     <string name="feature_profile_first_name_label">Maqaa Duraa</string>

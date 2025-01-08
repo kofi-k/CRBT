@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">Hmm, agarsiisuu homaa hin jiru.</string>
     <string name="feature_home_no_subscriptions">Sababii CRBT hojjetu hin qabdan</string>
     <string name="feature_home_subscribe_now">Amma Sababa\'i</string>
+    <string name="feature_home_quick_services">Qabsoo Qabsoon</string>
+    <string name="feature_home_view_all">Dabalataa</string>
 </resources>

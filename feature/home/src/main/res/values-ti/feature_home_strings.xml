@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">ሃም፣ ዝርአ የለን</string>
     <string name="feature_home_no_subscriptions">ንጡፍ CRBT ኣባልነት የብልካን</string>
     <string name="feature_home_subscribe_now">ሕጂ ኣባል ኩን</string>
+    <string name="feature_home_quick_services">ትክክል ኣገልግሎቶች</string>
+    <string name="feature_home_view_all">ሓበሬታ ኣብዚ</string>
 </resources>

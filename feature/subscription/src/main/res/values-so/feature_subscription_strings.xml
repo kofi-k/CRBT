@@ -31,6 +31,7 @@
     <string name="feature_subscription_register">Hadda isdiiwaangeli</string>
     <string name="feature_subscription_already_registered">Isticmaale cusub maahan</string>
     <string name="feature_subscription_new_to_crbt">Cusub ma tahay adeega CRBT?</string>
+    <string name="feature_subscription_register_for_crbt">Isdiiwaangeli adeegyada CRBT</string>
     <string name="feature_subscription_register_for_crbt_description">Si aad u isticmaasho adeegyada CRBT, isticmaalayaasha waa inay marka hore is diiwaangeliyaan. Isdiiwaangeli haddii aad cusub tahay CRBT.</string>
     <string name="feature_subscription_plays">ciyaaro⚡</string>
     <string name="feature_subscription_price">

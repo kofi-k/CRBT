@@ -31,6 +31,7 @@
     <string name="feature_subscription_register">سجل الآن</string>
     <string name="feature_subscription_already_registered">لست مستخدماً جديداً</string>
     <string name="feature_subscription_new_to_crbt">جديد في خدمة CRBT؟</string>
+    <string name="feature_subscription_register_for_crbt">سجل في CRBT</string>
     <string name="feature_subscription_register_for_crbt_description">لاستخدام خدمات CRBT، يجب على المستخدمين التسجيل أولاً. سجل إذا كنت جديداً في CRBT.</string>
     <string name="feature_subscription_plays">تشغيل⚡</string>
     <string name="feature_subscription_price">

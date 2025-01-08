@@ -2,7 +2,7 @@
 <resources>
     <string name="feature_profile_title">መግለፂ</string>
     <string name="feature_profile_logout">ውፃእ</string>
-    <string name="feature_profile_logging_out">እናወፀአ...</string>
+    <string name="feature_profile_logging_out">እናወፀአ…</string>
     <string name="feature_profile_reward_points">ነጥብታት ሽልማት</string>
     <string name="feature_profile_reward_points_description">ነጥብታት ሽልማትካ ተጠቐም</string>
     <string name="feature_profile_placeholder_subtext">ሓፂር መግለፂ</string>

@@ -31,6 +31,7 @@
     <string name="feature_subscription_register">Amma galmaa\'i</string>
     <string name="feature_subscription_already_registered">Fayyadamaa haaraa miti</string>
     <string name="feature_subscription_new_to_crbt">Tajaajila CRBT haaraa?</string>
+    <string name="feature_subscription_register_for_crbt">Tajaajila CRBT</string>
     <string name="feature_subscription_register_for_crbt_description">Tajaajila CRBT fayyadamuuf, fayyadamtonni dursa galmaa\'uu qabu. Yoo CRBT\'f haaraa taatan galmaa\'aa.</string>
     <string name="feature_subscription_plays">taphachuu⚡</string>
     <string name="feature_subscription_price">
