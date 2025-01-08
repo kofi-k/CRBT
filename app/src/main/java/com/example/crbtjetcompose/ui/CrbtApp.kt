@@ -1,5 +1,6 @@
 package com.example.crbtjetcompose.ui
 
+import PullToRefreshContent
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,12 +46,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.PlayerState
+import com.crbt.data.core.data.TonesPlayerEvent
 import com.crbt.data.core.data.repository.RefreshUiState
 import com.crbt.data.core.data.util.INTERNET_SPEED_CHECK_URL
 import com.crbt.designsystem.components.CrbtNavigationBar
@@ -95,7 +97,7 @@ import com.example.crbtjetcompose.navigation.TopLevelDestination
 fun CrbtApp(
     appState: CrbtAppState,
     sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel,
-    mainActivityViewModel: MainActivityViewModel = hiltViewModel(),
+    mainActivityViewModel: MainActivityViewModel,
     crbtTonesViewModel: CrbtTonesViewModel,
 ) {
     val destination = appState.currentTopLevelDestination
@@ -129,15 +131,14 @@ fun CrbtApp(
             ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
             PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
             ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
-            PACKAGES_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_packages
-            RECHARGE_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_recharge
+            PACKAGES_ROUTE -> com.example.crbtjetcompose.core.ui.R.string.core_ui_packages
+            RECHARGE_ROUTE -> com.example.crbtjetcompose.core.ui.R.string.core_ui_recharge
             else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
         }
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val isLoggedIn by appState.isLoggedIn.collectAsStateWithLifecycle()
-    val isProfileSetupComplete by appState.isProfileSetupComplete.collectAsStateWithLifecycle()
     val internetSpeed by appState.internetSpeed.collectAsStateWithLifecycle()
     val userData by appState.userData.collectAsStateWithLifecycle()
     val refreshUiState by mainActivityViewModel.refreshUiState.collectAsStateWithLifecycle()
@@ -150,11 +151,7 @@ fun CrbtApp(
     )
 
     val startDestination: String = when (isLoggedIn) {
-        true -> when (isProfileSetupComplete) {
-            true -> HOME_ROUTE
-            false -> ONBOARDING_PROFILE_ROUTE
-        }
-
+        true -> HOME_ROUTE
         false -> ONBOARDING_ROUTE
     }
 
@@ -369,15 +366,41 @@ fun CrbtApp(
                     }
                 }
             ) { padding ->
-                CrbtNavHost(
-                    appState = appState,
-                    startDestination = startDestination,
-                    musicControllerUiState = musicControllerUiState,
-                    crbtTonesViewModel = crbtTonesViewModel,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                )
+                PullToRefreshContent(
+                    isRefreshing = refreshUiState is RefreshUiState.Loading || tonesUiState.loading == true,
+                    onRefresh = {
+                        when (destination) {
+                            TopLevelDestination.HOME -> {
+                                mainActivityViewModel.refreshHome()
+                                crbtTonesViewModel.onEvent(
+                                    TonesPlayerEvent.FetchSong
+                                )
+                            }
+
+                            TopLevelDestination.SUBSCRIPTIONS -> mainActivityViewModel.refreshSongs()
+                            TopLevelDestination.PROFILE -> mainActivityViewModel.refreshUserInfo()
+                            else -> when (currentRoute) {
+                                PACKAGES_ROUTE -> mainActivityViewModel.refreshPackages()
+                                else -> Unit
+                            }
+                        }
+                    }) {
+                    when (userData) {
+                        is Result.Loading -> CircularProgressIndicator()
+                        is Result.Error -> Unit
+                        is Result.Success -> {
+                            CrbtNavHost(
+                                appState = appState,
+                                startDestination = startDestination,
+                                musicControllerUiState = musicControllerUiState,
+                                crbtTonesViewModel = crbtTonesViewModel,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(padding)
+                            )
+                        }
+                    }
+                }
             }
         }
     }

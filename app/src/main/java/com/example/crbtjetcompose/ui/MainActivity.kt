@@ -3,18 +3,21 @@ package com.example.crbtjetcompose.ui
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,8 +34,11 @@ import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,6 +60,8 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModels()
     private val sharedCrbtMusicPlayerViewModel: SharedCrbtMusicPlayerViewModel by viewModels()
     private val crbtTonesViewModel: CrbtTonesViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +78,29 @@ class MainActivity : ComponentActivity() {
                 }.collect()
             }
         }
+
+        lifecycleScope.launch {
+            crbtPreferencesRepository.userPreferencesData
+                .filterNotNull()
+                .distinctUntilChanged()
+                .collect { preferences ->
+                    preferences.languageCode.let { code ->
+                        val locale = Locale(code)
+                        val localeList = LocaleListCompat.create(locale)
+
+                        AppCompatDelegate.setApplicationLocales(localeList)
+
+                        @Suppress("DEPRECATION")
+                        resources.updateConfiguration(
+                            resources.configuration.apply {
+                                setLocales(LocaleList(locale))
+                            },
+                            resources.displayMetrics
+                        )
+                    }
+                }
+        }
+
 
         // Keep the splash screen on-screen until the UI state is loaded. This condition is
         // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
@@ -118,7 +149,8 @@ class MainActivity : ComponentActivity() {
                         CrbtApp(
                             appState = appState,
                             sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
-                            crbtTonesViewModel = crbtTonesViewModel
+                            crbtTonesViewModel = crbtTonesViewModel,
+                            mainActivityViewModel = mainActivityViewModel
                         )
                     }
                 }
@@ -131,6 +163,7 @@ class MainActivity : ComponentActivity() {
         sharedCrbtMusicPlayerViewModel.destroyMediaController()
         stopService(Intent(this, MusicService::class.java))
     }
+
 }
 
 /**

@@ -20,6 +20,11 @@ android {
         versionCode = 1
         versionName = "1.0.0" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
+        targetSdk = 35
+
+        resourceConfigurations += listOf("en", "ar", "am", "om", "so", "ti")
+
+
 //        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -29,7 +34,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
-//            isDebuggable = false
+            isDebuggable = false
         }
         release {
             isMinifyEnabled = false
@@ -54,7 +59,6 @@ android {
 
 dependencies {
 
-    implementation(projects.feature.payment)
     implementation(projects.feature.subscription)
     implementation(projects.feature.home)
     implementation(projects.feature.onboarding)
@@ -81,6 +85,7 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.runtime.tracing)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.runtimeCompose)
@@ -97,6 +102,7 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.session)
     implementation(libs.voipUssd)
+    implementation(libs.mockito.core)
 
     ksp(libs.hilt.compiler)
 

@@ -66,7 +66,6 @@ class MainActivityViewModel @Inject constructor(
     fun refreshHome() {
         viewModelScope.launch {
             refreshSongs()
-            refreshUserInfo()
             refreshAds()
         }
     }

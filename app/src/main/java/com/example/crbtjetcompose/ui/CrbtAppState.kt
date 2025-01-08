@@ -23,7 +23,6 @@ import com.crbt.services.navigation.SERVICES_ROUTE
 import com.crbt.services.navigation.navigateToServices
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.navigateToSubscription
-import com.example.crbtjetcompose.core.model.data.isProfileSetupComplete
 import com.example.crbtjetcompose.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -96,15 +95,7 @@ class CrbtAppState(
     val isLoggedIn = userManager.isLoggedIn
         .stateIn(
             scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
-        )
-
-    val isProfileSetupComplete = userRepository.userPreferencesData
-        .mapLatest { it.isProfileSetupComplete() }
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Eagerly,
             initialValue = false,
         )
 
@@ -146,7 +137,7 @@ class CrbtAppState(
                 // reselecting the same item
                 launchSingleTop = true
                 // Restore state when reselecting a previously selected item
-                restoreState = true
+                restoreState = false
             }
 
             when (topLevelDestination) {
