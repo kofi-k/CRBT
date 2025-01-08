@@ -67,7 +67,8 @@ fun LanguageSelectionMenu(
             Column {
                 CustomInputButton(
                     text = stringResource(
-                        id = CRBTSettingsData.languages.first { it.code == selectedLanguage }.name
+                        id = CRBTSettingsData.languages.find { it.code == selectedLanguage }?.name
+                            ?: CRBTSettingsData.languages.last().name
                     ),
                     onClick = {
                         expanded = !expanded

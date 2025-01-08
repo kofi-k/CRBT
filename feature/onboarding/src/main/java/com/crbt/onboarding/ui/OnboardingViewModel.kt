@@ -15,7 +15,6 @@ import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.data.core.data.repository.UserManager
 import com.crbt.ui.core.ui.otp.OTP_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -55,6 +54,11 @@ class OnboardingViewModel @Inject constructor(
 
 
     init {
+        viewModelScope.launch {
+            crbtPreferencesRepository.userPreferencesData.collect { userData ->
+                onLanguageSelected(userData.languageCode.ifBlank { CRBTSettingsData.languages.last().code })
+            }
+        }
         _isNextEnabled = getIsNextEnabled()
     }
 
@@ -107,9 +111,12 @@ class OnboardingViewModel @Inject constructor(
     }
 
 
-    fun onLanguageSelected(languageId: String = CRBTSettingsData.languages.first { it.code == "en" }.code) {
-        _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = languageId)
-        _isNextEnabled = getIsNextEnabled()
+    fun onLanguageSelected(code: String) {
+        viewModelScope.launch {
+            _onboardingSetupData = _onboardingSetupData.copy(selectedLanguage = code)
+            crbtPreferencesRepository.setUserLanguageCode(code)
+            _isNextEnabled = getIsNextEnabled()
+        }
     }
 
     fun onPhoneNumberEntered(phoneNumber: String, isPhoneNumberValid: Boolean) {

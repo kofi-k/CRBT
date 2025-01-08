@@ -78,7 +78,9 @@ fun ProfileRoute(
         },
         signOutState = signOutState,
         userPreferenceUiState = userPreferenceUiState,
-        onLanguageCheckChange = profileViewModel::saveLanguageCode,
+        onLanguageCheckChange = { code ->
+            profileViewModel.saveLanguageCode(code)
+        },
     )
 }
 
