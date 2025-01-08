@@ -37,4 +37,7 @@
         <item quantity="one">%d sab</item>
         <item quantity="other">%d sab</item>
     </plurals>
+
+    <string name="core_ui_packages">Paakeejii</string>
+    <string name="core_ui_recharge">Guutuu</string>
 </resources>

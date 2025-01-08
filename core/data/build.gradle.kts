@@ -24,6 +24,8 @@ dependencies {
     implementation(libs.extension.mediasession)
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.session)
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.voipUssd)
 }

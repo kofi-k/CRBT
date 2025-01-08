@@ -96,7 +96,9 @@ class CrbtTonesViewModel @Inject constructor(
                                 songs = feed.songs,
                                 loading = false,
                                 homeResource = HomeSongResource(
-                                    popularTodaySongs = feed.songs.take(8),
+                                    popularTodaySongs = feed.songs
+                                        .sortedByDescending { it.numberOfListeners }
+                                        .take(8),
                                     latestSong = feed.songs.first(),
                                     currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong
                                 )

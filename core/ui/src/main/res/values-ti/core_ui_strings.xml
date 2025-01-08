@@ -37,4 +37,7 @@
         <item quantity="one">%d ኣባል</item>
         <item quantity="other">%d ኣባላት</item>
     </plurals>
+
+    <string name="core_ui_packages">ፓኬጃት</string>
+    <string name="core_ui_recharge">ሓይሊ ምልኣይ</string>
 </resources>

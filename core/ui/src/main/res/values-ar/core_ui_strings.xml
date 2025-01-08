@@ -40,4 +40,8 @@
         <item quantity="many">%d مشترك</item>
         <item quantity="other">%d مشترك</item>
     </plurals>
+
+    <string name="core_ui_packages">الباقات</string>
+    <string name="core_ui_recharge">شحن الرصيد</string>
+
 </resources>

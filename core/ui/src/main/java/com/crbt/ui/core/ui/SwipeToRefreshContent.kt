@@ -20,8 +20,6 @@ fun PullToRefreshContent(
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = onRefresh,
-        refreshThreshold = 500.dp,
-        refreshingOffset = 150.dp
     )
 
     Box(

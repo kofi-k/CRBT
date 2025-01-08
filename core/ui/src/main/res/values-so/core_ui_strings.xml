@@ -36,4 +36,9 @@ Waa lagu biiray
         <item quantity="one">%d rukume</item>
         <item quantity="other">%d rukumayaal</item>
     </plurals>
+
+    <string name="core_ui_packages">Xirmooyinka</string>
+    <string name="core_ui_recharge">Dib u buuxi</string>
+
+
 </resources>

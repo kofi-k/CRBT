@@ -36,4 +36,7 @@
         <item quantity="one">%d ደንበኛ</item>
         <item quantity="other">%d ደንበኞች</item>
     </plurals>
+
+    <string name="core_ui_packages">ፓኬጆች</string>
+    <string name="core_ui_recharge">ሪቻርጅ</string>
 </resources>
