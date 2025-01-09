@@ -1,12 +1,11 @@
-
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
-import com.example.crbtjetcompose.configureFlavors
-import com.example.crbtjetcompose.configureGradleManagedDevices
-import com.example.crbtjetcompose.configureKotlinAndroid
-import com.example.crbtjetcompose.configurePrintApksTask
-import com.example.crbtjetcompose.disableUnnecessaryAndroidTests
-import com.example.crbtjetcompose.libs
+import com.itengs.crbt.configureFlavors
+import com.itengs.crbt.configureGradleManagedDevices
+import com.itengs.crbt.configureKotlinAndroid
+import com.itengs.crbt.configurePrintApksTask
+import com.itengs.crbt.disableUnnecessaryAndroidTests
+import com.itengs.crbt.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -29,7 +28,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configureGradleManagedDevices(this)
                 // The resource prefix is derived from the module name,
                 // so resources inside ":core:module1" must be prefixed with "core_module1_"
-                resourcePrefix = path.split("""\W""".toRegex()).drop(1).distinct().joinToString(separator = "_").lowercase() + "_"
+                resourcePrefix =
+                    path.split("""\W""".toRegex()).drop(1).distinct().joinToString(separator = "_")
+                        .lowercase() + "_"
             }
             extensions.configure<LibraryAndroidComponentsExtension> {
                 configurePrintApksTask(this)

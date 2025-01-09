@@ -13,7 +13,7 @@ import com.crbt.domain.PlaySongUseCase
 import com.crbt.domain.ResumeSongUseCase
 import com.crbt.domain.SkipToNextSongUseCase
 import com.crbt.domain.SkipToPreviousSongUseCase
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

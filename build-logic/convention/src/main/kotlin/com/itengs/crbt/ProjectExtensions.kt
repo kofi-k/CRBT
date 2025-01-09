@@ -1,5 +1,4 @@
-
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog

@@ -1,8 +1,8 @@
 package com.crbt.data.core.data.repository
 
 import com.crbt.common.core.common.result.Result
-import com.example.crbtjetcompose.core.model.data.CrbtPackageCategory
-import com.example.crbtjetcompose.core.model.data.PackageItem
+import com.itengs.crbt.core.model.data.CrbtPackageCategory
+import com.itengs.crbt.core.model.data.PackageItem
 import kotlinx.coroutines.flow.Flow
 
 interface CrbtPackagesRepository {

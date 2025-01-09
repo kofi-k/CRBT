@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.variant.AndroidComponentsExtension

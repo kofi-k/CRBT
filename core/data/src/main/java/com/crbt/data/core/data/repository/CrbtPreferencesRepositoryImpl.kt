@@ -2,7 +2,7 @@ package com.crbt.data.core.data.repository
 
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.datastore.CrbtPreferencesDataSource
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

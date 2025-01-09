@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.ManagedVirtualDevice

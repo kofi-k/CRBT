@@ -1,10 +1,9 @@
+package com.itengs.crbt
 
-package com.example.crbtjetcompose
-
+import com.android.SdkConstants
 import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
-import com.android.SdkConstants
 import com.google.common.truth.Truth.assertWithMessage
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -84,7 +83,7 @@ abstract class CheckBadgingTask : DefaultTask() {
     fun taskAction() {
         assertWithMessage(
             "Generated badging is different from golden badging! " +
-                "If this change is intended, run ./gradlew ${updateBadgingTaskName.get()}",
+                    "If this change is intended, run ./gradlew ${updateBadgingTaskName.get()}",
         )
             .that(generatedBadging.get().asFile.readText())
             .isEqualTo(goldenBadging.get().asFile.readText())
@@ -109,8 +108,8 @@ fun Project.configureBadgingTasks(
                     File(
                         baseExtension.sdkDirectory,
                         "${SdkConstants.FD_BUILD_TOOLS}/" +
-                            "${baseExtension.buildToolsVersion}/" +
-                            SdkConstants.FN_AAPT2,
+                                "${baseExtension.buildToolsVersion}/" +
+                                SdkConstants.FN_AAPT2,
                     ),
                 )
 

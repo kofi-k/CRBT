@@ -1,7 +1,6 @@
-
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
-import com.example.crbtjetcompose.configureJacoco
+import com.itengs.crbt.configureJacoco
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType

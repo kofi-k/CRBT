@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.ApplicationProductFlavor
@@ -15,7 +15,7 @@ enum class FlavorDimension {
 // These two product flavors reflect this behaviour.
 @Suppress("EnumEntryName")
 enum class CRBTFlavor(val dimension: FlavorDimension, val applicationIdSuffix: String? = null) {
-//    demo(FlavorDimension.contentType, applicationIdSuffix = ".demo"),
+    //    demo(FlavorDimension.contentType, applicationIdSuffix = ".demo"),
     prod(FlavorDimension.contentType)
 }
 

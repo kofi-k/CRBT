@@ -1,9 +1,9 @@
 package com.crbt.data.core.data.repository
 
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
-import com.example.crbtjetcompose.core.model.data.fullName
 import com.example.crbtjetcompose.core.network.di.HttpException
 import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
+import com.itengs.crbt.core.model.data.fullName
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

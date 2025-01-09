@@ -11,9 +11,9 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.crbt.data.core.data.PlayerState
 import com.crbt.data.core.data.mapper.toSongResource
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

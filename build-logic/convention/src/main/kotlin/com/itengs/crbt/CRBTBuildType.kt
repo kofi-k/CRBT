@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 /**
  * This is shared between :app and :benchmarks module to provide configurations type safety.

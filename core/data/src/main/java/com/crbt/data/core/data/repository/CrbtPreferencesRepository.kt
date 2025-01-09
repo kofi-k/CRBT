@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.repository
 
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 
 interface CrbtPreferencesRepository {

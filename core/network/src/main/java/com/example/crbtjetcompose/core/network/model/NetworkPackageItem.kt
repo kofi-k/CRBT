@@ -1,6 +1,6 @@
 package com.example.crbtjetcompose.core.network.model
 
-import com.example.crbtjetcompose.core.model.data.PackageItem
+import com.itengs.crbt.core.model.data.PackageItem
 import kotlinx.serialization.Serializable
 
 

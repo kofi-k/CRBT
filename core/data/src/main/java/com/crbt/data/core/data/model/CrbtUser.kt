@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.model
 
-import com.example.crbtjetcompose.core.model.data.CrbtUser
+import com.itengs.crbt.core.model.data.CrbtUser
 
 
 // dummy user object

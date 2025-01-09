@@ -1,10 +1,10 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
-import com.example.crbtjetcompose.configureBadgingTasks
-import com.example.crbtjetcompose.configureGradleManagedDevices
-import com.example.crbtjetcompose.configureKotlinAndroid
-import com.example.crbtjetcompose.configurePrintApksTask
+import com.itengs.crbt.configureBadgingTasks
+import com.itengs.crbt.configureGradleManagedDevices
+import com.itengs.crbt.configureKotlinAndroid
+import com.itengs.crbt.configurePrintApksTask
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
