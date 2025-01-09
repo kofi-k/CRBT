@@ -1,4 +1,4 @@
-import com.example.crbtjetcompose.CRBTBuildType
+import com.itengs.crbt.CRBTBuildType
 
 plugins {
     alias(libs.plugins.crbt.android.application)
@@ -13,10 +13,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose"
+    namespace = "com.itengs.crbt"
 
     defaultConfig {
-        applicationId = "com.example.crbtjetcompose"
+        applicationId = "com.itengs.crbt"
         versionCode = 1
         versionName = "1.0.0" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
@@ -33,12 +33,13 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
+            applicationIdSuffix = com.itengs.crbt.CRBTBuildType.DEBUG.applicationIdSuffix
             isDebuggable = false
         }
         release {
             isMinifyEnabled = false
-            applicationIdSuffix = CRBTBuildType.RELEASE.applicationIdSuffix
+            applicationIdSuffix =
+                com.itengs.crbt.CRBTBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

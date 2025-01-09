@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.ui
+package com.itengs.crbt.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

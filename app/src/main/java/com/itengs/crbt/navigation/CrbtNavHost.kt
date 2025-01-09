@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.navigation
+package com.itengs.crbt.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -17,7 +17,7 @@ import com.crbt.services.navigation.RECHARGE_ROUTE
 import com.crbt.services.navigation.servicesScreen
 import com.crbt.subscription.navigation.subscriptionScreen
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
-import com.example.crbtjetcompose.ui.CrbtAppState
+import com.itengs.crbt.ui.CrbtAppState
 
 
 @RequiresApi(Build.VERSION_CODES.O)

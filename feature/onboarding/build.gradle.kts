@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.feature.onboarding"
+    namespace = "com.itengs.crbt.feature.onboarding"
 }
 
 dependencies {

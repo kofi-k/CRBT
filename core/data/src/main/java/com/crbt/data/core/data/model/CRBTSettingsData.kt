@@ -1,7 +1,7 @@
 package com.crbt.data.core.data.model
 
 import androidx.annotation.StringRes
-import com.example.crbtjetcompose.core.data.R
+import com.itengs.crbt.core.data.R
 
 
 data class CRBTSettingsData(

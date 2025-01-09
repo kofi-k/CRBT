@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.core.model.data
+package com.itengs.crbt.core.model.data
 
 data class SubscriptionCategory(
     val id: String,

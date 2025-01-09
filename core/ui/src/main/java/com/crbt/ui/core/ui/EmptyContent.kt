@@ -18,7 +18,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
-import com.example.crbtjetcompose.core.ui.R
+import com.itengs.crbt.core.ui.R
 
 @Composable
 fun EmptyContent(

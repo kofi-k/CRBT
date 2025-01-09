@@ -94,8 +94,8 @@ import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
-import com.example.crbtjetcompose.core.model.data.PackageItem
-import com.example.crbtjetcompose.feature.subscription.R
+import com.itengs.crbt.core.model.data.PackageItem
+import com.itengs.crbt.feature.subscription.R
 import kotlinx.coroutines.launch
 
 
@@ -362,7 +362,7 @@ fun CrbtRegistrationContent(
                 )
                 Text(
                     text = stringResource(
-                        id = com.example.crbtjetcompose.core.data.R.string.core_data_registration_package,
+                        id = com.itengs.crbt.core.data.R.string.core_data_registration_package,
                         registrationPackage.price,
                         registrationPackage.itemValidity()
                     ),
@@ -399,7 +399,7 @@ fun SubscribeHeader(
         DynamicAsyncImage(
             modifier = Modifier.fillMaxSize(),
             imageUrl = songProfileUrl,
-            imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image
+            imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_paps_image
         )
 
         Box(

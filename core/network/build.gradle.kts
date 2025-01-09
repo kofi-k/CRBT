@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.network"
+    namespace = "com.itengs.crbt.core.network"
     buildFeatures {
         buildConfig = true
     }

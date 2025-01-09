@@ -1,7 +1,7 @@
-package com.example.crbtjetcompose
+package com.itengs.crbt
 
 import android.app.Application
-import com.example.crbtjetcompose.util.ProfileVerifierLogger
+import com.itengs.crbt.util.ProfileVerifierLogger
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 

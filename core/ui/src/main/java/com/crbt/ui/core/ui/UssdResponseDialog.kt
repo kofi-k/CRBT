@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.crbt.data.core.data.CrbtUssdType
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.icon.CrbtIcons
-import com.example.crbtjetcompose.core.ui.R
-import com.example.crbtjetcompose.core.designsystem.R as desR
+import com.itengs.crbt.core.ui.R
+import com.itengs.crbt.core.designsystem.R as desR
 
 @Composable
 fun UssdResponseDialog(

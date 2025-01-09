@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.icon.CrbtIcons
-import com.example.crbtjetcompose.feature.profile.R
+import com.itengs.crbt.feature.profile.R
+
 
 @Composable
 fun LanguageSettings(

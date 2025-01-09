@@ -1,7 +1,7 @@
 package com.crbt.domain
 
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

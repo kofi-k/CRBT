@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.core.model.data
+package com.itengs.crbt.core.model.data
 
 /**
  *  A [UserToneSubscriptions] model class that represents the user tone subscriptions

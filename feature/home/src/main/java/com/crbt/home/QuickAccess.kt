@@ -24,7 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
-import com.example.crbtjetcompose.core.ui.R
+import com.itengs.crbt.feature.home.R
+
 
 @Composable
 fun QuickAccess(
@@ -40,7 +41,7 @@ fun QuickAccess(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(id = com.example.crbtjetcompose.feature.home.R.string.feature_home_quick_services),
+                text = stringResource(id = R.string.feature_home_quick_services),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold
                 )
@@ -52,7 +53,7 @@ fun QuickAccess(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(id = com.example.crbtjetcompose.feature.home.R.string.feature_home_view_all),
+                    text = stringResource(id = R.string.feature_home_view_all),
                 )
                 Icon(
                     imageVector = CrbtIcons.ArrowRight,
@@ -70,7 +71,7 @@ fun QuickAccess(
             SurfaceCard(
                 content = {
                     QuickAccessItem(
-                        title = stringResource(id = R.string.core_ui_packages),
+                        title = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_packages),
                         icon = CrbtIcons.Packages,
                         onClick = navigateToPackages
                     )
@@ -83,7 +84,7 @@ fun QuickAccess(
             SurfaceCard(
                 content = {
                     QuickAccessItem(
-                        title = stringResource(id = R.string.core_ui_recharge),
+                        title = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_recharge),
                         icon = CrbtIcons.Recharge,
                         onClick = navigateToRecharge
                     )

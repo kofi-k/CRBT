@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.ui
+package com.itengs.crbt.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -23,7 +23,7 @@ import com.crbt.services.navigation.SERVICES_ROUTE
 import com.crbt.services.navigation.navigateToServices
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.navigateToSubscription
-import com.example.crbtjetcompose.navigation.TopLevelDestination
+import com.itengs.crbt.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

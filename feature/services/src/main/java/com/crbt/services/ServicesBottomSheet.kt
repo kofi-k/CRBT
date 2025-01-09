@@ -35,7 +35,8 @@ import com.crbt.designsystem.components.TextFieldType
 import com.crbt.services.packages.ButtonActionRow
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.validationStates.AmountValidationState
-import com.example.crbtjetcompose.feature.services.R
+import com.itengs.crbt.feature.services.R
+
 
 enum class ServicesType {
     CALL_ME_BACK,
@@ -174,9 +175,9 @@ fun TransferContent(
             value = amountState.text,
             inputType = InputType.MONEY,
             textFieldType = TextFieldType.OUTLINED,
-            label = stringResource(id = com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_amount_placeholder),
+            label = stringResource(id = com.itengs.crbt.core.designsystem.R.string.core_designsystem_amount_placeholder),
             leadingIcon = {
-                Text(text = stringResource(id = com.example.crbtjetcompose.core.data.R.string.core_data_ethio_currency))
+                Text(text = stringResource(id = com.itengs.crbt.core.data.R.string.core_data_ethio_currency))
             },
             colors = OutlinedTextFieldDefaults.colors(),
             onClear = {

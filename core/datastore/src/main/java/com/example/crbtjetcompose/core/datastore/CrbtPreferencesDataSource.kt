@@ -2,7 +2,7 @@ package com.example.crbtjetcompose.core.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException

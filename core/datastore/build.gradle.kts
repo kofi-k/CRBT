@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.datastore"
+    namespace = "com.itengs.crbt.core.datastore"
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
     }

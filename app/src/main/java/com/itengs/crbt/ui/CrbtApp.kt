@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.ui
+package com.itengs.crbt.ui
 
 import PullToRefreshContent
 import android.net.Uri
@@ -84,9 +84,9 @@ import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.MusicCard
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
-import com.example.crbtjetcompose.R
-import com.example.crbtjetcompose.navigation.CrbtNavHost
-import com.example.crbtjetcompose.navigation.TopLevelDestination
+import com.itengs.crbt.R
+import com.itengs.crbt.navigation.CrbtNavHost
+import com.itengs.crbt.navigation.TopLevelDestination
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
@@ -126,14 +126,14 @@ fun CrbtApp(
     val titleRes = when {
         destination != null -> destination.titleTextId
         else -> when (currentRoute) {
-            TOPUP_ROUTE -> com.example.crbtjetcompose.feature.services.R.string.feature_services_topup
-            TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_payments
-            ACCOUNT_HISTORY_ROUTE -> com.example.crbtjetcompose.feature.home.R.string.feature_home_account_history
-            PROFILE_EDIT_ROUTE -> com.example.crbtjetcompose.feature.profile.R.string.feature_profile_title
-            ADD_SUBSCRIPTION_ROUTE -> com.example.crbtjetcompose.feature.subscription.R.string.feature_subscription_add_subscription_title
-            PACKAGES_ROUTE -> com.example.crbtjetcompose.core.ui.R.string.core_ui_packages
-            RECHARGE_ROUTE -> com.example.crbtjetcompose.core.ui.R.string.core_ui_recharge
-            else -> com.example.crbtjetcompose.core.designsystem.R.string.core_designsystem_untitled
+            TOPUP_ROUTE -> com.itengs.crbt.feature.services.R.string.feature_services_topup
+            TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.itengs.crbt.feature.profile.R.string.feature_profile_payments
+            ACCOUNT_HISTORY_ROUTE -> com.itengs.crbt.feature.home.R.string.feature_home_account_history
+            PROFILE_EDIT_ROUTE -> com.itengs.crbt.feature.profile.R.string.feature_profile_title
+            ADD_SUBSCRIPTION_ROUTE -> com.itengs.crbt.feature.subscription.R.string.feature_subscription_add_subscription_title
+            PACKAGES_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_packages
+            RECHARGE_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_recharge
+            else -> com.itengs.crbt.core.designsystem.R.string.core_designsystem_untitled
         }
     }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -342,7 +342,7 @@ fun CrbtApp(
                                             verticalArrangement = Arrangement.Center
                                         ) {
                                             Text(
-                                                text = stringResource(id = com.example.crbtjetcompose.feature.services.R.string.feature_services_title),
+                                                text = stringResource(id = com.itengs.crbt.feature.services.R.string.feature_services_title),
                                                 style = MaterialTheme.typography.titleMedium.copy(
                                                     fontWeight = FontWeight.Bold
                                                 ),

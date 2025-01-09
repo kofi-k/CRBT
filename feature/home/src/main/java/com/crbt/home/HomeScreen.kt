@@ -52,7 +52,7 @@ import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.UssdResponseDialog
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
-import com.example.crbtjetcompose.feature.home.R
+import com.itengs.crbt.feature.home.R
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -147,7 +147,7 @@ fun HomeScreen(
                                         TonesPlayerEvent.FetchSong
                                     )
                                 },
-                                text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                                text = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_reload_button),
                                 colors = ButtonDefaults.textButtonColors()
                             )
                         }
@@ -209,7 +209,7 @@ fun HomeScreen(
                                                 TonesPlayerEvent.FetchSong
                                             )
                                         },
-                                        text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                                        text = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_reload_button),
                                         colors = ButtonDefaults.textButtonColors()
                                     )
                                 }

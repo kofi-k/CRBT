@@ -70,9 +70,10 @@ import com.crbt.onboarding.ui.PhoneNumberInput
 import com.crbt.onboarding.ui.phoneAuth.AuthState
 import com.crbt.onboarding.ui.phoneAuth.PhoneAuthViewModel
 import com.crbt.ui.core.ui.PermissionRequestComposable
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
 import kotlinx.coroutines.launch
-import com.example.crbtjetcompose.core.ui.R as UiR
+import com.itengs.crbt.core.ui.R as UiR
+
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)

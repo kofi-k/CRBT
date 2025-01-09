@@ -9,7 +9,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UserManager
@@ -23,8 +22,8 @@ import com.crbt.data.core.data.util.generateGiftCrbtUssd
 import com.crbt.domain.GetEthioPackagesUseCase
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
 import com.example.crbtjetcompose.core.network.di.HttpException
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -57,8 +56,6 @@ class SubscriptionViewModel @Inject constructor(
         private set
 
     var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
-
-    private var crbtBillingType by mutableStateOf(SubscriptionBillingType.Monthly)
 
 
     val crbtSongResource: StateFlow<CrbtSongResource?> =
@@ -203,11 +200,6 @@ class SubscriptionViewModel @Inject constructor(
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
-    }
-
-
-    fun onBillingTypeChange(billingType: SubscriptionBillingType) {
-        crbtBillingType = billingType
     }
 
 }

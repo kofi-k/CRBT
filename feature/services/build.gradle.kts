@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.feature.services"
+    namespace = "com.itengs.crbt.feature.services"
 }
 
 dependencies {

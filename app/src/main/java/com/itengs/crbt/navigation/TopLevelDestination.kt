@@ -1,11 +1,11 @@
-package com.example.crbtjetcompose.navigation
+package com.itengs.crbt.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.crbt.designsystem.icon.CrbtIcons
-import com.example.crbtjetcompose.feature.home.R as homeR
-import com.example.crbtjetcompose.feature.services.R as servicesR
-import com.example.crbtjetcompose.feature.subscription.R as subscriptionR
-import com.example.crbtjetcompose.feature.profile.R as profileR
+import com.itengs.crbt.feature.home.R as homeR
+import com.itengs.crbt.feature.profile.R as profileR
+import com.itengs.crbt.feature.services.R as servicesR
+import com.itengs.crbt.feature.subscription.R as subscriptionR
 
 /**
  * Type for the top level destinations in the application. Each of these destinations

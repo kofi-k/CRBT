@@ -72,7 +72,7 @@ import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.UssdResponseDialog
-import com.example.crbtjetcompose.feature.services.R
+import com.itengs.crbt.feature.services.R
 import kotlinx.coroutines.launch
 
 

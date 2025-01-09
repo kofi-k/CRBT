@@ -27,7 +27,7 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.InfoRow
-import com.example.crbtjetcompose.feature.subscription.R
+import com.itengs.crbt.feature.subscription.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 

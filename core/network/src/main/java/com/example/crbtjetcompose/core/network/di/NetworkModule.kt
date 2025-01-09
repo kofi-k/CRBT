@@ -1,11 +1,11 @@
 package com.example.crbtjetcompose.core.network.di
 
 import androidx.tracing.trace
-import com.example.crbtjetcompose.core.network.BuildConfig
 import com.example.crbtjetcompose.core.network.model.ApiErrorResponse
 import com.example.crbtjetcompose.core.network.repository.TokenProvider
 import com.example.crbtjetcompose.core.network.repository.TokenProviderImpl
 import com.example.crbtjetcompose.core.network.retrofit.RetrofitCrbtNetworkApi
+import com.itengs.crbt.core.network.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides

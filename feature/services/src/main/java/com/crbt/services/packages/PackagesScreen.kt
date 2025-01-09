@@ -72,9 +72,9 @@ import com.crbt.services.ServicesViewModel
 import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.UssdResponseDialog
-import com.example.crbtjetcompose.core.model.data.CrbtPackageCategory
-import com.example.crbtjetcompose.core.model.data.PackageItem
-import com.example.crbtjetcompose.feature.services.R
+import com.itengs.crbt.core.model.data.CrbtPackageCategory
+import com.itengs.crbt.core.model.data.PackageItem
+import com.itengs.crbt.feature.services.R
 import kotlinx.coroutines.launch
 
 
@@ -226,7 +226,7 @@ fun PackageContent(
                         ProcessButton(
                             onClick = onReload,
                             isProcessing = isReloading,
-                            text = stringResource(id = com.example.crbtjetcompose.core.ui.R.string.core_ui_reload_button),
+                            text = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_reload_button),
                             colors = ButtonDefaults.textButtonColors()
                         )
                     }

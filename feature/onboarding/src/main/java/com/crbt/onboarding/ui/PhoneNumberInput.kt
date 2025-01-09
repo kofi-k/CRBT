@@ -14,7 +14,8 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.PhoneEntryScreen
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
+
 
 @Composable
 fun PhoneNumberInput(
