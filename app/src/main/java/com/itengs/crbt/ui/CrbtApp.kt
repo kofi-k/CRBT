@@ -368,6 +368,11 @@ fun CrbtApp(
             ) { padding ->
                 PullToRefreshContent(
                     isRefreshing = refreshUiState is RefreshUiState.Loading || tonesUiState.loading == true,
+                    showIndicator = currentRoute in listOf(
+                        HOME_ROUTE,
+                        SUBSCRIPTION_ROUTE,
+                        PACKAGES_ROUTE,
+                    ),
                     onRefresh = {
                         when (destination) {
                             TopLevelDestination.HOME -> {
@@ -378,29 +383,30 @@ fun CrbtApp(
                             }
 
                             TopLevelDestination.SUBSCRIPTIONS -> mainActivityViewModel.refreshSongs()
-                            TopLevelDestination.PROFILE -> mainActivityViewModel.refreshUserInfo()
                             else -> when (currentRoute) {
                                 PACKAGES_ROUTE -> mainActivityViewModel.refreshPackages()
                                 else -> Unit
                             }
                         }
-                    }) {
-                    when (userData) {
-                        is Result.Loading -> CircularProgressIndicator()
-                        is Result.Error -> Unit
-                        is Result.Success -> {
-                            CrbtNavHost(
-                                appState = appState,
-                                startDestination = startDestination,
-                                musicControllerUiState = musicControllerUiState,
-                                crbtTonesViewModel = crbtTonesViewModel,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(padding)
-                            )
+                    },
+                    content = {
+                        when (userData) {
+                            is Result.Loading -> CircularProgressIndicator()
+                            is Result.Error -> Unit
+                            is Result.Success -> {
+                                CrbtNavHost(
+                                    appState = appState,
+                                    startDestination = startDestination,
+                                    musicControllerUiState = musicControllerUiState,
+                                    crbtTonesViewModel = crbtTonesViewModel,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(padding)
+                                )
+                            }
                         }
                     }
-                }
+                )
             }
         }
     }

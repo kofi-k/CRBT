@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 fun PullToRefreshContent(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    showIndicator: Boolean = true
 ) {
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -30,12 +31,15 @@ fun PullToRefreshContent(
             )
     ) {
         content()
-        PullRefreshIndicator(
-            isRefreshing,
-            refreshState,
-            Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 34.dp)
-        )
+
+        if (showIndicator) {
+            PullRefreshIndicator(
+                isRefreshing,
+                refreshState,
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 34.dp)
+            )
+        }
     }
 }

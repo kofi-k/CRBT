@@ -1,5 +1,6 @@
 package com.crbt.designsystem.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,9 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -55,6 +55,7 @@ fun RowScope.CrbtNavigationBarItem(
         enabled = enabled,
         label = label,
         alwaysShowLabel = alwaysShowLabel,
+        interactionSource = remember { MutableInteractionSource() }
     )
 }
 
@@ -98,8 +99,7 @@ fun FauNavigationBarPreview() {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 8.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
-            ,
+                .clip(MaterialTheme.shapes.extraLarge),
         ) {
             items.forEachIndexed { index, item ->
                 CrbtNavigationBarItem(
@@ -117,7 +117,7 @@ fun FauNavigationBarPreview() {
                     },
                     label = {
 //                        Text(item)
-                            },
+                    },
                     selected = index == 0,
                     onClick = { },
                 )
