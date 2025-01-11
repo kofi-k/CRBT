@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.repository
 
-import com.example.crbtjetcompose.core.network.di.HttpException
+import com.crbt.core.network.di.HttpException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map

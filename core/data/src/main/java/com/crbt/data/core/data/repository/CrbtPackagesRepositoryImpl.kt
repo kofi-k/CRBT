@@ -3,8 +3,8 @@ package com.crbt.data.core.data.repository
 import com.crbt.common.core.common.network.CrbtDispatchers
 import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.common.core.common.result.Result
+import com.crbt.core.network.model.asExternalModel
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
-import com.example.crbtjetcompose.core.network.model.asExternalModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

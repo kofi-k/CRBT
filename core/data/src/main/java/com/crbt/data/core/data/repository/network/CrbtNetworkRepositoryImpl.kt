@@ -1,18 +1,18 @@
 package com.crbt.data.core.data.repository.network
 
+import com.crbt.core.network.model.AccountUpdatedResponse
+import com.crbt.core.network.model.CrbtNetworkAds
+import com.crbt.core.network.model.CrbtNetworkPackage
+import com.crbt.core.network.model.Login
+import com.crbt.core.network.model.LoginResponse
+import com.crbt.core.network.model.NetworkPackageItem
+import com.crbt.core.network.model.NetworkSongsResource
+import com.crbt.core.network.model.SubscriptionRequest
+import com.crbt.core.network.model.UpdateUserInfo
+import com.crbt.core.network.model.UserAccountDetailsNetworkModel
+import com.crbt.core.network.model.UserContacts
+import com.crbt.core.network.retrofit.RetrofitCrbtNetworkApi
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.example.crbtjetcompose.core.network.model.AccountUpdatedResponse
-import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
-import com.example.crbtjetcompose.core.network.model.CrbtNetworkPackage
-import com.example.crbtjetcompose.core.network.model.Login
-import com.example.crbtjetcompose.core.network.model.LoginResponse
-import com.example.crbtjetcompose.core.network.model.NetworkPackageItem
-import com.example.crbtjetcompose.core.network.model.NetworkSongsResource
-import com.example.crbtjetcompose.core.network.model.SubscriptionRequest
-import com.example.crbtjetcompose.core.network.model.UpdateUserInfo
-import com.example.crbtjetcompose.core.network.model.UserAccountDetailsNetworkModel
-import com.example.crbtjetcompose.core.network.model.UserContacts
-import com.example.crbtjetcompose.core.network.retrofit.RetrofitCrbtNetworkApi
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
