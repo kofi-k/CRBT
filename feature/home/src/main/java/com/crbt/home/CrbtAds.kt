@@ -78,15 +78,6 @@ fun CrbtAds(
             }
         }
 
-//        is CrbtAdsUiState.Loading -> Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            CircularProgressIndicator()
-//        }
-
         else -> Unit
     }
 

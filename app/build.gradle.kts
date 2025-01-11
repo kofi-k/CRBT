@@ -33,13 +33,13 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = com.itengs.crbt.CRBTBuildType.DEBUG.applicationIdSuffix
-            isDebuggable = false
+            applicationIdSuffix = CRBTBuildType.DEBUG.applicationIdSuffix
+//            isDebuggable = false
         }
         release {
             isMinifyEnabled = false
             applicationIdSuffix =
-                com.itengs.crbt.CRBTBuildType.RELEASE.applicationIdSuffix
+                CRBTBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
