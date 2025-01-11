@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.core.network.repository
+package com.crbt.core.network.repository
 
 import com.example.crbtjetcompose.core.datastore.CrbtPreferencesDataSource
 import kotlinx.coroutines.flow.first

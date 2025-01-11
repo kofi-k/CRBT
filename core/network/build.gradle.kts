@@ -29,7 +29,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
-    implementation(project(":core:datastore"))
+    implementation(projects.core.datastore)
     implementation(libs.play.services.basement)
 
 }

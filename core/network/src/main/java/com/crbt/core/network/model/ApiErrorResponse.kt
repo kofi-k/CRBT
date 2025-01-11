@@ -1,4 +1,4 @@
-package com.example.crbtjetcompose.core.network.model
+package com.crbt.core.network.model
 
 import kotlinx.serialization.Serializable
 
