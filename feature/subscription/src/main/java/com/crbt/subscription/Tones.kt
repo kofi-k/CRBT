@@ -62,8 +62,9 @@ import com.crbt.ui.core.ui.SearchToolbar
 import com.crbt.ui.core.ui.ToneItem
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.feature.subscription.R
+import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.feature.subscription.R
+
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable

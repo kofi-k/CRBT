@@ -5,5 +5,5 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.common"
+    namespace = "com.itengs.crbt.core.common"
 }

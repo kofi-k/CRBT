@@ -28,7 +28,7 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.CustomInputButton
 import com.crbt.ui.core.ui.OnboardingSheetContainer
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
 
 
 @Composable
@@ -67,7 +67,8 @@ fun LanguageSelectionMenu(
             Column {
                 CustomInputButton(
                     text = stringResource(
-                        id = CRBTSettingsData.languages.first { it.code == selectedLanguage }.name
+                        id = CRBTSettingsData.languages.find { it.code == selectedLanguage }?.name
+                            ?: CRBTSettingsData.languages.last().name
                     ),
                     onClick = {
                         expanded = !expanded

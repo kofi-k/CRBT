@@ -1,7 +1,7 @@
 package com.crbt.data.core.data.mapper
 
 import androidx.media3.common.MediaItem
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 
 fun MediaItem.toSongResource() =
     CrbtSongResource(

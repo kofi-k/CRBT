@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_services_title">Tajaajila</string>
+    <string name="feature_services_check_balance">Baajata ilaali</string>
+    <string name="feature_services_check_description">Ibsa gabaabaa ilaali</string>
+    <string name="feature_services_packages">Paakeejii</string>
+    <string name="feature_services_packages_description">Ibsa gabaabaa paakeejii</string>
+    <string name="feature_services_recharge">Guutuu</string>
+    <string name="feature_services_recharge_description">Ibsa gabaabaa guutuu</string>
+    <string name="feature_services_transfer">Dabarsuu</string>
+    <string name="feature_services_transfer_description">Ibsa gabaabaa dabarsuu</string>
+    <string name="feature_services_call_back">Na bilbili</string>
+    <string name="feature_services_call_back_description">Ibsa gabaabaa na bilbili</string>
+    <string name="feature_services_buy">Biti</string>
+    <string name="feature_services_buy_description">Ibsa gabaabaa bituu</string>
+    <string name="feature_services_search_title">Barbaadi</string>
+    <string name="feature_services_balance">Baajata</string>
+    <string name="feature_services_etb">ETB %s</string>
+    <string name="feature_services_recharge_amount_title">Hanga kaa\'i</string>
+    <string name="feature_services_recharge_amount_subtitle">Hangam guutuu barbaadda?</string>
+    <string name="feature_services_mode_of_payment_title">Mala Kaffaltii</string>
+    <string name="feature_services_payment_option">Filannoo kaffaltii</string>
+    <string name="feature_services_topup">Guutuu</string>
+    <string name="feature_services_confirm">Mirkaneessi</string>
+    <string name="feature_services_amount_topup">Hanga Guutuu</string>
+    <string name="feature_services_account_balance">Baajata Herregaa</string>
+    <string name="feature_services_topup_amount">Hanga Guutuu</string>
+    <string name="feature_services_date">Guyyaa</string>
+    <string name="feature_services_gift_button">Kennaa</string>
+    <string name="feature_services_cancel">Haqi</string>
+    <string name="feature_services_purchase_confirmation">%1$s gatii %2$s ETB\'n bituuf itti fufi</string>
+    <string name="feature_services_gift_purchase_contact_info">Lakkoofsa fudhataa galchi</string>
+    <string name="feature_services_error_check_balance">Dogoggora baajata ilaaluu</string>
+    <string name="feature_services_balance_check">Baajatni kee ammaa</string>
+    <string name="feature_services_ok">Tole</string>
+    <string name="feature_services_call_back_button">Gaafadhu</string>
+    <string name="feature_services_no_packages">Paakeejiin mul\'isuuf hin jiru</string>
+    <string name="feature_services_no_packages_items">%s\'f homaa agarsiisuu hin jiru</string>
+    <string name="feature_services_recharge_screen_recharge_code_length">Lakkoofsi digittii kaardii guutuu qabaachuu qabu.</string>
+    <string name="feature_services_recharge_screen_auto_dial_title">Kaardii ofumaan bilbiluu</string>
+    <string name="feature_services_recharge_screen_auto_dial_description">Yoo lakkoofsi kaardii guutuu sirrii ta\'e bilbila harkaan gaafata</string>
+    <string name="feature_services_recharge_screen_quick_settings_hide">Qindaa\'ina ariifachiisaa dhoksi</string>
+    <string name="feature_services_recharge_screen_quick_settings_show">Qindaa\'ina ariifachiisaa agarsiisi</string>
+    <string name="feature_services_recharge_screen_title">Kaardiin guutuu asitti mul\'ata.</string>
+</resources>

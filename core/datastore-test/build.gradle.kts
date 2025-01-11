@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.coredatastore.test"
+    namespace = "com.itengs.crbt.coredatastore.test"
 }
 
 dependencies {

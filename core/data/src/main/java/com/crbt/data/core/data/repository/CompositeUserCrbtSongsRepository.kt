@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.repository
 
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -17,7 +17,12 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                     is CrbtMusicResourceUiState.Success -> {
                         CrbtSongsFeedUiState.Success(
                             songs = songs.songs
-                                .sortedByDescending { song -> song.createdAt },
+                                .sortedByDescending { song -> song.createdAt }
+                                .map {
+                                    it.copy(
+                                        subscriptionType = userPreferenceData.userCrbtRegistrationPackage
+                                    )
+                                },
                             currentUserCrbtSubscriptionSong = songs.songs.find {
                                 it.id == userPreferenceData.currentCrbtSubscriptionId.toString()
                             }

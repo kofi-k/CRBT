@@ -1,7 +1,7 @@
 package com.crbt.data.core.data.musicService
 
 import com.crbt.data.core.data.PlayerState
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 
 
 interface MusicController {

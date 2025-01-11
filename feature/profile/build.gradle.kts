@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.feature.profile"
+    namespace = "com.itengs.crbt.feature.profile"
 }
 
 dependencies {
@@ -14,4 +14,5 @@ dependencies {
     implementation(projects.core.ui)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.coil.kt.compose)
+    implementation(libs.androidx.appcompat)
 }

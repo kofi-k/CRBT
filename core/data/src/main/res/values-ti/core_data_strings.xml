@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_data_monthly_bill_title">ወርሓዊ</string>
+    <string name="core_data_bi_weekly_bill_title">ክልተ-ሰሙናዊ</string>
+    <string name="core_data_weekly_bill_title">ሰሙናዊ</string>
+    <string name="core_data_camera">ካሜራ</string>
+    <string name="core_data_photos">ፎቶታት</string>
+    <string name="core_data_microphone">ማይክሮፎን</string>
+    <string name="core_data_storage">ማዕከን</string>
+    <string name="core_data_contacts">ዝርክባት</string>
+    <string name="core_data_location">ቦታ</string>
+    <string name="core_data_sms">መልእኽቲ</string>
+    <string name="core_data_ussd">USSD</string>
+    <string name="core_data_chapa">ቻፓ</string>
+    <string name="core_data_santim_pay">ሳንቲም ፔይ</string>
+    <string name="core_data_telebir">ተለብር</string>
+    <string name="core_data_ethio_currency">ብር</string>
+    <string name="core_data_registration_package">Birr %s for %s</string>
+    <string name="core_data_monthly">Monthly</string>
+    <string name="core_data_bi_weekly">Two Weeks</string>
+    <string name="core_data_weekly">One Week</string>
+</resources>

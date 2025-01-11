@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_title">Mana</string>
+    <string name="feature_home_balance">ETB %s</string>
+    <string name="feature_home_balance_subtitle">Tilmaama Baajata</string>
+    <string name="feature_home_latest_music">Muuziqaa Haaraa</string>
+    <string name="feature_home_recent_subscription_title">Sababii Dhihoo</string>
+    <string name="feature_home_recent_subscription_rate_Description">Ji\'atti</string>
+    <string name="feature_home_popular_today_title">Har\'a beekamaa</string>
+    <string name="feature_home_account_history">Seenaa Herregaa</string>
+    <string name="feature_home_advert">beeksisa</string>
+    <string name="feature_home_no_songs">Hmm, agarsiisuu homaa hin jiru.</string>
+    <string name="feature_home_no_subscriptions">Sababii CRBT hojjetu hin qabdan</string>
+    <string name="feature_home_subscribe_now">Amma Sababa\'i</string>
+    <string name="feature_home_quick_services">Qabsoo Qabsoon</string>
+    <string name="feature_home_view_all">Dabalataa</string>
+</resources>

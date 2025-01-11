@@ -58,8 +58,9 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
 import com.crbt.domain.UserPreferenceUiState
-import com.example.crbtjetcompose.core.model.data.fullName
-import com.example.crbtjetcompose.feature.profile.R
+import com.itengs.crbt.core.model.data.fullName
+import com.itengs.crbt.feature.profile.R
+
 
 @Composable
 fun ProfileRoute(
@@ -78,7 +79,9 @@ fun ProfileRoute(
         },
         signOutState = signOutState,
         userPreferenceUiState = userPreferenceUiState,
-        onLanguageCheckChange = profileViewModel::saveLanguageCode,
+        onLanguageCheckChange = { code ->
+            profileViewModel.saveLanguageCode(code)
+        },
     )
 }
 
@@ -180,7 +183,7 @@ fun ProfileHeader(
             ) {
                 DynamicAsyncImage(
                     base64ImageString = userImageUrl,
-                    imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_avatar
+                    imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_avatar
                 )
             }
         },

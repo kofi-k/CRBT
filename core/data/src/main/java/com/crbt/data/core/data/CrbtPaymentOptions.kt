@@ -2,7 +2,8 @@ package com.crbt.data.core.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.crbtjetcompose.core.data.R
+import com.itengs.crbt.core.data.R
+
 
 enum class CrbtPaymentOptions(
     val id: Int,

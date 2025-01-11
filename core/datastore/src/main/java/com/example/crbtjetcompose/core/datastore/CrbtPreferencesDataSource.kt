@@ -2,7 +2,7 @@ package com.example.crbtjetcompose.core.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -30,7 +30,8 @@ class CrbtPreferencesDataSource @Inject constructor(
                 rewardPoints = it.rewardPoints,
                 numberOfRechargeCodeDigits = if (it.numberOfRechargeCodeDigits == 0) 14 else it.numberOfRechargeCodeDigits,
                 autoDialRechargeCode = it.autoDialRechargeCode,
-                userLocation = it.userLocation
+                userLocation = it.userLocation,
+                userCrbtRegistrationPackage = it.userCrbtRegistrationPackage
             )
         }
 
@@ -52,7 +53,6 @@ class CrbtPreferencesDataSource @Inject constructor(
                 rewardPoints = userPreferencesData.rewardPoints
                 userLocation = userPreferencesData.userLocation
                 currentCrbtSubscriptionId = userPreferencesData.currentCrbtSubscriptionId.toString()
-
             }
         }
     }
@@ -101,10 +101,11 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) {
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean, packageDuration: String) {
         userPreferences.updateData {
             it.copy {
                 isUserRegisteredForCrbt = isRegistered
+                userCrbtRegistrationPackage = packageDuration
             }
         }
     }
@@ -190,6 +191,13 @@ class CrbtPreferencesDataSource @Inject constructor(
                     userBalance = 0.0
                     token = ""
                     rewardPoints = 0
+                    userLocation = ""
+                    userContacts = ""
+                    isUserRegisteredForCrbt = false
+                    autoDialRechargeCode = false
+                    numberOfRechargeCodeDigits = 14
+                    themeBrand = ThemeBrandProto.THEME_BRAND_DEFAULT
+                    userCrbtRegistrationPackage = ""
                 }
             }
         } catch (ioException: IOException) {

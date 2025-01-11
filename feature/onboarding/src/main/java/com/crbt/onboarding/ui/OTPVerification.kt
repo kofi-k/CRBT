@@ -12,20 +12,24 @@ import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.otp.OtpScreen
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
+
 
 @RequiresApi(VERSION_CODES.TIRAMISU)
 @Composable
 fun OTPVerification(
     modifier: Modifier = Modifier,
     onOtpModified: (String, Boolean) -> Unit,
-    otpValue: String ,
+    otpValue: String,
     phoneNumber: String,
 ) {
     OnboardingSheetContainer(
         modifier = modifier,
         title = stringResource(id = R.string.feature_onboarding_authentication_title),
-        subtitle = stringResource(id = R.string.feature_onboarding_authentication_subtitle, phoneNumber),
+        subtitle = stringResource(
+            id = R.string.feature_onboarding_authentication_subtitle,
+            phoneNumber
+        ),
         content = {
             OTPVerificationScreen(
                 onOtpModified = onOtpModified,

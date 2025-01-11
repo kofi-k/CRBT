@@ -22,7 +22,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CRBTJetCompose"
+rootProject.name = "CRBT"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
@@ -30,7 +30,6 @@ include(":benchmark")
 include(":feature:onboarding")
 include(":feature:home")
 include(":feature:subscription")
-include(":feature:payment")
 include(":feature:profile")
 include(":feature:services")
 include(":core:designsystem")

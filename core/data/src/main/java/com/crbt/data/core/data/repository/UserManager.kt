@@ -9,7 +9,7 @@ interface UserManager {
         phone: String,
         accountType: String,
         langPref: String
-    )
+    ): String
 
     suspend fun getAccountInfo()
 
@@ -17,6 +17,7 @@ interface UserManager {
         firstName: String,
         lastName: String,
         profile: String?,
+        email: String?,
     ): UpdateUserInfoUiState
 }
 

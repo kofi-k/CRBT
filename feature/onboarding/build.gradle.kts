@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.feature.onboarding"
+    namespace = "com.itengs.crbt.feature.onboarding"
 }
 
 dependencies {
@@ -16,4 +16,5 @@ dependencies {
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.mockito.core)
+    implementation(libs.androidx.appcompat)
 }

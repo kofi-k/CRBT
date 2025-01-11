@@ -23,7 +23,8 @@ import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.SearchToolbar
-import com.example.crbtjetcompose.feature.subscription.R
+import com.itengs.crbt.feature.subscription.R
+
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable

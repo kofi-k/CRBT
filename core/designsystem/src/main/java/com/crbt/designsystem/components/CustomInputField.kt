@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.theme.extremelyDeemphasizedAlpha
-import com.example.crbtjetcompose.core.designsystem.R
+import com.itengs.crbt.core.designsystem.R
 
 
 enum class InputType {

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_subscription_title">Rukumada</string>
+    <string name="feature_subscription_tones">Codadka</string>
+    <string name="feature_subscription_albums">Albumyada</string>
+    <string name="feature_subscription_subscribe_gift_title">Hadiyad Rukumeed</string>
+    <string name="feature_subscription_laguage_change_title">Luqadda</string>
+    <string name="feature_subscription_date_placeholder">Dooro taariikhda</string>
+    <string name="feature_subscription_date_title">Taariikhda Rukumada</string>
+    <string name="feature_subscription_button_text">Ku dar Rukumada</string>
+    <string name="feature_subscription_billing_type_label">Biilka</string>
+    <string name="feature_subscription_name_label">Magaca Rukumada</string>
+    <string name="feature_subscription_price_label">Qiimaha</string>
+    <string name="feature_subscription_share_receipt">La wadaag rasiidka</string>
+    <string name="feature_subscription_done">Dhameys</string>
+    <string name="feature_subscription_etb">ETB %s</string>
+    <string name="feature_subscription_from_text">Ka</string>
+    <string name="feature_subscription_transaction_id">Lambarka Macaamalka</string>
+    <string name="feature_subscription_date">Taariikhda</string>
+    <string name="feature_subscription_add_subscription_title">Ku dar Rukumada</string>
+    <string name="feature_subscription_gift_subscription_title">Hadiyad Rukumeed</string>
+    <string name="feature_subscription_subscribe_to_song_title">Ku biir heestaan %s</string>
+    <string name="feature_subscription_gift_song_title">U hadiyi heestaan %s</string>
+    <string name="feature_subscription_gift_button">Hadiyad u ah</string>
+    <string name="feature_subscription_subscribe_button">Ku biir</string>
+    <string name="feature_subscription_subscribe_to_song_subtitle">Si wacayaashaadu u raaxeystaan heestaan, hadda iska diiwaangeli!</string>
+    <string name="feature_subscription_no_songs">Ma jiraan heeso CRBT oo la baadho</string>
+    <string name="feature_subscription_search_result_not_found">Waxba lama helin raadintaada \"%1$s\"</string>
+    <string name="feature_subscription_play_error">Waa lagu guuldarreystay in la daaro heesta CRBT.</string>
+    <string name="feature_subscription_reload">Cusboonaysii</string>
+    <string name="feature_subscription_register">Hadda isdiiwaangeli</string>
+    <string name="feature_subscription_already_registered">Isticmaale cusub maahan</string>
+    <string name="feature_subscription_new_to_crbt">Cusub ma tahay adeega CRBT?</string>
+    <string name="feature_subscription_register_for_crbt">Isdiiwaangeli adeegyada CRBT</string>
+    <string name="feature_subscription_register_for_crbt_description">Si aad u isticmaasho adeegyada CRBT, isticmaalayaasha waa inay marka hore is diiwaangeliyaan. Isdiiwaangeli haddii aad cusub tahay CRBT.</string>
+    <string name="feature_subscription_plays">ciyaaro⚡</string>
+    <string name="feature_subscription_price">
+qiimaha
+<b>%s</b>
+</string>
+    <string name="feature_subscription_subscribers">rukumayaal</string>
+    <string name="feature_subscription_gift_song_subtitle">Geli lambarka si aad heestaan u hadiyadeyso</string>
+    <string name="feature_subscription_success">
+Si guul leh ayaa loogu biiray
+<b>%s</b>
+CRBT.
+</string>
+    <!--   subscribers plurals   -->
+    <plurals name="feature_subscription_subscribers_plural">
+        <item quantity="one">rukume</item>
+        <item quantity="other">rukumayaal</item>
+    </plurals>
+    <plurals name="feature_subscription_plays_plural">
+        <item quantity="one">ciyaar ⚡</item>
+        <item quantity="other">ciyaaro ⚡</item>
+    </plurals>
+</resources>

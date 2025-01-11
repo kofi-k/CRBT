@@ -2,7 +2,7 @@ package com.crbt.data.core.data.repository
 
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.datastore.CrbtPreferencesDataSource
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -80,21 +80,28 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
         crbtPreferencesDataSource.setUserInterestedCrbtLanguages(code, isInterested)
 
-    override suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean) {
-        crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered)
-    }
+    override suspend fun setUserCrbtRegistrationStatus(
+        isRegistered: Boolean,
+        packageDuration: String
+    ) =
+        crbtPreferencesDataSource.setUserCrbtRegistrationStatus(isRegistered, packageDuration)
+
 
     override suspend fun setAutoDialRechargeCode(
         autoDial: Boolean,
-    ) {
-        crbtPreferencesDataSource.setAutoDialRechargeCode(autoDial)
-    }
+    ) = crbtPreferencesDataSource.setAutoDialRechargeCode(autoDial)
+
 
     override suspend fun setRequiredRechargeDigits(
         numberOfDigits: Int
-    ) {
-        crbtPreferencesDataSource.setRequiredRechargeDigits(numberOfDigits)
-    }
+    ) = crbtPreferencesDataSource.setRequiredRechargeDigits(numberOfDigits)
+
+
+    override suspend fun saveUserContacts(contacts: List<String>) =
+        crbtPreferencesDataSource.saveUserContacts(contacts.joinToString(","))
+
+
+    override suspend fun getUserContacts(): String = crbtPreferencesDataSource.getUserContacts()
 
     private suspend fun userPreferenceData() = userPreferencesData.first()
 }

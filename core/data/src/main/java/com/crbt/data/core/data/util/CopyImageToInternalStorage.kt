@@ -34,7 +34,7 @@ fun convertImageToBase64(context: Context, uri: Uri): String? {
             }
         }
         val bytes = file.readBytes()
-        Base64.encodeToString(bytes, Base64.DEFAULT)
+        Base64.encodeToString(bytes, Base64.NO_WRAP)
     } catch (e: Exception) {
         e.printStackTrace()
         null

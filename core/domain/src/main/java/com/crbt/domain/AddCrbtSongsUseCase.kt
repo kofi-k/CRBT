@@ -1,7 +1,7 @@
 package com.crbt.domain
 
 import com.crbt.data.core.data.musicService.MusicController
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import javax.inject.Inject
 
 class AddCrbtSongsUseCase @Inject constructor(

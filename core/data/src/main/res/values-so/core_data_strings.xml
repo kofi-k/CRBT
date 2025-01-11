@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_data_monthly_bill_title">Bishiiba</string>
+    <string name="core_data_bi_weekly_bill_title">Laba-Isbuucle</string>
+    <string name="core_data_weekly_bill_title">Isbuucle</string>
+    <string name="core_data_camera">Kamarad</string>
+    <string name="core_data_photos">Sawirro</string>
+    <string name="core_data_microphone">Maykrafoon</string>
+    <string name="core_data_storage">Kaydka</string>
+    <string name="core_data_contacts">Xiriirrada</string>
+    <string name="core_data_location">Goobta</string>
+    <string name="core_data_sms">SMS</string>
+    <string name="core_data_ussd">USSD</string>
+    <string name="core_data_chapa">Chapa</string>
+    <string name="core_data_santim_pay">Santim pay</string>
+    <string name="core_data_telebir">Telebir</string>
+    <string name="core_data_ethio_currency">Birr</string>
+    <string name="core_data_registration_package">Birr %s for %s</string>
+    <string name="core_data_monthly">Monthly</string>
+    <string name="core_data_bi_weekly">Two Weeks</string>
+    <string name="core_data_weekly">One Week</string>
+</resources>

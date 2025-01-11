@@ -31,8 +31,8 @@ import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.ToneItem
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.feature.home.R
+import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.feature.home.R
 
 
 @Composable

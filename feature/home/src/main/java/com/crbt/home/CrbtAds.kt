@@ -32,7 +32,7 @@ import com.crbt.data.core.data.repository.CrbtAdsUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.ui.core.ui.launchCustomChromeTab
-import com.example.crbtjetcompose.feature.home.R
+import com.itengs.crbt.feature.home.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,15 +77,6 @@ fun CrbtAds(
                 }
             }
         }
-
-//        is CrbtAdsUiState.Loading -> Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            CircularProgressIndicator()
-//        }
 
         else -> Unit
     }

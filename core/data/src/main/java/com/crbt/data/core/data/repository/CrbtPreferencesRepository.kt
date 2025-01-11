@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.repository
 
-import com.example.crbtjetcompose.core.model.data.UserPreferencesData
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 
 interface CrbtPreferencesRepository {
@@ -36,7 +36,7 @@ interface CrbtPreferencesRepository {
 
     suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
 
-    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean)
+    suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean, packageDuration: String)
 
     suspend fun setAutoDialRechargeCode(
         autoDial: Boolean,
@@ -45,5 +45,10 @@ interface CrbtPreferencesRepository {
     suspend fun setRequiredRechargeDigits(
         numberOfDigits: Int
     )
+
+    suspend fun saveUserContacts(contacts: List<String>)
+
+    suspend fun getUserContacts(): String
+
 }
 

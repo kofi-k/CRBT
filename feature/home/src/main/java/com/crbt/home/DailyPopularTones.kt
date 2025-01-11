@@ -49,7 +49,7 @@ import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
 import com.crbt.ui.core.ui.EmptyContent
-import com.example.crbtjetcompose.feature.home.R
+import com.itengs.crbt.feature.home.R
 
 
 @Composable
@@ -230,7 +230,7 @@ fun MusicCard(
             DynamicAsyncImage(
                 imageUrl = imageUrl,
                 modifier = Modifier.fillMaxSize(),
-                imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image
+                imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_paps_image
             )
         }
         Spacer(modifier = Modifier.size(2.dp))

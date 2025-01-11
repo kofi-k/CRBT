@@ -1,4 +1,4 @@
-import com.example.crbtjetcompose.configureFlavors
+import com.itengs.crbt.configureFlavors
 
 plugins {
     alias(libs.plugins.baselineprofile)
@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.benchmark"
+    namespace = "com.itengs.crbt.benchmark"
 
     defaultConfig {
         minSdk = 24

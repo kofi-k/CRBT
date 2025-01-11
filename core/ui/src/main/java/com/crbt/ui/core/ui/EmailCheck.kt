@@ -29,7 +29,7 @@ import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.validationStates.EmailValidationState
-import com.example.crbtjetcompose.core.ui.R
+import com.itengs.crbt.core.ui.R
 
 @Composable
 fun EmailCheck(

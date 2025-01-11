@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
-import com.example.crbtjetcompose.core.ui.R
+import com.itengs.crbt.core.ui.R
 
 @RequiresApi(VERSION_CODES.TIRAMISU)
 @Composable

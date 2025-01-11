@@ -46,7 +46,8 @@ import com.crbt.designsystem.components.scrollbar.scrollbarState
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.ui.core.ui.permissionIcons
-import com.example.crbtjetcompose.feature.profile.R
+import com.itengs.crbt.feature.profile.R
+
 
 @Composable
 fun PermissionSettings(

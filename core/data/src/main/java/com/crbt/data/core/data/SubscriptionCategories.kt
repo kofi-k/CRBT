@@ -1,6 +1,6 @@
 package com.crbt.data.core.data
 
-import com.example.crbtjetcompose.core.model.data.SubscriptionCategory
+import com.itengs.crbt.core.model.data.SubscriptionCategory
 
 
 // popular, phone, entertainment, packages

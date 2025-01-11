@@ -1,7 +1,7 @@
 package com.crbt.data.core.data.model
 
 import androidx.annotation.StringRes
-import com.example.crbtjetcompose.core.data.R
+import com.itengs.crbt.core.data.R
 
 
 data class CRBTSettingsData(
@@ -10,11 +10,11 @@ data class CRBTSettingsData(
 ) {
     companion object {
         val languages = listOf(
-            CRBTSettingsData("amh", R.string.core_data_amharic),
-            CRBTSettingsData("omf", R.string.core_data_oromiffa),
-            CRBTSettingsData("tgn", R.string.core_data_tigrigna),
-            CRBTSettingsData("sml", R.string.core_data_somalia),
-            CRBTSettingsData("arb", R.string.core_data_arabic),
+            CRBTSettingsData("am", R.string.core_data_amharic),
+            CRBTSettingsData("om", R.string.core_data_oromiffa),
+            CRBTSettingsData("ti", R.string.core_data_tigrigna),
+            CRBTSettingsData("so", R.string.core_data_somalia),
+            CRBTSettingsData("ar", R.string.core_data_arabic),
             CRBTSettingsData("en", R.string.core_data_english),
         )
 

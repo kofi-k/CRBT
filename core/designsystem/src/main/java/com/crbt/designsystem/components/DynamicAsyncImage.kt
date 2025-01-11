@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.example.crbtjetcompose.core.designsystem.R
+import com.itengs.crbt.core.designsystem.R
 
 
 @Composable

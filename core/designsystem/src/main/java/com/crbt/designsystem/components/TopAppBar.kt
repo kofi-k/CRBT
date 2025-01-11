@@ -21,7 +21,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.crbt.designsystem.theme.CrbtTheme
-import com.example.crbtjetcompose.core.designsystem.R
+import com.itengs.crbt.core.designsystem.R
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -36,8 +36,10 @@ import com.crbt.designsystem.components.ListCard
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.UssdResponseDialog
-import com.example.crbtjetcompose.feature.services.R
+import com.itengs.crbt.feature.services.R
 import kotlinx.coroutines.launch
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -207,13 +209,13 @@ fun UpperServices(
                 )
                 ListCard(
                     onClick = onPackageClick,
-                    headlineText = stringResource(id = R.string.feature_services_packages),
+                    headlineText = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_packages),
                     subText = stringResource(id = R.string.feature_services_packages_description),
                     leadingContentIcon = CrbtIcons.Packages
                 )
                 ListCard(
                     onClick = onRechargeClick,
-                    headlineText = stringResource(id = R.string.feature_services_recharge),
+                    headlineText = stringResource(id = com.itengs.crbt.core.ui.R.string.core_ui_recharge),
                     subText = stringResource(id = R.string.feature_services_recharge_description),
                     leadingContentIcon = CrbtIcons.Recharge
                 )

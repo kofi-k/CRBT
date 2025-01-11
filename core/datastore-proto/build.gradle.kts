@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.datastore_proto"
+    namespace = "com.itengs.crbt.core.datastore_proto"
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes

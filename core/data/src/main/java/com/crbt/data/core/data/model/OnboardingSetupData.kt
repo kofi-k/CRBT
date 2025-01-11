@@ -4,7 +4,7 @@ data class OnboardingSetupData(
     val phoneNumber: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    var selectedLanguage: String = CRBTSettingsData.languages.first { it.code == "en" }.code,
+    var selectedLanguage: String = "",
 )
 
 fun OnboardingSetupData.userProfileIsComplete(): Boolean {

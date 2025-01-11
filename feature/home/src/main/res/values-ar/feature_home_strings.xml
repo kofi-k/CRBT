@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">همم، لا يوجد شيء لعرضه هنا</string>
     <string name="feature_home_no_subscriptions">ليس لديك اشتراك CRBT نشط</string>
     <string name="feature_home_subscribe_now">اشترك الآن</string>
+    <string name="feature_home_quick_services">خدمات سريعة</string>
+    <string name="feature_home_view_all">عرض الكل</string>
 </resources>

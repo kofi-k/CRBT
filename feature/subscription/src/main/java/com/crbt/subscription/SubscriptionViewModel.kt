@@ -9,18 +9,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.crbt.data.core.data.SubscriptionBillingType
+import com.crbt.core.network.di.HttpException
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UserManager
+import com.crbt.data.core.data.repository.UserPackageResources
 import com.crbt.data.core.data.repository.UssdRepository
 import com.crbt.data.core.data.repository.UssdUiState
+import com.crbt.data.core.data.repository.findPackageDurationItemById
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
+import com.crbt.data.core.data.util.STOP_TIMEOUT
 import com.crbt.data.core.data.util.generateGiftCrbtUssd
+import com.crbt.domain.GetEthioPackagesUseCase
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.core.network.di.HttpException
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +45,8 @@ class SubscriptionViewModel @Inject constructor(
     crbtSongsRepository: UserCrbtMusicRepository,
     private val crbtNetworkRepository: CrbtNetworkRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    getEthioPackagesUseCase: GetEthioPackagesUseCase
 ) : ViewModel() {
 
     private val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
@@ -53,8 +57,6 @@ class SubscriptionViewModel @Inject constructor(
 
     var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
 
-    var crbtBillingType by mutableStateOf(SubscriptionBillingType.Monthly)
-
 
     val crbtSongResource: StateFlow<CrbtSongResource?> =
         selectedTone.flatMapLatest { toneId ->
@@ -64,6 +66,14 @@ class SubscriptionViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null
         )
+
+    val registrationPackagesFlow: StateFlow<com.crbt.common.core.common.result.Result<UserPackageResources?>> =
+        getEthioPackagesUseCase.getUserRegistrationPackages()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
+                initialValue = com.crbt.common.core.common.result.Result.Loading
+            )
 
 
     val isUserRegisteredForCrbt =
@@ -163,20 +173,33 @@ class SubscriptionViewModel @Inject constructor(
     }
 
 
-    fun updateUserCrbtSubscriptionStatus() {
+    fun updateUserCrbtSubscriptionStatus(packageId: Int) {
         subscriptionUiState = SubscriptionUiState.Loading
         viewModelScope.launch {
             subscriptionUiState = try {
-                crbtPreferencesRepository.setUserCrbtRegistrationStatus(true)
-                SubscriptionUiState.Success("")
+                registrationPackagesFlow.collect { data ->
+                    when (data) {
+                        is com.crbt.common.core.common.result.Result.Success -> {
+                            crbtPreferencesRepository.setUserCrbtRegistrationStatus(
+                                true,
+                                data.data?.findPackageDurationItemById(packageId.toString()) ?: ""
+                            )
+                            userManager.getAccountInfo()
+                            SubscriptionUiState.Success("")
+                        }
+
+                        is com.crbt.common.core.common.result.Result.Error -> {
+                            SubscriptionUiState.Error(data.exception.message ?: "An error occurred")
+                        }
+
+                        else -> SubscriptionUiState.Loading
+                    }
+
+                }
             } catch (e: Exception) {
                 SubscriptionUiState.Error(e.message ?: "An error occurred")
             }
         }
-    }
-
-    fun onBillingTypeChange(billingType: SubscriptionBillingType) {
-        crbtBillingType = billingType
     }
 
 }

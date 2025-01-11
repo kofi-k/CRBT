@@ -57,6 +57,7 @@ import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Pin
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.rounded.PublishedWithChanges
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
@@ -107,7 +108,7 @@ object CrbtIcons {
 
     //services icons
     val Check = Icons.Rounded.Check
-    val Recharge = Icons.AutoMirrored.Filled.Shortcut
+    val Recharge = Icons.Rounded.PublishedWithChanges
     val Packages = Icons.Rounded.Inventory2
     val CallBack = Icons.AutoMirrored.Filled.PhoneCallback
     val Dollar = Icons.Rounded.AttachMoney

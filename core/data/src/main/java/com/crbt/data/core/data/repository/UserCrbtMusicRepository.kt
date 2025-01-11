@@ -1,6 +1,6 @@
 package com.crbt.data.core.data.repository
 
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 import kotlinx.coroutines.flow.Flow
 
 interface UserCrbtMusicRepository {

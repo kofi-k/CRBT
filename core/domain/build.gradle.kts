@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.domain"
+    namespace = "com.itengs.crbt.core.domain"
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:data"))
+    implementation(projects.core.model)
+    implementation(projects.core.data)
 }

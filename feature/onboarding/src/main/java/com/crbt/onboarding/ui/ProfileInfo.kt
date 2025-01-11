@@ -30,8 +30,9 @@ import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.UsernameDetails
 import com.crbt.ui.core.ui.validationStates.isValidEmail
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun Profile(

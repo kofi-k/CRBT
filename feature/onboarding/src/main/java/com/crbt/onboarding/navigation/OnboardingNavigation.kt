@@ -22,21 +22,17 @@ fun NavController.navigateToOnboarding() =
 fun NavGraphBuilder.onboardingScreen(
     navigateToHome: () -> Unit,
     navController: NavController,
-    isProfileSetupComplete: Boolean
 ) {
     composable(route = ONBOARDING_ROUTE) {
         OnboardingScreen(
-            navigateToHome = {
-                if (isProfileSetupComplete) {
-                    navigateToHome()
-                } else {
-                    navController.navigate(ONBOARDING_COMPLETE_ROUTE) {
-                        popUpTo(ONBOARDING_ROUTE) {
-                            inclusive = true
-                        }
+            navigateToHome = navigateToHome,
+            navigateToProfileSetup = {
+                navController.navigate(ONBOARDING_PROFILE_ROUTE) {
+                    popUpTo(ONBOARDING_ROUTE) {
+                        inclusive = true
                     }
                 }
-            },
+            }
         )
     }
 

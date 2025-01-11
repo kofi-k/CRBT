@@ -34,14 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.trace
-import com.crbt.common.core.common.result.Result
-import com.crbt.data.core.data.DummyTones
-import com.crbt.data.core.data.model.DummyUser
 import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
-import com.example.crbtjetcompose.core.model.data.mapToUserToneSubscriptions
 
 enum class AccountHistoryTab {
     Payment,
@@ -153,7 +149,7 @@ fun AccountHistoryTabRow(
                     .weight(1f)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surface)
-                    .padding( 8.dp)
+                    .padding(8.dp)
             ) {
                 AccountHistoryTab.entries.forEachIndexed { index, tab ->
                     val text = when (tab) {

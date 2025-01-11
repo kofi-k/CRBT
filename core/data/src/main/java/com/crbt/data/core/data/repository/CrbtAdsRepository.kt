@@ -2,10 +2,10 @@ package com.crbt.data.core.data.repository
 
 import com.crbt.common.core.common.network.CrbtDispatchers
 import com.crbt.common.core.common.network.Dispatcher
+import com.crbt.core.network.model.CrbtNetworkAds
+import com.crbt.core.network.model.asExternalModel
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
-import com.example.crbtjetcompose.core.model.data.CrbtAdResource
-import com.example.crbtjetcompose.core.network.model.CrbtNetworkAds
-import com.example.crbtjetcompose.core.network.model.asExternalModel
+import com.itengs.crbt.core.model.data.CrbtAdResource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

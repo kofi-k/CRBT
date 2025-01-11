@@ -1,6 +1,6 @@
 import com.android.build.gradle.LibraryExtension
-import com.example.crbtjetcompose.configureGradleManagedDevices
-import com.example.crbtjetcompose.libs
+import com.itengs.crbt.configureGradleManagedDevices
+import com.itengs.crbt.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -31,7 +31,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
                 add("implementation", libs.findLibrary("androidx.tracing.ktx").get())
 
-                add("androidTestImplementation", libs.findLibrary("androidx.lifecycle.runtimeTesting").get())
+                add(
+                    "androidTestImplementation",
+                    libs.findLibrary("androidx.lifecycle.runtimeTesting").get()
+                )
             }
         }
     }

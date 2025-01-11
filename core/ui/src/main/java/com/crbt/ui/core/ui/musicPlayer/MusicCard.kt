@@ -36,8 +36,8 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
-import com.example.crbtjetcompose.core.ui.R
+import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.ui.R
 
 
 @Composable

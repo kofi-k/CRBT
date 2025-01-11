@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.tracing.trace
 import com.crbt.data.core.data.SubscriptionCategories.categories
-import com.example.crbtjetcompose.core.model.data.SubscriptionCategory
+import com.itengs.crbt.core.model.data.SubscriptionCategory
 
 @Composable
 fun Categories(

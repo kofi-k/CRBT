@@ -27,7 +27,8 @@ import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.bodyFontFamily
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
+
 
 @Composable
 fun OnboardingFinishedScreen(

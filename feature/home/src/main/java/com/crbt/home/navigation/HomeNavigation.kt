@@ -26,12 +26,18 @@ fun NavGraphBuilder.homeScreen(
     navigateToTopUp: () -> Unit,
     navigateToSubscription: () -> Unit,
     crbtTonesViewModel: CrbtTonesViewModel,
+    navigateToPackages: () -> Unit,
+    navigateToRecharge: () -> Unit,
+    navigateToServices: () -> Unit
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
             navigateToSubscription = navigateToSubscription,
             onNavigateToTopUp = navigateToTopUp,
-            crbtTonesViewModel = crbtTonesViewModel
+            crbtTonesViewModel = crbtTonesViewModel,
+            navigateToPackages = navigateToPackages,
+            navigateToRecharge = navigateToRecharge,
+            navigateToServices = navigateToServices
         )
     }
     composable(

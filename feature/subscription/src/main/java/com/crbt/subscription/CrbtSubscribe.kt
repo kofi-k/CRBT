@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +28,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -37,9 +36,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -73,31 +72,30 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.common.core.common.result.Result
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.data.core.data.PlayerState
-import com.crbt.data.core.data.SubscriptionBillingType
 import com.crbt.data.core.data.TonesPlayerEvent
+import com.crbt.data.core.data.repository.UserPackageResources
 import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.components.ProcessButton
-import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
-import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
-import com.crbt.ui.core.ui.CustomInputButton
+import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
-import com.example.crbtjetcompose.feature.subscription.R
+import com.itengs.crbt.core.model.data.PackageItem
+import com.itengs.crbt.feature.subscription.R
 import kotlinx.coroutines.launch
 
 
@@ -113,6 +111,7 @@ internal fun CrbtSubscribeScreen(
 ) {
 
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
+    val registrationPackagesFlow by subscriptionViewModel.registrationPackagesFlow.collectAsStateWithLifecycle()
     val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
     val subscriptionUiState = subscriptionViewModel.subscriptionUiState
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
@@ -130,8 +129,6 @@ internal fun CrbtSubscribeScreen(
     val isPlaying =
         isCurrentlyPlayingSong && musicControllerUiState.playerState == PlayerState.PLAYING
 
-
-    var showRegistrationDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -178,32 +175,49 @@ internal fun CrbtSubscribeScreen(
                             .padding(horizontal = 16.dp)
                             .verticalScroll(rememberScrollState()),
                         onSubscribeClick = { giftPhoneNumber ->
-                            if (!isUserRegisteredForCrbt) {
-                                showRegistrationDialog = true
-                            } else {
-                                subscriptionViewModel.subscribeToTone(
-                                    ussdCode = crbtSong?.ussdCode ?: "",
-                                    activity = context as Activity,
-                                    onSuccess = {
-                                        showBottomSheet = true
-                                    },
-                                    onError = { errorMessage ->
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(
-                                                message = errorMessage,
-                                                duration = SnackbarDuration.Short
-                                            )
-                                        }
-                                    },
-                                    phoneNumber = giftPhoneNumber
-                                )
-                            }
+                            subscriptionViewModel.subscribeToTone(
+                                ussdCode = crbtSong?.ussdCode ?: "",
+                                activity = context as Activity,
+                                onSuccess = {
+                                    showBottomSheet = true
+                                },
+                                onError = { errorMessage ->
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = errorMessage,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                phoneNumber = giftPhoneNumber
+                            )
                         },
                         subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
-                        isSubscriptionProcessing = subscriptionUiState is SubscriptionUiState.Loading,
-                        onBillingTypeSelected = subscriptionViewModel::onBillingTypeChange,
-                        billingType = subscriptionViewModel.crbtBillingType,
-                        context = context
+                        isSubscriptionProcessing =
+                        subscriptionUiState is SubscriptionUiState.Loading ||
+                                ussdState is UssdUiState.Loading,
+                        context = context,
+                        isUserRegisteredForCrbt = isUserRegisteredForCrbt,
+                        registerUserForCrbt = { packageId, code ->
+                            subscriptionViewModel.runUssdCode(
+                                ussdCode = "$code$packageId#",
+                                onSuccess = {
+                                    subscriptionViewModel.updateUserCrbtSubscriptionStatus(
+                                        packageId = packageId
+                                    )
+                                },
+                                onError = {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = it,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                activity = context as Activity
+                            )
+                        },
+                        packagesResult = registrationPackagesFlow
                     )
                 }
                 Box(
@@ -298,32 +312,6 @@ internal fun CrbtSubscribeScreen(
         )
     }
 
-    if (showRegistrationDialog) {
-        CrbtRegistrationDialog(
-            onDismiss = {
-                subscriptionViewModel.updateUserCrbtSubscriptionStatus()
-                showRegistrationDialog = false
-            },
-            onRegister = {
-                subscriptionViewModel.runUssdCode(
-                    ussdCode = crbtSong?.registrationUssdCode ?: "",
-                    onSuccess = {
-                        subscriptionViewModel.updateUserCrbtSubscriptionStatus()
-                        showRegistrationDialog = false
-                    },
-                    onError = {},
-                    activity = context as Activity
-                )
-            },
-            isRegistering = ussdState is UssdUiState.Loading || (
-                    ussdState is UssdUiState.Success &&
-                            subscriptionUiState is SubscriptionUiState.Loading
-                    ),
-            isUpdatingRegisterStatus = subscriptionUiState is SubscriptionUiState.Loading &&
-                    ussdState is UssdUiState.Idle
-        )
-    }
-
     if (showBottomSheet) {
         SubscriptionSuccessBottomSheet(
             navigateUp = {
@@ -339,53 +327,51 @@ internal fun CrbtSubscribeScreen(
 }
 
 @Composable
-fun CrbtRegistrationDialog(
-    onDismiss: () -> Unit,
-    onRegister: () -> Unit,
-    isRegistering: Boolean,
-    isUpdatingRegisterStatus: Boolean
+fun CrbtRegistrationContent(
+    packageItems: List<PackageItem>,
+    onSelectedPackage: (packageId: Int, ussdCode: String) -> Unit,
 ) {
-    AlertDialog(
-        title = {
-            Text(
-                text = stringResource(id = R.string.feature_subscription_new_to_crbt),
-                style = MaterialTheme.typography.headlineMedium
-            )
-        },
-        text = {
-            Text(
-                text = stringResource(id = R.string.feature_subscription_register_for_crbt_description),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Start,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        onDismissRequest = onDismiss,
-        confirmButton = {},
-        dismissButton = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.End,
-            ) {
-                ProcessButton(
-                    onClick = onRegister,
-                    colors = ButtonDefaults.textButtonColors(),
-                    text = stringResource(id = R.string.feature_subscription_register_now),
-                    isProcessing = isRegistering
-                )
+    var selectedPackage by remember { mutableStateOf("") }
 
-                ProcessButton(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.textButtonColors(),
-                    text = stringResource(id = R.string.feature_subscription_already_registered),
-                    isProcessing = isUpdatingRegisterStatus
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        packageItems.forEach { registrationPackage ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        selectedPackage = registrationPackage.id
+                        onSelectedPackage(
+                            registrationPackage.id.toInt(),
+                            registrationPackage.ussdCode
+                        )
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = selectedPackage == registrationPackage.id,
+                    onClick = {
+                        selectedPackage = registrationPackage.id
+                        onSelectedPackage(
+                            registrationPackage.id.toInt(),
+                            registrationPackage.ussdCode
+                        )
+                    },
+                )
+                Text(
+                    text = stringResource(
+                        id = com.itengs.crbt.core.data.R.string.core_data_registration_package,
+                        registrationPackage.price,
+                        registrationPackage.itemValidity()
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(8.dp)
                 )
             }
-        },
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
-        )
-    )
+        }
+    }
 
 }
 
@@ -413,7 +399,7 @@ fun SubscribeHeader(
         DynamicAsyncImage(
             modifier = Modifier.fillMaxSize(),
             imageUrl = songProfileUrl,
-            imageRes = com.example.crbtjetcompose.core.ui.R.drawable.core_ui_paps_image
+            imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_paps_image
         )
 
         Box(
@@ -546,32 +532,48 @@ fun InfoButton(
 fun SubscribeContent(
     modifier: Modifier = Modifier,
     isGiftSubscription: Boolean,
-    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
-    billingType: SubscriptionBillingType,
     onSubscribeClick: (phoneNumber: String) -> Unit,
     subscriptionPrice: Double,
     isSubscriptionProcessing: Boolean,
-    context: Context
+    context: Context,
+    isUserRegisteredForCrbt: Boolean,
+    registerUserForCrbt: (packageId: Int, ussdCode: String) -> Unit,
+    packagesResult: Result<UserPackageResources?>,
 ) {
-    val title = if (isGiftSubscription) {
-        stringResource(
-            id = R.string.feature_subscription_gift_song_title, ""
-        ) to stringResource(
-            id = R.string.feature_subscription_gift_song_subtitle
-        )
-    } else {
-        stringResource(
-            id = R.string.feature_subscription_subscribe_to_song_title,
-            ""
-        ) to stringResource(
-            id = R.string.feature_subscription_subscribe_to_song_subtitle
-        )
+    val title = when (isGiftSubscription) {
+        true ->
+            stringResource(
+                id = R.string.feature_subscription_gift_song_title, ""
+            ) to stringResource(
+                id = R.string.feature_subscription_gift_song_subtitle
+            )
+
+        else ->
+            if (isUserRegisteredForCrbt) {
+                stringResource(
+                    id = R.string.feature_subscription_subscribe_to_song_title,
+                    ""
+                ) to stringResource(
+                    id = R.string.feature_subscription_subscribe_to_song_subtitle
+                )
+            } else {
+                stringResource(
+                    id = R.string.feature_subscription_register_for_crbt
+                ) to
+                        stringResource(
+                            id = R.string.feature_subscription_register_for_crbt_description
+                        )
+            }
     }
 
     var giftPhoneNumber by remember {
         mutableStateOf(
             "" to false
         )
+    }
+
+    var packageId by remember {
+        mutableStateOf(0 to "")
     }
 
     OnboardingSheetContainer(
@@ -589,14 +591,45 @@ fun SubscribeContent(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            BillingType(
-                onBillingTypeSelected = onBillingTypeSelected,
-                billingType = billingType
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+
+            if (!isUserRegisteredForCrbt && !isGiftSubscription) {
+                when (packagesResult) {
+                    is Result.Loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is Result.Error -> {
+                        EmptyContent(
+                            description = packagesResult.exception.message ?: "An error occurred"
+                        )
+                    }
+
+                    is Result.Success -> {
+                        val packageItems = packagesResult.data?.packageItems ?: emptyList()
+                        if (packageItems.isNotEmpty()) {
+                            CrbtRegistrationContent(
+                                packageItems = packageItems,
+                                onSelectedPackage = { id, ussdCode ->
+                                    packageId = id to ussdCode
+                                }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
 
             ProcessButton(
-                onClick = { onSubscribeClick(giftPhoneNumber.first) },
+                onClick = {
+                    if (!isUserRegisteredForCrbt && !isGiftSubscription) {
+                        registerUserForCrbt(packageId.first, packageId.second)
+                    } else {
+                        onSubscribeClick(giftPhoneNumber.first)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -610,6 +643,26 @@ fun SubscribeContent(
                     contentColor = Color.White
                 ),
                 textContent = {
+
+                    val subscribeTextAmountPair = when (isGiftSubscription) {
+                        true ->
+                            stringResource(id = R.string.feature_subscription_gift_button) to subscriptionPrice.toString()
+
+                        else -> {
+                            val text =
+                                if (!isUserRegisteredForCrbt) {
+                                    stringResource(id = R.string.feature_subscription_register) to
+                                            (packagesResult as? Result.Success)?.data?.packageItems?.find { it.id == packageId.first.toString() }?.price.takeIf {
+                                                !it.isNullOrEmpty()
+                                            }
+
+                                } else {
+                                    stringResource(R.string.feature_subscription_subscribe_button) to subscriptionPrice.toString()
+                                }
+                            text
+                        }
+                    }
+
                     Text(
                         text = buildAnnotatedString {
                             withStyle(
@@ -617,84 +670,31 @@ fun SubscribeContent(
                                     fontWeight = FontWeight.Bold
                                 ).toSpanStyle()
                             ) {
-                                val text = if (isGiftSubscription) {
-                                    stringResource(id = R.string.feature_subscription_gift_button)
-                                } else {
-                                    stringResource(R.string.feature_subscription_subscribe_button)
-                                }
-                                append(text)
+                                append(subscribeTextAmountPair.first)
                                 append(" ")
                                 append(
                                     stringResource(
                                         id = R.string.feature_subscription_etb,
-                                        subscriptionPrice
+                                        subscribeTextAmountPair.second ?: ""
                                     )
                                 )
                             }
                         }
                     )
                 },
-                isEnabled = if (isGiftSubscription) giftPhoneNumber.second else true,
+                isEnabled = when (isGiftSubscription) {
+                    true -> giftPhoneNumber.second
+                    else ->
+                        if (!isUserRegisteredForCrbt)
+                            packageId.second.isNotEmpty() && packageId.first > 0
+                        else true
+                },
                 isProcessing = isSubscriptionProcessing
             )
         },
         modifier = modifier
     )
 }
-
-
-@Composable
-fun BillingType(
-    onBillingTypeSelected: (SubscriptionBillingType) -> Unit,
-    billingType: SubscriptionBillingType
-) {
-    var expanded by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf(billingType) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(text = stringResource(id = R.string.feature_subscription_billing_type_label))
-        Spacer(modifier = Modifier.height(8.dp))
-        SurfaceCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(),
-            content = {
-                Column {
-                    CustomInputButton(
-                        text = stringResource(id = selected.title),
-                        onClick = { expanded = !expanded },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        leadingIcon = CrbtIcons.PaymentMethods
-                    )
-                    if (expanded) {
-                        SubscriptionBillingType.entries.forEach {
-                            ListItem(
-                                headlineContent = { Text(text = stringResource(id = it.title)) },
-                                modifier = Modifier.clickable {
-                                    selected = it
-                                    expanded = false
-                                    onBillingTypeSelected(it)
-                                },
-                            )
-                        }
-                    }
-                }
-            },
-            color = MaterialTheme.colorScheme.outlineVariant.copy(
-                stronglyDeemphasizedAlpha,
-            )
-        )
-    }
-
-}
-
 
 @Composable
 fun AnimatedSuccessCheckmark(
@@ -834,9 +834,10 @@ fun CrbtSubscribeContentPreview() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            onBillingTypeSelected = {},
-            billingType = SubscriptionBillingType.Monthly,
-            context = LocalContext.current
+            context = LocalContext.current,
+            isUserRegisteredForCrbt = false,
+            registerUserForCrbt = { _, _ -> },
+            packagesResult = Result.Loading
         )
     }
 }
@@ -850,9 +851,10 @@ fun CrbtSubscribeContentPreview2() {
             onSubscribeClick = {},
             subscriptionPrice = 10.30,
             isSubscriptionProcessing = false,
-            onBillingTypeSelected = {},
-            billingType = SubscriptionBillingType.Monthly,
-            context = LocalContext.current
+            context = LocalContext.current,
+            isUserRegisteredForCrbt = false,
+            registerUserForCrbt = { _, _ -> },
+            packagesResult = Result.Loading
         )
     }
 }

@@ -12,4 +12,6 @@
     <string name="feature_home_no_songs">ህም፣ ለማሳየት ምንም የለም</string>
     <string name="feature_home_no_subscriptions">ምንም ንቁ የCRBT ሰብስክሪፕሽን የለዎትም</string>
     <string name="feature_home_subscribe_now">አሁን ሰብስክራይብ ያድርጉ</string>
+    <string name="feature_home_quick_services">በትክክል አገልግሎቶች</string>
+    <string name="feature_home_view_all">ሁሉም ይመልከቱ</string>
 </resources>

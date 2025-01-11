@@ -1,6 +1,6 @@
 package com.crbt.data.core.data
 
-import com.example.crbtjetcompose.core.model.data.CrbtAdResource
+import com.itengs.crbt.core.model.data.CrbtAdResource
 
 const val GOOGLE_LINK = "http://www.google.com/"
 val dummyAds = listOf(

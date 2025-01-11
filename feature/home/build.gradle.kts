@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.feature.home"
+    namespace = "com.itengs.crbt.feature.home"
 }
 
 dependencies {
     implementation(projects.core.data)
+    implementation(projects.core.domain)
     implementation(libs.androidx.graphics.shapes)
     implementation(libs.palette.ktx)
     implementation(libs.voipUssd)
-    implementation(project(":core:domain"))
 }

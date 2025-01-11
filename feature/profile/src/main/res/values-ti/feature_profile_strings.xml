@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_profile_title">መግለፂ</string>
+    <string name="feature_profile_logout">ውፃእ</string>
+    <string name="feature_profile_logging_out">እናወፀአ…</string>
+    <string name="feature_profile_reward_points">ነጥብታት ሽልማት</string>
+    <string name="feature_profile_reward_points_description">ነጥብታት ሽልማትካ ተጠቐም</string>
+    <string name="feature_profile_placeholder_subtext">ሓፂር መግለፂ</string>
+    <string name="feature_profile_payment_methods">ዓይነታት ክፍሊት</string>
+    <string name="feature_profile_payment_methods_description">ዓይነታት ክፍሊት ወስኽ ወይ ኣልግስ</string>
+    <string name="feature_profile_currency">ገንዘብ</string>
+    <string name="feature_profile_currency_description">ገንዘብካ ምረፅ</string>
+    <string name="feature_profile_language">ቋንቋ</string>
+    <string name="feature_profile_language_description">ቋንቋኻ ምረፅ</string>
+    <string name="feature_profile_permissions">ፍቓዳት</string>
+    <string name="feature_profile_permissions_description">ፍቓዳት ኣፕሊኬሽን ኣማሓድር</string>
+    <string name="feature_profile_payments">ክፍሊታት</string>
+    <string name="feature_profile_setup_title">ሓበሬታ መግለፂ ተጠቃሚ</string>
+    <string name="feature_profile_save_profile_button">መግለፂ ዓቅብ</string>
+    <string name="feature_profile_updates_title">ምዕባለታትን ለበዋታትን</string>
+    <string name="feature_profile_updates_subtitle">ምስ ዝበለፀ ዝርዝር መደባት ምዕባለ ተራኸብ</string>
+    <string name="feature_profile_first_name_label">ቀዳማይ ሽም</string>
+    <string name="feature_profile_last_name_label">ካልኣይ ሽም</string>
+    <string name="feature_profile_email_label">ኢመይል ካብ CRBT</string>
+    <string name="feature_profile_reward_points_sheet_action">ተረዲኡኒ</string>
+    <string name="feature_profile_total_reward_points">ጠቕላላ ነጥብታት ሽልማትካ</string>
+    <string name="feature_profile_crbt_reward_points">ነጥብታት ሽልማት CRBT ካ</string>
+    <string name="feature_profile_crbt_reward_points_info">ነጥብታት ንነፍሲወከፍ ኣባልነት ኣብ CRBT ይወሃብ። ንኻልኦት ኣባል እንተገይርካዮም እውን ነጥብታት ትረክብ። ነጥብታት ንምእካብ ቀፅል🔥</string>
+</resources>

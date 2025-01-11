@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.crbtjetcompose.core.ui"
+    namespace = "com.itengs.crbt.core.ui"
 }
 
 dependencies {

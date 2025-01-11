@@ -45,7 +45,7 @@ import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
 import com.rejowan.ccpc.CCPUtils.Companion.getEmojiFlag
 import com.rejowan.ccpc.Country
-import com.example.crbtjetcompose.core.ui.R as CoreUiR
+import com.itengs.crbt.core.ui.R as CoreUiR
 
 @Composable
 fun PhoneEntryScreen(

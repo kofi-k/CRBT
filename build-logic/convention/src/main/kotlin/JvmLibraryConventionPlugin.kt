@@ -1,4 +1,4 @@
-import com.example.crbtjetcompose.configureKotlinJvm
+import com.itengs.crbt.configureKotlinJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

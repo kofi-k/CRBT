@@ -44,7 +44,6 @@ import com.crbt.designsystem.components.InputType
 import com.crbt.designsystem.components.TextFieldType
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.ui.core.ui.validationStates.PhoneNumberValidationState
-import com.example.crbtjetcompose.core.designsystem.R
 
 @Composable
 fun GiftPurchasePhoneNumber(
@@ -106,7 +105,7 @@ fun GiftPurchasePhoneNumber(
             value = phoneNumberState.text,
             inputType = InputType.PHONE_NUMBER,
             textFieldType = TextFieldType.OUTLINED,
-            label = stringResource(id = R.string.core_designsystem_phone_number_placeholder),
+            label = stringResource(id = com.itengs.crbt.core.designsystem.R.string.core_designsystem_phone_number_placeholder),
             leadingIcon = {
                 Icon(
                     imageVector = CrbtIcons.Phone,

@@ -28,9 +28,10 @@
     <string name="feature_subscription_search_result_not_found">ይቅርታ፣ ለፍለጋዎ \"%1$s\" ምንም አልተገኘም</string>
     <string name="feature_subscription_play_error">የCRBT ዘፈን ማጫወት አልተሳካም</string>
     <string name="feature_subscription_reload">አድስ</string>
-    <string name="feature_subscription_register_now">አሁን ይመዝገቡ</string>
+    <string name="feature_subscription_register">አሁን ይመዝገቡ</string>
     <string name="feature_subscription_already_registered">አዲስ ተጠቃሚ አይደለሁም</string>
     <string name="feature_subscription_new_to_crbt">በCRBT አዲስ ነዎት?</string>
+    <string name="feature_subscription_register_for_crbt">CRBT እንዴት እንደሚጠቀሙ ይመዝገቡ</string>
     <string name="feature_subscription_register_for_crbt_description">የCRBT አገልግሎቶችን ለመጠቀም፣ ተጠቃሚዎች መጀመሪያ መመዝገብ አለባቸው። በCRBT አዲስ ከሆኑ ይመዝገቡ።</string>
     <string name="feature_subscription_plays">ጨዋታዎች⚡</string>
     <string name="feature_subscription_price">

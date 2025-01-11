@@ -1,6 +1,6 @@
 package com.crbt.home
 
-import com.example.crbtjetcompose.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.CrbtSongResource
 
 
 /**

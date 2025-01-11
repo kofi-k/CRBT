@@ -70,15 +70,17 @@ import com.crbt.onboarding.ui.PhoneNumberInput
 import com.crbt.onboarding.ui.phoneAuth.AuthState
 import com.crbt.onboarding.ui.phoneAuth.PhoneAuthViewModel
 import com.crbt.ui.core.ui.PermissionRequestComposable
-import com.example.crbtjetcompose.feature.onboarding.R
+import com.itengs.crbt.feature.onboarding.R
 import kotlinx.coroutines.launch
-import com.example.crbtjetcompose.core.ui.R as UiR
+import com.itengs.crbt.core.ui.R as UiR
+
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     navigateToHome: () -> Unit,
+    navigateToProfileSetup: () -> Unit
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -153,8 +155,12 @@ fun OnboardingScreen(
                                         )
                                     }
                                 },
-                                onVerified = {
-                                    navigateToHome()
+                                onVerified = { userName ->
+                                    if (userName.isNotBlank()) {
+                                        navigateToHome()
+                                    } else {
+                                        navigateToProfileSetup()
+                                    }
                                     viewModel.onDoneClicked()
                                     scope.launch {
                                         bottomSheetScaffoldState.bottomSheetState.hide()
@@ -170,7 +176,12 @@ fun OnboardingScreen(
                 },
                 isNextEnabled = viewModel.isNextEnabled,
                 onPhoneNumberEntered = viewModel::onPhoneNumberEntered,
-                onLanguageSelected = viewModel::onLanguageSelected,
+                onLanguageSelected = { code ->
+                    viewModel.onLanguageSelected(code)
+//                    AppCompatDelegate.setApplicationLocales(
+//                        LocaleListCompat.forLanguageTags(code)
+//                    )
+                },
                 modifier = Modifier
                     .windowInsetsPadding(
                         WindowInsets.safeDrawing.only(
