@@ -540,30 +540,30 @@ fun SubscribeContent(
     registerUserForCrbt: (packageId: Int, ussdCode: String) -> Unit,
     packagesResult: Result<UserPackageResources?>,
 ) {
-    val title = when (isUserRegisteredForCrbt) {
+    val title = when (isGiftSubscription) {
         true ->
-            if (isGiftSubscription) {
-                stringResource(
-                    id = R.string.feature_subscription_gift_song_title, ""
-                ) to stringResource(
-                    id = R.string.feature_subscription_gift_song_subtitle
-                )
-            } else {
+            stringResource(
+                id = R.string.feature_subscription_gift_song_title, ""
+            ) to stringResource(
+                id = R.string.feature_subscription_gift_song_subtitle
+            )
+
+        else ->
+            if (isUserRegisteredForCrbt) {
                 stringResource(
                     id = R.string.feature_subscription_subscribe_to_song_title,
                     ""
                 ) to stringResource(
                     id = R.string.feature_subscription_subscribe_to_song_subtitle
                 )
+            } else {
+                stringResource(
+                    id = R.string.feature_subscription_register_for_crbt
+                ) to
+                        stringResource(
+                            id = R.string.feature_subscription_register_for_crbt_description
+                        )
             }
-
-        else ->
-            stringResource(
-                id = R.string.feature_subscription_register_for_crbt
-            ) to
-                    stringResource(
-                        id = R.string.feature_subscription_register_for_crbt_description
-                    )
     }
 
     var giftPhoneNumber by remember {
@@ -592,7 +592,7 @@ fun SubscribeContent(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            if (!isUserRegisteredForCrbt) {
+            if (!isUserRegisteredForCrbt && !isGiftSubscription) {
                 when (packagesResult) {
                     is Result.Loading -> {
                         CircularProgressIndicator()
@@ -624,7 +624,7 @@ fun SubscribeContent(
 
             ProcessButton(
                 onClick = {
-                    if (!isUserRegisteredForCrbt) {
+                    if (!isUserRegisteredForCrbt && !isGiftSubscription) {
                         registerUserForCrbt(packageId.first, packageId.second)
                     } else {
                         onSubscribeClick(giftPhoneNumber.first)
@@ -643,38 +643,51 @@ fun SubscribeContent(
                     contentColor = Color.White
                 ),
                 textContent = {
-                    when (isUserRegisteredForCrbt) {
-                        true ->
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        MaterialTheme.typography.bodyLarge.copy(
-                                            fontWeight = FontWeight.Bold
-                                        ).toSpanStyle()
-                                    ) {
-                                        val text = if (isGiftSubscription) {
-                                            stringResource(id = R.string.feature_subscription_gift_button)
-                                        } else {
-                                            stringResource(R.string.feature_subscription_subscribe_button)
-                                        }
-                                        append(text)
-                                        append(" ")
-                                        append(
-                                            stringResource(
-                                                id = R.string.feature_subscription_etb,
-                                                subscriptionPrice
-                                            )
-                                        )
-                                    }
-                                }
-                            )
 
-                        else -> Text(text = stringResource(id = R.string.feature_subscription_register))
+                    val subscribeTextAmountPair = when (isGiftSubscription) {
+                        true ->
+                            stringResource(id = R.string.feature_subscription_gift_button) to subscriptionPrice.toString()
+
+                        else -> {
+                            val text =
+                                if (!isUserRegisteredForCrbt) {
+                                    stringResource(id = R.string.feature_subscription_register) to
+                                            (packagesResult as? Result.Success)?.data?.packageItems?.find { it.id == packageId.first.toString() }?.price.takeIf {
+                                                !it.isNullOrEmpty()
+                                            }
+
+                                } else {
+                                    stringResource(R.string.feature_subscription_subscribe_button) to subscriptionPrice.toString()
+                                }
+                            text
+                        }
                     }
+
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                ).toSpanStyle()
+                            ) {
+                                append(subscribeTextAmountPair.first)
+                                append(" ")
+                                append(
+                                    stringResource(
+                                        id = R.string.feature_subscription_etb,
+                                        subscribeTextAmountPair.second ?: ""
+                                    )
+                                )
+                            }
+                        }
+                    )
                 },
-                isEnabled = when (isUserRegisteredForCrbt) {
-                    true -> if (isGiftSubscription) giftPhoneNumber.second else true
-                    else -> packageId.second.isNotEmpty() && packageId.first > 0
+                isEnabled = when (isGiftSubscription) {
+                    true -> giftPhoneNumber.second
+                    else ->
+                        if (!isUserRegisteredForCrbt)
+                            packageId.second.isNotEmpty() && packageId.first > 0
+                        else true
                 },
                 isProcessing = isSubscriptionProcessing
             )

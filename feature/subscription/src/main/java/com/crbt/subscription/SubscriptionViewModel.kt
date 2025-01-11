@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crbt.core.network.di.HttpException
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UserManager
@@ -22,7 +23,6 @@ import com.crbt.data.core.data.util.generateGiftCrbtUssd
 import com.crbt.domain.GetEthioPackagesUseCase
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
-import com.example.crbtjetcompose.core.network.di.HttpException
 import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
