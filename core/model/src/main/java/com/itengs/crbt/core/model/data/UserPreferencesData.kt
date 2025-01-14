@@ -1,5 +1,8 @@
 package com.itengs.crbt.core.model.data
 
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
+
 data class UserPreferencesData(
     val userId: String,
     val token: String,
@@ -19,6 +22,9 @@ data class UserPreferencesData(
     val numberOfRechargeCodeDigits: Int,
     val userLocation: String,
     val userCrbtRegistrationPackage: String,
+    val themeBrand: ThemeBrand,
+    val darkThemeConfig: DarkThemeConfig,
+    val useDynamicColor: Boolean,
 )
 
 
