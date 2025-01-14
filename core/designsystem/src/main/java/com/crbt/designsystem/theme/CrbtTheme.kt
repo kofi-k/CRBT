@@ -6,11 +6,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 /**
@@ -98,6 +101,87 @@ val DarkDefaultColorScheme = darkColorScheme(
 )
 
 
+val LightAndroidColorScheme = lightColorScheme(
+    primary = primaryLightAndroid,
+    onPrimary = onPrimaryLightAndroid,
+    primaryContainer = primaryContainerLightAndroid,
+    onPrimaryContainer = onPrimaryContainerLightAndroid,
+    secondary = secondaryLightAndroid,
+    onSecondary = onSecondaryLightAndroid,
+    secondaryContainer = secondaryContainerLightAndroid,
+    onSecondaryContainer = onSecondaryContainerLightAndroid,
+    tertiary = tertiaryLightAndroid,
+    onTertiary = onTertiaryLightAndroid,
+    tertiaryContainer = tertiaryContainerLightAndroid,
+    onTertiaryContainer = onTertiaryContainerLightAndroid,
+    error = errorLightAndroid,
+    onError = onErrorLightAndroid,
+    errorContainer = errorContainerLightAndroid,
+    onErrorContainer = onErrorContainerLightAndroid,
+    background = backgroundLightAndroid,
+    onBackground = onBackgroundLightAndroid,
+    surface = surfaceLightAndroid,
+    onSurface = onSurfaceLightAndroid,
+    surfaceVariant = surfaceVariantLightAndroid,
+    onSurfaceVariant = onSurfaceVariantLightAndroid,
+    outline = outlineLightAndroid,
+    outlineVariant = outlineVariantLightAndroid,
+    scrim = scrimLightAndroid,
+    inverseSurface = inverseSurfaceLightAndroid,
+    inverseOnSurface = inverseOnSurfaceLightAndroid,
+    inversePrimary = inversePrimaryLightAndroid,
+    surfaceDim = surfaceDimLightAndroid,
+    surfaceBright = surfaceBrightLightAndroid,
+    surfaceContainerLowest = surfaceContainerLowestLightAndroid,
+    surfaceContainerLow = surfaceContainerLowLightAndroid,
+    surfaceContainer = surfaceContainerLightAndroid,
+    surfaceContainerHigh = surfaceContainerHighLightAndroid,
+    surfaceContainerHighest = surfaceContainerHighestLightAndroid,
+)
+
+/**
+ * Dark Android theme color scheme
+ */
+@VisibleForTesting
+val DarkAndroidColorScheme = darkColorScheme(
+    primary = primaryDarkAndroid,
+    onPrimary = onPrimaryDarkAndroid,
+    primaryContainer = primaryContainerDarkAndroid,
+    onPrimaryContainer = onPrimaryContainerDarkAndroid,
+    secondary = secondaryDarkAndroid,
+    onSecondary = onSecondaryDarkAndroid,
+    secondaryContainer = secondaryContainerDarkAndroid,
+    onSecondaryContainer = onSecondaryContainerDarkAndroid,
+    tertiary = tertiaryDarkAndroid,
+    onTertiary = onTertiaryDarkAndroid,
+    tertiaryContainer = tertiaryContainerDarkAndroid,
+    onTertiaryContainer = onTertiaryContainerDarkAndroid,
+    error = errorDarkAndroid,
+    onError = onErrorDarkAndroid,
+    errorContainer = errorContainerDarkAndroid,
+    onErrorContainer = onErrorContainerDarkAndroid,
+    background = backgroundDarkAndroid,
+    onBackground = onBackgroundDarkAndroid,
+    surface = surfaceDarkAndroid,
+    onSurface = onSurfaceDarkAndroid,
+    surfaceVariant = surfaceVariantDarkAndroid,
+    onSurfaceVariant = onSurfaceVariantDarkAndroid,
+    outline = outlineDarkAndroid,
+    outlineVariant = outlineVariantDarkAndroid,
+    scrim = scrimDarkAndroid,
+    inverseSurface = inverseSurfaceDarkAndroid,
+    inverseOnSurface = inverseOnSurfaceDarkAndroid,
+    inversePrimary = inversePrimaryDarkAndroid,
+    surfaceDim = surfaceDimDarkAndroid,
+    surfaceBright = surfaceBrightDarkAndroid,
+    surfaceContainerLowest = surfaceContainerLowestDarkAndroid,
+    surfaceContainerLow = surfaceContainerLowDarkAndroid,
+    surfaceContainer = surfaceContainerDarkAndroid,
+    surfaceContainerHigh = surfaceContainerHighDarkAndroid,
+    surfaceContainerHighest = surfaceContainerHighestDarkAndroid,
+)
+
+
 const val stronglyDeemphasizedAlpha = 0.6f
 const val slightlyDeemphasizedAlpha = 0.87f
 const val extremelyDeemphasizedAlpha = 0.32f
@@ -108,6 +192,12 @@ const val extremelyDeemphasizedAlpha = 0.32f
 val CustomGradientColors = listOf(
     Color(0xFF9E82F0),
     Color(0xFF42A5F5)
+)
+
+val AndroidGradientColors = GradientColors(
+    top = Color(0xFF8AD6B6),
+    bottom = Color(0xFF1A6B51),
+//    bottom = Color(0xFF42A5F5),
 )
 
 /**
@@ -121,6 +211,9 @@ val DarkAndroidGradientColors = GradientColors(container = surfaceContainerLowDa
 val DarkAndroidBackgroundTheme =
     BackgroundTheme(color = surfaceContainerLowDark, tonalElevation = 2.dp)
 
+
+val LightAndroidBackgroundTheme = BackgroundTheme(color = surfaceLightMediumContrast)
+
 /**
  * CRBT theme.
  *
@@ -129,11 +222,18 @@ val DarkAndroidBackgroundTheme =
 @Composable
 fun CrbtTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    androidTheme: Boolean = false,
+    disableDynamicTheming: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
-        darkTheme -> DarkDefaultColorScheme
-        else -> LightDefaultColorScheme
+        androidTheme -> if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
+        !disableDynamicTheming && supportsDynamicTheming() -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
+        else -> if (darkTheme) DarkDefaultColorScheme else LightDefaultColorScheme
     }
 
     val emptyGradientColors = GradientColors(container = colorScheme.surfaceColorAtElevation(2.dp))
@@ -153,14 +253,21 @@ fun CrbtTheme(
         tonalElevation = 2.dp,
     )
 
-    val backgroundTheme = when (darkTheme) {
-        true -> DarkAndroidBackgroundTheme
+    val backgroundTheme = when {
+        androidTheme -> if (darkTheme) DarkAndroidBackgroundTheme else LightAndroidBackgroundTheme
         else -> defaultBackgroundTheme
+    }
+
+    val tintTheme = when {
+        androidTheme -> TintTheme()
+        !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
+        else -> TintTheme()
     }
 
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
         LocalBackgroundTheme provides backgroundTheme,
+        LocalTintTheme provides tintTheme,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.extremelyDeemphasizedAlpha
 import com.itengs.crbt.core.designsystem.R
 
@@ -67,6 +68,9 @@ fun CustomInputField(
     ),
     shape: Shape = MaterialTheme.shapes.medium,
     textFieldType: TextFieldType = TextFieldType.FILLED,
+    singleLine: Boolean = true,
+    maxLines: Int = 1,
+    minLines: Int = 1,
 ) {
     var showPassword by remember { mutableStateOf(false) }
 
@@ -80,7 +84,7 @@ fun CustomInputField(
                 },
                 leadingIcon = leadingIcon,
                 modifier = modifier,
-                singleLine = true,
+                singleLine = singleLine,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
                 enabled = enabled,
@@ -93,8 +97,8 @@ fun CustomInputField(
                     ) {
                         IconButton(onClick = onClear) {
                             Icon(
-                                imageVector = Icons.Filled.Cancel,
-                                contentDescription = "clear text",
+                                imageVector = CrbtIcons.Clear,
+                                contentDescription = CrbtIcons.Clear.name,
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -122,6 +126,8 @@ fun CustomInputField(
                 },
                 isError = showsErrors && enabled,
                 shape = shape,
+                maxLines = maxLines,
+                minLines = minLines
             )
         }
 
