@@ -9,15 +9,16 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +27,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,7 +49,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -55,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.crbt.data.core.data.OnboardingSetupProcess
@@ -63,6 +70,9 @@ import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.designsystem.components.ProcessButton
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
+import com.crbt.designsystem.theme.onPrimaryDark
+import com.crbt.designsystem.theme.primaryContainerDark
+import com.crbt.designsystem.theme.primaryDark
 import com.crbt.onboarding.ui.LanguageSelection
 import com.crbt.onboarding.ui.OTPVerification
 import com.crbt.onboarding.ui.OnboardingViewModel
@@ -201,16 +211,9 @@ fun OnboardingScreen(
             ),
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) {
-        val scrim = if (bottomSheetScaffoldState.bottomSheetState.isVisible) {
-            Color.Black.copy(alpha = 0.5f)
-        } else {
-            Color.Transparent
-        }
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(scrim),
-            contentAlignment = Alignment.Center
+                .fillMaxSize(),
         ) {
             Image(
                 painter = painterResource(R.drawable.onboarding_onboardingbackground),
@@ -222,9 +225,49 @@ fun OnboardingScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.25f))
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black),
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY
+                        )
+                    )
             )
+
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 36.dp),
+            ) {
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .background(Color.White, CircleShape)
+                        .padding(horizontal = 6.dp, vertical = 6.dp)
+                        .clip(CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = com.itengs.crbt.core.ui.R.drawable.core_ui_logo),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape)
+                    )
+                    Text(
+                        text = stringResource(id = UiR.string.core_ui_app_name),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Black,
+                        ),
+                        color = primaryContainerDark,
+                    )
+                }
+            }
         }
+
         OnboardingTextContent(
             modifier = Modifier
                 .fillMaxSize()
@@ -244,74 +287,76 @@ fun OnboardingTextContent(
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+        Text(
+            text = stringResource(id = R.string.feature_onboarding_page_one_title),
+            style = MaterialTheme.typography.displayLarge.copy(
+                fontSize = MaterialTheme.typography.displaySmall.fontSize,
+                fontWeight = FontWeight.Bold,
+                lineHeight = TextUnit.Unspecified
+            ),
+            color = Color.White,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxHeight(0.5f)
-        ) {
-            Image(
-                painter = painterResource(id = UiR.drawable.core_ui_crbtlogo),
-                contentDescription = "logo",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(200.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        }
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
+            color = Color.White,
+            style = MaterialTheme.typography.titleSmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxHeight(0.5f)
-        ) {
-            Text(
-                text = stringResource(id = R.string.feature_onboarding_page_one_title),
-                style = MaterialTheme.typography.displayLarge.copy(
-                    fontSize = MaterialTheme.typography.displayMedium.fontSize,
-                    fontWeight = FontWeight.Bold,
-                ),
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(id = R.string.feature_onboarding_page_one_subtitle),
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            )
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            IconButton(
-                onClick = onClicked,
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                )
-            ) {
-                Icon(
-                    imageVector = CrbtIcons.ArrowForward,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(86.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(32.dp))
-        }
+        IconButtonWithArc(
+            onClicked = onClicked
+        )
+        Spacer(modifier = Modifier.height(32.dp))
     }
 
 }
+
+@Composable
+fun IconButtonWithArc(
+    onClicked: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.size(64.dp)
+    ) {
+        Canvas(modifier = Modifier.size(64.dp)) {
+            drawArc(
+                color = primaryDark,
+                startAngle = 0f,
+                sweepAngle = 270f,
+                useCenter = false,
+                style = Stroke(width = 1.2.dp.toPx())
+            )
+        }
+        IconButton(
+            onClick = onClicked,
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = primaryDark,
+                contentColor = onPrimaryDark
+            ),
+            modifier = Modifier.size(48.dp)
+        ) {
+            Icon(
+                imageVector = CrbtIcons.ArrowForward,
+                contentDescription = null
+            )
+        }
+    }
+}
+
 
 private const val CONTENT_ANIMATION_DURATION = 300
 
@@ -421,11 +466,12 @@ fun BottomSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp)
             .then(modifier),
     ) {
         content()
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         ProcessButton(
             onClick = onNextClicked,
             text = buttonText,
@@ -433,7 +479,6 @@ fun BottomSheetContent(
             modifier = Modifier.fillMaxWidth(),
             isProcessing = buttonLoading
         )
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
