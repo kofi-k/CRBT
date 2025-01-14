@@ -3,6 +3,8 @@ package com.crbt.data.core.data.repository
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.datastore.CrbtPreferencesDataSource
 import com.itengs.crbt.core.model.data.UserPreferencesData
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -102,6 +104,15 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
 
 
     override suspend fun getUserContacts(): String = crbtPreferencesDataSource.getUserContacts()
+
+    override suspend fun setThemeBrand(themeBrand: ThemeBrand) =
+        crbtPreferencesDataSource.setThemeBrand(themeBrand)
+
+    override suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) =
+        crbtPreferencesDataSource.setDarkThemeConfig(darkThemeConfig)
+
+    override suspend fun setDynamicColorPreference(useDynamicColor: Boolean) =
+        crbtPreferencesDataSource.setDynamicColorPreference(useDynamicColor)
 
     private suspend fun userPreferenceData() = userPreferencesData.first()
 }
