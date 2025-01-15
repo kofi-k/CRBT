@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="core_ui_app_name" translatable="false">CRBT</string>
     <string name="core_ui_phone_number_error">Invalid phone number</string>
     <string name="core_ui_phone_number_placeholder">Enter your phone number</string>
     <string name="core_ui_otp_subtitle">Enter the 6-digit code sent to %s</string>
