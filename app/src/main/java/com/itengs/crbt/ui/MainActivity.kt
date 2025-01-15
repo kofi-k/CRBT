@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -27,11 +28,12 @@ import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.util.NetworkMonitor
 import com.crbt.designsystem.theme.CrbtTheme
-import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.SharedCrbtMusicPlayerViewModel
 import com.example.crbtjetcompose.core.analytics.AnalyticsHelper
 import com.example.crbtjetcompose.core.analytics.LocalAnalyticsHelper
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -69,7 +71,7 @@ class MainActivity : ComponentActivity() {
             installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var uiState: UserPreferenceUiState by mutableStateOf(UserPreferenceUiState.Loading)
+        var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -106,14 +108,14 @@ class MainActivity : ComponentActivity() {
         // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
         // the UI.
         splashScreen.setKeepOnScreenCondition {
-            uiState is UserPreferenceUiState.Loading
+            uiState is MainActivityUiState.Loading
         }
 
         enableEdgeToEdge()
 
 
         setContent {
-            val darkTheme = isSystemInDarkTheme()
+            val darkTheme = shouldUseDarkTheme(uiState)
 
 
             // Update the edge to edge configuration to match the theme
@@ -145,7 +147,11 @@ class MainActivity : ComponentActivity() {
                         userManager = userManager
                     )
 
-                    CrbtTheme {
+                    CrbtTheme(
+                        darkTheme = darkTheme,
+                        androidTheme = shouldUseAndroidTheme(uiState),
+                        disableDynamicTheming = shouldDisableDynamicTheming(uiState),
+                    ) {
                         CrbtApp(
                             appState = appState,
                             sharedCrbtMusicPlayerViewModel = sharedCrbtMusicPlayerViewModel,
@@ -164,6 +170,48 @@ class MainActivity : ComponentActivity() {
         stopService(Intent(this, MusicService::class.java))
     }
 
+}
+
+
+/**
+ * Returns `true` if dark theme should be used, as a function of the [uiState] and the
+ * current system context.
+ */
+@Composable
+private fun shouldUseDarkTheme(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> isSystemInDarkTheme()
+    is MainActivityUiState.Success -> when (uiState.userData.darkThemeConfig) {
+        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        DarkThemeConfig.LIGHT -> false
+        DarkThemeConfig.DARK -> true
+    }
+}
+
+/**
+ * Returns `true` if the Android theme should be used, as a function of the [uiState].
+ */
+@Composable
+private fun shouldUseAndroidTheme(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> false
+    is MainActivityUiState.Success -> when (uiState.userData.themeBrand) {
+        ThemeBrand.DEFAULT -> false
+        ThemeBrand.ANDROID -> true
+    }
+}
+
+/**
+ * Returns `true` if the dynamic color is disabled, as a function of the [uiState].
+ */
+@Composable
+private fun shouldDisableDynamicTheming(
+    uiState: MainActivityUiState,
+): Boolean = when (uiState) {
+    MainActivityUiState.Loading -> false
+    is MainActivityUiState.Success -> !uiState.userData.useDynamicColor
 }
 
 /**

@@ -70,6 +70,7 @@ import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.profile.navigation.BUG_REPORTS
 import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
 import com.crbt.services.navigation.PACKAGES_ROUTE
 import com.crbt.services.navigation.RECHARGE_ROUTE
@@ -133,6 +134,7 @@ fun CrbtApp(
             ADD_SUBSCRIPTION_ROUTE -> com.itengs.crbt.feature.subscription.R.string.feature_subscription_add_subscription_title
             PACKAGES_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_packages
             RECHARGE_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_recharge
+            BUG_REPORTS -> com.itengs.crbt.feature.profile.R.string.feature_profile_report_bug_title
             else -> com.itengs.crbt.core.designsystem.R.string.core_designsystem_untitled
         }
     }
@@ -412,7 +414,6 @@ fun CrbtApp(
     }
 }
 
-/*will customize this to look like figma design */
 @Composable
 private fun CrbtBottomBar(
     destinations: List<TopLevelDestination>,
@@ -440,9 +441,7 @@ private fun CrbtBottomBar(
                         contentDescription = null,
                     )
                 },
-                label = {
-//                    Text(stringResource(destination.iconTextId))
-                },
+                label = null,
                 modifier = Modifier,
                 alwaysShowLabel = false
             )
