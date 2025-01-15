@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,12 +27,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,51 +59,89 @@ import com.crbt.designsystem.components.SurfaceCard
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CustomGradientColors
 import com.crbt.designsystem.theme.bodyFontFamily
-import com.crbt.domain.UserPreferenceUiState
+import com.crbt.ui.core.ui.MessageSnackbar
 import com.itengs.crbt.core.model.data.fullName
 import com.itengs.crbt.feature.profile.R
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ProfileRoute(
     onLogout: () -> Unit,
     onEditProfileClick: () -> Unit = {},
+    navigateToBugReports: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
-    val signOutState by profileViewModel.signOutState.collectAsStateWithLifecycle()
-
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    var isSigningOut by remember { mutableStateOf(false) }
 
     ProfileScreen(
         onEditProfileClick = onEditProfileClick,
         onLogout = {
-            profileViewModel.signOut(onLogout)
+            isSigningOut = true
+            scope.launch {
+                when (val state = profileViewModel.signOut()) {
+                    is SignOutState.Success -> onLogout()
+                    is SignOutState.Error -> {
+                        isSigningOut = false
+                        snackbarHostState.showSnackbar(
+                            state.message,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+
+                    else -> isSigningOut = true
+                }
+            }
         },
-        signOutState = signOutState,
+        signingOut = isSigningOut,
         userPreferenceUiState = userPreferenceUiState,
         onLanguageCheckChange = { code ->
             profileViewModel.saveLanguageCode(code)
         },
+        navigateToBugReports = navigateToBugReports,
+        updateThemeBrand = profileViewModel::updateThemeBrand,
+        updateDarkThemeConfig = profileViewModel::updateDarkThemeConfig,
+        updateDynamicColorPreference = profileViewModel::updateDynamicColorPreference,
     )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        MessageSnackbar(
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+    }
 }
 
 @Composable
 fun ProfileScreen(
     onEditProfileClick: () -> Unit = {},
     onLogout: () -> Unit = {},
-    signOutState: SignOutState,
-    userPreferenceUiState: UserPreferenceUiState,
+    signingOut: Boolean,
+    userPreferenceUiState: SettingsUiState,
     onLanguageCheckChange: (String) -> Unit = {},
+    navigateToBugReports: () -> Unit,
+    updateThemeBrand: (themeBrand: ThemeBrand) -> Unit,
+    updateDarkThemeConfig: (
+        darkThemeConfig: DarkThemeConfig
+    ) -> Unit,
+    updateDynamicColorPreference: (
+        useDynamicColor: Boolean
+    ) -> Unit,
 ) {
     when (userPreferenceUiState) {
-        is UserPreferenceUiState.Loading -> {
+        is SettingsUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(ButtonDefaults.IconSize))
             }
         }
 
-        is UserPreferenceUiState.Success -> {
-            val userData = userPreferenceUiState.userData
+        is SettingsUiState.Success -> {
+            val userData = userPreferenceUiState.userPreferencesData
 
             LazyColumn(
                 modifier = Modifier
@@ -128,8 +168,51 @@ fun ProfileScreen(
                         onPermissionCheckChange = { _, _ -> },
                         rewardPoints = userData.rewardPoints.toString()
                     )
-                    Spacer(modifier = Modifier.heightIn(min = 16.dp))
+                }
 
+                item {
+                    ThemeSettingsScreen(
+                        updateThemeBrand = updateThemeBrand,
+                        updateDarkThemeConfig = updateDarkThemeConfig,
+                        updateDynamicColorPreference = updateDynamicColorPreference,
+                        themeSettings = userPreferenceUiState.settings
+                    )
+                }
+
+                item {
+                    SurfaceCard(
+                        content = {
+                            ListCard(
+                                onClick = navigateToBugReports,
+                                headlineText = stringResource(id = R.string.feature_profile_report_bug_title),
+                                leadingContentIcon = CrbtIcons.RewardPoints,
+                                trailingContent = {},
+                                supportingContent = {
+                                    Text(
+                                        text = stringResource(id = R.string.feature_profile_report_bug_decriptiom),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                },
+                                leadingContent = {
+                                    Icon(
+                                        imageVector = CrbtIcons.BugReport,
+                                        contentDescription = CrbtIcons.BugReport.name,
+                                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        modifier = Modifier.size(62.dp)
+                                    )
+                                },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    headlineColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    supportingColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                ),
+                            )
+                        },
+                        color = MaterialTheme.colorScheme.tertiaryContainer
+                    )
+                }
+
+                item {
                     OutlinedButton(
                         onClick = onLogout,
                         modifier = Modifier.fillMaxWidth(),
@@ -140,13 +223,13 @@ fun ProfileScreen(
                             contentDescription = CrbtIcons.Logout.name
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        val text = if (signOutState is SignOutState.Loading) {
+                        val text = if (signingOut) {
                             stringResource(id = R.string.feature_profile_logging_out)
                         } else {
                             stringResource(id = R.string.feature_profile_logout)
                         }
                         Text(text = text)
-                        AnimatedVisibility(visible = signOutState is SignOutState.Loading) {
+                        AnimatedVisibility(visible = signingOut) {
                             Spacer(modifier = Modifier.width(8.dp))
                             CircularProgressIndicator()
                         }
@@ -338,6 +421,8 @@ fun RewardPointsBottomSheet(
 @Composable
 fun ProfileScreenPreview() {
     ProfileRoute(
-        onLogout = {}
+        onLogout = {},
+        onEditProfileClick = {},
+        navigateToBugReports = {}
     )
 }

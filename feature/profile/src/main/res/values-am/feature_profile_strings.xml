@@ -26,4 +26,26 @@
     <string name="feature_profile_total_reward_points">ጠቅላላ የሽልማት ነጥቦችዎ</string>
     <string name="feature_profile_crbt_reward_points">የCRBT ሽልማት ነጥቦችዎ</string>
     <string name="feature_profile_crbt_reward_points_info">ነጥቦች የሚሰጡት በCRBT ላይ ለሚያደርጉት እያንዳንዱ ሰብስክሪፕሽን ነው። ለሌሎች ለሚያደርጉት ሰብስክሪፕሽንም ነጥቦችን ያገኛሉ። ተጨማሪ ነጥቦችን ለማግኘት መመዝገብዎን ይቀጥሉ🔥</string>
+    <string name="feature_profile_theme">ትህንድ</string>
+    <string name="feature_profile_brand_default">ነባሪ</string>
+    <string name="feature_profile_brand_android">አንዲን</string>
+    <string name="feature_profile_dark_mode_preference">የምሳሌ ሞድ መረጃ</string>
+    <string name="feature_profile_dark_mode_config_system_default">የስርዓት ነባሪ</string>
+    <string name="feature_profile_dark_mode_config_light">ብርሃን</string>
+    <string name="feature_profile_dark_mode_config_dark">ጣብያ</string>
+    <string name="feature_profile_dynamic_color_preference">የዲንማይክ ቀለም መረጃ</string>
+    <string name="feature_profile_dynamic_color_yes">አዎ</string>
+    <string name="feature_profile_dynamic_color_no">አይደለም</string>
+    <string name="feature_profile_dismiss_dialog_button_text">እሺ</string>
+    <string name="feature_profile_default_theme_title">ነባሪ</string>
+    <string name="feature_profile_report_bug_title">በምርጫ ላይ ማስተካከል!</string>
+    <string name="feature_profile_report_bug_decriptiom">
+        እኛን በምርጫዎችን እና ችግርዎችን ለማስተካከል እንደምንችል እንደሚያስችል
+    </string>
+
+    <string name="feature_profile_report_bug_title_label">ርዕስ</string>
+    <string name="feature_profile_report_bug_description_label">መግለጫ</string>
+    <string name="feature_profile_report_bug_category_label">ምድብ</string>
+    <string name="feature_profile_report_bug_submit_button">ማስተካከል</string>
+
 </resources>

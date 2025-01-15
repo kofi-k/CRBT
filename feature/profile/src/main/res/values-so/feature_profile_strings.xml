@@ -26,4 +26,24 @@
     <string name="feature_profile_total_reward_points">Wadarta dhibcahaaga abaalmarinta</string>
     <string name="feature_profile_crbt_reward_points">Dhibcahaaga abaalmarinta ee CRBT</string>
     <string name="feature_profile_crbt_reward_points_info">Dhibco waxaa lagu abaalmariyaa rukumo kasta oo aad samayso CRBT. Sidoo kale waxaad kasbataa dhibco rukumooyinka aad u samayso dadka kale. Sii wad rukumada si aad u urursato dhibco badan🔥</string>
+    <string name="feature_profile_theme">Muuqaalka</string>
+    <string name="feature_profile_brand_default">Dhab ah</string>
+    <string name="feature_profile_brand_android">Android</string>
+    <string name="feature_profile_dark_mode_preference">Xaaladda Madow</string>
+    <string name="feature_profile_dark_mode_config_system_default">Dhab ah</string>
+    <string name="feature_profile_dark_mode_config_light">Light</string>
+    <string name="feature_profile_dark_mode_config_dark">Madow</string>
+    <string name="feature_profile_dynamic_color_preference">Isticmaal Caddaalad Dhimis</string>
+    <string name="feature_profile_dynamic_color_yes">Haa</string>
+    <string name="feature_profile_dynamic_color_no">Maya</string>
+    <string name="feature_profile_dismiss_dialog_button_text">OK</string>
+    <string name="feature_profile_default_theme_title">Dhab ah</string>
+    <string name="feature_profile_report_bug_title">Koobka Bug!</string>
+    <string name="feature_profile_report_bug_decriptiom">
+        Naga caawin inaanu ku ogaano bugaha iyo arrimaha si aanu ugu adeegno wax kasta oo aad u baahan tahay.
+    </string>
+    <string name="feature_profile_report_bug_title_label">Cinwaanka</string>
+    <string name="feature_profile_report_bug_description_label">Bugaha</string>
+    <string name="feature_profile_report_bug_category_label">Qaybta</string>
+    <string name="feature_profile_report_bug_submit_button">Koob</string>
 </resources>
