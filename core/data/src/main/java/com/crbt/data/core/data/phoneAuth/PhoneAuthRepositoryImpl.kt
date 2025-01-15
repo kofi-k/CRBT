@@ -8,12 +8,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class PhoneAuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val crbtPreferencesRepository: CrbtPreferencesRepository
+    private val crbtPreferencesRepository: CrbtPreferencesRepository,
 ) : PhoneAuthRepository {
 
 
@@ -41,8 +42,10 @@ class PhoneAuthRepositoryImpl @Inject constructor(
         auth.signOut()
         crbtPreferencesRepository.setSignInToken("")
         SignOutState.Success
+    } catch (e: IOException) {
+        SignOutState.Error("Error signing out")
     } catch (e: Exception) {
-        SignOutState.Error(e.message ?: "Error")
+        SignOutState.Error("Error signing out")
     }
 
 
