@@ -9,6 +9,7 @@ import com.crbt.core.network.model.NetworkPackageItem
 import com.crbt.core.network.model.NetworkSongsResource
 import com.crbt.core.network.model.SubscriptionRequest
 import com.crbt.core.network.model.SubscriptionResponse
+import com.crbt.core.network.model.SysReportsNetworkModel
 import com.crbt.core.network.model.UpdateUserInfo
 import com.crbt.core.network.model.UserAccountDetailsNetworkModel
 import com.crbt.core.network.model.UserContacts
@@ -59,6 +60,11 @@ interface RetrofitCrbtNetworkApi {
     @POST("user/user-contacts")
     suspend fun uploadUserContacts(
         @Body contacts: UserContacts
+    )
+
+    @POST("reports")
+    suspend fun reportIssue(
+        @Body sysReportsNetworkModel: SysReportsNetworkModel
     )
 }
 
