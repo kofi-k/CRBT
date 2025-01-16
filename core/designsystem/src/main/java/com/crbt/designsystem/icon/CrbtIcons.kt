@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
@@ -87,6 +88,7 @@ object CrbtIcons {
     val SwapVert = Icons.Rounded.SwapVert
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
     val Clear = Icons.Filled.Cancel
+    val Description = Icons.Filled.Description
 
     val OtpCode = Icons.Rounded.Pin
     val MoreVert = Icons.Default.MoreVert

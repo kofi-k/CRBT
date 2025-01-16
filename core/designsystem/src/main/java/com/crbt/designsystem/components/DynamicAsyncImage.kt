@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
@@ -33,12 +34,13 @@ fun DynamicAsyncImage(
     imageUrl: String? = null,
     base64ImageString: String? = null,
     @DrawableRes imageRes: Int = R.drawable.avatar,
+    colorFilter: ColorFilter? = null,
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
     val isLocalInspection = LocalInspectionMode.current
 
-    // Decode base64 to ImageBitmap if provided
     val base64Bitmap = remember(base64ImageString) {
         base64ImageString?.let {
             val imageBytes = Base64.decode(it, Base64.DEFAULT)
@@ -46,7 +48,6 @@ fun DynamicAsyncImage(
         }
     }
 
-    // Image painter depending on the source
     val painter = if (base64Bitmap != null) {
         isLoading = false
         isError = false
@@ -80,9 +81,10 @@ fun DynamicAsyncImage(
             } else {
                 painterResource(imageRes)
             },
-            contentScale = ContentScale.Crop,
+            contentScale = contentScale,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            colorFilter = colorFilter
         )
     }
 }
