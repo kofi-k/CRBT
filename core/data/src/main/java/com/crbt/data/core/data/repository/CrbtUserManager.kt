@@ -68,8 +68,10 @@ class CrbtUserManager @Inject constructor(
             when (e) {
                 is ConnectException -> UpdateUserInfoUiState.Error("Oops! your internet connection seem to be off.")
                 is SocketTimeoutException -> UpdateUserInfoUiState.Error("Hmm, connection timed out")
-                is UnknownHostException -> UpdateUserInfoUiState.Error("A network error occurred. Please check your connection and try again.")
-                else -> UpdateUserInfoUiState.Error(e.message ?: "An error occurred")
+                is UnknownHostException -> UpdateUserInfoUiState.Error("An error occurred while connecting to the server. Please try again later.")
+                else -> UpdateUserInfoUiState.Error(
+                    e.message ?: "A network error occurred. Please try again later."
+                )
             }
         } catch (e: Exception) {
             UpdateUserInfoUiState.Error(e.message ?: "Error")

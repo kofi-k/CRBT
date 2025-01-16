@@ -25,9 +25,13 @@ class RefreshRepositoryImpl @Inject constructor(
         } catch (e: IOException) {
             when (e) {
                 is ConnectException -> emit(RefreshUiState.Error("Oops! your internet connection seem to be off."))
-                is SocketTimeoutException -> emit(RefreshUiState.Error("Hmm, connection timed out"))
-                is UnknownHostException -> emit(RefreshUiState.Error("A network error occurred. Please check your connection and try again."))
-                else -> emit(RefreshUiState.Error(e.message ?: "An error occurred"))
+                is SocketTimeoutException -> emit(RefreshUiState.Error("Hmm, connection timed out."))
+                is UnknownHostException -> emit(RefreshUiState.Error("An error occurred while connecting to the server. Please try again later."))
+                else -> emit(
+                    RefreshUiState.Error(
+                        e.message ?: "A network error occurred. Please try again later."
+                    )
+                )
             }
         } catch (e: Exception) {
             emit(RefreshUiState.Error(e.message ?: "An error occurred"))

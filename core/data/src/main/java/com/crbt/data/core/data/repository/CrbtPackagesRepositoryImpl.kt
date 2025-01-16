@@ -41,8 +41,12 @@ class CrbtPackagesRepositoryImpl @Inject constructor(
             when (e) {
                 is ConnectException -> emit(PackagesFeedUiState.Error("Oops! your internet connection seem to be off."))
                 is SocketTimeoutException -> emit(PackagesFeedUiState.Error("Hmm, connection timed out"))
-                is UnknownHostException -> emit(PackagesFeedUiState.Error("A network error occurred. Please check your connection and try again."))
-                else -> emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
+                is UnknownHostException -> emit(PackagesFeedUiState.Error("An error occurred while connecting to the server. Please try again later."))
+                else -> emit(
+                    PackagesFeedUiState.Error(
+                        e.message ?: "A network error occurred. Please try again later"
+                    )
+                )
             }
         } catch (e: Exception) {
             emit(PackagesFeedUiState.Error(e.message ?: "An error occurred"))
