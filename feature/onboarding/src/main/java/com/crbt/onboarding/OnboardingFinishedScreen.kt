@@ -40,7 +40,7 @@ fun OnboardingFinishedScreen(
     ) {
         DynamicAsyncImage(
             imageUrl = null,
-            imageRes = R.drawable.onboarding_jorge,
+            imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_onboarding_image_2,
             modifier = Modifier.fillMaxSize()
         )
         Box(

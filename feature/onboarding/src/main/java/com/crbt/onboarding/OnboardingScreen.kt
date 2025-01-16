@@ -216,7 +216,7 @@ fun OnboardingScreen(
                 .fillMaxSize(),
         ) {
             Image(
-                painter = painterResource(R.drawable.onboarding_onboardingbackground),
+                painter = painterResource(com.itengs.crbt.core.ui.R.drawable.core_ui_onboarding_background),
                 contentDescription = "background image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
