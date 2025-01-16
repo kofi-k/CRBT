@@ -1,5 +1,6 @@
 package com.itengs.crbt.navigation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
@@ -27,6 +28,7 @@ import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.itengs.crbt.ui.CrbtAppState
 
 
+@SuppressLint("NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
