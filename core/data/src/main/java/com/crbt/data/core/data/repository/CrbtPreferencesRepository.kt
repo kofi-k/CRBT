@@ -1,6 +1,8 @@
 package com.crbt.data.core.data.repository
 
 import com.itengs.crbt.core.model.data.UserPreferencesData
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
 import kotlinx.coroutines.flow.Flow
 
 interface CrbtPreferencesRepository {
@@ -49,6 +51,13 @@ interface CrbtPreferencesRepository {
     suspend fun saveUserContacts(contacts: List<String>)
 
     suspend fun getUserContacts(): String
+
+    suspend fun setThemeBrand(themeBrand: ThemeBrand)
+
+    suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig)
+
+    suspend fun setDynamicColorPreference(useDynamicColor: Boolean)
+
 
 }
 

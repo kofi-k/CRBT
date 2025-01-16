@@ -14,6 +14,7 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.time.LocalDate
 import javax.inject.Inject
 
 
@@ -37,6 +38,10 @@ class CrbtAdsRepositoryImpl @Inject constructor(
             val ads = crbtNetworkRepository.getAds()
                 .map(CrbtNetworkAds::asExternalModel)
                 .sortedByDescending { it.id }
+                .filter { dateString ->
+                    val date = LocalDate.parse(dateString.expiryDate)
+                    date.isAfter(LocalDate.now())
+                }
             emit(CrbtAdsUiState.Success(ads))
         } catch (e: IOException) {
             when (e) {

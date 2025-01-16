@@ -26,4 +26,33 @@
     <string name="feature_profile_total_reward_points">Qabxii badhaasa kee waliigalaa</string>
     <string name="feature_profile_crbt_reward_points">Qabxii badhaasa CRBT kee</string>
     <string name="feature_profile_crbt_reward_points_info">Qabxiin sababii CRBT hundaaf ni kennama. Sababii namoota biroof gootu illee qabxii argatta. Qabxii dabaluuf sababuu itti fufi🔥</string>
+    <string name="feature_profile_theme">Tema</string>
+    <string name="feature_profile_brand_default">Dhab ah</string>
+    <string name="feature_profile_brand_android">Android</string>
+    <string name="feature_profile_dark_mode_preference">Xaaladda Madow</string>
+    <string name="feature_profile_dark_mode_config_system_default">Dhab ah</string>
+    <string name="feature_profile_dark_mode_config_light">Hundumaa</string>
+    <string name="feature_profile_dark_mode_config_dark">Madow</string>
+    <string name="feature_profile_dynamic_color_preference">Rakkoo Dinamikaa</string>
+    <string name="feature_profile_dynamic_color_yes">Haa</string>
+    <string name="feature_profile_dynamic_color_no">Maya</string>
+    <string name="feature_profile_dismiss_dialog_button_text">Haa\'u</string>
+    <string name="feature_profile_default_theme_title">Dhab ah</string>
+    <string name="feature_profile_report_bug_title">Dhiibbaa qabdu!</string>
+    <string name="feature_profile_report_bug_decriptiom">
+        Dhiibbaa fi qabduunni gara fuula keessaa qabuufi qabsoo keenyaan akka ta\'uufi
+    </string>
+
+    <string name="feature_profile_report_bug_title_label">Tajaajila</string>
+    <string name="feature_profile_report_bug_description_label">Faayidaa</string>
+    <string name="feature_profile_report_bug_category_label">Kategori</string>
+    <string name="feature_profile_report_bug_submit_button">Dhiibbaa qabdu</string>
+    <string name="feature_profile_others">Kanuma</string>
+    <string name="feature_profile_others_description">
+        Saffisa, qabsoo, appii fi kkf
+    </string>
+    <string name="feature_profile_app_info">Appii Info</string>
+    <string name="feature_profile_licenses">Lisansii</string>
+    <string name="feature_profile_app_version">Version %s </string>
+    <string name="feature_profile_terms_and_policy">Qabsoo fi qabsoo</string>
 </resources>

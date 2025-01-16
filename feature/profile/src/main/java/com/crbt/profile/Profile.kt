@@ -67,7 +67,6 @@ import com.crbt.designsystem.components.ThemePreviews
 import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.CrbtTheme
 import com.crbt.designsystem.theme.stronglyDeemphasizedAlpha
-import com.crbt.domain.UserPreferenceUiState
 import com.crbt.ui.core.ui.EmailCheck
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
@@ -82,7 +81,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Profile(
     modifier: Modifier = Modifier,
-    onSaveButtonClicked: () -> Unit,
+    onSaveSuccess: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
@@ -92,20 +91,18 @@ fun Profile(
 
 
     when (userPreferenceUiState) {
-        is UserPreferenceUiState.Loading -> CircularProgressIndicator()
-        is UserPreferenceUiState.Success -> {
+        is SettingsUiState.Loading -> CircularProgressIndicator()
+        is SettingsUiState.Success -> {
             ProfileContent(
                 modifier = modifier,
-                userData = (userPreferenceUiState as UserPreferenceUiState.Success).userData.asCrbtUser(),
+                userData = (userPreferenceUiState as SettingsUiState.Success).userPreferencesData.asCrbtUser(),
                 saveProfile = { firstName, lastName, email, profile ->
                     profileViewModel.saveProfile(
                         firstName = firstName,
                         lastName = lastName,
                         email = email,
                         profile = profile,
-                        onSuccessfulUpdate = {
-                            onSaveButtonClicked()
-                        },
+                        onSuccessfulUpdate = onSaveSuccess,
                         onFailedUpdate = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
@@ -225,7 +222,7 @@ fun ProfileContent(
                         },
                         checked = checked,
                         userEmailAddress = userEmailAddress,
-                        onEmailChanged = { email, isValid ->
+                        onEmailChanged = { email, _ ->
                             userEmailAddress = email
                         }
                     )
@@ -402,7 +399,7 @@ class MorphPolygonShape(
 fun ProfilePreview() {
     CrbtTheme {
         Profile(
-            onSaveButtonClicked = {},
+            onSaveSuccess = {},
         )
     }
 }

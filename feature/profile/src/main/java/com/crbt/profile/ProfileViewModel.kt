@@ -10,51 +10,55 @@ import com.crbt.data.core.data.phoneAuth.SignOutState
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.UpdateUserInfoUiState
 import com.crbt.data.core.data.repository.UserManager
-import com.crbt.domain.GetUserDataPreferenceUseCase
-import com.crbt.domain.UserPreferenceUiState
+import com.crbt.domain.DestroyMediaControllerUseCase
+import com.itengs.crbt.core.model.data.UserPreferencesData
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val phoneAuthRepository: PhoneAuthRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
     private val userManager: UserManager,
-    getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
+    private val destroyMediaControllerUseCase: DestroyMediaControllerUseCase,
 ) : ViewModel() {
 
 
     var userInfoUiState by mutableStateOf<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
         private set
 
-    private val _signOutState = MutableStateFlow<SignOutState>(SignOutState.Idle)
-    val signOutState: StateFlow<SignOutState> = _signOutState
 
-
-    val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
-        getUserDataPreferenceUseCase()
+    val userPreferenceUiState: StateFlow<SettingsUiState> =
+        crbtPreferencesRepository.userPreferencesData
+            .map { userData ->
+                SettingsUiState.Success(
+                    settings = UserEditableSettings(
+                        brand = userData.themeBrand,
+                        useDynamicColor = userData.useDynamicColor,
+                        darkThemeConfig = userData.darkThemeConfig,
+                    ),
+                    userPreferencesData = userData
+                )
+            }
             .stateIn(
                 scope = viewModelScope,
-                initialValue = UserPreferenceUiState.Loading,
-                started = WhileSubscribed(5_000),
+                started = WhileSubscribed(5.seconds.inWholeMilliseconds),
+                initialValue = SettingsUiState.Loading,
             )
 
 
-    fun signOut(signedOut: () -> Unit) {
-        _signOutState.value = SignOutState.Loading
-        viewModelScope.launch {
-            val result = phoneAuthRepository.signOut()
-            _signOutState.value = result
-            if (result is SignOutState.Success) {
-                signedOut()
-            }
-        }
+    suspend fun signOut(): SignOutState {
+        destroyMediaControllerUseCase()
+        return phoneAuthRepository.signOut()
     }
 
 
@@ -101,4 +105,40 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateThemeBrand(themeBrand: ThemeBrand) {
+        viewModelScope.launch {
+            crbtPreferencesRepository.setThemeBrand(themeBrand)
+        }
+    }
+
+    fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+        viewModelScope.launch {
+            crbtPreferencesRepository.setDarkThemeConfig(darkThemeConfig)
+        }
+    }
+
+    fun updateDynamicColorPreference(useDynamicColor: Boolean) {
+        viewModelScope.launch {
+            crbtPreferencesRepository.setDynamicColorPreference(useDynamicColor)
+        }
+    }
+}
+
+
+/**
+ * Represents the settings which the user can edit within the app.
+ */
+data class UserEditableSettings(
+    val brand: ThemeBrand,
+    val useDynamicColor: Boolean,
+    val darkThemeConfig: DarkThemeConfig,
+)
+
+sealed interface SettingsUiState {
+    data object Loading : SettingsUiState
+    data class Success(
+        val settings: UserEditableSettings,
+        val userPreferencesData: UserPreferencesData
+    ) : SettingsUiState
 }

@@ -1,5 +1,6 @@
 package com.crbt.subscription.navigation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
@@ -17,7 +18,6 @@ const val TONE_ID_ARG = "tone_id"
 const val GIFT_SUB_ARG = "gift_sub"
 
 const val SUBSCRIPTION_ROUTE = "subscriptions_route/$TONE_ID_ARG={$TONE_ID_ARG}"
-const val SUBSCRIPTION_COMPLETE_ROUTE = "$SUBSCRIPTION_ROUTE/subscription_complete"
 
 
 const val ADD_SUBSCRIPTION_ROUTE =
@@ -26,7 +26,6 @@ const val ADD_SUBSCRIPTION_ROUTE =
 fun NavController.navigateToAddSubscription(
     toneId: String,
     giftSub: Boolean,
-    navOptions: NavOptions? = null
 ) {
     val route = "$SUBSCRIPTION_ROUTE/add_subscription?$TONE_ID_ARG=$toneId&$GIFT_SUB_ARG=$giftSub"
     navigate(route) {
@@ -47,6 +46,7 @@ fun NavController.navigateToSubscription(navOptions: NavOptions, toneId: String 
     )
 
 
+@SuppressLint("NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,

@@ -17,10 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.mockito.Mockito.mock
-import java.io.IOException
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 
@@ -87,16 +83,8 @@ class PhoneAuthViewModel @Inject constructor(
                 val userName = userManager.login(phone, accountType, langPref)
                 onVerified(userName)
 //                AuthState.Success(fakeAuthResult)
-            } catch (e: IOException) {
-                onFailed("A network error occurred. Please check your connection and try again.")
-                authState = when (e) {
-                    is ConnectException -> AuthState.Error("Oops! your internet connection seem to be off.")
-                    is SocketTimeoutException -> AuthState.Error("Hmm, connection timed out")
-                    is UnknownHostException -> AuthState.Error("A network error occurred. Please check your connection and try again.")
-                    else -> AuthState.Error(e.message ?: "An error occurred")
-                }
             } catch (e: Exception) {
-                onFailed(e.message ?: "Verification failed")
+                onFailed(e.message ?: "Verification failed. Please try again.")
                 authState = AuthState.Error(e.message)
             }
         }

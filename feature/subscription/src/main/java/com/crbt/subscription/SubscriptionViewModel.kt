@@ -159,8 +159,10 @@ class SubscriptionViewModel @Inject constructor(
                 when (e) {
                     is ConnectException -> SubscriptionUiState.Error("Oops! your internet connection seem to be off.")
                     is SocketTimeoutException -> SubscriptionUiState.Error("Hmm, connection timed out.")
-                    is UnknownHostException -> SubscriptionUiState.Error("A network error occurred. Please check your connection and try again.")
-                    else -> SubscriptionUiState.Error(e.message ?: "An error occurred")
+                    is UnknownHostException -> SubscriptionUiState.Error("An error occurred while connecting to the server. Please try again later.")
+                    else -> SubscriptionUiState.Error(
+                        e.message ?: "A network error occurred. Please try again later"
+                    )
                 }
             } catch (e: HttpException) {
                 onError(e.message ?: "An error occurred")

@@ -3,7 +3,6 @@ package com.crbt.services
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.CrbtUssdType
@@ -13,10 +12,7 @@ import com.crbt.data.core.data.repository.UssdUiState
 import com.crbt.data.core.data.repository.extractBalance
 import com.crbt.data.core.data.util.STOP_TIMEOUT
 import com.crbt.domain.GetEthioPackagesUseCase
-import com.crbt.domain.GetUserDataPreferenceUseCase
 import com.crbt.domain.UpdateUserBalanceUseCase
-import com.crbt.domain.UserPreferenceUiState
-import com.crbt.services.navigation.TOPUP_AMOUNT_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,25 +26,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ServicesViewModel @Inject constructor(
     private val repository: UssdRepository,
-    getUserDataPreferenceUseCase: GetUserDataPreferenceUseCase,
     private val updateBalanceUseCase: UpdateUserBalanceUseCase,
-    savedStateHandle: SavedStateHandle,
     getEthioPackagesUseCase: GetEthioPackagesUseCase
 ) : ViewModel() {
 
-    val topUpAmount: StateFlow<String?> =
-        savedStateHandle.getStateFlow(TOPUP_AMOUNT_ARG, null)
     val ussdState: StateFlow<UssdUiState> get() = repository.ussdState
 
     private val reloadTrigger = MutableStateFlow(0)
-
-    val userPreferenceUiState: StateFlow<UserPreferenceUiState> =
-        getUserDataPreferenceUseCase()
-            .stateIn(
-                scope = viewModelScope,
-                initialValue = UserPreferenceUiState.Loading,
-                started = SharingStarted.Eagerly,
-            )
 
 
     val packagesFlow: StateFlow<PackagesFeedUiState> =

@@ -3,6 +3,8 @@ package com.example.crbtjetcompose.core.datastore
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.itengs.crbt.core.model.data.UserPreferencesData
+import com.kofik.freeatudemy.core.model.data.DarkThemeConfig
+import com.kofik.freeatudemy.core.model.data.ThemeBrand
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -31,7 +33,30 @@ class CrbtPreferencesDataSource @Inject constructor(
                 numberOfRechargeCodeDigits = if (it.numberOfRechargeCodeDigits == 0) 14 else it.numberOfRechargeCodeDigits,
                 autoDialRechargeCode = it.autoDialRechargeCode,
                 userLocation = it.userLocation,
-                userCrbtRegistrationPackage = it.userCrbtRegistrationPackage
+                userCrbtRegistrationPackage = it.userCrbtRegistrationPackage,
+                themeBrand = when (it.themeBrand) {
+                    null,
+                    ThemeBrandProto.THEME_BRAND_UNSPECIFIED,
+                    ThemeBrandProto.UNRECOGNIZED,
+                    ThemeBrandProto.THEME_BRAND_DEFAULT,
+                    -> ThemeBrand.DEFAULT
+
+                    ThemeBrandProto.THEME_BRAND_ANDROID -> ThemeBrand.ANDROID
+                },
+                darkThemeConfig = when (it.darkThemeConfig) {
+                    null,
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_UNSPECIFIED,
+                    DarkThemeConfigProto.UNRECOGNIZED,
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_FOLLOW_SYSTEM,
+                    ->
+                        DarkThemeConfig.FOLLOW_SYSTEM
+
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_LIGHT ->
+                        DarkThemeConfig.LIGHT
+
+                    DarkThemeConfigProto.DARK_THEME_CONFIG_DARK -> DarkThemeConfig.DARK
+                },
+                useDynamicColor = it.useDynamicColor,
             )
         }
 
@@ -57,6 +82,37 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
+
+    suspend fun setThemeBrand(themeBrand: ThemeBrand) {
+        userPreferences.updateData {
+            it.copy {
+                this.themeBrand = when (themeBrand) {
+                    ThemeBrand.DEFAULT -> ThemeBrandProto.THEME_BRAND_DEFAULT
+                    ThemeBrand.ANDROID -> ThemeBrandProto.THEME_BRAND_ANDROID
+                }
+            }
+        }
+    }
+
+    suspend fun setDynamicColorPreference(useDynamicColor: Boolean) {
+        userPreferences.updateData {
+            it.copy { this.useDynamicColor = useDynamicColor }
+        }
+    }
+
+    suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+        userPreferences.updateData {
+            it.copy {
+                this.darkThemeConfig = when (darkThemeConfig) {
+                    DarkThemeConfig.FOLLOW_SYSTEM ->
+                        DarkThemeConfigProto.DARK_THEME_CONFIG_FOLLOW_SYSTEM
+
+                    DarkThemeConfig.LIGHT -> DarkThemeConfigProto.DARK_THEME_CONFIG_LIGHT
+                    DarkThemeConfig.DARK -> DarkThemeConfigProto.DARK_THEME_CONFIG_DARK
+                }
+            }
+        }
+    }
 
     suspend fun setSignInToken(userToken: String) {
         try {

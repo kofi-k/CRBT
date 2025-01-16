@@ -26,4 +26,31 @@
     <string name="feature_profile_total_reward_points">ጠቕላላ ነጥብታት ሽልማትካ</string>
     <string name="feature_profile_crbt_reward_points">ነጥብታት ሽልማት CRBT ካ</string>
     <string name="feature_profile_crbt_reward_points_info">ነጥብታት ንነፍሲወከፍ ኣባልነት ኣብ CRBT ይወሃብ። ንኻልኦት ኣባል እንተገይርካዮም እውን ነጥብታት ትረክብ። ነጥብታት ንምእካብ ቀፅል🔥</string>
+    <string name="feature_profile_theme">ትህንድ</string>
+    <string name="feature_profile_brand_default">ነባሪ</string>
+    <string name="feature_profile_brand_android">አንዲን</string>
+    <string name="feature_profile_dark_mode_preference">የምሳሌ ሞድ መረጃ</string>
+    <string name="feature_profile_dark_mode_config_system_default">የስርዓት ነባሪ</string>
+    <string name="feature_profile_dark_mode_config_light">ብርሃን</string>
+    <string name="feature_profile_dark_mode_config_dark">ጣብያ</string>
+    <string name="feature_profile_dynamic_color_preference">የዲንማይክ ቀለም መረጃ</string>
+    <string name="feature_profile_dynamic_color_yes">አዎ</string>
+    <string name="feature_profile_dynamic_color_no">አይደለም</string>
+    <string name="feature_profile_dismiss_dialog_button_text">እሺ</string>
+    <string name="feature_profile_default_theme_title">ነባሪ</string>
+    <string name="feature_profile_report_bug_title">በምርጫ ላይ ማስተካከል!</string>
+    <string name="feature_profile_report_bug_decriptiom">
+        እኛን በምርጫዎችን እና ችግርዎችን ለማስተካከል እንደምንችል እንደሚያስችል
+    </string>
+
+    <string name="feature_profile_report_bug_title_label">ርዕስ</string>
+    <string name="feature_profile_report_bug_description_label">መግለጫ</string>
+    <string name="feature_profile_report_bug_category_label">ምድብ</string>
+    <string name="feature_profile_report_bug_submit_button">ማስተካከል</string>
+    <string name="feature_profile_others">ናይዚ</string>
+    <string name="feature_profile_others_description">ፕሪቪሊያችንን ፣ ግምት ስለ አስተያየቶች ፣ መረጃ እና ሌሎች።</string>
+    <string name="feature_profile_app_info">መረጃ እና ስለ መረጃ</string>
+    <string name="feature_profile_licenses">ፍቃድዎች</string>
+    <string name="feature_profile_app_version">እትም %s </string>
+    <string name="feature_profile_terms_and_policy">የግል እና የግል ፍቃድ</string>
 </resources>

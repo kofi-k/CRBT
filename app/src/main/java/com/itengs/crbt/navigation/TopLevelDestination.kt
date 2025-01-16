@@ -37,8 +37,8 @@ enum class TopLevelDestination(
         titleTextId = subscriptionR.string.feature_subscription_title,
     ),
     PROFILE(
-        selectedIcon = CrbtIcons.Person,
-        unselectedIcon = CrbtIcons.PersonBorder,
+        selectedIcon = CrbtIcons.PersonSettings,
+        unselectedIcon = CrbtIcons.PersonSettingsBorder,
         iconTextId = profileR.string.feature_profile_title,
         titleTextId = profileR.string.feature_profile_title,
     ),

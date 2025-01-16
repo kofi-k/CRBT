@@ -2,17 +2,18 @@ package com.crbt.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PhoneCallback
-import androidx.compose.material.icons.automirrored.filled.Shortcut
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
 import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.SkipPrevious
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.AttachMoney
 import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.Audiotrack
+import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material.icons.rounded.CardGiftcard
@@ -32,7 +34,9 @@ import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Contacts
+import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DisplaySettings
 import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.ExpandMore
@@ -41,12 +45,14 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.ManageAccounts
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.NotificationAdd
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Numbers
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PauseCircle
 import androidx.compose.material.icons.rounded.Payment
@@ -81,6 +87,8 @@ object CrbtIcons {
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
     val SwapVert = Icons.Rounded.SwapVert
     val ArrowRight = Icons.AutoMirrored.Rounded.ArrowRight
+    val Clear = Icons.Filled.Cancel
+    val Description = Icons.Filled.Description
 
     val OtpCode = Icons.Rounded.Pin
     val MoreVert = Icons.Default.MoreVert
@@ -133,6 +141,7 @@ object CrbtIcons {
     val Permissions = Icons.Rounded.ManageAccounts
     val RewardPoints = Icons.Rounded.EmojiEvents
     val PaymentMethods = Icons.Rounded.Payment
+    val BugReport = Icons.Rounded.BugReport
 
     // music icons
     val Audiotrack = Icons.Rounded.Audiotrack
@@ -150,6 +159,13 @@ object CrbtIcons {
     val Services = Icons.Rounded.SyncAlt
     val ServicesBorder = Icons.Outlined.SyncAlt
     val Person = Icons.Rounded.Person
-    val PersonBorder = Icons.Outlined.PersonOutline
+    val PersonSettings = Icons.Rounded.ManageAccounts
+    val PersonSettingsBorder = Icons.Outlined.ManageAccounts
+
+    // theme icons
+    val DarkMode = Icons.Rounded.DarkMode
+    val LightMode = Icons.Rounded.LightMode
+    val SystemDefault = Icons.Rounded.DisplaySettings
+    val ThemePalette = Icons.Rounded.Palette
 }
 
