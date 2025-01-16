@@ -70,14 +70,13 @@ import com.crbt.home.navigation.HOME_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_COMPLETE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_PROFILE_ROUTE
 import com.crbt.onboarding.navigation.ONBOARDING_ROUTE
+import com.crbt.profile.navigation.APP_INFO
 import com.crbt.profile.navigation.BUG_REPORTS
+import com.crbt.profile.navigation.OTHER_SETTINGS
 import com.crbt.profile.navigation.PROFILE_EDIT_ROUTE
 import com.crbt.services.navigation.PACKAGES_ROUTE
 import com.crbt.services.navigation.RECHARGE_ROUTE
-import com.crbt.services.navigation.TOPUP_CHECKOUT_ROUTE
-import com.crbt.services.navigation.TOPUP_ROUTE
 import com.crbt.subscription.navigation.ADD_SUBSCRIPTION_ROUTE
-import com.crbt.subscription.navigation.SUBSCRIPTION_COMPLETE_ROUTE
 import com.crbt.subscription.navigation.SUBSCRIPTION_ROUTE
 import com.crbt.subscription.navigation.navigateToAddSubscription
 import com.crbt.ui.core.ui.launchCustomChromeTab
@@ -110,31 +109,24 @@ fun CrbtApp(
             destination
         ) && currentRoute != destination.name
 
-    val showNavigationBars = currentRoute !in listOf(
+    val showAppNavigation = currentRoute !in listOf(
         ONBOARDING_ROUTE,
         ONBOARDING_COMPLETE_ROUTE,
         ONBOARDING_PROFILE_ROUTE,
-        ADD_SUBSCRIPTION_ROUTE
+        ADD_SUBSCRIPTION_ROUTE,
+        APP_INFO,
     )
-
-    val showBottomBar = currentRoute !in listOf(
-        ONBOARDING_ROUTE,
-        ONBOARDING_COMPLETE_ROUTE,
-        ONBOARDING_PROFILE_ROUTE,
-    )
-
 
     val titleRes = when {
         destination != null -> destination.titleTextId
         else -> when (currentRoute) {
-            TOPUP_ROUTE -> com.itengs.crbt.feature.services.R.string.feature_services_topup
-            TOPUP_CHECKOUT_ROUTE, SUBSCRIPTION_COMPLETE_ROUTE -> com.itengs.crbt.feature.profile.R.string.feature_profile_payments
             ACCOUNT_HISTORY_ROUTE -> com.itengs.crbt.feature.home.R.string.feature_home_account_history
             PROFILE_EDIT_ROUTE -> com.itengs.crbt.feature.profile.R.string.feature_profile_title
             ADD_SUBSCRIPTION_ROUTE -> com.itengs.crbt.feature.subscription.R.string.feature_subscription_add_subscription_title
             PACKAGES_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_packages
             RECHARGE_ROUTE -> com.itengs.crbt.core.ui.R.string.core_ui_recharge
             BUG_REPORTS -> com.itengs.crbt.feature.profile.R.string.feature_profile_report_bug_title
+            OTHER_SETTINGS -> com.itengs.crbt.feature.profile.R.string.feature_profile_others
             else -> com.itengs.crbt.core.designsystem.R.string.core_designsystem_untitled
         }
     }
@@ -217,7 +209,7 @@ fun CrbtApp(
                             Spacer(modifier = Modifier.size(16.dp))
                         }
 
-                        if (showBottomBar) {
+                        if (showAppNavigation) {
                             CrbtBottomBar(
                                 destinations = appState.topLevelDestinations,
                                 onNavigateToDestination = appState::navigateToTopLevelDestination,
@@ -237,7 +229,7 @@ fun CrbtApp(
                 },
                 topBar = {
                     val backgroundColor = MaterialTheme.colorScheme.background.toArgb()
-                    if (showNavigationBars) {
+                    if (showAppNavigation) {
                         CrbtTopAppBar(
                             titleRes = titleRes,
                             navigationIcon = CrbtIcons.ArrowBack,
