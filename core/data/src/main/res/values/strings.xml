@@ -25,4 +25,5 @@
     <string name="core_data_monthly">Monthly</string>
     <string name="core_data_bi_weekly">Two Weeks</string>
     <string name="core_data_weekly">One Week</string>
+    <string name="core_data_dev_team" translatable="false">ITEngineers Ltd</string>
 </resources>
