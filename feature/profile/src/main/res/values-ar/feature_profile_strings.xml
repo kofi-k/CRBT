@@ -45,4 +45,10 @@
     <string name="feature_profile_report_bug_description_label">الوصف</string>
     <string name="feature_profile_report_bug_category_label">الفئة</string>
     <string name="feature_profile_report_bug_submit_button">ارسال</string>
+    <string name="feature_profile_others">آخرين</string>
+    <string name="feature_profile_others_description">سياسة الخصوصية، شروط الخدمة، معلومات التطبيق، إلخ.</string>
+    <string name="feature_profile_app_info">معلومات التطبيق</string>
+    <string name="feature_profile_licenses">التراخيص</string>
+    <string name="feature_profile_app_version">الإصدار %s </string>
+    <string name="feature_profile_terms_and_policy">الشروط والسياسة</string>
 </resources>

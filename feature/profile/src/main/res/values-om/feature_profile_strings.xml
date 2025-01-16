@@ -47,4 +47,12 @@
     <string name="feature_profile_report_bug_description_label">Faayidaa</string>
     <string name="feature_profile_report_bug_category_label">Kategori</string>
     <string name="feature_profile_report_bug_submit_button">Dhiibbaa qabdu</string>
+    <string name="feature_profile_others">Kanuma</string>
+    <string name="feature_profile_others_description">
+        Saffisa, qabsoo, appii fi kkf
+    </string>
+    <string name="feature_profile_app_info">Appii Info</string>
+    <string name="feature_profile_licenses">Lisansii</string>
+    <string name="feature_profile_app_version">Version %s </string>
+    <string name="feature_profile_terms_and_policy">Qabsoo fi qabsoo</string>
 </resources>

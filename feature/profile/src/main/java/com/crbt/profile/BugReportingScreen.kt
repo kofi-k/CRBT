@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SnackbarDuration
@@ -112,7 +114,8 @@ fun ReportingForm(
 
     Column(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         val focusManager = LocalFocusManager.current
@@ -202,7 +205,8 @@ fun ReportingForm(
                 placeholder = stringResource(id = R.string.feature_profile_report_bug_description_label),
                 value = description.text,
                 onValueChange = {
-                    description.text = it
+                    if (description.text.length <= 500)
+                        description.text = it
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -47,5 +47,10 @@
     <string name="feature_profile_report_bug_description_label">መግለጫ</string>
     <string name="feature_profile_report_bug_category_label">ምድብ</string>
     <string name="feature_profile_report_bug_submit_button">ማስተካከል</string>
-
+    <string name="feature_profile_others">አዲስ</string>
+    <string name="feature_profile_others_description">ፕሪቪሊያችንን ፣ ግምት ስለ አስተያየቶች ፣ መረጃ እና ሌሎች።</string>
+    <string name="feature_profile_app_info">መረጃ እና ስለ መረጃ</string>
+    <string name="feature_profile_licenses">ፍቃድዎች</string>
+    <string name="feature_profile_app_version">እትም %s </string>
+    <string name="feature_profile_terms_and_policy">የግል እና የግል ፍቃድ</string>
 </resources>

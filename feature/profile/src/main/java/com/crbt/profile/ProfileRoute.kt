@@ -72,6 +72,7 @@ fun ProfileRoute(
     onLogout: () -> Unit,
     onEditProfileClick: () -> Unit = {},
     navigateToBugReports: () -> Unit,
+    navigateToOthers: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val userPreferenceUiState by profileViewModel.userPreferenceUiState.collectAsStateWithLifecycle()
@@ -107,6 +108,7 @@ fun ProfileRoute(
         updateThemeBrand = profileViewModel::updateThemeBrand,
         updateDarkThemeConfig = profileViewModel::updateDarkThemeConfig,
         updateDynamicColorPreference = profileViewModel::updateDynamicColorPreference,
+        navigateToOthers = navigateToOthers
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -132,6 +134,7 @@ fun ProfileScreen(
     updateDynamicColorPreference: (
         useDynamicColor: Boolean
     ) -> Unit,
+    navigateToOthers: () -> Unit
 ) {
     when (userPreferenceUiState) {
         is SettingsUiState.Loading -> {
@@ -185,7 +188,7 @@ fun ProfileScreen(
                             ListCard(
                                 onClick = navigateToBugReports,
                                 headlineText = stringResource(id = R.string.feature_profile_report_bug_title),
-                                leadingContentIcon = CrbtIcons.RewardPoints,
+                                leadingContentIcon = CrbtIcons.BugReport,
                                 trailingContent = {},
                                 supportingContent = {
                                     Text(
@@ -209,6 +212,30 @@ fun ProfileScreen(
                             )
                         },
                         color = MaterialTheme.colorScheme.tertiaryContainer
+                    )
+                }
+
+                item {
+                    ListCard(
+                        onClick = navigateToOthers,
+                        headlineText = stringResource(id = R.string.feature_profile_others),
+                        leadingContentIcon = CrbtIcons.Help,
+                        trailingContent = {},
+                        supportingContent = {
+                            Text(
+                                text = stringResource(id = R.string.feature_profile_others_description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = CrbtIcons.Help,
+                                contentDescription = CrbtIcons.Help.name,
+                            )
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = Color.Transparent,
+                        ),
                     )
                 }
 
@@ -423,6 +450,7 @@ fun ProfileScreenPreview() {
     ProfileRoute(
         onLogout = {},
         onEditProfileClick = {},
-        navigateToBugReports = {}
+        navigateToBugReports = {},
+        navigateToOthers = {}
     )
 }

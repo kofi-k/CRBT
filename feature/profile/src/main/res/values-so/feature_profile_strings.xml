@@ -46,4 +46,12 @@
     <string name="feature_profile_report_bug_description_label">Bugaha</string>
     <string name="feature_profile_report_bug_category_label">Qaybta</string>
     <string name="feature_profile_report_bug_submit_button">Koob</string>
+    <string name="feature_profile_others">Kale</string>
+    <string name="feature_profile_others_description">
+        Qaanuunka xogta, shuruudaha adeegga, Macluumaadka App, iwm.
+    </string>
+    <string name="feature_profile_app_info">Macluumaadka App</string>
+    <string name="feature_profile_licenses">Lisansiyadaha</string>
+    <string name="feature_profile_app_version">Version %s </string>
+    <string name="feature_profile_terms_and_policy">Shuruudaha iyo Qaanuunka</string>
 </resources>

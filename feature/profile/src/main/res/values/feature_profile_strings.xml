@@ -49,5 +49,11 @@
     <string name="feature_profile_report_bug_description_label">Description</string>
     <string name="feature_profile_report_bug_category_label">Category</string>
     <string name="feature_profile_report_bug_submit_button">Report</string>
-
+    <string name="feature_profile_others">Others</string>
+    <string name="feature_profile_others_description">Privacy policy, terms of service, app info, etc.</string>
+    <string name="feature_profile_app_info">App Info</string>
+    <string name="feature_profile_licenses">Licenses</string>
+    <string name="feature_profile_app_version">Version %s </string>
+    <string name="feature_profile_copy_right" translatable="false">© %s.</string>
+    <string name="feature_profile_terms_and_policy">Terms and Privacy Policy</string>
 </resources>
