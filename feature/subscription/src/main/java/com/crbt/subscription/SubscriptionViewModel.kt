@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.core.network.di.HttpException
 import com.crbt.data.core.data.repository.CrbtPreferencesRepository
-import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.data.core.data.repository.UserManager
 import com.crbt.data.core.data.repository.UserPackageResources
 import com.crbt.data.core.data.repository.UssdRepository
@@ -23,12 +22,9 @@ import com.crbt.data.core.data.util.generateGiftCrbtUssd
 import com.crbt.domain.GetEthioPackagesUseCase
 import com.crbt.subscription.navigation.GIFT_SUB_ARG
 import com.crbt.subscription.navigation.TONE_ID_ARG
-import com.itengs.crbt.core.model.data.CrbtSongResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -42,14 +38,13 @@ import javax.inject.Inject
 class SubscriptionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val ussdRepository: UssdRepository,
-    crbtSongsRepository: UserCrbtMusicRepository,
     private val crbtNetworkRepository: CrbtNetworkRepository,
     private val crbtPreferencesRepository: CrbtPreferencesRepository,
     private val userManager: UserManager,
     getEthioPackagesUseCase: GetEthioPackagesUseCase
 ) : ViewModel() {
 
-    private val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
+    val selectedTone: StateFlow<String?> = savedStateHandle.getStateFlow(TONE_ID_ARG, null)
     val isGiftSubscription: StateFlow<Boolean?> = savedStateHandle.getStateFlow(GIFT_SUB_ARG, null)
 
     var subscriptionUiState by mutableStateOf<SubscriptionUiState>(SubscriptionUiState.Idle)
@@ -57,15 +52,6 @@ class SubscriptionViewModel @Inject constructor(
 
     var ussdState: StateFlow<UssdUiState> = ussdRepository.ussdState
 
-
-    val crbtSongResource: StateFlow<CrbtSongResource?> =
-        selectedTone.flatMapLatest { toneId ->
-            toneId?.let { crbtSongsRepository.songByToneId(it) } ?: flowOf(null)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
-        )
 
     val registrationPackagesFlow: StateFlow<com.crbt.common.core.common.result.Result<UserPackageResources?>> =
         getEthioPackagesUseCase.getUserRegistrationPackages()
