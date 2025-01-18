@@ -20,6 +20,9 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
     override val isUserRegisteredForCrbt: Flow<Boolean> =
         crbtPreferencesDataSource.isUserRegisteredForCrbt
 
+    override val isSystemUnderMaintenance: Flow<Boolean> =
+        crbtPreferencesDataSource.isSystemUnderMaintenance
+
 
     override suspend fun setSignInToken(token: String) =
         crbtPreferencesDataSource.setSignInToken(token)

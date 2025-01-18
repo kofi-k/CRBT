@@ -11,6 +11,8 @@ interface CrbtPreferencesRepository {
 
     val isUserRegisteredForCrbt: Flow<Boolean>
 
+    val isSystemUnderMaintenance: Flow<Boolean>
+
 
     suspend fun setSignInToken(token: String)
 
@@ -57,7 +59,6 @@ interface CrbtPreferencesRepository {
     suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig)
 
     suspend fun setDynamicColorPreference(useDynamicColor: Boolean)
-
 
 }
 
