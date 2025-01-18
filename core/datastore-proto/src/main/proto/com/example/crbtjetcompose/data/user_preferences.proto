@@ -27,6 +27,7 @@ message UserPreferences {
   string user_location = 30;
   string user_contacts = 31;
   string user_crbt_Registration_package = 32;
+  bool is_system_under_maintenance = 33;
 
   repeated string deprecated_interested_crbt_languages = 21;
   repeated string deprecated_gifted_crbt_tone_ids = 22;

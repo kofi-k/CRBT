@@ -62,6 +62,9 @@ class CrbtPreferencesDataSource @Inject constructor(
 
     val isUserRegisteredForCrbt = userPreferences.data.map { it.isUserRegisteredForCrbt }
 
+    val isSystemUnderMaintenance = userPreferences.data.map { it.isSystemUnderMaintenance }
+
+
     suspend fun updateUserPreferences(
         userPreferencesData: UserPreferencesData
     ) {
@@ -124,6 +127,14 @@ class CrbtPreferencesDataSource @Inject constructor(
             }
         } catch (ioException: IOException) {
             Log.e("CrbtPreferences", "Failed to update user preferences", ioException)
+        }
+    }
+
+    suspend fun setIsSystemUnderMaintenance(isUnderMaintenance: Boolean) {
+        userPreferences.updateData {
+            it.copy {
+                isSystemUnderMaintenance = isUnderMaintenance
+            }
         }
     }
 
