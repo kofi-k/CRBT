@@ -10,4 +10,7 @@ class TokenProviderImpl @Inject constructor(
     override suspend fun getToken(): String {
         return crbtPreferencesDataSource.userPreferencesData.first().token
     }
+
+    override suspend fun setSystemUnderMaintenance(isUnderMaintenance: Boolean) =
+        crbtPreferencesDataSource.setIsSystemUnderMaintenance(isUnderMaintenance)
 }
