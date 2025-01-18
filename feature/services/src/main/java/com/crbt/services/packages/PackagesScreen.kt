@@ -81,7 +81,8 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PackagesScreen(
-    viewModel: ServicesViewModel = hiltViewModel()
+    viewModel: ServicesViewModel = hiltViewModel(),
+    isSystemUnderMaintenance: Boolean
 ) {
 
     val packagesFeedUiState by viewModel.packagesFlow.collectAsStateWithLifecycle()
@@ -113,7 +114,8 @@ fun PackagesScreen(
             actionLoading = ussdUiState is UssdUiState.Loading,
             packagesFeedUiState = packagesFeedUiState,
             onReload = viewModel::reloadPackages,
-            isReloading = packagesFeedUiState is PackagesFeedUiState.Loading
+            isReloading = packagesFeedUiState is PackagesFeedUiState.Loading,
+            isSystemUnderMaintenance = isSystemUnderMaintenance
         )
     }
 
@@ -136,7 +138,8 @@ fun PackageContent(
     onPurchasePackage: (code: String, phoneNumber: String, isGiftPurchase: Boolean) -> Unit,
     packagesFeedUiState: PackagesFeedUiState,
     onReload: () -> Unit,
-    isReloading: Boolean
+    isReloading: Boolean,
+    isSystemUnderMaintenance: Boolean
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var expandedItemId by remember { mutableStateOf<String?>(null) }
@@ -218,6 +221,7 @@ fun PackageContent(
 
             is PackagesFeedUiState.Error -> {
                 EmptyContent(
+                    isSystemUnderMaintenance = isSystemUnderMaintenance,
                     description = packagesFeedUiState.message,
                     modifier = Modifier
                         .fillMaxWidth()

@@ -22,6 +22,7 @@ fun NavController.navigateToServices(navOptions: NavOptions) =
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.servicesScreen(
     navController: NavController,
+    isSystemUnderMaintenance: Boolean
 ) {
     composable(route = SERVICES_ROUTE) {
         ServicesRoute(
@@ -35,7 +36,9 @@ fun NavGraphBuilder.servicesScreen(
     }
 
     composable(route = PACKAGES_ROUTE) {
-        PackagesScreen()
+        PackagesScreen(
+            isSystemUnderMaintenance = isSystemUnderMaintenance
+        )
     }
 
     composable(route = RECHARGE_ROUTE) {
