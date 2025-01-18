@@ -32,6 +32,7 @@
     <string name="core_ui_package_subscription_error">فشل شراء الباقة</string>
     <string name="core_ui_package_subscription_success">تم شراء الباقة بنجاح</string>
     <string name="core_ui_reload_button">تحديث</string>
+    <string name="core_ui_system_under_maintenance">خدمات النظام تحت الصيانة، يرجى المحاولة مرة أخرى لاحقًا.</string>
     <plurals name="core_ui_music_player_subscribers">
         <item quantity="zero">%d مشترك</item>
         <item quantity="one">%d مشترك</item>

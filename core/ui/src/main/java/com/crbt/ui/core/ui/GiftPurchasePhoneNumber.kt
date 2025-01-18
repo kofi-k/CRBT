@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -110,7 +111,8 @@ fun GiftPurchasePhoneNumber(
                 Icon(
                     imageVector = CrbtIcons.Phone,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = if (phoneNumberState.showErrors()) MaterialTheme.colorScheme.error else
+                        MaterialTheme.colorScheme.onSurface
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(),
@@ -152,8 +154,12 @@ fun GiftPurchasePhoneNumber(
                 }
             },
             modifier = Modifier
-                .size(48.dp)
-                .offset(y = (-4).dp),
+                .size(TextFieldDefaults.MinHeight, TextFieldDefaults.MinHeight)
+                .offset(
+                    y = (-TextFieldDefaults
+                        .contentPaddingWithLabel()
+                        .calculateTopPadding())
+                ),
             colors = IconButtonDefaults.filledTonalIconButtonColors()
         ) {
             Icon(

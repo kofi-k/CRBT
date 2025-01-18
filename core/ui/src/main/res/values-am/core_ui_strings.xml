@@ -32,6 +32,7 @@
     <string name="core_ui_package_subscription_error">ፓኬጅ መግዛት አልተሳካም</string>
     <string name="core_ui_package_subscription_success">ፓኬጅ መግዛት ተሳክቷል</string>
     <string name="core_ui_reload_button">አድስ</string>
+    <string name="core_ui_system_under_maintenance">የሰነዶች አገልግሎት በማለት አጋራዊ ነው፣ እባኮ እንደገና ይሞክሩ።</string>
     <plurals name="core_ui_music_player_subscribers">
         <item quantity="one">%d ደንበኛ</item>
         <item quantity="other">%d ደንበኞች</item>

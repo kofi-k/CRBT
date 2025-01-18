@@ -132,6 +132,7 @@ fun CrbtApp(
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val systemUnderMaintenance by appState.isSystemUnderMaintenance.collectAsStateWithLifecycle()
     val isLoggedIn by appState.isLoggedIn.collectAsStateWithLifecycle()
     val internetSpeed by appState.internetSpeed.collectAsStateWithLifecycle()
     val userData by appState.userData.collectAsStateWithLifecycle()
@@ -393,6 +394,7 @@ fun CrbtApp(
                                     startDestination = startDestination,
                                     musicControllerUiState = musicControllerUiState,
                                     crbtTonesViewModel = crbtTonesViewModel,
+                                    isSystemUnderMaintenance = systemUnderMaintenance,
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .padding(padding)

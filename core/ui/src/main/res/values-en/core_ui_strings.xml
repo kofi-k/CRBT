@@ -31,6 +31,7 @@
     <string name="core_ui_package_subscription_error">Package purchase failed</string>
     <string name="core_ui_package_subscription_success">Package purchase successful</string>
     <string name="core_ui_reload_button">Refresh</string>
+    <string name="core_ui_system_under_maintenance">System services are under maintenance, please try again later.</string>
 
     <string name="core_ui_packages">Packages</string>
     <string name="core_ui_recharge">Recharge</string>
