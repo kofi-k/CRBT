@@ -28,7 +28,8 @@ fun NavGraphBuilder.homeScreen(
     crbtTonesViewModel: CrbtTonesViewModel,
     navigateToPackages: () -> Unit,
     navigateToRecharge: () -> Unit,
-    navigateToServices: () -> Unit
+    navigateToServices: () -> Unit,
+    isSystemUnderMaintenance: Boolean
 ) {
     composable(route = HOME_ROUTE) {
         HomeScreen(
@@ -37,7 +38,8 @@ fun NavGraphBuilder.homeScreen(
             crbtTonesViewModel = crbtTonesViewModel,
             navigateToPackages = navigateToPackages,
             navigateToRecharge = navigateToRecharge,
-            navigateToServices = navigateToServices
+            navigateToServices = navigateToServices,
+            isSystemUnderMaintenance = isSystemUnderMaintenance
         )
     }
     composable(

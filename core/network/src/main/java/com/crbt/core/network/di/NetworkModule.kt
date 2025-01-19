@@ -17,6 +17,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.io.IOException
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 
 
 private const val CRBT_BASE_URL = BuildConfig.BACKEND_URL
+const val SYS_MAINTENANCE_CODE = 503
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,7 +51,8 @@ internal object NetworkModule {
     @Provides
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        tokenProvider: TokenProvider
+        tokenProvider: TokenProvider,
+        json: Json
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
@@ -62,16 +65,34 @@ internal object NetworkModule {
                 val response = chain.proceed(newRequest)
 
                 if (!response.isSuccessful) {
-                    val errorBody = response.body?.string()
-                    val apiError = try {
-                        Json.decodeFromString<ApiErrorResponse>(errorBody ?: "")
-                    } catch (e: Exception) {
-                        null
-                    }
-                    val errorMessage =
-                        apiError?.error ?: "An unexpected error occurred. Code: ${response.code}"
+                    // Create a copy of response body before reading it
+                    val responseBody = response.body
+                    val errorBody = responseBody?.string()
 
-                    throw HttpException(response.code, errorMessage)
+                    // Create a new response with the consumed body for downstream consumers
+                    val newResponse = response.newBuilder()
+                        .body(errorBody?.toResponseBody(responseBody.contentType()))
+                        .build()
+
+                    val apiError = errorBody?.let {
+                        try {
+                            json.decodeFromString<ApiErrorResponse>(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+
+                    runBlocking {
+                        tokenProvider.setSystemUnderMaintenance(response.code == SYS_MAINTENANCE_CODE)
+                    }
+
+                    val errorMessage = when (response.code) {
+                        SYS_MAINTENANCE_CODE -> "System is under maintenance."
+                        else -> apiError?.error
+                            ?: "An unexpected error occurred. Code: ${response.code}"
+                    }
+
+                    throw HttpException(newResponse.code, errorMessage)
                 }
 
                 response

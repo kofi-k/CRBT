@@ -32,7 +32,7 @@
     <string name="core_ui_package_subscription_error">Bitaan paakeejii hin milkoofne</string>
     <string name="core_ui_package_subscription_success">Bitaan paakeejii milkaa\'e</string>
     <string name="core_ui_reload_button">Haaromsi</string>
-
+    <string name="core_ui_system_under_maintenance">Kutaa guutuu keessatti sirriitti</string>
     <plurals name="core_ui_music_player_subscribers">
         <item quantity="one">%d sab</item>
         <item quantity="other">%d sab</item>

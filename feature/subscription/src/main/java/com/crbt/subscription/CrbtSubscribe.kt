@@ -112,7 +112,8 @@ internal fun CrbtSubscribeScreen(
 
     val isGiftSub by subscriptionViewModel.isGiftSubscription.collectAsStateWithLifecycle()
     val registrationPackagesFlow by subscriptionViewModel.registrationPackagesFlow.collectAsStateWithLifecycle()
-    val crbtSong by subscriptionViewModel.crbtSongResource.collectAsStateWithLifecycle()
+    val toneId by subscriptionViewModel.selectedTone.collectAsStateWithLifecycle()
+    val crbtSong = crbtTonesViewModel.songByToneId(toneId ?: "")
     val subscriptionUiState = subscriptionViewModel.subscriptionUiState
     val isUserRegisteredForCrbt by subscriptionViewModel.isUserRegisteredForCrbt.collectAsStateWithLifecycle()
     val ussdState by subscriptionViewModel.ussdState.collectAsStateWithLifecycle()
@@ -595,7 +596,14 @@ fun SubscribeContent(
             if (!isUserRegisteredForCrbt && !isGiftSubscription) {
                 when (packagesResult) {
                     is Result.Loading -> {
-                        CircularProgressIndicator()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
 
                     is Result.Error -> {

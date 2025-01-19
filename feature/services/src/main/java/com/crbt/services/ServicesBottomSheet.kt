@@ -177,7 +177,11 @@ fun TransferContent(
             textFieldType = TextFieldType.OUTLINED,
             label = stringResource(id = com.itengs.crbt.core.designsystem.R.string.core_designsystem_amount_placeholder),
             leadingIcon = {
-                Text(text = stringResource(id = com.itengs.crbt.core.data.R.string.core_data_ethio_currency))
+                Text(
+                    text = stringResource(id = com.itengs.crbt.core.data.R.string.core_data_ethio_currency),
+                    color = if (amountState.showErrors()) MaterialTheme.colorScheme.error else
+                        MaterialTheme.colorScheme.onSurface
+                )
             },
             colors = OutlinedTextFieldDefaults.colors(),
             onClear = {

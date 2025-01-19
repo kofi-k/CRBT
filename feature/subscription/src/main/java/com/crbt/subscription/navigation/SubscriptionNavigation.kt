@@ -52,6 +52,7 @@ fun NavGraphBuilder.subscriptionScreen(
     navController: NavController,
     crbtTonesViewModel: CrbtTonesViewModel,
     musicControllerUiState: MusicControllerUiState,
+    isSystemUnderMaintenance: Boolean
 ) {
     composable(
         route = SUBSCRIPTION_ROUTE,
@@ -67,6 +68,7 @@ fun NavGraphBuilder.subscriptionScreen(
             },
             crbtTonesViewModel = crbtTonesViewModel,
             musicControllerUiState = musicControllerUiState,
+            isSystemUnderMaintenance = isSystemUnderMaintenance
         )
     }
 

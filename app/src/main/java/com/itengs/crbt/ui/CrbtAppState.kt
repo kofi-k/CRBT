@@ -83,6 +83,14 @@ class CrbtAppState(
             initialValue = Result.Loading,
         )
 
+    val isSystemUnderMaintenance =
+        userRepository.isSystemUnderMaintenance
+            .stateIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false
+            )
+
 
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)

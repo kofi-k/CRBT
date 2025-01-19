@@ -73,6 +73,7 @@ fun TonesScreen(
     onGiftSubscriptionClick: (toneId: String) -> Unit,
     musicControllerUiState: MusicControllerUiState,
     crbtTonesViewModel: CrbtTonesViewModel,
+    isSystemUnderMaintenance: Boolean
 ) {
     val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
     val currentSong = tonesUiState.songs?.findCurrentMusicControllerSong(
@@ -135,6 +136,7 @@ fun TonesScreen(
                                 when (errorMessage != null) {
                                     true -> {
                                         EmptyContent(
+                                            isSystemUnderMaintenance = isSystemUnderMaintenance,
                                             description = errorMessage!!,
                                             modifier = Modifier
                                                 .fillMaxWidth()
@@ -388,7 +390,8 @@ fun TonesPreview() {
             onSubscriptionToneClick = {},
             onGiftSubscriptionClick = {},
             musicControllerUiState = MusicControllerUiState(),
-            crbtTonesViewModel = crbtTonesViewModel
+            crbtTonesViewModel = crbtTonesViewModel,
+            isSystemUnderMaintenance = false
         )
     }
 }

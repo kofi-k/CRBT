@@ -36,6 +36,7 @@ fun CrbtNavHost(
     startDestination: String,
     crbtTonesViewModel: CrbtTonesViewModel,
     musicControllerUiState: MusicControllerUiState,
+    isSystemUnderMaintenance: Boolean
 ) {
     val navController = appState.navController
 
@@ -78,15 +79,18 @@ fun CrbtNavHost(
                 },
                 navigateToServices = {
                     appState.navigateToTopLevelDestination(TopLevelDestination.SERVICES)
-                }
+                },
+                isSystemUnderMaintenance = isSystemUnderMaintenance
             )
             servicesScreen(
                 navController = navController,
+                isSystemUnderMaintenance = isSystemUnderMaintenance
             )
             subscriptionScreen(
                 navController = navController,
                 crbtTonesViewModel = crbtTonesViewModel,
                 musicControllerUiState = musicControllerUiState,
+                isSystemUnderMaintenance = isSystemUnderMaintenance
             )
             profileScreen(
                 navController = navController,

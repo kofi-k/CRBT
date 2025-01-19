@@ -63,7 +63,8 @@ fun HomeScreen(
     crbtTonesViewModel: CrbtTonesViewModel,
     navigateToPackages: () -> Unit,
     navigateToRecharge: () -> Unit,
-    navigateToServices: () -> Unit
+    navigateToServices: () -> Unit,
+    isSystemUnderMaintenance: Boolean
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val ussdUiState by viewModel.ussdState.collectAsStateWithLifecycle()
@@ -135,6 +136,7 @@ fun HomeScreen(
             when (errorMessage != null) {
                 true -> item {
                     EmptyContent(
+                        isSystemUnderMaintenance = isSystemUnderMaintenance,
                         description = errorMessage!!,
                         modifier = Modifier
                             .fillMaxWidth()

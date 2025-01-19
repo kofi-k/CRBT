@@ -85,6 +85,10 @@ class CrbtTonesViewModel @Inject constructor(
         }
     }
 
+    fun songByToneId(toneId: String): CrbtSongResource? =
+        _uiState.value.songs?.find { it.id == toneId }
+
+
     private fun fetchSongs() {
         viewModelScope.launch {
             crbtSongsRepository.observeAllCrbtMusic().collect { feed ->

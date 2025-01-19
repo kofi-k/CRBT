@@ -32,7 +32,8 @@
     <string name="core_ui_no_content_text">\\\(0.0)/</string>
     <string name="core_ui_package_subscription_error">ፓኬጅ ምግዛእ ኣይተዓወተን</string>
     <string name="core_ui_package_subscription_success">ፓኬጅ ምግዛእ ዓዊቱ</string>
-    <string name="core_ui_reload_button">ኣሐድስ</string>
+    <string name="core_ui_reload_button">ኣድሕድ</string>
+    <string name="core_ui_system_under_maintenance">ኣገልግሎት ኣብ ስርዓት ኣይተዓወተን፣ እቲ ኣብዚ ኣብዚ ናይ ስርዓት ዓዊቱ</string>
     <plurals name="core_ui_music_player_subscribers">
         <item quantity="one">%d ኣባል</item>
         <item quantity="other">%d ኣባላት</item>
