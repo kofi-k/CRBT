@@ -3,8 +3,9 @@ CRBT  App
 
 Heyy, this is the repository for the **CRBT** android app. It is a **work in progress** 🚧.
 
-**CRBT** is a fully functional Android app built entirely with Kotlin and Jetpack Compose. Just.
-Like. That!
+**CRBT** is a fully functional Android app built entirely with Kotlin and Jetpack Compose. `Just`.
+`Like`. `That`!
+
 It follows Android design and development best practices. Its a classic, I'm telling you.
 
 # Features
