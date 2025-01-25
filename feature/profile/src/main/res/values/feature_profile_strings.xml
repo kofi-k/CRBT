@@ -45,6 +45,7 @@
     <string name="feature_profile_report_bug_decriptiom">
         Help us track down bugs and issues to serve you better.
     </string>
+    <string name="feature_profile_report_bug_success">Bug reported successfully!</string>
     <string name="feature_profile_report_bug_title_label">Title</string>
     <string name="feature_profile_report_bug_description_label">Description</string>
     <string name="feature_profile_report_bug_category_label">Category</string>

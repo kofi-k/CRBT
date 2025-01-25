@@ -31,7 +31,9 @@ class ReportingViewModel @Inject constructor(
         viewModelScope.launch {
             when (val state = sysReportingRepository.reportIssue(
                 SysReportsNetworkModel(
-                    title, category, description
+                    title = title,
+                    description = description,
+                    category = category
                 )
             )) {
                 is SysReportingUiState.Success -> onSuccess()

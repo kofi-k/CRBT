@@ -25,12 +25,10 @@ fun NavController.navigateToProfileEdit() =
     navigate(PROFILE_EDIT_ROUTE)
 
 fun NavGraphBuilder.profileScreen(
-    onLogout: () -> Unit,
     navController: NavController
 ) {
     composable(route = PROFILE_ROUTE) {
         ProfileRoute(
-            onLogout = onLogout,
             onEditProfileClick = navController::navigateToProfileEdit,
             navigateToBugReports = {
                 navController.navigate(BUG_REPORTS)

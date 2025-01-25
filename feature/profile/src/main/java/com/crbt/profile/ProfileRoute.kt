@@ -1,6 +1,5 @@
 package com.crbt.profile
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -69,7 +68,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileRoute(
-    onLogout: () -> Unit,
     onEditProfileClick: () -> Unit = {},
     navigateToBugReports: () -> Unit,
     navigateToOthers: () -> Unit,
@@ -86,7 +84,7 @@ fun ProfileRoute(
             isSigningOut = true
             scope.launch {
                 when (val state = profileViewModel.signOut()) {
-                    is SignOutState.Success -> onLogout()
+                    is SignOutState.Success -> {}
                     is SignOutState.Error -> {
                         isSigningOut = false
                         snackbarHostState.showSnackbar(
@@ -256,10 +254,6 @@ fun ProfileScreen(
                             stringResource(id = R.string.feature_profile_logout)
                         }
                         Text(text = text)
-                        AnimatedVisibility(visible = signingOut) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            CircularProgressIndicator()
-                        }
                     }
                 }
             }
@@ -448,7 +442,6 @@ fun RewardPointsBottomSheet(
 @Composable
 fun ProfileScreenPreview() {
     ProfileRoute(
-        onLogout = {},
         onEditProfileClick = {},
         navigateToBugReports = {},
         navigateToOthers = {}
