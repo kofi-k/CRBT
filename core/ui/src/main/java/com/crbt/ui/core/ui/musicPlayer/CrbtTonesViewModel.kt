@@ -14,6 +14,7 @@ import com.crbt.domain.ResumeSongUseCase
 import com.crbt.domain.SkipToNextSongUseCase
 import com.crbt.domain.SkipToPreviousSongUseCase
 import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.LikeableToneCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,8 +105,9 @@ class CrbtTonesViewModel @Inject constructor(
                                         .sortedByDescending { it.numberOfListeners }
                                         .take(8),
                                     latestSong = feed.songs.first(),
-                                    currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong
-                                )
+                                    currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong,
+                                ),
+                                toneCategories = feed.toneCategories
                             )
                         }
 
@@ -161,6 +163,7 @@ data class TonesUiState(
     val searchResults: List<CrbtSongResource> = emptyList(),
     val errorMessage: String? = null,
     val homeResource: HomeSongResource? = null,
+    val toneCategories: List<LikeableToneCategory> = emptyList(),
 )
 
 fun List<CrbtSongResource>.findCurrentMusicControllerSong(

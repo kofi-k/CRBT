@@ -15,7 +15,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +95,44 @@ fun MusicCard(
     )
 }
 
+
+@Composable
+fun DismissableMusicCard(
+    modifier: Modifier = Modifier,
+    cRbtSong: CrbtSongResource,
+    musicControllerUiState: MusicControllerUiState,
+    onPlayerEvent: (TonesPlayerEvent) -> Unit,
+    onNavigateToSubscription: (toneId: String) -> Unit,
+    stopMusicPlayer: () -> Unit
+) {
+    val dismissState = rememberSwipeToDismissBoxState()
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromEndToStart = false,
+        backgroundContent = {
+            Box {
+                Icon(imageVector = CrbtIcons.Delete, contentDescription = CrbtIcons.Delete.name)
+            }
+        }
+    ) {
+        when (dismissState.currentValue) {
+            SwipeToDismissBoxValue.EndToStart -> {
+                stopMusicPlayer()
+            }
+
+            else -> {}
+        }
+        MusicCard(
+            modifier = modifier,
+            cRbtSong = cRbtSong,
+            musicControllerUiState = musicControllerUiState,
+            onPlayerEvent = onPlayerEvent,
+            onNavigateToSubscription = onNavigateToSubscription
+        )
+    }
+
+}
 
 @Composable
 fun MusicInfo(
