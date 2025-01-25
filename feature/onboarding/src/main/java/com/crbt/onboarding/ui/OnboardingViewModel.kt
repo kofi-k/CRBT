@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crbt.data.core.data.OnboardingSetupProcess
-import com.crbt.data.core.data.model.CRBTSettingsData
 import com.crbt.data.core.data.model.OnboardingScreenData
 import com.crbt.data.core.data.model.OnboardingSetupData
 import com.crbt.data.core.data.model.userProfileIsComplete
@@ -52,15 +51,6 @@ class OnboardingViewModel @Inject constructor(
     var userInfoUiState by mutableStateOf<UpdateUserInfoUiState>(UpdateUserInfoUiState.Idle)
         private set
 
-
-    init {
-        viewModelScope.launch {
-            crbtPreferencesRepository.userPreferencesData.collect { userData ->
-                onLanguageSelected(userData.languageCode.ifBlank { CRBTSettingsData.languages.last().code })
-            }
-        }
-        _isNextEnabled = getIsNextEnabled()
-    }
 
     fun onNextClicked() {
         if (onboardingIndex < onboardingOrder.size - 1) {
