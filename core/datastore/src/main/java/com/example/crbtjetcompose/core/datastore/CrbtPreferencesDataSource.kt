@@ -25,9 +25,9 @@ class CrbtPreferencesDataSource @Inject constructor(
                 lastName = it.userLastName,
                 email = it.userEmail,
                 currentBalance = it.userBalance,
-                interestedCrbtLanguages = it.interestedCrbtLanguages.keys,
+                interestedToneCategories = it.getInterestedToneCategories().keys,
                 currentCrbtSubscriptionId = it.currentCrbtSubscriptionId.toIntOrNull() ?: 0,
-                giftedCrbtToneIds = it.giftedCrbtToneIds.keys,
+                giftedCrbtToneIds = it.getGiftedCrbtToneIdsMap().keys,
                 token = it.token,
                 rewardPoints = it.rewardPoints,
                 numberOfRechargeCodeDigits = if (it.numberOfRechargeCodeDigits == 0) 14 else it.numberOfRechargeCodeDigits,
@@ -186,14 +186,14 @@ class CrbtPreferencesDataSource @Inject constructor(
         }
     }
 
-    suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) {
+    suspend fun setUserInterestedToneCategories(code: String, isInterested: Boolean) {
         try {
             userPreferences.updateData {
                 it.copy {
                     if (isInterested) {
-                        interestedCrbtLanguages.put(code, true)
+                        interestedToneCategories.put(code, true)
                     } else {
-                        interestedCrbtLanguages.remove(code)
+                        interestedToneCategories.remove(code)
                     }
                 }
             }
@@ -253,7 +253,7 @@ class CrbtPreferencesDataSource @Inject constructor(
                     subscribedCrbtToneIds.clear()
                     unsubscribedCrbtToneIds.clear()
                     giftedCrbtToneIds.clear()
-                    interestedCrbtLanguages.clear()
+                    interestedToneCategories.clear()
                     currentCrbtSubscriptionId = ""
                     userBalance = 0.0
                     token = ""
