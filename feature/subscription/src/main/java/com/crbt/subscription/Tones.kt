@@ -14,12 +14,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -28,10 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -47,6 +41,7 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.crbt.LikeableToneCategoriesUiState
 import com.crbt.data.core.data.DummyTones
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.data.core.data.PlayerState
@@ -73,8 +68,9 @@ fun TonesScreen(
     onGiftSubscriptionClick: (toneId: String) -> Unit,
     musicControllerUiState: MusicControllerUiState,
     crbtTonesViewModel: CrbtTonesViewModel,
-    isSystemUnderMaintenance: Boolean
+    isSystemUnderMaintenance: Boolean,
 ) {
+    val tonesViewModel: TonesViewModel = hiltViewModel()
     val tonesUiState by crbtTonesViewModel.uiState.collectAsStateWithLifecycle()
     val currentSong = tonesUiState.songs?.findCurrentMusicControllerSong(
         musicControllerUiState.currentSong?.tune ?: ""
@@ -105,33 +101,12 @@ fun TonesScreen(
                 SurfaceCard(
                     content = {
                         Column(modifier = Modifier) {
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp)
-                            ) {
-                                TextButton(
-                                    onClick = { /*TODO show language selection options menu */ },
-                                    colors = ButtonDefaults.textButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.onSurface
-                                    )
-                                ) {
-                                    Text(text = stringResource(id = R.string.feature_subscription_laguage_change_title))
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Icon(
-                                        imageVector = CrbtIcons.Language,
-                                        contentDescription = null
-                                    )
-                                }
-
-                                IconButton(onClick = { /*TODO*/ }) {
-                                    Icon(
-                                        imageVector = CrbtIcons.FilterList,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
+                            InterestedCategorySelection(
+                                onCategoryCheckedChanged = tonesViewModel::updateCategorySelection,
+                                categoriesUiState = LikeableToneCategoriesUiState.Shown(
+                                    toneCategories = tonesUiState.toneCategories
+                                )
+                            )
                             with(tonesUiState) {
                                 when (errorMessage != null) {
                                     true -> {
@@ -207,7 +182,6 @@ fun TonesScreen(
                                                         LazyColumn(
                                                             modifier = Modifier
                                                                 .fillMaxWidth(),
-                                                            contentPadding = PaddingValues(top = 8.dp)
                                                         ) {
                                                             subscriptionTonesFeed(
                                                                 onSubscriptionToneClick = onSubscriptionToneClick,

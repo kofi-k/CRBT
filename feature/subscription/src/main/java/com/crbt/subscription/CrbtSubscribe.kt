@@ -57,6 +57,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -92,6 +93,7 @@ import com.crbt.ui.core.ui.EmptyContent
 import com.crbt.ui.core.ui.GiftPurchasePhoneNumber
 import com.crbt.ui.core.ui.MessageSnackbar
 import com.crbt.ui.core.ui.OnboardingSheetContainer
+import com.crbt.ui.core.ui.blendMode
 import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.crbt.ui.core.ui.musicPlayer.findCurrentMusicControllerSong
 import com.itengs.crbt.core.model.data.PackageItem
@@ -156,16 +158,16 @@ internal fun CrbtSubscribeScreen(
 
                     SubscribeHeader(
                         onBackClicked = onBackClicked,
-                        artisteName = crbtSong?.artisteName ?: "",
-                        songTitle = crbtSong?.songTitle ?: "",
-                        songProfileUrl = crbtSong?.profile ?: "",
+                        artisteName = crbtSong.artisteName,
+                        songTitle = crbtSong.songTitle,
+                        songProfileUrl = crbtSong.profile,
                     )
 
                     MusicInfo(
-                        price = crbtSong?.price ?: "0.00",
-                        numberOfSubscribers = crbtSong?.numberOfSubscribers ?: 0,
-                        numberOfPlays = crbtSong?.numberOfListeners ?: 0,
-                        billingType = "/ ${crbtSong?.subscriptionType?.lowercase()}",
+                        price = crbtSong.price,
+                        numberOfSubscribers = crbtSong.numberOfSubscribers,
+                        numberOfPlays = crbtSong.numberOfListeners,
+                        billingType = "/ ${crbtSong.subscriptionType.lowercase()}",
                         modifier = Modifier
                     )
 
@@ -177,7 +179,7 @@ internal fun CrbtSubscribeScreen(
                             .verticalScroll(rememberScrollState()),
                         onSubscribeClick = { giftPhoneNumber ->
                             subscriptionViewModel.subscribeToTone(
-                                ussdCode = crbtSong?.ussdCode ?: "",
+                                ussdCode = crbtSong.ussdCode,
                                 activity = context as Activity,
                                 onSuccess = {
                                     showBottomSheet = true
@@ -193,7 +195,7 @@ internal fun CrbtSubscribeScreen(
                                 phoneNumber = giftPhoneNumber
                             )
                         },
-                        subscriptionPrice = crbtSong?.price?.toDoubleOrNull() ?: 0.00,
+                        subscriptionPrice = crbtSong.price.toDoubleOrNull() ?: 0.00,
                         isSubscriptionProcessing =
                         subscriptionUiState is SubscriptionUiState.Loading ||
                                 ussdState is UssdUiState.Loading,
@@ -276,7 +278,7 @@ internal fun CrbtSubscribeScreen(
                                 } else {
                                     crbtTonesViewModel.onEvent(
                                         TonesPlayerEvent.OnSongSelected(
-                                            selectedSong = tonesUiState.songs?.find { it.id == crbtSong?.id }!!
+                                            selectedSong = tonesUiState.songs?.find { it.id == crbtSong.id }!!
                                         )
                                     )
                                     crbtTonesViewModel.onEvent(TonesPlayerEvent.PlaySong)
@@ -403,17 +405,6 @@ fun SubscribeHeader(
             imageRes = com.itengs.crbt.core.ui.R.drawable.core_ui_paps_image
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
-                    )
-                )
-        )
         Column(
             modifier = Modifier
                 .padding(top = 36.dp, start = 16.dp)
@@ -444,11 +435,13 @@ fun SubscribeHeader(
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.White,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.blendMode(BlendMode.Difference)
             )
             Text(
                 text = artisteName,
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.blendMode(BlendMode.Difference)
             )
         }
     }
