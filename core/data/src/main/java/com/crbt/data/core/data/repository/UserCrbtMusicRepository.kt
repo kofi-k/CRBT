@@ -7,9 +7,6 @@ interface UserCrbtMusicRepository {
     fun observeAllCrbtMusic(
         filterInterestedLanguages: Set<String>? = null,
     ): Flow<CrbtSongsFeedUiState>
-
-
-    fun songByToneId(toneId: String): Flow<CrbtSongResource?>
 }
 
 

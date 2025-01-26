@@ -116,6 +116,7 @@ class MusicControllerImpl @Inject constructor(
     }
 
     override fun destroy() {
+        mediaController?.stop()
         MediaController.releaseFuture(mediaControllerFuture)
         mediaControllerCallback = null
     }

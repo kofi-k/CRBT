@@ -1,9 +1,8 @@
 package com.crbt.data.core.data.repository
 
-import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.LikeableToneCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CompositeUserCrbtSongsRepository @Inject constructor(
@@ -18,6 +17,11 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                         CrbtSongsFeedUiState.Success(
                             songs = songs.songs
                                 .sortedByDescending { song -> song.createdAt }
+                                .filter { song ->
+                                    userPreferenceData.interestedToneCategories.isEmpty() || userPreferenceData.interestedToneCategories.contains(
+                                        song.category
+                                    )
+                                }
                                 .map {
                                     it.copy(
                                         subscriptionType = userPreferenceData.userCrbtRegistrationPackage
@@ -25,7 +29,18 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
                                 },
                             currentUserCrbtSubscriptionSong = songs.songs.find {
                                 it.id == userPreferenceData.currentCrbtSubscriptionId.toString()
-                            }
+                            },
+                            toneCategories = songs.songs
+                                .map { it.category }
+                                .distinct()
+                                .map { category ->
+                                    LikeableToneCategory(
+                                        toneCategory = category,
+                                        isInterestedInCategory = userPreferenceData.interestedToneCategories.contains(
+                                            category
+                                        )
+                                    )
+                                }
                         )
                     }
 
@@ -33,19 +48,6 @@ class CompositeUserCrbtSongsRepository @Inject constructor(
 
                     is CrbtMusicResourceUiState.Loading -> CrbtSongsFeedUiState.Loading
 
-                }
-            }
-
-    override fun songByToneId(toneId: String): Flow<CrbtSongResource?> =
-        observeAllCrbtMusic()
-            .map { crbtSongsFeedUiState ->
-                when (crbtSongsFeedUiState) {
-                    is CrbtSongsFeedUiState.Success ->
-                        crbtSongsFeedUiState.songs.find {
-                            it.id == toneId
-                        }
-
-                    else -> null
                 }
             }
 
