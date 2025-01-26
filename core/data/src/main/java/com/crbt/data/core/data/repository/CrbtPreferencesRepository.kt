@@ -38,7 +38,7 @@ interface CrbtPreferencesRepository {
 
     suspend fun setUserBalance(balance: Double)
 
-    suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean)
+    suspend fun setUserInterestedToneCategories(code: String, isInterested: Boolean)
 
     suspend fun setUserCrbtRegistrationStatus(isRegistered: Boolean, packageDuration: String)
 

@@ -82,8 +82,8 @@ class CrbtPreferencesRepositoryImpl @Inject constructor(
         crbtPreferencesDataSource.setCurrentBalance(balance)
 
 
-    override suspend fun setUserInterestedCrbtLanguages(code: String, isInterested: Boolean) =
-        crbtPreferencesDataSource.setUserInterestedCrbtLanguages(code, isInterested)
+    override suspend fun setUserInterestedToneCategories(code: String, isInterested: Boolean) =
+        crbtPreferencesDataSource.setUserInterestedToneCategories(code, isInterested)
 
     override suspend fun setUserCrbtRegistrationStatus(
         isRegistered: Boolean,
