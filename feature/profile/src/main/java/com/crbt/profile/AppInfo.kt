@@ -1,5 +1,6 @@
 package com.crbt.profile
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import com.crbt.designsystem.icon.CrbtIcons
 import com.crbt.designsystem.theme.onPrimaryDark
 import com.crbt.designsystem.theme.primaryDark
 import com.crbt.designsystem.theme.slightlyDeemphasizedAlpha
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.itengs.crbt.feature.profile.R
 
 
@@ -124,7 +126,9 @@ fun AppInfo(
             Spacer(modifier = Modifier.padding(16.dp))
 
             ProcessButton(
-                onClick = { /*TODO Licenses*/ },
+                onClick = {
+                    context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+                },
                 modifier = Modifier
                     .wrapContentSize(),
                 text = stringResource(id = R.string.feature_profile_licenses),
