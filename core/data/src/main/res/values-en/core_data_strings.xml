@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="core_data_amharic" translatable="false">Amharic</string>
-    <string name="core_data_oromiffa" translatable="false">Oromiffa</string>
-    <string name="core_data_tigrigna" translatable="false">Tigrigna</string>
-    <string name="core_data_somalia" translatable="false">Somalia</string>
-    <string name="core_data_arabic" translatable="false">Arabic</string>
+    <string name="core_data_amharic" translatable="false">አማርኛ</string>
+    <string name="core_data_oromiffa" translatable="false">Afaan Oromoo</string>
+    <string name="core_data_tigrigna" translatable="false">ትግርኛ</string>
+    <string name="core_data_somalia" translatable="false">Soomaalii</string>
+    <string name="core_data_arabic" translatable="false">العربية</string>
     <string name="core_data_english" translatable="false">English</string>
     <string name="core_data_monthly_bill_title">Monthly</string>
     <string name="core_data_bi_weekly_bill_title">Bi-Weekly</string>
