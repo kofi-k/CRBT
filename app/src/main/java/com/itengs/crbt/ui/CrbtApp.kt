@@ -205,7 +205,7 @@ fun CrbtApp(
                                             false
                                         )
                                     }
-                                }
+                                },
                             )
                             Spacer(modifier = Modifier.size(16.dp))
                         }

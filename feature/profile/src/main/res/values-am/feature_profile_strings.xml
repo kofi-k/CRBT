@@ -42,7 +42,7 @@
     <string name="feature_profile_report_bug_decriptiom">
         እኛን በምርጫዎችን እና ችግርዎችን ለማስተካከል እንደምንችል እንደሚያስችል
     </string>
-
+    <string name="feature_profile_report_bug_success">በምርጫ ላይ ማስተካከል ተሳክቷል!</string>
     <string name="feature_profile_report_bug_title_label">ርዕስ</string>
     <string name="feature_profile_report_bug_description_label">መግለጫ</string>
     <string name="feature_profile_report_bug_category_label">ምድብ</string>

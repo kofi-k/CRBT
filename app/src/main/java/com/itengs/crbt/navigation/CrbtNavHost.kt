@@ -1,5 +1,6 @@
 package com.itengs.crbt.navigation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.EnterTransition
@@ -16,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.crbt.data.core.data.MusicControllerUiState
 import com.crbt.home.navigation.homeScreen
-import com.crbt.onboarding.navigation.navigateToOnboarding
 import com.crbt.onboarding.navigation.onboardingScreen
 import com.crbt.profile.navigation.profileScreen
 import com.crbt.services.navigation.PACKAGES_ROUTE
@@ -27,6 +27,7 @@ import com.crbt.ui.core.ui.musicPlayer.CrbtTonesViewModel
 import com.itengs.crbt.ui.CrbtAppState
 
 
+@SuppressLint("NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -94,9 +95,6 @@ fun CrbtNavHost(
             )
             profileScreen(
                 navController = navController,
-                onLogout = {
-                    navController.navigateToOnboarding()
-                }
             )
         }
     }

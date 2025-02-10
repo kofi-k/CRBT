@@ -42,7 +42,7 @@
     <string name="feature_profile_report_bug_decriptiom">
         Dhiibbaa fi qabduunni gara fuula keessaa qabuufi qabsoo keenyaan akka ta\'uufi
     </string>
-
+    <string name="feature_profile_report_bug_success">Dhiibbaa qabduu dhiibbaa qabduu</string>
     <string name="feature_profile_report_bug_title_label">Tajaajila</string>
     <string name="feature_profile_report_bug_description_label">Faayidaa</string>
     <string name="feature_profile_report_bug_category_label">Kategori</string>

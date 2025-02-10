@@ -39,11 +39,7 @@ fun NavGraphBuilder.onboardingScreen(
     composable(route = ONBOARDING_PROFILE_ROUTE) {
         Profile(
             onOnboardingComplete = {
-                navController.navigate(ONBOARDING_COMPLETE_ROUTE) {
-                    popUpTo(ONBOARDING_PROFILE_ROUTE) {
-                        inclusive = true
-                    }
-                }
+                navigateToHome()
             }
         )
     }

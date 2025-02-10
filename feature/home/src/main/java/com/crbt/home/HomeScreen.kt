@@ -182,7 +182,8 @@ fun HomeScreen(
                                     modifier = Modifier.fillMaxWidth(),
                                     crbSongsFeed = CrbtSongsFeedUiState.Success(
                                         songResource,
-                                        null
+                                        null,
+                                        toneCategories = emptyList()
                                     ),
                                 )
                             }

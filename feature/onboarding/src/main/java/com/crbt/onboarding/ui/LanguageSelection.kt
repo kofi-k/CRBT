@@ -42,7 +42,7 @@ fun LanguageSelection(
         content = {
             LanguageSelectionMenu(
                 onLanguageSelected = onLanguageSelected,
-                selectedLanguage = selectedLanguage
+                userLanguagePref = selectedLanguage
             )
         }
     )
@@ -52,7 +52,7 @@ fun LanguageSelection(
 fun LanguageSelectionMenu(
     modifier: Modifier = Modifier,
     onLanguageSelected: (String) -> Unit,
-    selectedLanguage: String
+    userLanguagePref: String
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(if (expanded) 90f else 0f, label = "")
@@ -65,11 +65,13 @@ fun LanguageSelectionMenu(
         color = MaterialTheme.colorScheme.surfaceBright,
         content = {
             Column {
+                val language =
+                    stringResource(
+                        id = CRBTSettingsData.languages.find { it.code == userLanguagePref }?.name
+                            ?: R.string.feature_onboarding_select_language
+                    )
                 CustomInputButton(
-                    text = stringResource(
-                        id = CRBTSettingsData.languages.find { it.code == selectedLanguage }?.name
-                            ?: CRBTSettingsData.languages.last().name
-                    ),
+                    text = language,
                     onClick = {
                         expanded = !expanded
                     },

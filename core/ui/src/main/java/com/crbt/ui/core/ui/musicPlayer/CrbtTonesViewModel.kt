@@ -3,10 +3,13 @@ package com.crbt.ui.core.ui.musicPlayer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crbt.common.core.common.result.Result
+import com.crbt.common.core.common.result.asResult
 import com.crbt.data.core.data.TonesPlayerEvent
+import com.crbt.data.core.data.repository.CrbtMusicRepository
+import com.crbt.data.core.data.repository.CrbtMusicResourceUiState
+import com.crbt.data.core.data.repository.CrbtPreferencesRepository
 import com.crbt.data.core.data.repository.CrbtSongsFeedUiState
-import com.crbt.data.core.data.repository.HomeSongResource
-import com.crbt.data.core.data.repository.UserCrbtMusicRepository
 import com.crbt.domain.AddCrbtSongsUseCase
 import com.crbt.domain.PauseSongUseCase
 import com.crbt.domain.PlaySongUseCase
@@ -14,10 +17,16 @@ import com.crbt.domain.ResumeSongUseCase
 import com.crbt.domain.SkipToNextSongUseCase
 import com.crbt.domain.SkipToPreviousSongUseCase
 import com.itengs.crbt.core.model.data.CrbtSongResource
+import com.itengs.crbt.core.model.data.HomeSongResource
+import com.itengs.crbt.core.model.data.LikeableToneCategory
+import com.itengs.crbt.core.model.data.UserPreferencesData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +41,8 @@ class CrbtTonesViewModel @Inject constructor(
     private val skipToNextSongUseCase: SkipToNextSongUseCase,
     private val skipToPreviousSongUseCase: SkipToPreviousSongUseCase,
     private val savedStateHandle: SavedStateHandle,
-    private val crbtSongsRepository: UserCrbtMusicRepository,
+    private val crbtSongsRepository: CrbtMusicRepository,
+    private val userPreferencesRepository: CrbtPreferencesRepository
 ) : ViewModel() {
     companion object {
         private const val SEARCH_QUERY_MIN_LENGTH = 3
@@ -91,7 +101,10 @@ class CrbtTonesViewModel @Inject constructor(
 
     private fun fetchSongs() {
         viewModelScope.launch {
-            crbtSongsRepository.observeAllCrbtMusic().collect { feed ->
+            songResourcesUiState(
+                crbtMusicRepository = crbtSongsRepository,
+                userPreferencesRepository = userPreferencesRepository
+            ).collect { feed ->
                 _uiState.update { state ->
                     when (feed) {
                         is CrbtSongsFeedUiState.Success -> {
@@ -103,9 +116,9 @@ class CrbtTonesViewModel @Inject constructor(
                                     popularTodaySongs = feed.songs
                                         .sortedByDescending { it.numberOfListeners }
                                         .take(8),
-                                    latestSong = feed.songs.first(),
-                                    currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong
-                                )
+                                    currentUserCrbtSubscription = feed.currentUserCrbtSubscriptionSong,
+                                ),
+                                toneCategories = feed.toneCategories
                             )
                         }
 
@@ -151,6 +164,70 @@ class CrbtTonesViewModel @Inject constructor(
             state.copy(selectedSong = it)
         }
     }
+
+    private fun songResourcesUiState(
+        userPreferencesRepository: CrbtPreferencesRepository,
+        crbtMusicRepository: CrbtMusicRepository,
+    ): Flow<CrbtSongsFeedUiState> {
+
+        val preferencesDataFlow: Flow<UserPreferencesData> =
+            userPreferencesRepository.userPreferencesData
+
+
+        val crbtTones: Flow<List<CrbtSongResource>> =
+            crbtMusicRepository.getCrbtMusic()
+                .map { feed ->
+                    when (feed) {
+                        is CrbtMusicResourceUiState.Success -> feed.songs
+                        else -> emptyList()
+                    }
+                }
+
+        return combine(
+            preferencesDataFlow,
+            crbtTones,
+            ::Pair
+        )
+            .asResult()
+            .map { userPrefDataToTonesResult ->
+                when (userPrefDataToTonesResult) {
+                    is Result.Success -> {
+                        val (userPreferencesData, crbtSongResources) = userPrefDataToTonesResult.data
+                        CrbtSongsFeedUiState.Success(
+                            songs = crbtSongResources
+                                .sortedByDescending { song -> song.createdAt }
+                                .filter { song ->
+                                    userPreferencesData.interestedToneCategories.isEmpty() || userPreferencesData.interestedToneCategories.contains(
+                                        song.category
+                                    )
+                                }
+                                .map {
+                                    it.copy(
+                                        subscriptionType = userPreferencesData.userCrbtRegistrationPackage
+                                    )
+                                },
+                            currentUserCrbtSubscriptionSong = crbtSongResources.find {
+                                it.id == userPreferencesData.currentCrbtSubscriptionId.toString()
+                            },
+                            toneCategories = crbtSongResources
+                                .map { it.category }
+                                .distinct()
+                                .map { category ->
+                                    LikeableToneCategory(
+                                        toneCategory = category,
+                                        isInterestedInCategory = userPreferencesData.interestedToneCategories.contains(
+                                            category
+                                        )
+                                    )
+                                }
+                        )
+                    }
+
+                    is Result.Error -> CrbtSongsFeedUiState.Error(userPrefDataToTonesResult.exception.message.toString())
+                    is Result.Loading -> CrbtSongsFeedUiState.Loading
+                }
+            }
+    }
 }
 
 data class TonesUiState(
@@ -161,6 +238,7 @@ data class TonesUiState(
     val searchResults: List<CrbtSongResource> = emptyList(),
     val errorMessage: String? = null,
     val homeResource: HomeSongResource? = null,
+    val toneCategories: List<LikeableToneCategory> = emptyList(),
 )
 
 fun List<CrbtSongResource>.findCurrentMusicControllerSong(

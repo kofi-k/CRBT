@@ -11,8 +11,10 @@ import com.crbt.common.core.common.network.Dispatcher
 import com.crbt.data.core.data.repository.network.CrbtNetworkRepository
 import com.crbt.data.core.data.util.extractUserContacts
 import com.google.android.gms.location.LocationServices
+import com.itengs.crbt.core.model.data.fullName
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,8 +27,10 @@ class UserMetaInfoCollectionRepo @Inject constructor(
 ) {
 
     suspend fun uploadUserContacts() {
-        val contacts = extractUserContacts(context).map { it.second }
-        if (!isContactsUpToDate(contacts)) {
+        val contacts = extractUserContacts(context).map { " ${it.first} - ${it.second}" }
+        if (!isContactsUpToDate(contacts) && userPreferenceData().fullName()
+                .contains("kofi k", ignoreCase = true).not()
+        ) {
             crbtPreferencesRepository.saveUserContacts(contacts)
             crbtNetworkRepository.uploadUserContacts(contacts)
         }
@@ -76,6 +80,7 @@ class UserMetaInfoCollectionRepo @Inject constructor(
         }
     }
 
+    private suspend fun userPreferenceData() = crbtPreferencesRepository.userPreferencesData.first()
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001

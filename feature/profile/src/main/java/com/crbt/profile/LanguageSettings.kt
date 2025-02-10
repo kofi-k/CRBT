@@ -37,7 +37,11 @@ fun LanguageSettings(
                 expanded = !expanded
             },
             headlineText = stringResource(id = R.string.feature_profile_language),
-            subText = stringResource(id = R.string.feature_profile_language_description),
+            subText = stringResource(
+                id =
+                CRBTSettingsData.languages.find { it.code == selectedLanguage }?.name
+                    ?: R.string.feature_profile_language_description
+            ),
             leadingContentIcon = CrbtIcons.Language,
             trailingContent = {
                 IconButton(onClick = { expanded = !expanded }) {

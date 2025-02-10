@@ -40,7 +40,7 @@
     <string name="feature_profile_default_theme_title">افتراضي</string>
     <string name="feature_profile_report_bug_title">الإبلاغ عن خطأ!</string>
     <string name="feature_profile_report_bug_decriptiom">ساعدنا في تتبع الأخطاء والمشاكل لخدمتك بشكل أفضل.</string>
-
+    <string name="feature_profile_report_bug_success">تم الإبلاغ عن الخطأ بنجاح!</string>
     <string name="feature_profile_report_bug_title_label">العنوان</string>
     <string name="feature_profile_report_bug_description_label">الوصف</string>
     <string name="feature_profile_report_bug_category_label">الفئة</string>

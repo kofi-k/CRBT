@@ -14,7 +14,7 @@ data class UserPreferencesData(
     val lastName: String,
     val email: String,
     val currentBalance: Double,
-    val interestedCrbtLanguages: Set<String>,
+    val interestedToneCategories: Set<String>,
     val currentCrbtSubscriptionId: Int,
     val giftedCrbtToneIds: Set<String>,
     val rewardPoints: Int,

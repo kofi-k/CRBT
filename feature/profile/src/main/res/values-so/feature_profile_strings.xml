@@ -42,6 +42,7 @@
     <string name="feature_profile_report_bug_decriptiom">
         Naga caawin inaanu ku ogaano bugaha iyo arrimaha si aanu ugu adeegno wax kasta oo aad u baahan tahay.
     </string>
+    <string name="feature_profile_report_bug_success">Bug-ka waxaa la koobay si guul leh!</string>
     <string name="feature_profile_report_bug_title_label">Cinwaanka</string>
     <string name="feature_profile_report_bug_description_label">Bugaha</string>
     <string name="feature_profile_report_bug_category_label">Qaybta</string>

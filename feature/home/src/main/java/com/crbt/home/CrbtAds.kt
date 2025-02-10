@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.crbt.data.core.data.repository.CrbtAdsUiState
 import com.crbt.designsystem.components.DynamicAsyncImage
 import com.crbt.designsystem.theme.CustomGradientColors
+import com.crbt.ui.core.ui.blendMode
 import com.crbt.ui.core.ui.launchCustomChromeTab
 import com.itengs.crbt.feature.home.R
 
@@ -117,7 +119,7 @@ fun AdvertCard(
             )
         }
 
-        Box(
+        /*Box(
             modifier = Modifier
                 .fillMaxSize()
                 .drawBehind {
@@ -129,13 +131,14 @@ fun AdvertCard(
                         )
                     )
                 }
-        )
+        )*/
         Text(
             text = title,
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(bottom = 5.dp)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 12.dp)
+                .blendMode(BlendMode.Difference),
             color = Color.White,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold

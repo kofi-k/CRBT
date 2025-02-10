@@ -113,7 +113,10 @@ internal object NetworkModule {
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(CRBT_BASE_URL)
-            .addConverterFactory(providesNetworkJson().asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(
+                providesNetworkJson()
+                    .asConverterFactory("application/json".toMediaType())
+            )
             .client(okHttpClient)
             .build()
     }
